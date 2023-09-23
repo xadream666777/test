@@ -1,0 +1,25 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Davion705027/test.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Davion705027/test/issues"
+  },
+  "homepage": "https://github.com/Davion705027/test#readme",
+  "dependencies": {
+    "node-websocket": "^0.1.6",
+    "pako": "^2.1.0",
+    "ws": "^8.14.1"
+  }
+}
