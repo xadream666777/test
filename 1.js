@@ -27,3 +27,39 @@ console.log(nodeVersion.toString());
 // console.log(process.cwd());
 // console.log(process.argv); // 获取执行进程后的参数
 // console.log(process.env); // 获取环境变量
+
+
+
+
+const params = {
+    name : '12',
+    age : 18
+}
+// 校验参数方法
+const checkParams = (params)=>{
+    const {name,age} = params
+    return new Promise((resolve,reject)=>{
+        if(typeof name !== 'string'){
+            reject(`name参数错误`)
+        }
+        if(typeof age !== 'number'){
+            reject(`age参数错误`)
+        }
+        resolve('校验成功')
+        
+    })        
+}
+
+// 提交  async搭配await  await后面是个promise
+const submit = async ()=>{
+    try{
+        await checkParams(params)
+        // 上面校验通过后才会走下面 不然不会走
+        console.log('提交成功');
+        // ajax()
+    }catch(err){
+        console.log(err);
+    }
+}
+
+submit()
