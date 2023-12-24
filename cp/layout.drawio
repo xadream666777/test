@@ -1,0 +1,64 @@
+<mxfile host="65bd71144e">
+    <diagram id="dwGD1ZG5jWYyeLhsml0k" name="第 1 页">
+        <mxGraphModel dx="815" dy="713" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="&lt;h1&gt;root&lt;/h1&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="240" y="60" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="&lt;h1&gt;Center&lt;/h1&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="240" y="160" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;direction=south;notch=0;" vertex="1" parent="1">
+                    <mxGeometry x="190" y="80" width="20" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="&lt;h2&gt;&lt;/h2&gt;&lt;font color=&quot;#ffffff&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;375≤&lt;/span&gt;&lt;span style=&quot;font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;width&lt;/span&gt;&lt;/font&gt;&lt;span style=&quot;font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;&lt;font color=&quot;#ffffff&quot;&gt;≤375&lt;/font&gt;&lt;br&gt;&lt;/span&gt;&lt;h2&gt;&lt;font style=&quot;font-size: 12px; font-weight: 400;&quot; color=&quot;#ffffff&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;667≤&lt;/span&gt;&lt;span style=&quot;font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;height&lt;/span&gt;&lt;/font&gt;&lt;span style=&quot;font-weight: 400; font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;&lt;font color=&quot;#ffffff&quot;&gt;≤665&lt;/font&gt;&lt;br&gt;&lt;/span&gt;&lt;/h2&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400; font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;&lt;font color=&quot;#ffffff&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="20" y="60" width="150" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="&lt;h1&gt;Container&lt;/h1&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="240" y="260" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="&lt;h1&gt;Container&lt;/h1&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="240" y="360" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;direction=south;notch=0;" vertex="1" parent="1">
+                    <mxGeometry x="190" y="200" width="20" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;direction=south;notch=0;" vertex="1" parent="1">
+                    <mxGeometry x="190" y="320" width="20" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="&lt;h2&gt;&lt;/h2&gt;&lt;font color=&quot;#ffffff&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;0≤&lt;/span&gt;&lt;span style=&quot;font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;width&lt;/span&gt;&lt;/font&gt;&lt;span style=&quot;font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;&lt;font color=&quot;#ffffff&quot;&gt;≤335&lt;/font&gt;&lt;br&gt;&lt;/span&gt;&lt;h2&gt;&lt;font style=&quot;font-size: 12px; font-weight: 400;&quot; color=&quot;#ffffff&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;0≤&lt;/span&gt;&lt;span style=&quot;font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;height&lt;/span&gt;&lt;/font&gt;&lt;span style=&quot;font-weight: 400; font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;&lt;font color=&quot;#ffffff&quot;&gt;≤627&lt;/font&gt;&lt;br&gt;&lt;/span&gt;&lt;/h2&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400; font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;&lt;font color=&quot;#ffffff&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="30" y="310" width="130" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="&lt;h2&gt;&lt;/h2&gt;&lt;font color=&quot;#ffffff&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;0≤&lt;/span&gt;&lt;span style=&quot;font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;width&lt;/span&gt;&lt;/font&gt;&lt;span style=&quot;font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;&lt;font color=&quot;#ffffff&quot;&gt;≤375&lt;/font&gt;&lt;br&gt;&lt;/span&gt;&lt;h2&gt;&lt;font style=&quot;font-size: 12px; font-weight: 400;&quot; color=&quot;#ffffff&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;0≤&lt;/span&gt;&lt;span style=&quot;font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;height&lt;/span&gt;&lt;/font&gt;&lt;span style=&quot;font-weight: 400; font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;&lt;font color=&quot;#ffffff&quot;&gt;≤667&lt;/font&gt;&lt;br&gt;&lt;/span&gt;&lt;/h2&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400; font-family: &amp;quot;PingFang SC&amp;quot;; font-size: 16px; text-align: start;&quot;&gt;&lt;font color=&quot;#ffffff&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="30" y="190" width="130" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;direction=north;notch=0;" vertex="1" parent="1">
+                    <mxGeometry x="430" y="320" width="20" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;direction=north;notch=0;" vertex="1" parent="1">
+                    <mxGeometry x="430" y="80" width="20" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;direction=north;notch=0;" vertex="1" parent="1">
+                    <mxGeometry x="430" y="200" width="20" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="&lt;h1&gt;30x30&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#FFFFFF;" vertex="1" parent="1">
+                    <mxGeometry x="470" y="325" width="90" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="&lt;h1&gt;70x70&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#FFFFFF;" vertex="1" parent="1">
+                    <mxGeometry x="470" y="205" width="90" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="&lt;h1&gt;375x665&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#FFFFFF;" vertex="1" parent="1">
+                    <mxGeometry x="470" y="85" width="120" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="&lt;h1&gt;向下传递约束&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#FFFFFF;" vertex="1" parent="1">
+                    <mxGeometry x="70" width="170" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="&lt;h1&gt;向上传递尺寸&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#FFFFFF;" vertex="1" parent="1">
+                    <mxGeometry x="414" width="170" height="70" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
