@@ -18,10 +18,45 @@
   <body>
     <div class="test">你好、世界、你好、世界、你好、世界、你好、世界、你好、世界、你好、世界、你好、世界、</div>
     <script>
-      const res = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-      res.forEach((item) => {
-        console.log(item);
+      let map = new Map()
+      map.set('a',[1])
+      map.set('b',{})
+      console.log(map);
+      map.forEach((v,k) => {
+        // console.log(v);  // 值
+        // console.log(k);  // 索引
       });
+      // const res = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+      // res.forEach((item) => {
+      //   console.log(item);
+      // });
+
+      let obj = {
+        a:1,
+        b:2
+      }
+      // let vm = {}
+      // Object.defineProperty(vm, 'a',{
+      //   get(){
+      //     return obj.a
+      //   },
+      //   set(val){
+      //     obj.a = val
+      //   }
+      // })
+      // console.log(vm.a);
+      // vm.a = 3;
+      // console.log(vm);
+      // console.log(obj);
+
+      let vm = new Proxy(obj,{
+        get(target, key, receiver){
+          // console.log('get',target == obj, key,receiver==vm);
+          return obj[key]
+        }
+      })
+      // console.log(vm.a);
+      // console.log(vm.b);
     </script>
   </body>
 </html>
