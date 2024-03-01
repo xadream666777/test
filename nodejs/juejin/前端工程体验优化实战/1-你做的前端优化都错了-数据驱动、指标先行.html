@@ -1,0 +1,307 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><h1 data-id="heading-0">前言</h1>
+<p>性能优化不等于体验优化。</p>
+<p>就像吃饭不等于吃饱一样，吃饭和性能优化都只是<strong>手段</strong>，而吃饱和优化体验才是<strong>目的</strong>。</p>
+<p>谈到前端优化，许多人往往只关注性能优化，但性能优化只是改善前端项目的方式之一，<strong>改善用户体验和开发体验</strong>才应该是我们优化的根本目的。</p>
+<p>所以这本书不同于以往的前端性能优化书籍，不是简单的罗列优化方法，而是更多的关注<strong>方法论</strong>，引导读者从宏观的视角，关注前端优化开始前、实施中、生效后的全过程，最终极致地、有效地改善用户体验和开发体验。</p>
+<p>从而解决以往前端优化的诸多痛点：</p>
+<ol>
+<li>
+<p><strong>目标不明确：</strong> 只会照本宣科，把别人的优化手段生搬硬套到自己的项目，找不到自己的优化目标；</p>
+</li>
+<li>
+<p><strong>缺乏量化指标：</strong> 无法评估优化效果，拿不出客观、可量化的指标证明优化效果；</p>
+</li>
+<li>
+<p><strong>没有改善用户的主观体验：</strong> 优化效果对用户主观体验影响甚微，无法让用户直观地感受到；</p>
+</li>
+<li>
+<p><strong>欠缺长效化机制：</strong> 无法保证优化效果长期稳定、不出现衰退；</p>
+</li>
+<li>
+<p><strong>忽视开发体验：</strong> 没有认识到开发体验和用户体验的正相关性；</p>
+</li>
+</ol>
+<p>这本书总结了作者6年多来优化和维护百万日访问量广告管理后台项目、千万日活信息流前端项目以及全球领先的浏览器平台音视频会议等众多项目的经验，将以具体场景和实践经验为例，搭配6000+行源码，深入浅出地讲解现代前端工程体验优化的方法论和具体措施。</p>
+<p>希望这本书能让读者有所收获，为用户带来更好体验，在工作中取得更多成就。</p>
+<p>更欢迎通过评论，邮件，微信交流群等方式和笔者、同学们交流探讨。</p>
+<h1 data-id="heading-1">1. 为什么要建立量化指标？</h1>
+<p>没有量化指标的优化是没有说服力的，不了解优化目标的现状更无法实现优化。</p>
+<p>在实施优化时，一个常常陷入的误区是不了解现状，缺乏量化优化效果的监控指标就开始优化。这样的方式往往导致自欺欺人的优化，自以为做了效果显著的改进优化，实际上并没有改善用户体验。</p>
+<p>例如笔者在刚参加工作时就曾做过一次没有量化指标、生搬硬套的技术改进。</p>
+<p>当时计划为内部前端项目的 JS，CSS 等静态资源增加预加载<code>Prefetch</code> ，因为没有提前建立量化指标、监控优化效果的理念，所以在完成优化，部署上线后，没有得到优化效果的量化数据，只能通过 JS 加载命中了缓存来解释优化的收益，这次优化对用户体验的影响更是一无所知。</p>
+<p>这样没有反馈的技术改进显然不能算是成功的优化。</p>
+<blockquote>
+<p>注：<a href="https://link.juejin.cn?target=https%3A%2F%2Freact.dev%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://react.dev/" ref="nofollow noopener noreferrer">react.dev/</a> 的预加载 Prefetch 示例：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ec2635daf0294ace9e987399d58463d1~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=188973&amp;e=png&amp;b=24262c" alt="" loading="lazy" class="medium-zoom-image"></p>
+</blockquote>
+<p>所以，为了能真正的改善用户体验，我们需要在开始优化前，就建立量化指标，一方面帮助我们透彻的理解优化目标的现状，另一方面，也可以用量化指标监控优化前后的变化，评估优化效果。</p>
+<p>这就需要我们能把<strong>主观</strong>的用户体验或开发体验<strong>量化</strong>为<strong>客观</strong>的数据指标。</p>
+<h1 data-id="heading-2">2. 将主观的体验量化为客观指标</h1>
+<p>体验是主观的感受，同样的事物对不同的人，在不同的环境都会有不同的体验。</p>
+<p>我们以前端页面的加载速度为例，同一个页面，在不同的地理位置，不同的硬件设备上，加载速度都会有不同的表现，给用户的主观体验更是因人而异。</p>
+<p>所以要测量用户对页面的加载速度的主观体验，需要考虑的因素非常多，我们需要能抹平各种影响因素差异，稳定衡量用户体验的量化手段。</p>
+<p>业界经过多年的实践，尝试过许多量化用户体验的方式，例如：</p>
+<ul>
+<li>测量页面白屏时长</li>
+<li>计算可交互耗时（Time to interact）</li>
+<li>计算总阻塞时间 (Total Blocking Time，TBT)</li>
+<li>计算首次有效绘制 (First Meaningful Paint，FMP)</li>
+</ul>
+<p>但这些指标往往逻辑复杂、难以测量，甚至定义都有显著的歧义，所以逐渐消亡。</p>
+<p>经过大浪淘沙，近年来最实用的用户体验量化指标是基于开源库<code>web-vitals</code>获取的页面渲染耗时，交互延迟等指标。</p>
+<blockquote>
+<p><code>web-vitals</code> GitHub 仓库: <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FGoogleChrome%2Fweb-vitals" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/GoogleChrome/web-vitals" ref="nofollow noopener noreferrer">github.com/GoogleChrom…</a></p>
+</blockquote>
+<h2 data-id="heading-3">1. web-vitals 各项指标简介</h2>
+<p><code>web-vitals</code>是谷歌的 Chrome 维护团队于 2020 年开源的工具库，它基于统一的浏览器 <code>Performance API</code> 获取标准化的用户体验指标。</p>
+<p>它主要测量6项指标，分别是：</p>
+<ol>
+<li>首次内容绘制 (First Contentful Paint，FCP)</li>
+<li>最大内容绘制 (Largest Contentful Paint，LCP)</li>
+<li>首次输入延迟 (First Input Delay ，FID)</li>
+<li>交互到绘制延迟（Interaction to Next Paint，INP）</li>
+<li>累积布局偏移 (Cumulative Layout Shift，CLS)</li>
+<li>第一字节时间 (Time to First Byte，TTFB)</li>
+</ol>
+<p>下面我们将逐一了解这些指标的测量目标、评分标准和具体示例。</p>
+<h3 data-id="heading-4">1. 首次内容绘制 (First Contentful Paint，FCP)</h3>
+<p>FCP测量从页面开始加载到页面中任意部分内容（文本、图像、<code>&lt;svg/&gt;</code>，<code>&lt;canvas/&gt;</code>等内容）完成渲染的时长。</p>
+<p>其值为浮点数，单位是毫秒。FCP值越小表示该指标状况越好、页面的初始内容渲染越快。</p>
+<p>页面中率先出现的文本图像等视觉可见内容，直接决定了用户对页面加载速度的主观体验，所以这一指标选择测量这些内容的渲染耗时，从而量化用户的主观体验。</p>
+<p>注意，FCP测量的是<strong>任意部分</strong>DOM完成渲染的耗时，而非<strong>全部</strong>内容完成渲染耗时，不等于<code>onLoad</code>事件。</p>
+<p>如下图中的例子，FCP指标的值为1439毫秒，在这个时刻页面中首次渲染出了文字和图像。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/98a3a9145a7941509a28f89c7a63e643~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=1002&amp;s=214561&amp;e=png&amp;b=232427" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>按照Chrome官方的推荐标准，FCP指标3个等级的评分分别为：</p>
+<ul>
+<li>优：小于1.8秒</li>
+<li>待改进：大于1.8秒且小于3秒</li>
+<li>差：大于3秒</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/10b5b6f70be044bfa5cd37adbefc9aac~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=907&amp;h=224&amp;s=15461&amp;e=png&amp;b=d2d3d7" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h3 data-id="heading-5">2. 最大内容绘制 (Largest Contentful Paint，LCP)</h3>
+<p>LCP测量从页面开始加载到可视区域内<strong>尺寸最大</strong>的文字或图像渲染完成的耗时。</p>
+<p>其值为浮点数，单位是毫秒。LCP值越小表示该指标状况越好、最大元素渲染越快。</p>
+<p>之所以测量最大的内容，是因为尺寸最大的内容往往最能吸引用户的注意力，其渲染耗时，直接影响了用户对页面整体渲染速度的体验。</p>
+<p>我们可以用Chrome浏览器自带 DevTool 中的 Performance Insights 工具来判断页面中什么元素是最大内容，例如下图中的<code>img.banner-image</code>就是掘金首页的最大内容元素，这个元素渲染的耗时为1.55秒，即LCP的值。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f3df2a8358a84f7a8752435abbea7268~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=314104&amp;e=png&amp;b=222326" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>按照Chrome官方的推荐标准，LCP指标3个等级的评分分别为：</p>
+<ul>
+<li>优：小于2.5秒</li>
+<li>待改进：大于2.5秒且小于4秒</li>
+<li>差：大于4秒</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4ad167f763ba44979b952511cff0d739~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=888&amp;h=256&amp;s=16717&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h3 data-id="heading-6">3. 首次输入延迟 (First Input Delay ，FID)</h3>
+<p>FID 测量用户首次交互（点击、触摸）后到浏览器开始响应之间的时间间隔。</p>
+<p>其值为浮点数，单位是毫秒。FID值越小表示该指标状况越好，用户首次与页面交互时，浏览器响应的延迟越小。</p>
+<p>这一指标只关注页面中首次交互的原因是因为，首次交互时，页面往往处于尚未完全加载的状态，异步响应数据仍在等待响应、部分JS和CSS仍在执行和渲染的过程中，浏览器的主线程会短暂的处于忙碌状态，往往不能即时响应用户交互。</p>
+<p>但是第一次交互的延迟长短往往决定了用户对网页流畅度的第一印象，所以这一指标的测量目标，也能量化用户的主观体验。</p>
+<p>按照Chrome官方的推荐标准，FID指标3个等级的评分分别为：</p>
+<ul>
+<li>优：小于100毫秒</li>
+<li>待改进：大于100毫秒且小于300毫秒</li>
+<li>差：大于300毫秒</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3921bd17e4264928a1c1b7a60ae183f4~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=839&amp;h=214&amp;s=13670&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<blockquote>
+<p>注：FID指标与下文将要提到的 INP 指标测量目标有所重叠，且普适性不及INP，未来可能会被INP替代。</p>
+</blockquote>
+<h3 data-id="heading-7">4. 交互到绘制延迟（Interaction to Next Paint，INP）</h3>
+<p>INP测量用户在页面浏览过程中的所有交互（点击、键盘输入、触摸等）与浏览器渲染响应的<strong>整体</strong>延迟情况。</p>
+<p>其值为浮点数，单位是毫秒。INP值越小表示该指标状况越好，用户的各类交互响应延迟越小。</p>
+<p>与FID只关注首次交互不同，INP会关注用户浏览网页全过程中的<strong>所有</strong>交互，所以<code>web-vitals</code>库中获取INP值的<code>onINP(FCPReportCallback)</code>方法，通常会在页面可视化状态变化或页面卸载时多次触发，综合统计一段时间内的多次交互，按特定算法，计算该时段内的INP指标值。</p>
+<p>INP指标3个等级的评分分别为：</p>
+<ul>
+<li>优：小于200毫秒</li>
+<li>待改进：大于200毫秒且小于500毫秒</li>
+<li>差：大于500毫秒</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/621df7bccb4b43f591e686b5c18df7c3~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=960&amp;h=243&amp;s=17232&amp;e=png&amp;b=202124" alt="" loading="lazy" class="medium-zoom-image"></p>
+<blockquote>
+<p>INP是新近加入<code>web-vitals</code>的一项指标，仍处于实验状态，其标准可能会有调整，目前描述的是其2023年5月的状况。</p>
+</blockquote>
+<h3 data-id="heading-8">5. 累积布局偏移 (Cumulative Layout Shift，CLS)</h3>
+<p>CLS测量页面中所有<strong>意外</strong>布局变化的累计分值。</p>
+<p>其值为浮点数，<strong>无单位，</strong> 值的大小表示意外布局变化的多少和影响范围的大小。</p>
+<p>CLS值的计算类似INP，会统计一段时间内的所有意外布局变化，按特定算法，计算出分值。</p>
+<p>所谓<strong>意外布局变化</strong>是指 DOM 元素在前后绘制的2帧之间，非用户交互引起DOM元素尺寸、位置的变化。</p>
+<p>请看示例视频：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e75675dc88fe4f1793ce6b6106cb036a~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=880&amp;h=794&amp;s=560666&amp;e=gif&amp;f=402&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这段视频中用户本想点击取消按钮，但是页面元素的布局位置突然产生了变化，出现了<strong>非用户交互导致</strong>的<strong>意外布局变化</strong>，原本取消按钮的位置被确认按钮替代，导致了用户本想点击取消，却触发了购买的误操作，严重损害了用户体验。</p>
+<blockquote>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fcodesandbox.io%2Fp%2Fdevbox%2Fcls-demo-qfu8g5%3Ffile%3D%252Fsrc%252Findex.js%253A6%252C53" target="_blank" rel="nofollow noopener noreferrer" title="https://codesandbox.io/p/devbox/cls-demo-qfu8g5?file=%2Fsrc%2Findex.js%3A6%2C53" ref="nofollow noopener noreferrer">《意外布局变化》在线DEMO</a></p>
+</blockquote>
+<p>引入<code>web-vitals</code>库后调用<code>onCLS</code>API就能获取CLS的值，同时获取到对应的意外布局变化的具体来源，如下图中<code>sources</code>字段的2个对象就通过DOM元素引用，明确地告诉了我们引起布局变化的来源，以及变化前后的尺寸位置等详细数据<code>sources[i].currentRect, sources[i].previousRect</code>：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0924be1dc6d64aba9e65ac5d54ae771e~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1919&amp;h=990&amp;s=313395&amp;e=png&amp;b=222326" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>按照Chrome官方的推荐标准，CLS指标3个等级的评分分别为：</p>
+<ul>
+<li>优：小于0.1</li>
+<li>待改进：大于0.1且小于0.25</li>
+<li>差：大于0.25</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25f1c1ced13b4f6e91d27abba993d8ce~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=862&amp;h=241&amp;s=16329&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h3 data-id="heading-9">6. 第一字节时间 (Time to First Byte，TTFB)</h3>
+<p>TTFB测量前端页面（Document）的HTTP请求发送后，到接收到第一字节数据响应的耗时，通常包括重定向、DNS查询、服务器响应延迟等耗时。</p>
+<p>其值为浮点数，单位是毫秒。值越小表示该项指标状况越好，页面HTTP响应的耗时越短，也就是页面的加载更快。</p>
+<p>TTFB指标值的大小直接决定着页面初始内容渲染耗时的长短，往往和<code>FCP</code>、<code>LCP</code>指标有明显的相关关系，对用户体验有直接影响，所以<code>web-viatals</code>也将其当做了量化用户体验的指标之一。</p>
+<p>除了可以通过<code>web-vitals</code>库的<code>onTTFB()</code>API获取，也可以使用 Chrome 自带的 DevTool Network 网络面板计算得出。</p>
+<p>如下图的例子知乎首页的<code>TTFB</code>指标值即为：</p>
+<ul>
+<li><code>文档响应的整体耗时</code> 减去 <code>内容下载耗时（Content Download）</code></li>
+<li>391毫秒 - 57毫秒 = 335毫秒</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f8d68235585249eebff38869774cac02~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=317512&amp;e=png&amp;b=242528" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>TTFB指标3个等级的评分分别为：</p>
+<ul>
+<li>优：小于800毫秒</li>
+<li>待改进：大于800毫秒且小于1800毫秒</li>
+<li>差：大于1800毫秒</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a5243e32a54a4826bf7d2133095edfe6~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=909&amp;h=219&amp;s=14280&amp;e=png&amp;b=d2d3d7" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>尽管以上指标都可以通过原生Performance API计算获得，但仍然推荐使用的<code>web-vitals</code>库，因为它能帮助我们处理了许多细节问题，例如标签页处于后台时的计算、指标获取时机、浏览器兼容性等等，能确保我们测量出标准、稳定的指标数值。</p>
+<h2 data-id="heading-10">2. 六类指标对比</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>名称</th><th>含义</th><th>注意事项</th><th>值单位</th><th>WebVitals 库获取结果示例</th></tr></thead><tbody><tr><td>首次内容绘制(First Contentful Paint，<strong>FCP</strong>)</td><td>测量从页面开始加载到页面中<strong>任意</strong>部分内容（文本、图像、<code>&lt;svg/&gt;</code>，<code>&lt;canvas/&gt;</code>等内容）完成渲染的时长</td><td>测量任意<strong>部分</strong>DOM渲染的耗时，而非全部内容，不等于页面所有内容完全加载完成的<code>onLoad</code>事件。</td><td>毫秒</td><td><code>{   "name": "FCP",   "value": 463.20000076293945,   "rating": "good",   "delta": 463.20000076293945,   "entries": [     {       "name": "first-contentful-paint",       "entryType": "paint",       "startTime": 463.20000076293945,       "duration": 0     }   ],   "id": "v3-1695054859140-2991050486027",   "navigationType": "reload" }</code></td></tr><tr><td>最大内容绘制 (Largest Contentful Paint，<strong>LCP</strong>)</td><td>测量从页面开始加载到可视区域内尺寸最大的文字或图像渲染完成的耗时。</td><td>对于UI渲染逻辑复杂的前端应用，不同优化可能会有不同的最大元素，统计获得的最大元素可能有多个。</td><td>毫秒</td><td><code> {   "name": "LCP",   "value": 463.20000076293945,   "rating": "good",   "delta": 463.20000076293945,   "entries": [     {       "name": "",       "entryType": "largest-contentful-paint",       "startTime": 463.20000076293945,       "duration": 0,       "size": 8985,       "renderTime": 463.2,       "loadTime": 0,       "firstAnimatedFrameTime": 0,       "id": "",       "url": ""     }   ],   "id": "v3-1695054859140-6431611124119",   "navigationType": "reload" }</code></td></tr><tr><td>首次输入延迟(First Input Delay ，<strong>FID</strong>)</td><td>测量用户首次交互（点击、触摸）后到浏览器开始响应用户交互之间的时间间隔。</td><td>未来可能会被INP替代。</td><td>毫秒</td><td><code>{   "name": "FID",   "value": 1.7999992370605469,   "rating": "good",   "delta": 1.7999992370605469,   "entries": [     {       "name": "pointerdown",       "entryType": "first-input",       "startTime": 1954,       "duration": 0,       "processingStart": 1955.7999992370605,       "processingEnd": 1955.7999992370605,       "cancelable": true     }   ],   "id": "v3-1695054999447-8039144919554",   "navigationType": "reload" }</code></td></tr><tr><td>交互到绘制延迟(Interaction to Next Paint，<strong>INP</strong>)</td><td>测量用户在页面浏览过程中的所有交互（点击、键盘输入、触摸等）与浏览器绘制对应响应的<strong>整体</strong>延迟情况。</td><td>通常会在页面可视化状态变化或页面卸载时进行计算。</td><td>毫秒</td><td><code> {   "name": "INP",   "value": 8,   "rating": "good",   "delta": 8,   "entries": [     {       "name": "pointerdown",       "entryType": "first-input",       "startTime": 36701.30000114441,       "duration": 8,       "processingStart": 36702.80000114441,       "processingEnd": 36702.80000114441,       "cancelable": true     }   ],   "id": "v3-1695054859140-4977365532114",   "navigationType": "reload" }</code></td></tr><tr><td>累积布局偏移(Cumulative Layout Shift，<strong>CLS</strong>)</td><td>测量页面中，一定时间段内所有意外布局变化的累计分值。</td><td>-   通常会在页面可视化状态变化或页面卸载时进行计算。<br>-   <code>web-viatals</code>提供的<code>onCLS()</code>方法会多次触发。<br>-   <code>onCLS()</code>获取到的<code>sources</code>字段可能会因为元素卸载而变成<code>null</code>，统计时可以使用xpath进行特殊处理。</td><td>分值</td><td><code>{   "name": "CLS",   "value": 0.0007529577629112682,   "rating": "good",   "delta": 0.0007529577629112682,   "entries": [     {       "entryType": "layout-shift",       "value": 0.0007529577629112682,       // ...       "sources": [         {           "previousRect": {             "x": 128,             "y": 553,             "width": 20,             "height": 20,             "top": 553,             "right": 148,             "bottom": 573,             "left": 128           },           "currentRect": {               // ...           }         }       ]     }   ],   "id": "v3-1695054859142-8118655247179",   "navigationType": "reload" }</code></td></tr><tr><td>第一字节时间(Time to First Byte，<strong>TTFB</strong>)</td><td>测量页面本身（Document）的HTTP请求发送后，到接收到第一字节数据响应的耗时</td><td>往往和FCP、LCP指标有相关关系。</td><td>毫秒</td><td><code>{   "name": "TTFB",   "value": 369.20000076293945,   "rating": "good",   "delta": 369.20000076293945,   "entries": [     {       "name": "https://output.jsbin.com/bizanep",       "entryType": "navigation",       "startTime": 0,       "duration": 820.5,       "initiatorType": "navigation",       "nextHopProtocol": "h2",       "renderBlockingStatus": "non-blocking",       "workerStart": 0,       // ...       "activationStart": 0,       "criticalCHRestart": 0     }   ],   "id": "v3-1695054859140-2231742211102",   "navigationType": "reload" }</code></td></tr></tbody></table>
+<h2 data-id="heading-11">3.  <code>web-vitals</code>使用示例</h2>
+<p>以上6项指标均可通过<code>web-vitals</code>库内置的API方便的获取，将<code>web-vitals</code>库集成到用户访问的前端页面，即可方便地获取用户的真实体验数据，例如：</p>
+<blockquote>
+<p>获取<code>web-vitals</code>数据在线 DEMO: <a href="https://link.juejin.cn?target=https%3A%2F%2Foutput.jsbin.com%2Fbizanep" target="_blank" rel="nofollow noopener noreferrer" title="https://output.jsbin.com/bizanep" ref="nofollow noopener noreferrer">output.jsbin.com/bizanep</a></p>
+</blockquote>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/97c8075c49724036a10fc072f87abd03~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1919&amp;h=985&amp;s=246939&amp;e=png&amp;b=212225" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>获取 web-vitals 数据 DEMO<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-tag">&lt;<span class="hljs-name">h2</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"fcp"</span>&gt;</span>FCP:<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-tag">&lt;<span class="hljs-name">h2</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"lcp"</span>&gt;</span>LCP:<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-tag">&lt;<span class="hljs-name">h2</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"ttfb"</span>&gt;</span>TTFB:<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>首次交互（例如：点击任意位置）后可获取：<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-tag">&lt;<span class="hljs-name">h2</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"fid"</span>&gt;</span>FID:<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>页面可视化状态变化为隐藏（例如：切换标签页）后可获取：<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">  <span class="hljs-tag">&lt;<span class="hljs-name">h2</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"inp"</span>&gt;</span>INP:<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">  <span class="hljs-tag">&lt;<span class="hljs-name">h2</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"cls"</span>&gt;</span>CLS:<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">  </span>
+<span class="code-block-extension-codeLine" data-line-num="18">  </span>
+<span class="code-block-extension-codeLine" data-line-num="19">  <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://github.com/JuniorTour"</span>&gt;</span>Author: https://github.com/JuniorTour<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">  </span>
+<span class="code-block-extension-codeLine" data-line-num="21">  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"module"</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-keyword">import</span> {onFCP, onLCP, onFID, onCLS, onINP, onTTFB} <span class="hljs-keyword">from</span> <span class="hljs-string">'https://unpkg.com/web-vitals@3?module'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="23"></span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-keyword">function</span> <span class="hljs-title function_">setInnerHtml</span>(<span class="hljs-params">id, html</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="25">      <span class="hljs-keyword">if</span> (!id || !html) {</span>
+<span class="code-block-extension-codeLine" data-line-num="26">        <span class="hljs-keyword">return</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="28">      <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${id}</span>`</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="29">      <span class="hljs-keyword">if</span> (el) {</span>
+<span class="code-block-extension-codeLine" data-line-num="30">        el.<span class="hljs-property">innerHTML</span> = html</span>
+<span class="code-block-extension-codeLine" data-line-num="31">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="32">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="33">    </span>
+<span class="code-block-extension-codeLine" data-line-num="34">    <span class="hljs-keyword">function</span> <span class="hljs-title function_">onGetWebVitalsData</span>(<span class="hljs-params">data</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="35">      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(data)</span>
+<span class="code-block-extension-codeLine" data-line-num="36">      <span class="hljs-keyword">if</span> (!data?.<span class="hljs-property">name</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="37">        <span class="hljs-keyword">return</span></span>
+<span class="code-block-extension-codeLine" data-line-num="38">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="39">      <span class="hljs-keyword">const</span> name = data.<span class="hljs-property">name</span></span>
+<span class="code-block-extension-codeLine" data-line-num="40">      <span class="hljs-keyword">const</span> value = data.<span class="hljs-property">value</span></span>
+<span class="code-block-extension-codeLine" data-line-num="41">      <span class="hljs-keyword">const</span> rating = data.<span class="hljs-property">rating</span></span>
+<span class="code-block-extension-codeLine" data-line-num="42">      <span class="hljs-keyword">const</span> msg = (<span class="hljs-string">`<span class="hljs-subst">${name}</span>: value=<span class="hljs-subst">${value}</span>, rating=<span class="hljs-subst">${rating}</span>`</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="43">      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(msg)</span>
+<span class="code-block-extension-codeLine" data-line-num="44">      <span class="hljs-title function_">setInnerHtml</span>(name?.<span class="hljs-title function_">toLowerCase</span>(), msg)</span>
+<span class="code-block-extension-codeLine" data-line-num="45">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="46">    </span>
+<span class="code-block-extension-codeLine" data-line-num="47">    <span class="hljs-title function_">onFCP</span>(onGetWebVitalsData);</span>
+<span class="code-block-extension-codeLine" data-line-num="48">    <span class="hljs-title function_">onLCP</span>(onGetWebVitalsData); </span>
+<span class="code-block-extension-codeLine" data-line-num="49">    <span class="hljs-title function_">onFID</span>(onGetWebVitalsData); </span>
+<span class="code-block-extension-codeLine" data-line-num="50">    <span class="hljs-title function_">onCLS</span>(onGetWebVitalsData);</span>
+<span class="code-block-extension-codeLine" data-line-num="51">    <span class="hljs-title function_">onINP</span>(onGetWebVitalsData);</span>
+<span class="code-block-extension-codeLine" data-line-num="52">    <span class="hljs-title function_">onTTFB</span>(onGetWebVitalsData);</span>
+<span class="code-block-extension-codeLine" data-line-num="53">  <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="54"></span>
+<span class="code-block-extension-codeLine" data-line-num="55"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="56"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>要注意的细节是，这些指标中：</p>
+<ul>
+<li>
+<p><code>onFCP, onLCP, onTTFB</code> 均为在页面初始化时自动触发。</p>
+</li>
+<li>
+<p><code>onFID</code>是在用户第一次与页面交互时触发。</p>
+</li>
+<li>
+<p><code>onCLS, onINP</code>则因为要测量页面的全生命周期，往往无固定触发时间点，在实践中通常会在交互停止一段时间后，或页面可视状态变化（例如切换标签页）后多次触发。</p>
+</li>
+</ul>
+<p><code>web-vitals</code>的这些指标是Chrome维护团队基于海量用户数据、经过大量实践后设计出来的，能科学地将主观的用户体验量化为客观的指标，是我们进行体验优化的必备工具。</p>
+<p>大量的收集这些指标数据，加以汇总分析便可以实现针对用户体验的“真实用户监控”（<a href="https://link.juejin.cn?target=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FReal_user_monitoring%25EF%25BC%2589" target="_blank" rel="nofollow noopener noreferrer" title="https://en.wikipedia.org/wiki/Real_user_monitoring%EF%BC%89" ref="nofollow noopener noreferrer">en.wikipedia.org/wiki/Real_u…</a> ，从用户客户端收集到<strong>海量</strong>数据，要比我们在内部的测试开发环境上测量出的<strong>少量</strong>实验室数据更全面、更客观、更有说服力，更有助于我们做出数据驱动的优化决策。</p>
+<h1 data-id="heading-12">小结</h1>
+<p>这一节中我们主要学习了建立量化指标的意义，是为了能真正的改善用户体验。</p>
+<p>并详细介绍了<code>web-viatals</code>库，FCP、LCP、CLS、FID、INP、TTFB等6项用户体验指标的含义、细节和具体用法。</p></div>

@@ -1,0 +1,634 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>有了获取用户体验数据的工具<code>web-vitals</code>，许多人会直接在本地开发环境或内部测试环境获取用户体验指标数据，用于评估优化效果，但是这样的做法有显著的问题：</p>
+<ul>
+<li><strong>样本总量较少</strong>：开发测试环境的用户数量较为有限，往往只有个别内部同事访问，收集到的数据量较少，数据的波动也会很大。</li>
+<li><strong>数据不具有广泛代表性</strong>：只在内部环境收集<code>web-vitals</code>数据，忽略了生产环境中真实用户千差万别的网络状况、软硬件性能，这样的数据不能代表真正的用户体验。</li>
+</ul>
+<p>所以，只在开发测试环境使用<code>web-vitals</code>收集用户体验指标数据是远远不够的，我们需要到广阔无垠的生产环境中收集最广大用户的真实数据，以便准确了解现状、确定优化目标、评估优化效果。</p>
+<p>笔者在此推荐一套经过实践检验、开发体验较好的生产环境数据采集工具：Prometheus 和 Grafana。</p>
+<h2 data-id="heading-0">1.   Prometheus 及 Grafana 简介</h2>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fprometheus.io%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://prometheus.io/" ref="nofollow noopener noreferrer">Prometheus</a> 是一款开源的数据监控解决方案，主要包括以下模块：</p>
+<ul>
+<li>面向各种编程语言的数据采集SDK（例如面向 Node.js 的NPM包客户端：<a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fprom-client" target="_blank" rel="nofollow noopener noreferrer" title="https://www.npmjs.com/package/prom-client" ref="nofollow noopener noreferrer">prom-client</a>）</li>
+<li>接收数据上报的服务器后端应用</li>
+<li>基于时间序的数据库</li>
+<li>基础的数据可视化前端应用</li>
+</ul>
+<p>具有强大的拓展能力，可以方便快速地融合进已有的项目中，作为数据监控中台的工具使用。</p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fgrafana.com%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://grafana.com/" ref="nofollow noopener noreferrer">Grafana</a> 是一款开源的数据可视化工具，主要有以下特性：</p>
+<ul>
+<li>兼容 Prometheus 在内各种数据库的数据查询工具</li>
+<li>内置海量可视化图表模板的前端应用</li>
+<li>支持免费的私有化部署</li>
+</ul>
+<p>将 Prometheus 与 Grafana 整合进我们的项目中就能实现强大的数据收集、可视化能力。</p>
+<p>下面我们以<code>Node.js</code>为例，演示如何接入这2款工具。</p>
+<h2 data-id="heading-1">2.  接入演示</h2>
+<p>我们将基于：</p>
+<ul>
+<li>Grafana 官方的云端应用</li>
+<li>本地环境自建的 Node.js 服务器应用</li>
+<li>Node.js 的 Prometheus 数据收集SDK：<code>prom-client</code></li>
+</ul>
+<p>演示如何从本地环境收集<code>web-vitals</code>数据，上传到 Grafana，最终创建出数据可视化图表。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d03545f3739a46e3ba8d485d71fb3154~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=881&amp;s=377725&amp;e=jpg&amp;b=181b20" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>首先，我们注册并登录 Grafana 官方的云端应用：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgrafana.com%2Fget%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://grafana.com/get/" ref="nofollow noopener noreferrer">grafana.com/get/</a> ，每个账户都有永久免费的试用额度供我们体验。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60b033218f1e4eaabb288214f77a8184~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=184894&amp;e=png&amp;b=f2f2f4" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>完成注册后，我们就会进入 Grafana 的看板页面，这里是我们管理数据可视化图表、接入数据源的主要工作区域。</p>
+<p>但因为此时我们还没有接入数据，所以内容还是一片空白。</p>
+<blockquote>
+<p>注：对于Grafana来说，不同的数据源有不同的特性，例如：</p>
+<ul>
+<li>查询语句的语法</li>
+<li>是否支持日志全文查询</li>
+</ul>
+<p>Grafana 支持众多数据源，如果下文介绍的 Prometheus 不适合你的前后端架构，可以参考官方文档选择<code>Elasticsearch</code>、<code>Graphite</code>等其他数据源：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgrafana.com%2Fdocs%2Fgrafana%2Flatest%2Fdatasources%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://grafana.com/docs/grafana/latest/datasources/" ref="nofollow noopener noreferrer">grafana.com/docs/grafan…</a></p>
+<p>如果只需要指标收集和存储，建议选择 Prometheus 或 Graphite；</p>
+<p>如果需要结合服务端日志进行分析，对日志中包含的数据做可视化，建议选择 Elasticsearch；</p>
+</blockquote>
+<p>接下来我们需要启动一个基于<code>prom-client</code>的 Node.js 服务器作为我们的数据收集应用。</p>
+<p>首先我们从左侧侧边栏访问 Connection &gt; Connect data 目录，搜索 node.js 即可找到官方推荐的 Node.js 应用接入基础设施：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1d79bbee15bc497682a4a3d6f9110f9a~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=96507&amp;e=png&amp;b=181b1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b52baec954ea4b06b50a61e881079699~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=138526&amp;e=png&amp;b=171a1e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h3 data-id="heading-2">1. 安装配置<code>Grafana Agent</code></h3>
+<p>点击进入 Node.js Infrastructure 后，我们的目标是按照页面上详细的分步骤指引，安装<code>Grafana Agent</code>用于收集、转发本地的Prometheus数据。</p>
+<p>首先，我们点击第一步的<code>Run the Grafana agent</code>按钮，在弹窗中选择安装目标对应的系统和CPU架构：
+<img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/43e82ad2beaa4ca5846cd017048b703b~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=290756&amp;e=png&amp;b=232629" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p>接下来，输入 API key 的备注名，点击 Generate API token 生成令牌，随后会提示生成已完成：<code>Your API token has been generated below.</code>，这段token将会自动添加到后续的安装脚本中，用于验证身份。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f50494b3361b4a619cd682dcbc29a039~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=174467&amp;e=png&amp;b=212427" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>最后，我们复制并运行弹窗中生成的安装脚本命令行（<code>Run this command to generate the config file</code>后的内容），下载、安装 Grafana Agent 应用到本地，用于转发本地收集的数据到远端 Grafana 服务器，这个应用的下载和安装可能需要一定时间（建议搭配全局科学上网）：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7f0086bc6f5c45649ec96a9b191b728d~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=188521&amp;e=png&amp;b=232528" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>安装命令执行完成后，点击Grafana页面中，弹窗左下角的 Test agent connection 即可验证安装是否完成。</p>
+<p>验证通过、安装完成，就可以在本地通过Node.js应用收集并上报数据了。</p>
+<blockquote>
+<p>用命令行安装时常见问题及解决建议：</p>
+<p>问题1：Windows系统 需要<strong>以管理员身份运行 PowerShell</strong> 才能顺利安装，运行方式如下图，在搜索框搜索时选择“以管理员身份运行即可”：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c1d03129b81b468db54bb29c94db3a38~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1049&amp;h=856&amp;s=469014&amp;e=png&amp;b=252525" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>问题2：执行命令行时报错<code>curl: googleapis.com 443 Timeout</code>。</p>
+<p>答：建议检查网络环境，确保科学上网应用到了全局，命令行也走网络代理。</p>
+<p>问题3：无法确定agent是否成功安装、运行。</p>
+<p>答：通过任务管理器应用，搜索Grafana Agent进程可以确认运行状态，如图：
+<img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bafbc709e54446cba0e4d369d11a5f22~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=449&amp;h=437&amp;s=23433&amp;e=png&amp;b=fdfcfc" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+</blockquote>
+<h3 data-id="heading-3">2. 本地运行数据收集应用</h3>
+<p>运行数据收集 Node.js 应用有2个选项。</p>
+<h4 data-id="heading-4">1. 克隆<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Fnode-prometheus-grafana-demo" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/node-prometheus-grafana-demo" ref="nofollow noopener noreferrer">数据收集示例应用：node-prometheus-grafana-demo</a></h4>
+<p>我们可以直接 Clone 笔者编写的本书配套数据收集示例应用：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Fnode-prometheus-grafana-demo" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/node-prometheus-grafana-demo" ref="nofollow noopener noreferrer">github.com/JuniorTour/…</a></p>
+<p>克隆后，运行也很简单，只需要执行：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sh</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sh code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install</span>
+<span class="code-block-extension-codeLine" data-line-num="2">npm run start</span>
+</code></pre>
+<h4 data-id="heading-5">2. 从头开始搭建数据收集应用</h4>
+<p>也可以从头开始，新建一个空白 Node.js 项目，大致的步骤是：</p>
+<ul>
+<li>创建新目录：<em>node-prometheus-grafana-demo</em></li>
+<li>执行 <code>npm init</code> 初始化生成 <code>package.json</code>，并添加启动脚本：<code>"start": "node app.js"</code></li>
+<li>安装必要NPM包依赖：<code>npm install express prom-client</code></li>
+<li>新建 <code>app.js</code> ，将官方的代码示例复制粘贴下来：</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a2e2e82da95548299137174861210453~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=119025&amp;e=png&amp;b=15181c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<blockquote>
+<p>注：官方示例需要Node.js环境支持 ES module 语法，你也可以参考笔者提供的示例项目，使用更方便的 CommonJS module 语法：</p>
+<p>完整代码示例《feat: 引入express &amp;&amp; prom-client；初始化服务》commit：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Fnode-prometheus-grafana-demo%2Fcommit%2F7ba9148a70164c944cd6d474251c5bef2507273c" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/node-prometheus-grafana-demo/commit/7ba9148a70164c944cd6d474251c5bef2507273c" ref="nofollow noopener noreferrer">github.com/JuniorTour/…</a></p>
+</blockquote>
+<p>运行 <code>npm run start</code> 后，<code>prom-client</code>就会自动开始采集一批默认的 Node.js 应用数据。</p>
+<blockquote>
+<p>注：数据收集应用运行成功后，访问应用的<code>/metris</code>接口，应该能看到页面展示了大量数据，这些就是Agent要刮取收集的数据，如图：
+<img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0b6194b6301d4795976105a3a0fab78f~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=830&amp;h=905&amp;s=106930&amp;e=png&amp;b=141414" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+</blockquote>
+<p>最后，让我们把预置的一批可视化图表，添加到我们的看板中，点击下图中的安装 Install 按钮：</p>
+<h3 data-id="heading-6">3. 添加预置可视化图表</h3>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0bbd1c25babf40b5bdef2967de08aa67~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=128735&amp;e=png&amp;b=171a1e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>安装后，一套监控 Node.js 应用内存用量、CPU使用率等指标的可视化图片就会被添加到我们的看板中，本地收集的数据，也会随之显示出来，如下图：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/48f046853ff749f0a4acfa694f025332~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=157230&amp;e=png&amp;b=17191e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<blockquote>
+<p>Grafana 官方 Node.js 集成文档：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgrafana.com%2Fdocs%2Fgrafana-cloud%2Fdata-configuration%2Fintegrations%2Fintegration-reference%2Fintegration-nodejs%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://grafana.com/docs/grafana-cloud/data-configuration/integrations/integration-reference/integration-nodejs/" ref="nofollow noopener noreferrer">grafana.com/docs/grafan…</a></p>
+<p>各大云服务供应商也有集成 Grafana：</p>
+<ul>
+<li>阿里云：<a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.aliyun.com%2Fproduct%2Faliware%2Fgrafana" target="_blank" rel="nofollow noopener noreferrer" title="https://www.aliyun.com/product/aliware/grafana" ref="nofollow noopener noreferrer">www.aliyun.com/product/ali…</a></li>
+<li>腾讯云：<a href="https://link.juejin.cn?target=https%3A%2F%2Fcloud.tencent.com%2Fdocument%2Fproduct%2F1437%2F61603" target="_blank" rel="nofollow noopener noreferrer" title="https://cloud.tencent.com/document/product/1437/61603" ref="nofollow noopener noreferrer">cloud.tencent.com/document/pr…</a></li>
+</ul>
+</blockquote>
+<p>我们的目标不只是监控这些基础指标，下面让我们试试如何增加<strong>自定义</strong>指标。</p>
+<h2 data-id="heading-7">3.  上报自定义指标并创建可视化图表</h2>
+<p>为了将前端收集到的<code>web-vitals</code>数据，发送到<code>Grafana</code>，后端服务需要基于<code>prom-client</code>的能力，增加一批<strong>自定义</strong>指标。</p>
+<h3 data-id="heading-8">1.  搭建后端服务器接收指标数据</h3>
+<p>让我们继续在<code>app.js</code>中添加以下代码：</p>
+<blockquote>
+<p>完整代码实现，请参考 node-prometheus-grafana-demo 示例项目中的<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Fnode-prometheus-grafana-demo%2Fcommit%2F467e211746a747338faeb0f705549bc879405a30" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/node-prometheus-grafana-demo/commit/467e211746a747338faeb0f705549bc879405a30" ref="nofollow noopener noreferrer">《feat: 增加自定义计数指标及接口》commit</a></p>
+</blockquote>
+<ol>
+<li><code>src/app.js</code></li>
+</ol>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// ...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> app = <span class="hljs-title function_">express</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-comment">/* 1. */</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">const</span> metricPath = <span class="hljs-string">'/metrics'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">app.<span class="hljs-title function_">get</span>(metricPath, <span class="hljs-keyword">async</span> (_req, res) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-keyword">try</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    res.<span class="hljs-title function_">set</span>(<span class="hljs-string">'Content-Type'</span>, register.<span class="hljs-property">contentType</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    res.<span class="hljs-title function_">end</span>(<span class="hljs-keyword">await</span> register.<span class="hljs-title function_">metrics</span>());</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  } <span class="hljs-keyword">catch</span> (err) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    res.<span class="hljs-title function_">status</span>(<span class="hljs-number">500</span>).<span class="hljs-title function_">end</span>(err);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="13">});</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16"><span class="hljs-comment">/*</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">2. 新增POST方法接口，接收客户端传来的任意自定义指标</span>
+<span class="code-block-extension-codeLine" data-line-num="18">*/</span>
+<span class="code-block-extension-codeLine" data-line-num="19">app.<span class="hljs-title function_">post</span>(<span class="hljs-string">'/counter-metric'</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">  <span class="hljs-keyword">const</span> { name, help, labels } = req.<span class="hljs-property">body</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="21">  <span class="hljs-keyword">if</span> (!name) {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="23">      <span class="hljs-string">`/counter-metric WARN: no name req: <span class="hljs-subst">${<span class="hljs-built_in">JSON</span>.stringify(req.body, <span class="hljs-literal">null</span>, <span class="hljs-number">2</span>)}</span>`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">    );</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="26">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="27"></span>
+<span class="code-block-extension-codeLine" data-line-num="28">  <span class="hljs-title function_">useCounter</span>({ name, help, labels });</span>
+<span class="code-block-extension-codeLine" data-line-num="29"></span>
+<span class="code-block-extension-codeLine" data-line-num="30">  <span class="hljs-keyword">const</span> message = <span class="hljs-string">`/counter-metric name=<span class="hljs-subst">${name}</span> labels=<span class="hljs-subst">${<span class="hljs-built_in">JSON</span>.stringify(</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    labels</span>
+<span class="code-block-extension-codeLine" data-line-num="32">  )}`;</span>
+<span class="code-block-extension-codeLine" data-line-num="33">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(message);</span>
+<span class="code-block-extension-codeLine" data-line-num="34">  res.<span class="hljs-title function_">status</span>(<span class="hljs-number">200</span>).<span class="hljs-title function_">json</span>({ message });</span>
+<span class="code-block-extension-codeLine" data-line-num="35">});</span>
+</code></pre>
+<ol start="2">
+<li><code>src\prom-client.js</code>:</li>
+</ol>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> client = <span class="hljs-built_in">require</span>(<span class="hljs-string">'prom-client'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> <span class="hljs-title class_">Registry</span> = client.<span class="hljs-property">Registry</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> register = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Registry</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">client.<span class="hljs-title function_">collectDefaultMetrics</span>({ register });</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">function</span> <span class="hljs-title function_">useCounter</span>(<span class="hljs-params">{ name, help, labels }</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-comment">/* 3. */</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-keyword">let</span> counter = register.<span class="hljs-title function_">getSingleMetric</span>(name);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-keyword">if</span> (!counter) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    counter = <span class="hljs-keyword">new</span> client.<span class="hljs-title class_">Counter</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      name,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      help,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-attr">registers</span>: [register],</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-attr">labelNames</span>: <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(labels),</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="18">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">  counter.<span class="hljs-title function_">inc</span>(labels, <span class="hljs-number">1</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="21">}</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">  useCounter,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">  register,</span>
+<span class="code-block-extension-codeLine" data-line-num="26">};</span>
+</code></pre>
+<p>通过这2段代码，我们实现了以下功能逻辑：</p>
+<ol>
+<li>新建了一个Express框架的Node.js服务器应用，用于和其他应用以HTTP接口的形式通信，获取数据，再上报到Grafana。</li>
+<li>增加了GET方法的HTTP接口<code>/metrics</code>，用于供Grafana Agent获取该服务器应用收集到的数据，Grafana Agent定时请求该接口，收集这段时间的数据，并转发到Grafana服务器上。</li>
+</ol>
+<blockquote>
+<p>Grafana文档中，把Grafana Agent通过<code>/metrics</code>收集数据的过程为<strong>刮取（scrape）</strong> ，非常生动形象。</p>
+</blockquote>
+<ol start="3">
+<li>增加了另一个POST方法的HTTP接口<code>/counter-metric</code>，用于接受其他应用上报的数据，在本节中主要用于接收前端应用发送来的<code>web-vitals</code>数据；</li>
+<li>在<code>src\prom-client.js</code>中封装<code>prom-client</code>的<code>new client.Counter()</code>，以便于我们在<code>/counter-metric</code>接口中调用，记录计数类型的数据。</li>
+</ol>
+<p>每次有请求发送到服务器，都会触发计数器指标加一（<code>couter.inc(labels, 1);</code>），并且会通过<code>labels</code>字段记录上报的各种自定义数据，例如名称（<code>name</code>）、评分（<code>rating</code>）等；</p>
+<p>有了这部分代码，我们就可以从前端应用中上报数据到Grafana，例如：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// 客户端发送数据用法：</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">await</span> <span class="hljs-title function_">fetch</span>(<span class="hljs-string">'http://localhost:4001/counter-metric'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">method</span>: <span class="hljs-string">"POST"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">headers</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-string">"Content-Type"</span>: <span class="hljs-string">"application/json"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">body</span>: <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-attr">name</span>: <span class="hljs-string">'FCP'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">help</span>: <span class="hljs-string">'FCP data'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-attr">labels</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attr">rating</span>: <span class="hljs-string">'good'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-comment">// num: Math.random() * 100,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-comment">// bool: Math.random() &lt; 0.5,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    }),</span>
+<span class="code-block-extension-codeLine" data-line-num="16">})</span>
+</code></pre>
+<p>综上所述，完整数据收集流程即：</p>
+<ul>
+<li>前端应用通过HTTP异步请求，将<code>web-vitals</code>数据发送到数据收集后端服务；</li>
+<li>数据收集后端服务调用<code>prom-client</code>的自定义计数指标记录数据到内存中；</li>
+<li>Grafana Agent 应用，定期通过<code>/metric</code>接口刮取数据，上报到 Grafana 远端服务器；</li>
+</ul>
+<p>接下来我们可以基于之前的《获取<code>web-vitals</code>数据在线 DEMO》: <a href="https://link.juejin.cn?target=https%3A%2F%2Foutput.jsbin.com%2Fbizanep" target="_blank" rel="nofollow noopener noreferrer" title="https://output.jsbin.com/bizanep" ref="nofollow noopener noreferrer">output.jsbin.com/bizanep</a> 学习从前端应用上报数据到 Node.js 数据收集后端服务的逻辑。</p>
+<h3 data-id="heading-9">2.  增加前端上报数据逻辑</h3>
+<p>我们的改动主要有2部分：</p>
+<ol>
+<li>增加<code>report</code>方法，用于把调用<code>web-vitals</code>库API获得的数据，通过HTTP请求到发送到数据收集后端应用的<code>/counter-metric</code>接口，并附带<code>name, rating</code>这2个字段作为请求体，以便我们在Grafana中查询过滤，实现想要的可视化效果；</li>
+<li>在DEMO已有的<code>onGetWebVitalsData</code>方法中增加<code>report()</code>方法的调用，将指标数据中的<code>name, rating</code>作为参数传入；</li>
+</ol>
+<p>对应代码如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">  <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">report</span>(<span class="hljs-params">name, labels, help = <span class="hljs-string">'default help'</span></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">await</span> <span class="hljs-title function_">fetch</span>(<span class="hljs-string">'http://localhost:4001/counter-metric'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">      <span class="hljs-attr">headers</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-attr">body</span>: <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        name,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        help,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        labels,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      }),</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  </span>
+<span class="code-block-extension-codeLine" data-line-num="15">  </span>
+<span class="code-block-extension-codeLine" data-line-num="16"><span class="hljs-keyword">function</span> <span class="hljs-title function_">onGetWebVitalsData</span>(<span class="hljs-params">data</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  <span class="hljs-comment">// ...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">  </span>
+<span class="code-block-extension-codeLine" data-line-num="19">  <span class="hljs-title function_">report</span>(name, { rating});</span>
+<span class="code-block-extension-codeLine" data-line-num="20">}</span>
+</code></pre>
+<blockquote>
+<p>完整示例请参考 《发送 web-vitals 数据 DEMO》：<a href="https://link.juejin.cn?target=https%3A%2F%2Foutput.jsbin.com%2Fxibimaj%2F1" target="_blank" rel="nofollow noopener noreferrer" title="https://output.jsbin.com/xibimaj/1" ref="nofollow noopener noreferrer">output.jsbin.com/xibimaj/1</a></p>
+</blockquote>
+<p>运行这些新增改动后，我们就能在开发中工具的Network面板中看到发送数据的HTTP请求，以及数据收集后端应用的响应了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/30c6649fcf7044a7b031165a44b6a459~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1193&amp;h=996&amp;s=138985&amp;e=png&amp;b=252629" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>有了这样一套前后端工作流，我们的<code>web-vitals</code>数据就可以方便地发送到 Grafana，让我们能基于这些数据创建出各式各样的可视化图表。</p>
+<h2 data-id="heading-10">4.  创建 Grafana 可视化图表指南</h2>
+<p>创建一张 Grafana 可视化图表，非常简单，主要有以下几步：</p>
+<h3 data-id="heading-11">1.  新建仪表盘页面</h3>
+<p>首先，让我们访问<a href="https://link.juejin.cn?target=https%3A%2F%2Fgrafana.com%2Fgrafana%2Fdashboards%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://grafana.com/grafana/dashboards/" ref="nofollow noopener noreferrer">仪表盘（Dashboard）</a>页面，点击新建仪表盘（New Dashboard）按钮，创建一个专门的目录，存放我们创建的可视化图表。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7e08a30c71f14d5e8ab603df17afa422~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=76618&amp;e=png&amp;b=171a1e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h3 data-id="heading-12">2.  新增可视化（Add visualization）图表</h3>
+<p>接下来，点击新增可视化图表（Add visualization）按钮，我们就会进入到图表的编辑页面</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a76851d2900b4180a1b680806ad84bd2~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=90912&amp;e=png&amp;b=121318" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h3 data-id="heading-13">3.  选择数据源</h3>
+<p>一张可视化图表要绘制出数据，首先就要确定数据的来源，所以进入图表编辑页后，我们首先要选择的就是这张图表的数据源（Data Source）：</p>
+<p>如果按照上文的接入演示一路操作过来，会有默认的数据源：<code>grafanaclound-${yourName}-prom</code>，这就是我们的数据收集后端应用上报数据对应的数据源，选中即可。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c0501df4d824433e99fd6867bebb4c3a~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=133475&amp;e=png&amp;b=191c21" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h3 data-id="heading-14">4.  输入查询语录</h3>
+<p>Grafana 中不同的数据源对应不同的查询器面板及语法，我们以前文示例中 <code>prom-client</code>对应的 Prometheus 数据源为例，其主要有2种模式：</p>
+<ul>
+<li>交互界面选择查询语句（Builder）</li>
+<li>直接输入查询语句文本（Code）</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/74b7a1f1d3c1434c909b050014e44b14~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=126810&amp;e=png&amp;b=191c21" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>推荐使用对新用户更为友好的Builder模式，可以看到主要包含2类选项：</p>
+<ul>
+<li>指标（Metric）</li>
+<li>标签过滤（Label filters）</li>
+</ul>
+<p>分别对应我们上文中服务端调用<code>prom-client</code>的 <code>new Counter</code> API 时传入的<code>name</code>,<code>labels</code>字段：</p>
+<p>我们分别输入并选择<code>FCP{rating=~"good"}</code>三项后，点击刷新仪表盘（Refresh Dashboard）即可看到我们刚刚上传的数据，将对应时段有多少个<code>name=FCP</code>且<code>rating=good</code> 的上报数据在可视化图表中展示出来：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ace49d31d9e648f98833c8042abf439b~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=173078&amp;e=png&amp;b=191b20" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>熟悉了基础的指标和标签后，还可以探索一下<code>运算 Operation</code>功能，类似于给数据加函数处理，进行加减乘除等聚合处理，也是常用的功能。</p>
+<blockquote>
+<p>注：不同的数据源有各自不同的查询面板UI和语法：</p>
+<ul>
+<li>Prometheus 数据源查询语法：<a href="https://link.juejin.cn?target=https%3A%2F%2Fprometheus.io%2Fdocs%2Fprometheus%2Flatest%2Fquerying%2Fbasics%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://prometheus.io/docs/prometheus/latest/querying/basics/" ref="nofollow noopener noreferrer">prometheus.io/docs/promet…</a></li>
+<li>ElasticSearch 数据源查询语法：<a href="https://link.juejin.cn?target=http%3A%2F%2Flucenetutorial.com%2Flucene-query-syntax.html" target="_blank" rel="nofollow noopener noreferrer" title="http://lucenetutorial.com/lucene-query-syntax.html" ref="nofollow noopener noreferrer">lucenetutorial.com/lucene-quer…</a></li>
+</ul>
+</blockquote>
+<h3 data-id="heading-15">5.  调整样式、配置等细节</h3>
+<p>有了数据后，我们就可以进一步完善可视化图表的细节，常用的功能主要有6个：</p>
+<ol>
+<li>
+<p>图表类型：常用的有折线图、柱状图，纯文本；</p>
+</li>
+<li>
+<p>标题和描述</p>
+</li>
+<li>
+<p>提示（Tooltip）和图例（Legend）：设置何时显示鼠标悬停时的提示框，以及图例的样式和内容；</p>
+</li>
+<li>
+<p>度量选项（Standard Options）：设置当前查询的值是什么单位，常用的有：</p>
+<ol>
+<li>其他-短数值（Misc / short）：会对数值进行进位处理，例如1000000，会被优化成 1M。</li>
+<li>其他-百分比（Misc / Percent(0.0-0.1)）</li>
+<li>时间-毫秒（Time/ millisecond）</li>
+</ol>
+</li>
+<li>
+<p>时间间隔：设置将多久的时间间隔内的所有数据，聚合数据为可视化图中的一个数据点。</p>
+</li>
+</ol>
+<p>例如截图中<code>5m</code>即表示将5分钟内的数据统一计入可视化图中的一个点。</p>
+<p>所以下图中时间范围（Time Range）选择最近15分钟（Last 15 minutes），对应折线图就有3个点。</p>
+<ol start="6">
+<li>覆盖配置：覆盖查询语句默认的显示名称、颜色等配置。</li>
+</ol>
+<p>以上各项配置是个人总结较为常用的配置项，可以自由尝试调整，观察效果。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/92671692a4744653a5d17a0b339e32db~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=267083&amp;e=png&amp;b=191c21" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h3 data-id="heading-16">6.  分别保存图表和仪表盘</h3>
+<p>完整保存图表，需要先后点击：</p>
+<ul>
+<li>图表编辑界面的右上角的应用（Apply）按钮，保存图表；</li>
+<li>仪表盘页面的保存仪表盘按钮，保存整体仪表盘。在此处可以输入仪表盘的名称及所属目录；</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/07b42e6fd2244e1ab7174b28955e17a8~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=52163&amp;e=png&amp;b=13151a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>至此，我们就创建了第一张可视化图表，后续可以在实践中逐步熟悉 Grafana 的强大功能，这只是我们的第一步。</p>
+<p>这一套数据收集方案，也可以用于收集用户行为数据，例如页面访问量（Page View），每个按钮的点击量等业务数据。</p>
+<p>将数据记录并可视化，可以让我们明确的感知到工作的产出，帮助我们在工作中获得成就感。</p>
+<p>当我们的数据和图表越来越多，我们对维护项目的了解也会越来越深入，更有助于我们用数据驱动开发、促进体验优化、推动业务发展。</p>
+<h2 data-id="heading-17">5.  堆叠百分比评分图优点及示例</h2>
+<p>从<code>web-vitals</code>获得的比较有统计意义的数据主要有：</p>
+<ul>
+<li>各指标的数值（<code>value</code>），例如累计布局变化CLS的 0.2；</li>
+<li>评分（<code>ratings</code>）：按官方标准对值进行划分得到的字符串值，共有优（<code>'good'</code>），待提升（<code>'needs-improvement'</code>），差（<code>'poor'</code>）三类值，可用于对数据进行标准化处理；</li>
+<li>指标的统计来源（<code>sources</code>）：记录了计算各指标的来源，例如累计布局变化CLS的<code>sources</code>字段记录的就是每次意外布局变化对应的DOM元素，及其变化前后的位置尺寸数据；</li>
+</ul>
+<p>例如这条通过<code>onFCP()</code>API获取的LCP数据：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    delta<span class="hljs-punctuation">:</span> <span class="hljs-number">382.80000019073486</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    entries<span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">            duration<span class="hljs-punctuation">:</span> <span class="hljs-number">0</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">            element<span class="hljs-punctuation">:</span> p</span>
+<span class="code-block-extension-codeLine" data-line-num="7">            entryType<span class="hljs-punctuation">:</span> <span class="hljs-string">"largest-contentful-paint"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">            id<span class="hljs-punctuation">:</span> <span class="hljs-string">""</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">            loadTime<span class="hljs-punctuation">:</span> <span class="hljs-number">0</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">            name<span class="hljs-punctuation">:</span> <span class="hljs-string">""</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">            renderTime<span class="hljs-punctuation">:</span> <span class="hljs-number">382.8</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">            size<span class="hljs-punctuation">:</span> <span class="hljs-number">8985</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">            startTime<span class="hljs-punctuation">:</span> <span class="hljs-number">382.80000019073486</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">            url<span class="hljs-punctuation">:</span> <span class="hljs-string">""</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    id<span class="hljs-punctuation">:</span> <span class="hljs-string">"v3-1683034382854-2926018174544"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    name<span class="hljs-punctuation">:</span> <span class="hljs-string">"LCP"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    navigationType<span class="hljs-punctuation">:</span> <span class="hljs-string">"reload"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    rating<span class="hljs-punctuation">:</span> <span class="hljs-string">"good"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    value<span class="hljs-punctuation">:</span> <span class="hljs-number">382.80000019073486</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<p>笔者更推荐使用<strong>评分字段（ratings）</strong> 作为可视化图表的主要量化指标。</p>
+<p>原因是直接使用<strong>值（value）</strong> 作为统计数据，计算其平均值或最大最小值，这样做常常会遇到<strong>异常波动</strong>的问题，即在前端项目没有任何变更的情况下，却观察到值产生了显著的波动变化。</p>
+<p>波动的原因一般是因为<code>web-vitals</code>在生产环境中，因为千差万别的用户环境，获取的<strong>值（value）</strong> 的波动范围较大，个别极端值会导致统计出的平均值显著变化。</p>
+<p>而使用<strong>评分字段（ratings）</strong> 作为指标，相当于对观测的值做了一次标准化处理，将一定范围内的值处理成统一的评分，有助于规避个别极端值导致的异常波动。</p>
+<p>笔者最初基于<code>web-vitals</code>制作数据可视化图时，用的就是值字段，计算了FCP等指标的平均值，观察一段时间后发现即使前后端项目没有上线变更，各指标的平均值也会有10%以上的波动，这显然是不符合预期的，这种波动将会降低我们评估优化效果的准确性。</p>
+<blockquote>
+<p>例如下图，04-22 前后的 LCP 平均值在我们的前端项目没有变更的情况下，就出现了减少11%的变化，这样的异常波动显然不利于评估我们优化的效果：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b71c26f4498a440f826c087b33b58f2e~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=847&amp;s=68289&amp;e=png&amp;b=171a1e" alt="" loading="lazy" class="medium-zoom-image"></p>
+</blockquote>
+<p>后来改成基于<strong>评分字段（ratings）</strong> 制作<strong>各评分占比堆叠百分比图</strong>后，数据异常波动问题就不再出现了，各评分的占比平均值在长时间内都能保持不超过5%的波动。</p>
+<p>这样当我们主动进行一些优化后就能观察到更客观，更有说服力的指标变化。</p>
+<p>下面分享一套基于模拟数据的“堆叠百分比图”示例及配置源码，各位读者可以根据需要复制粘贴到自己的仪表盘内，并替换为真实数据，从而得到客观稳定的优化效果评估指标。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7f61cce00b2c4f11807cd57b8911acd3~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=102781&amp;e=png&amp;b=598e53" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h3 data-id="heading-18">1.  堆叠百分比图配置源码</h3>
+<blockquote>
+<p>粘贴图表方式： 创建一张空图表后，点击更多选项-Inspect-Panel JSON，粘贴上述配置源码，点击应用（Apply）后即可立即生效</p>
+</blockquote>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc6d652021eb4419946f520ebb7e9ce3~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=942&amp;s=118098&amp;e=png&amp;b=598e53" alt="" loading="lazy" class="medium-zoom-image"></p>
+<details>
+  <summary>▶点击展开：“堆叠百分比图”配置源码</summary>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"testdata"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"a95c7111-f01f-4e29-b3a6-9b0ac81d9094"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"“堆叠百分比图”配置源码，作者：https://github.com/JuniorTour"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">"fieldConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">"defaults"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">"custom"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">"drawStyle"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"line"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attr">"lineInterpolation"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"linear"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">"barAlignment"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">"lineWidth"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">"fillOpacity"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">70</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-attr">"gradientMode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"none"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">"spanNulls"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-attr">"showPoints"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"auto"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-attr">"pointSize"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-attr">"stacking"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">          <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"normal"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">          <span class="hljs-attr">"group"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"A"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-attr">"axisPlacement"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"auto"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">        <span class="hljs-attr">"axisLabel"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">""</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">        <span class="hljs-attr">"axisColorMode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"text"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">        <span class="hljs-attr">"scaleDistribution"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">          <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"linear"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29">        <span class="hljs-attr">"axisCenteredZero"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30">        <span class="hljs-attr">"hideFrom"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">          <span class="hljs-attr">"tooltip"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">          <span class="hljs-attr">"viz"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="33">          <span class="hljs-attr">"legend"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span></span>
+<span class="code-block-extension-codeLine" data-line-num="34">        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="35">        <span class="hljs-attr">"thresholdsStyle"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="36">          <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"off"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="37">        <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="38">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="39">      <span class="hljs-attr">"color"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="40">        <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"palette-classic"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="41">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="42">      <span class="hljs-attr">"mappings"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="43">      <span class="hljs-attr">"thresholds"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="44">        <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"absolute"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="45">        <span class="hljs-attr">"steps"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="46">          <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="47">            <span class="hljs-attr">"color"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"green"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="48">            <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">null</span></span>
+<span class="code-block-extension-codeLine" data-line-num="49">          <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="50">          <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="51">            <span class="hljs-attr">"color"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"red"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="52">            <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">80</span></span>
+<span class="code-block-extension-codeLine" data-line-num="53">          <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="54">        <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="55">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="56">      <span class="hljs-attr">"max"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="57">      <span class="hljs-attr">"min"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="58">      <span class="hljs-attr">"unit"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"percentunit"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="59">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="60">    <span class="hljs-attr">"overrides"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="61">      <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="62">        <span class="hljs-attr">"matcher"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="63">          <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"byName"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="64">          <span class="hljs-attr">"options"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"G"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="65">        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="66">        <span class="hljs-attr">"properties"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="67">          <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="68">            <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"color"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="69">            <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="70">              <span class="hljs-attr">"fixedColor"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"red"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="71">              <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"fixed"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="72">            <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="73">          <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="74">          <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="75">            <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"displayName"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="76">            <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"差"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="77">          <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="78">        <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="79">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="80">      <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="81">        <span class="hljs-attr">"matcher"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="82">          <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"byName"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="83">          <span class="hljs-attr">"options"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"E"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="84">        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="85">        <span class="hljs-attr">"properties"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="86">          <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="87">            <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"displayName"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="88">            <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"优"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="89">          <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="90">        <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="91">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="92">      <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="93">        <span class="hljs-attr">"matcher"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="94">          <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"byName"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="95">          <span class="hljs-attr">"options"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"F"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="96">        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="97">        <span class="hljs-attr">"properties"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="98">          <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="99">            <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"displayName"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="100">            <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"待改进"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="101">          <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="102">        <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="103">      <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="104">    <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="105">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="106">  <span class="hljs-attr">"gridPos"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="107">    <span class="hljs-attr">"h"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">8</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="108">    <span class="hljs-attr">"w"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">12</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="109">    <span class="hljs-attr">"x"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="110">    <span class="hljs-attr">"y"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">16</span></span>
+<span class="code-block-extension-codeLine" data-line-num="111">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="112">  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="113">  <span class="hljs-attr">"options"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="114">    <span class="hljs-attr">"tooltip"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="115">      <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"multi"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="116">      <span class="hljs-attr">"sort"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"none"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="117">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="118">    <span class="hljs-attr">"legend"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="119">      <span class="hljs-attr">"showLegend"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="120">      <span class="hljs-attr">"displayMode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"table"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="121">      <span class="hljs-attr">"placement"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"right"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="122">      <span class="hljs-attr">"calcs"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="123">        <span class="hljs-string">"min"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="124">        <span class="hljs-string">"max"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="125">        <span class="hljs-string">"mean"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="126">      <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="127">    <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="128">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="129">  <span class="hljs-attr">"targets"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="130">    <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="131">      <span class="hljs-attr">"alias"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"good"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="132">      <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="133">        <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"testdata"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="134">        <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"a95c7111-f01f-4e29-b3a6-9b0ac81d9094"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="135">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="136">      <span class="hljs-attr">"hide"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="137">      <span class="hljs-attr">"refId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"A"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="138">      <span class="hljs-attr">"scenarioId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"csv_metric_values"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="139">      <span class="hljs-attr">"stringInput"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"47,57,46,54,54,57,47,46,54,54,55,52,46,53,46"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="140">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="141">    <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="142">      <span class="hljs-attr">"alias"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"needsImprove"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="143">      <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="144">        <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"testdata"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="145">        <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"a95c7111-f01f-4e29-b3a6-9b0ac81d9094"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="146">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="147">      <span class="hljs-attr">"hide"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="148">      <span class="hljs-attr">"refId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"B"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="149">      <span class="hljs-attr">"scenarioId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"csv_metric_values"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="150">      <span class="hljs-attr">"stringInput"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"10,14,11,11,19,13,15,19,15,13,16,17,12,9,19"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="151">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="152">    <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="153">      <span class="hljs-attr">"alias"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"poor"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="154">      <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="155">        <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"testdata"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="156">        <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"a95c7111-f01f-4e29-b3a6-9b0ac81d9094"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="157">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="158">      <span class="hljs-attr">"hide"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="159">      <span class="hljs-attr">"refId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"C"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="160">      <span class="hljs-attr">"scenarioId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"csv_metric_values"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="161">      <span class="hljs-attr">"stringInput"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"15,18,6,12,9,17,10,16,5,8,15,12,11,12,16"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="162">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="163">    <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="164">      <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="165">        <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Expression"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="166">        <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__expr__"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="167">        <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__expr__"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="168">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="169">      <span class="hljs-attr">"expression"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"$A+$B+$C"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="170">      <span class="hljs-attr">"hide"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="171">      <span class="hljs-attr">"refId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"D"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="172">      <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"math"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="173">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="174">    <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="175">      <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="176">        <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Expression"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="177">        <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__expr__"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="178">        <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__expr__"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="179">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="180">      <span class="hljs-attr">"expression"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"$A/$D"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="181">      <span class="hljs-attr">"hide"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="182">      <span class="hljs-attr">"refId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"E"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="183">      <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"math"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="184">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="185">    <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="186">      <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="187">        <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Expression"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="188">        <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__expr__"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="189">        <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__expr__"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="190">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="191">      <span class="hljs-attr">"expression"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"$B/$D"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="192">      <span class="hljs-attr">"hide"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="193">      <span class="hljs-attr">"refId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"F"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="194">      <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"math"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="195">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="196">    <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="197">      <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="198">        <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Expression"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="199">        <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__expr__"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="200">        <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__expr__"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="201">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="202">      <span class="hljs-attr">"expression"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"$C/$D"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="203">      <span class="hljs-attr">"hide"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="204">      <span class="hljs-attr">"refId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"G"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="205">      <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"math"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="206">    <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="207">  <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="208">  <span class="hljs-attr">"title"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"堆叠百分比统计 WebVitals CLS 指标示例"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="209">  <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"timeseries"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="210"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+</details>
+<h3 data-id="heading-19">2.  多个堆叠百分比图完整示例</h3>
+<p>通过创建多张针对不同指标的堆叠百分比图，我们就能对<code>web-vitals</code>各项指标有稳定、客观、可量化的监控，从而：</p>
+<ul>
+<li>
+<p>找到<strong>明确的优化目标</strong>：根据可视化图表快速定位用户体验相关的问题和痛点。</p>
+<ul>
+<li>例如下图中的《LCP评分百分比》图表中的平均值（mean）数据中，38%的评分均为差（poor），说明相当多的用户在访问我们的网站时，遇到了最大元素（Largest Component）渲染较慢的问题，是一项值得优化的目标。</li>
+</ul>
+</li>
+<li>
+<p>建立<strong>量化指标</strong>：将主观、不稳定的用户体验用客观、稳定的数据量化为清晰明了的图表。</p>
+</li>
+<li>
+<p>切实<strong>改善用户体验：</strong> 帮助我们在优化前后，通过这些指标图表，客观准确地评估对用户体验的优化效果。</p>
+</li>
+<li>
+<p>建立<strong>长效化的机制</strong>：通过长期观测、对比可视化图表，长期有效地感知用户体验的变化情况。</p>
+</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2a683956be18459bad8dc2a363965830~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=896&amp;s=162326&amp;e=png&amp;b=181b1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h2 data-id="heading-20">小结</h2>
+<p>在本节中，我们学习了数据收集和可视化的实用工具：Prometheus 和 Grafana。</p>
+<p>我们首先演示了接入Grafana的流程，并搭建了一个基于Express框架的Node.js服务器应用，利用prom-client的API，收集数据，并上报到Grafana。</p>
+<p>其次，我们还学习了在Grafana页面中创建可视化图表的核心流程。</p>
+<p>最后，我们学习了<strong>堆叠百分比评分图表</strong>的特点及其解决的痛点。</p></div>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+// 打开或创建一个名为 "MyDatabase" 的数据库，版本号为 1
+var request = indexedDB.open('MyDatabase', 1);
+
+// 当数据库打开成功时执行的回调函数
+request.onsuccess = function(event) {
+    // 获取对数据库的引用
+    var db = event.target.result;
+
+    // 执行事务来操作数据库
+    var transaction = db.transaction(['MyObjectStore'], 'readwrite');
+
+    // 获取对象存储空间
+    var objectStore = transaction.objectStore('MyObjectStore');
+
+    // 将数据存储到对象存储空间中
+    var data = { id: 1, name: 'John' };
+    var request = objectStore.add(data);
+
+    // 当数据存储成功时执行的回调函数
+    request.onsuccess = function(event) {
+        console.log('Data added successfully');
+    };
+
+    // 当事务完成时执行的回调函数
+    transaction.oncomplete = function(event) {
+        console.log('Transaction completed');
+    };
+    };
+
+    // 当需要升级数据库版本时执行的回调函数
+    request.onupgradeneeded = function(event) {
+        // 获取对数据库的引用
+        var db = event.target.result;
+
+        // 创建一个对象存储空间，并指定主键路径
+        var objectStore = db.createObjectStore('MyObjectStore', { keyPath: 'id' });
+
+        // 创建索引
+        objectStore.createIndex('name', 'name', { unique: false });
+    };
+
+    // 当发生错误时执行的回调函数
+    request.onerror = function(event) {
+        console.log('Error opening database');
+    };
+
+
+    </script>
+</body>
+</html>
