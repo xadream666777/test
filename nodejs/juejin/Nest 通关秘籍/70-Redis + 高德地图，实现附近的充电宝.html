@@ -1,0 +1,502 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>想必大家都打过车，打车软件可以根据你的当前位置搜索附近的车辆：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0cc1b4c36782437a8dfdcd6495161e30~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=696&amp;h=924&amp;s=462559&amp;e=png&amp;b=f7f2ee" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这两天国庆节，大家出去玩可能会借用共享充电宝。它也是基于你的位置来搜索附近充电宝：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/162332a323994cd0adc59478b4524747~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1080&amp;h=1414&amp;s=485485&amp;e=jpg&amp;b=f7f5f2" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再就是大家搜索附近的酒店、餐厅等，也是基于位置的搜索。</p>
+<p>那么问题来了：这种附近的人、附近的酒店、附近的充电宝的功能是怎么实现的呢？</p>
+<p>答案是用 Redis 实现的。</p>
+<p>很多人对 Redis 的认识停留在它能做缓存，也就是从数据库中查询出来的数据，放到 redis 里，下次直接拿 redis 的数据返回：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/55f331ce98fe4a00a7cbcdfce9b1e1ac~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=582&amp;h=532&amp;s=25021&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>确实，缓存是 redis 的常见应用。</p>
+<p>但它并不只是可以做缓存，很多临时的数据，比如验证码、token 等，都可以放到 redis 里。</p>
+<p>redis 是 key-value 的数据库，value 有很多种类型：</p>
+<ul>
+<li><strong>string</strong>： 可以存数字、字符串，比如存验证码就是这种类型</li>
+<li><strong>hash</strong>：存一个 map 的结构，比如文章的点赞数、收藏数、阅读量，就可以用 hash 存</li>
+<li><strong>set</strong>：存去重后的集合数据，支持交集、并集等计算，常用来实现关注关系，比如可以用交集取出互相关注的用户</li>
+<li><strong>zset</strong>：排序的集合，可以指定一个分数，按照分数排序。我们每天看的文章热榜、微博热榜等各种排行榜，都是 zset 做的</li>
+<li><strong>list</strong>：存列表数据</li>
+<li><strong>geo</strong>：存地理位置，支持地理位置之间的距离计算、按照半径搜索附近的位置</li>
+</ul>
+<p>其中，geo 的数据结构，就可以用来实现附近的人等功能。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5e010dc001c742ee998f14e3b4f988f3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1096&amp;h=438&amp;s=111789&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>比如大众点评、美团外卖这种，就是用 redis 实现的基于地理位置的功能。</p>
+<p>今天我们就来实现一下：</p>
+<p>在 RedisInsight 里输入命令，点击执行：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">redis</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-redis code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">geoadd loc 13.361389 38.115556 "guangguang" 15.087269 37.502669 "dongdong" </span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/682a25f128d44b2f8b34196a1d774499~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1882&amp;h=536&amp;s=111119&amp;e=png&amp;b=141414" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们用 geoadd 命令添加了两个位置。</p>
+<p>guangguang 的位置是经度 13.361389，纬度 38.11556</p>
+<p>dongdong 的位置是经度 15.08729 ，纬度 37.502669</p>
+<p>点击刷新，就可以看到 loc 的 key：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f653c454fac34e618576ea33c9e4a5b2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1448&amp;h=650&amp;s=88500&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后可以用 geodist 计算两个位置之间的距离：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">geodist loc guangguang dongdong</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2e02e4b19c5e4a2fae164a35701b2912~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=488&amp;h=162&amp;s=15606&amp;e=png&amp;b=222535" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到相距差不多 166 km</p>
+<p>然后用 georadius 分别查找经度 15、纬度 37 位置的附近 100km 半径和 200km 半径的点：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">georadius loc 15 37 100 km</span>
+<span class="code-block-extension-codeLine" data-line-num="2">georadius loc 15 37 200 km</span>
+</code></pre>
+<p>结果如下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1a259b3ff0314f5386c66eb5abc5b65d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=440&amp;h=368&amp;s=27172&amp;e=png&amp;b=020202" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>因为两个点相距 166km，所以搜索 100km 以内的点，只能搜到一个。而 200km 的内的点，能搜到两个。</p>
+<p>这样，我们就可以实现搜索附近 1km 的充电宝的功能。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ff90584ad1994d4d8aa43c3a23ed94cd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1080&amp;h=1414&amp;s=979580&amp;e=png&amp;b=f7f5f1" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>服务端提供一个接口，让充电宝机器上传位置信息，然后把它存到 redis 里。</p>
+<p>再提供个搜索的接口，基于传入的位置用 georadius 来搜索附近的充电宝机器，返回客户端。</p>
+<p>客户端可以在地图上把这些点画出来。</p>
+<p>这里用高德地图或者百度地图都行，他们都支持在地图上绘制 marker 标记的功能：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/50accb5e2298400bb92f97bab49cb5ad~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1636&amp;h=1226&amp;s=3894495&amp;e=gif&amp;f=44&amp;b=f5eee3" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>比如上面我们分别在地图上绘制了 marker 和 circle：</p>
+<p>这是添加 Marker 的代码：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cf7986d1420f40cd9da90d72a2c11614~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1000&amp;h=678&amp;s=115472&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>指定 marker 的经纬度和图片就行。</p>
+<p>这是添加 Circle 的代码：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f877c980ae7343c3a04a5f69f5f4c047~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1064&amp;h=780&amp;s=156708&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>指定圆心经纬度和半径就行。</p>
+<p>都挺简单的。</p>
+<p>这样，后端和前端分别怎么实现，我们就都理清了。</p>
+<p>接下来用代码实现下。</p>
+<p>创建个 nest 项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install g <span class="hljs-variable">@nestjs</span><span class="hljs-operator">/</span>cli</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">nest <span class="hljs-keyword">new</span> nearby<span class="hljs-operator">-</span><span class="hljs-keyword">search</span></span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b92de697f7c9479980b928e675a01f46~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1086&amp;h=760&amp;s=287965&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>进入项目目录，把它跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2eb33e14ce0644748607f503bd30dd29~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1560&amp;h=350&amp;s=112251&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000" ref="nofollow noopener noreferrer">http://localhost:3000</a> 可以看到 hello world，就代表 nest 服务跑起来了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a3a81755e0f646658bd5a08d2e97bd98~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=564&amp;h=202&amp;s=16433&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们安装连接 redis 的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> redis</span>
+</code></pre>
+<p>创建个 redis 模块和 service：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g <span class="hljs-keyword">module</span> redis</span>
+<span class="code-block-extension-codeLine" data-line-num="2">nest g service redis</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eaf36dbe385544309bc35de23c2a45a7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=722&amp;h=196&amp;e=webp&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 RedisModule 创建连接 redis 的 provider，导出 RedisService：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'redis'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">RedisService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./redis.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">providers</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-title class_">RedisService</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">provide</span>: <span class="hljs-string">'REDIS_CLIENT'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-keyword">async</span> <span class="hljs-title function_">useFactory</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-keyword">const</span> client = <span class="hljs-title function_">createClient</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="12">            <span class="hljs-attr">socket</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">                <span class="hljs-attr">host</span>: <span class="hljs-string">'localhost'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">                <span class="hljs-attr">port</span>: <span class="hljs-number">6379</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">connect</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-keyword">return</span> client;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="21">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="22">  <span class="hljs-attr">exports</span>: [<span class="hljs-title class_">RedisService</span>]</span>
+<span class="code-block-extension-codeLine" data-line-num="23">})</span>
+<span class="code-block-extension-codeLine" data-line-num="24"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RedisModule</span> {}</span>
+</code></pre>
+<p>然后在 RedisService 里注入 REDIS_CLIENT，并封装一些操作 redis 的方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">RedisClientType</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'redis'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RedisService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @<span class="hljs-title class_">Inject</span>(<span class="hljs-string">'REDIS_CLIENT'</span>) </span>
+<span class="code-block-extension-codeLine" data-line-num="8">    private <span class="hljs-attr">redisClient</span>: <span class="hljs-title class_">RedisClientType</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">geoAdd</span>(<span class="hljs-params">key: string, posName: string, posLoc: [number, number]</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">geoAdd</span>(key, {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">            <span class="hljs-attr">longitude</span>: posLoc[<span class="hljs-number">0</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="13">            <span class="hljs-attr">latitude</span>: posLoc[<span class="hljs-number">1</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="14">            <span class="hljs-attr">member</span>: posName</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        })</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+</code></pre>
+<p>我们先添加了一个 geoAdd 的方法，传入 key 和位置信息，底层调用 redis 的 geoadd 来添加数据。</p>
+<p>在 AppController 里注入 RedisService，然后添加一个路由：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c748eec3bc424829ae279c62629dd86d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1396&amp;h=1080&amp;s=245118&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>添加 addPos 的 get 请求的路由，传入 name、longitude、latitude，调用 redisService添加位置信息。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">BadRequestException</span>, <span class="hljs-title class_">Controller</span>, <span class="hljs-title class_">Get</span>, <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Query</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">RedisService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./redis/redis.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Controller</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">private readonly appService: AppService</span>) {}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  @<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">RedisService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  private <span class="hljs-attr">redisService</span>: <span class="hljs-title class_">RedisService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  @<span class="hljs-title class_">Get</span>(<span class="hljs-string">'addPos'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-keyword">async</span> <span class="hljs-title function_">addPos</span>(<span class="hljs-params"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    @Query(<span class="hljs-string">'name'</span>) posName: string,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    @Query(<span class="hljs-string">'longitude'</span>) longitude: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    @Query(<span class="hljs-string">'latitude'</span>) latitude: number</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  ) {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-keyword">if</span>(!posName || !longitude || !latitude) {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'位置信息不全'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-keyword">try</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">geoAdd</span>(<span class="hljs-string">'positions'</span>, posName, [longitude, latitude]);</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    } <span class="hljs-keyword">catch</span>(e) {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(e.<span class="hljs-property">message</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="27">      <span class="hljs-attr">message</span>: <span class="hljs-string">'添加成功'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="28">      <span class="hljs-attr">statusCode</span>: <span class="hljs-number">200</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="30">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="31"></span>
+<span class="code-block-extension-codeLine" data-line-num="32">  @<span class="hljs-title class_">Get</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="33">  <span class="hljs-title function_">getHello</span>(): string {</span>
+<span class="code-block-extension-codeLine" data-line-num="34">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">appService</span>.<span class="hljs-title function_">getHello</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="35">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="36">}</span>
+</code></pre>
+<p>测试下：</p>
+<p>/addPos?name=guang</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a6f12110e3294c50b2e68b50c20b55ef~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=886&amp;h=230&amp;s=33422&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>/addPos?name=guang&amp;longitude=15&amp;latitude=35</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a93b4b67a4d340b1b5dbce4eb653150b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1214&amp;h=234&amp;s=37494&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>/addPos?name=dong&amp;longitude=15&amp;latitude=85</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2b2eb8b9b4f74d5b999135180d251627~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1180&amp;h=190&amp;s=35916&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后去 RedisInsight 里看下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2e114cfd7b084284b9f4baee1009746a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2472&amp;h=742&amp;s=140318&amp;e=png&amp;b=1c1c1c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击刷新，可以看到确实有了 positions 的数据。</p>
+<p>然后我们再添加个查询位置列表的接口：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5da22b8a12a24f9b87473b8614366517~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1204&amp;h=1124&amp;s=219532&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">geoPos</span>(<span class="hljs-params">key: string, posName: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">geoPos</span>(key, posName);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-attr">name</span>: posName,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">longitude</span>: res[<span class="hljs-number">0</span>].<span class="hljs-property">longitude</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">latitude</span>: res[<span class="hljs-number">0</span>].<span class="hljs-property">latitude</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-keyword">async</span> <span class="hljs-title function_">geoList</span>(<span class="hljs-params">key: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">const</span> positions = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">zRange</span>(key, <span class="hljs-number">0</span>, -<span class="hljs-number">1</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">const</span> list = [];</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; positions.<span class="hljs-property">length</span>; i++) {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-keyword">const</span> pos = positions[i];</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">geoPos</span>(key, pos);</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        list.<span class="hljs-title function_">push</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-keyword">return</span> list;</span>
+<span class="code-block-extension-codeLine" data-line-num="21">}</span>
+</code></pre>
+<p>因为 geo 信息底层使用 zset 存储的，所以查询所有的 key 使用 zrange。</p>
+<p>zset 是有序列表，列表项会有一个分数，zrange 是返回某个分数段的 key，传入 0、-1 就是返回所有的。</p>
+<p>然后再用 geoPos 拿到它对应的位置信息。</p>
+<p>我们先在 RedisInsight 测试下这两个命令：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d204e7129f734932b9b87422691d74d2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=534&amp;h=390&amp;s=34803&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没啥问题。</p>
+<p>在 AppController 添加两个路由：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ce2f5fb88bc14082a01539fd9f4c0c74~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=980&amp;h=822&amp;s=151436&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'allPos'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">allPos</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">geoList</span>(<span class="hljs-string">'positions'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'pos'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">async</span> <span class="hljs-title function_">pos</span>(<span class="hljs-params">@Query(<span class="hljs-string">'name'</span>) name: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">geoPos</span>(<span class="hljs-string">'positions'</span>, name);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+</code></pre>
+<p>访问下试试：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6d80c0bb3369475a88eebbb21df8b8f1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=764&amp;h=308&amp;s=38044&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6ca48e0678864b64b80f3192d15f2073~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=624&amp;h=436&amp;s=48980&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>最后，还要提供一个搜索附近的点的接口：</p>
+<p>在 RedisService 添加 geoSearch 方法，传入 key，经纬度、搜索半径，返回附近的点：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a638bcdcc37d49bf9c717c86e0ec6b5e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1200&amp;h=750&amp;s=139520&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里单位用的 km。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">geoSearch</span>(<span class="hljs-params">key: string, pos: [number, number], radius: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> positions = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">geoRadius</span>(key, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">longitude</span>: pos[<span class="hljs-number">0</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-attr">latitude</span>: pos[<span class="hljs-number">1</span>]</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    }, radius, <span class="hljs-string">'km'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> list = [];</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; positions.<span class="hljs-property">length</span>; i++) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-keyword">const</span> pos = positions[i];</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">geoPos</span>(key, pos);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        list.<span class="hljs-title function_">push</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">return</span> list;</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+</code></pre>
+<p>先用 geoRadius 搜索半径内的点，然后再用 geoPos 拿到点的经纬度返回。</p>
+<p>在 AppController 添加 nearbySearch 接口：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/03a99a13b3594c589818f9dec3329eaa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1394&amp;h=814&amp;s=183689&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'nearbySearch'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">nearbySearch</span>(<span class="hljs-params"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    @Query(<span class="hljs-string">'longitude'</span>) longitude: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @Query(<span class="hljs-string">'latitude'</span>) latitude: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @Query(<span class="hljs-string">'radius'</span>) radius: number</span>
+<span class="code-block-extension-codeLine" data-line-num="6">) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">if</span>(!longitude || !latitude) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'缺少位置信息'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">if</span>(!radius) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'缺少搜索半径'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">geoSearch</span>(<span class="hljs-string">'positions'</span>, [longitude, latitude], radius);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<p>首先我们在 RedisInsight 里算下两点的距离：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e3c061264dd14b9287f3b5b7cf1d8f2f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=684&amp;h=442&amp;s=31930&amp;e=png&amp;b=0e0e0e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>大概 5561 km</p>
+<p>在 guang 附近搜索半径 5000km 内的位置：</p>
+<p>/nearbySearch?longitude=15&amp;latitude=35&amp;radius=5000</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3f6ac88afcb34c3586635f29a1f3187f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1250&amp;h=344&amp;s=49400&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>找到了一个点。</p>
+<p>然后搜索半径 6000km 内的位置：</p>
+<p>/nearbySearch?longitude=15&amp;latitude=35&amp;radius=6000</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a45cf75b41544bdfa537a6ee02e3364a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1252&amp;h=446&amp;s=67371&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>不过现在的经纬度我们是随便给的。</p>
+<p>可以用高德地图的坐标拾取工具来取几个位置：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dd406c9760e24e12ab78450ac5a9630e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2316&amp;h=1390&amp;s=513513&amp;e=png&amp;b=f1ebd2" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>天安门： 116.397444,39.909183</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dcfec6d97f254cb1a574b52610a5a3a5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1530&amp;h=796&amp;s=240197&amp;e=png&amp;b=e4ebc0" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>文化宫科技馆：116.3993,39.908578</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4155cd3d110f421a96227f7b98c8742d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1462&amp;h=670&amp;s=154219&amp;e=png&amp;b=e8ecc4" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>售票处：116.397283,39.90943</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ea18ac14e76a40efbd86d85800d69612~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1230&amp;h=748&amp;s=163260&amp;e=png&amp;b=e4ebc1" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>故宫彩扩部：116.398002,39.909175</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5dca4d64e6774277835632f2842f597d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1272&amp;h=758&amp;s=171813&amp;e=png&amp;b=e6ecc2" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把这样 4 个位置添加到系统中：</p>
+<p>/addPos?name=天安门&amp;longitude=116.397444&amp;latitude=39.909183</p>
+<p>/addPos?name=文化宫科技馆&amp;longitude=116.3993&amp;latitude=39.908578</p>
+<p>/addPos?name=售票处&amp;longitude=116.397283&amp;latitude=39.90943</p>
+<p>/addPos?name=故宫彩扩部&amp;longitude=116.398002&amp;latitude=39.909175</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/335950667b4b49a9b5cebbb5e910646e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1480&amp;h=200&amp;s=43493&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>先计算下天安门到故宫彩扩部的距离：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">GEODIST positions 天安门 故宫彩扩部 km</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3e9c32db99ae43a597e398e3b5c02ca8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=772&amp;h=442&amp;s=35420&amp;e=png&amp;b=0f0f0f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>是 0.0476km</p>
+<p>那么我们在天安门的位置搜索 0.04km 内的点，应该搜不到它。</p>
+<p>搜索 0.05 km 的点的时候，才能搜到。</p>
+<p>试一下：</p>
+<p>/nearbySearch?longitude=116.397444&amp;latitude=39.909183&amp;radius=0.04</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/97a07d29baa54e68a92473888e921935~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1496&amp;h=568&amp;s=89712&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>/nearbySearch?longitude=116.397444&amp;latitude=39.909183&amp;radius=0.05</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0c39141f291c45758c09ba655f8320fc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1516&amp;h=674&amp;s=116630&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没啥问题，这样我们搜索附近的充电宝的后端功能就完成了。</p>
+<p>然后写下前端页面。</p>
+<p>在 main.ts 指定 public 目录为静态文件的目录：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4f58898faa46436887d0ba68230c8a49~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1212&amp;h=502&amp;s=113981&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">NestFactory</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/core'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.module'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">NestExpressApplication</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/platform-express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">bootstrap</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">const</span> app = <span class="hljs-keyword">await</span> <span class="hljs-title class_">NestFactory</span>.<span class="hljs-property">create</span>&lt;<span class="hljs-title class_">NestExpressApplication</span>&gt;(<span class="hljs-title class_">AppModule</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  app.<span class="hljs-title function_">useStaticAssets</span>(<span class="hljs-string">'public'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-keyword">await</span> app.<span class="hljs-title function_">listen</span>(<span class="hljs-number">3000</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-title function_">bootstrap</span>();</span>
+</code></pre>
+<p>然后创建 public/index.html</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Document<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    光光光</span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>访问下看看：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5d94267c266948a9a60ef3126813091f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=550&amp;h=164&amp;s=15408&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>接下来要接入高德地图。</p>
+<p>先按照<a href="https://link.juejin.cn?target=https%3A%2F%2Flbs.amap.com%2Fapi%2Fjavascript-api-v2%2Fgetting-started" target="_blank" rel="nofollow noopener noreferrer" title="https://lbs.amap.com/api/javascript-api-v2/getting-started" ref="nofollow noopener noreferrer">文档</a>的步骤获取 key</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9309773ea1294e8caad93a28821e1b0a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2322&amp;h=790&amp;s=251333&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个很简单，填一下信息就好。</p>
+<p>点击<a href="https://link.juejin.cn?target=https%3A%2F%2Fconsole.amap.com%2Fdev%2Fkey%2Fapp" target="_blank" rel="nofollow noopener noreferrer" title="https://console.amap.com/dev/key/app" ref="nofollow noopener noreferrer">创建新应用</a>，选择 web 应用，就可以生成 key 了</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8facc24e999347cc9eb9357f3b88f9a7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2326&amp;h=468&amp;s=99448&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后把文档的 <a href="https://link.juejin.cn?target=https%3A%2F%2Flbs.amap.com%2Fdemo%2Fjavascript-api-v2%2Fexample%2Fmap-componets%2Fmap-overlays" target="_blank" rel="nofollow noopener noreferrer" title="https://lbs.amap.com/demo/javascript-api-v2/example/map-componets/map-overlays" ref="nofollow noopener noreferrer">demo 代码</a>复制过来：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d4a2c8d922e4a1c917db9ca543da97f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2814&amp;h=1408&amp;s=816652&amp;e=png&amp;b=f9eeec" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>改成这样：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!doctype <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"IE=edge"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"initial-scale=1.0, user-scalable=no, width=device-width"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>附近的充电宝<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://cache.amap.com/lbs/static/es5.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text/javascript"</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://cache.amap.com/lbs/static/addToolbar.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-selector-tag">html</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-selector-tag">body</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-selector-id">#container</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">          <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">          <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"container"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://webapi.amap.com/maps?v=2.0&amp;key=f96fa52474cedb7477302d4163b3aa09"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="24"><span class="hljs-keyword">var</span> map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AMap</span>.<span class="hljs-title class_">Map</span>(<span class="hljs-string">'container'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-attr">resizeEnable</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    <span class="hljs-attr">zoom</span>: <span class="hljs-number">6</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="27">    <span class="hljs-attr">center</span>: [<span class="hljs-number">116.397444</span>, <span class="hljs-number">39.909183</span>]</span>
+<span class="code-block-extension-codeLine" data-line-num="28">});</span>
+<span class="code-block-extension-codeLine" data-line-num="29"></span>
+<span class="code-block-extension-codeLine" data-line-num="30"><span class="hljs-keyword">var</span> marker = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AMap</span>.<span class="hljs-title class_">Marker</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-attr">icon</span>: <span class="hljs-string">"https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-attr">position</span>: [<span class="hljs-number">116.399327</span>,<span class="hljs-number">39.908562</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="33">    <span class="hljs-attr">anchor</span>:<span class="hljs-string">'bottom-center'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="34">});</span>
+<span class="code-block-extension-codeLine" data-line-num="35"></span>
+<span class="code-block-extension-codeLine" data-line-num="36"><span class="hljs-keyword">var</span> circle = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AMap</span>.<span class="hljs-title class_">Circle</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="37">    <span class="hljs-attr">center</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">AMap</span>.<span class="hljs-title class_">LngLat</span>(<span class="hljs-number">116.397444</span>, <span class="hljs-number">39.909183</span>), <span class="hljs-comment">// 圆心位置</span></span>
+<span class="code-block-extension-codeLine" data-line-num="38">    <span class="hljs-attr">radius</span>: <span class="hljs-number">50</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="39">    <span class="hljs-attr">strokeColor</span>: <span class="hljs-string">"#F33"</span>,  <span class="hljs-comment">//线颜色</span></span>
+<span class="code-block-extension-codeLine" data-line-num="40">    <span class="hljs-attr">strokeOpacity</span>: <span class="hljs-number">1</span>,  <span class="hljs-comment">//线透明度</span></span>
+<span class="code-block-extension-codeLine" data-line-num="41">    <span class="hljs-attr">strokeWeight</span>: <span class="hljs-number">3</span>,  <span class="hljs-comment">//线粗细度</span></span>
+<span class="code-block-extension-codeLine" data-line-num="42">    <span class="hljs-attr">fillColor</span>: <span class="hljs-string">"#ee2200"</span>,  <span class="hljs-comment">//填充颜色</span></span>
+<span class="code-block-extension-codeLine" data-line-num="43">    <span class="hljs-attr">fillOpacity</span>: <span class="hljs-number">0.35</span> <span class="hljs-comment">//填充透明度</span></span>
+<span class="code-block-extension-codeLine" data-line-num="44">});</span>
+<span class="code-block-extension-codeLine" data-line-num="45"></span>
+<span class="code-block-extension-codeLine" data-line-num="46">map.<span class="hljs-title function_">add</span>(marker);</span>
+<span class="code-block-extension-codeLine" data-line-num="47">map.<span class="hljs-title function_">add</span>(circle);</span>
+<span class="code-block-extension-codeLine" data-line-num="48"></span>
+<span class="code-block-extension-codeLine" data-line-num="49">map.<span class="hljs-title function_">setFitView</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="50"></span>
+<span class="code-block-extension-codeLine" data-line-num="51"><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="52"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="53"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>在天安门画了一个 circle，然后在文化宫科技馆画了一个 marker：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/67157c4f02dd413fad750239e3a17dc2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1028&amp;h=568&amp;s=151672&amp;e=png&amp;b=e4eecb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>接下来引入 axios，来调用服务端接口：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc1d4f26b8454ece90d20733a7b64d53~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1344&amp;h=956&amp;s=184709&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!doctype <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"IE=edge"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"initial-scale=1.0, user-scalable=no, width=device-width"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>附近的充电宝<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://cache.amap.com/lbs/static/es5.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text/javascript"</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://cache.amap.com/lbs/static/addToolbar.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-selector-tag">html</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-selector-tag">body</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-selector-id">#container</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">          <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">          <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        </span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-selector-tag">label</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">            <span class="hljs-attribute">width</span>: <span class="hljs-number">55px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="21">            <span class="hljs-attribute">height</span>: <span class="hljs-number">26px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="22">            <span class="hljs-attribute">line-height</span>: <span class="hljs-number">26px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="23">            <span class="hljs-attribute">margin-bottom</span>: <span class="hljs-number">0</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">        <span class="hljs-selector-tag">button</span><span class="hljs-selector-class">.btn</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="26">            <span class="hljs-attribute">width</span>: <span class="hljs-number">80px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="27">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"container"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://webapi.amap.com/maps?v=2.0&amp;key=f96fa52474cedb7477302d4163b3aa09"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="33"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/axios@1.5.1/dist/axios.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="34"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="35"></span>
+<span class="code-block-extension-codeLine" data-line-num="36">    <span class="hljs-keyword">const</span> radius = <span class="hljs-number">0.2</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="37"></span>
+<span class="code-block-extension-codeLine" data-line-num="38">    axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'/nearbySearch'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="39">        <span class="hljs-attr">params</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="40">            <span class="hljs-attr">longitude</span>: <span class="hljs-number">116.397444</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="41">            <span class="hljs-attr">latitude</span>: <span class="hljs-number">39.909183</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="42">            radius</span>
+<span class="code-block-extension-codeLine" data-line-num="43">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="44">    }).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="45">        <span class="hljs-keyword">const</span> data = res.<span class="hljs-property">data</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="46"></span>
+<span class="code-block-extension-codeLine" data-line-num="47">        <span class="hljs-keyword">var</span> map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AMap</span>.<span class="hljs-title class_">Map</span>(<span class="hljs-string">'container'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="48">            <span class="hljs-attr">resizeEnable</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="49">            <span class="hljs-attr">zoom</span>: <span class="hljs-number">6</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="50">            <span class="hljs-attr">center</span>: [<span class="hljs-number">116.397444</span>, <span class="hljs-number">39.909183</span>]</span>
+<span class="code-block-extension-codeLine" data-line-num="51">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="52"></span>
+<span class="code-block-extension-codeLine" data-line-num="53">        data.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="54">            <span class="hljs-keyword">var</span> marker = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AMap</span>.<span class="hljs-title class_">Marker</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="55">                <span class="hljs-attr">icon</span>: <span class="hljs-string">"https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="56">                <span class="hljs-attr">position</span>: [item.<span class="hljs-property">longitude</span>, item.<span class="hljs-property">latitude</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="57">                <span class="hljs-attr">anchor</span>: <span class="hljs-string">'bottom-center'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="58">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="59">            map.<span class="hljs-title function_">add</span>(marker);</span>
+<span class="code-block-extension-codeLine" data-line-num="60">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="61"></span>
+<span class="code-block-extension-codeLine" data-line-num="62"></span>
+<span class="code-block-extension-codeLine" data-line-num="63">        <span class="hljs-keyword">var</span> circle = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AMap</span>.<span class="hljs-title class_">Circle</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="64">            <span class="hljs-attr">center</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">AMap</span>.<span class="hljs-title class_">LngLat</span>(<span class="hljs-number">116.397444</span>, <span class="hljs-number">39.909183</span>), <span class="hljs-comment">// 圆心位置</span></span>
+<span class="code-block-extension-codeLine" data-line-num="65">            <span class="hljs-attr">radius</span>: radius * <span class="hljs-number">1000</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="66">            <span class="hljs-attr">strokeColor</span>: <span class="hljs-string">"#F33"</span>,  <span class="hljs-comment">//线颜色</span></span>
+<span class="code-block-extension-codeLine" data-line-num="67">            <span class="hljs-attr">strokeOpacity</span>: <span class="hljs-number">1</span>,  <span class="hljs-comment">//线透明度</span></span>
+<span class="code-block-extension-codeLine" data-line-num="68">            <span class="hljs-attr">strokeWeight</span>: <span class="hljs-number">3</span>,  <span class="hljs-comment">//线粗细度</span></span>
+<span class="code-block-extension-codeLine" data-line-num="69">            <span class="hljs-attr">fillColor</span>: <span class="hljs-string">"#ee2200"</span>,  <span class="hljs-comment">//填充颜色</span></span>
+<span class="code-block-extension-codeLine" data-line-num="70">            <span class="hljs-attr">fillOpacity</span>: <span class="hljs-number">0.35</span> <span class="hljs-comment">//填充透明度</span></span>
+<span class="code-block-extension-codeLine" data-line-num="71">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="72"></span>
+<span class="code-block-extension-codeLine" data-line-num="73">        map.<span class="hljs-title function_">add</span>(circle);</span>
+<span class="code-block-extension-codeLine" data-line-num="74">        map.<span class="hljs-title function_">setFitView</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="75">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="76">        </span>
+<span class="code-block-extension-codeLine" data-line-num="77"><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="78"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="79"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>效果是这样的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7857bdf3275f4f549619dae6cfb5d1f3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1518&amp;h=1148&amp;s=518801&amp;e=png&amp;b=e9eecb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后把 radius 改成 0.05，是这样的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/498e4b77aee8419fb8d10b3d06a4861a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1042&amp;h=576&amp;s=156421&amp;e=png&amp;b=e6eecd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样就实现了查找附近的充电宝的功能。</p>
+<p>代码上传了<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fnearby-search" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/nearby-search" ref="nofollow noopener noreferrer">小册仓库</a></p>
+<h2 data-id="heading-0">总结</h2>
+<p>我们经常会使用基于位置的功能，比如附近的充电宝、酒店，打车，附近的人等功能。</p>
+<p>这些都是基于 redis 实现的，因为 redis 有 geo 的数据结构，可以方便的计算两点的距离，计算某个半径内的点。</p>
+<p>前端部分使用地图的 sdk 分别在搜出的点处绘制 marker 就好了。</p>
+<p>geo 的底层数据结构是 zset，所以可以使用 zset 的命令。</p>
+<p>我们在 Nest 里封装了 geoadd、geopos、zrange、georadius 等 redis 命令。实现了添加点，搜索附近的点的功能。</p>
+<p>以后再用这类附近的 xxx 功能，你是否会想起 redis 呢？</p></div>

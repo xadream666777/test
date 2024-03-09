@@ -1,0 +1,246 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>Nest 的文件上传是基于 Express 的中间件 multer 实现的，所以在学习 Nest 文件上传之前，我们先学习下 multer 包的使用。</p>
+<p>新建目录，npm init -y 创建 package.json</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0171b52c789d41daa7cadf185fd358c8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后安装 express 和 multer 还有 cors 包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install express multer cors</span>
+</code></pre>
+<p>这个 cors 包是处理跨域 header 的。</p>
+<p>然后创建 index.js，输入如下内容：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> multer  = <span class="hljs-built_in">require</span>(<span class="hljs-string">'multer'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> cors = <span class="hljs-built_in">require</span>(<span class="hljs-string">'cors'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">const</span> app = <span class="hljs-title function_">express</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6">app.<span class="hljs-title function_">use</span>(<span class="hljs-title function_">cors</span>());</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">const</span> upload = <span class="hljs-title function_">multer</span>({ <span class="hljs-attr">dest</span>: <span class="hljs-string">'uploads/'</span> })</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">app.<span class="hljs-title function_">post</span>(<span class="hljs-string">'/aaa'</span>, upload.<span class="hljs-title function_">single</span>(<span class="hljs-string">'aaa'</span>), <span class="hljs-keyword">function</span> (<span class="hljs-params">req, res, next</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'req.file'</span>, req.<span class="hljs-property">file</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'req.body'</span>, req.<span class="hljs-property">body</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">})</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">app.<span class="hljs-title function_">listen</span>(<span class="hljs-number">3333</span>);</span>
+</code></pre>
+<p>app.use 使用中间件 cors 来处理跨域。</p>
+<p>用 multer 处理文件上传，指定保存目录为 uploads/。</p>
+<p>然后新建这样一个 index.html：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"IE=edge"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Document<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/axios@0.24.0/dist/axios.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"fileInput"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"file"</span>/&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-keyword">const</span> fileInput = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">'#fileInput'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">formData</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-keyword">const</span> data = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FormData</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="17">            data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'name'</span>,<span class="hljs-string">'光'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="18">            data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'age'</span>, <span class="hljs-number">20</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">            data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'aaa'</span>, fileInput.<span class="hljs-property">files</span>[<span class="hljs-number">0</span>]);</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">            <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">post</span>(<span class="hljs-string">'http://localhost:3333/aaa'</span>, data);</span>
+<span class="code-block-extension-codeLine" data-line-num="22">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">        fileInput.<span class="hljs-property">onchange</span> = formData;</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>通过 FormData + axios 上传文件，指定内容的传输格式 content-type 为 multipart/form-data。</p>
+<p>（这里 axios 会自动根据内容指定 content-type，不需要手动指定）</p>
+<p>然后用 node 把 server 跑起来，并且用 http-server 把静态服务跑起来：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f2254517fd534b26b35518a73322501e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/96c2e1f251cb482281e3da9b9b68cdae~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候在 devtools 可以看到 aaa 请求的 body 是多个 boundary 分隔的格式：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4081f20c201849e3ac9a2e27e4e461dc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而分隔符是在 Content-Type 指定的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/76cefb7b228543e29e1702c2ac70044f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是 form-data 的传输格式。</p>
+<p>然后去服务端看看：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/45b415b776c847dc83aebe63aa0af640~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>req.file 可以拿到文件字段，其余非文件字段在 req.body。</p>
+<p>并且服务端多了 uploads 目录，下面就保存着我们上传的文件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cd8495f65bbb440a837a20c48dff6406~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>单文件上传我们会了，那多文件上传呢？</p>
+<p>再添加一个路由处理多文件的上传：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/78939177ca454a5facc19afae0b432e7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>bbb 路由通过 array 方法来取上传的文件，并且指定最大数量的限制。</p>
+<p>上传的文件通过 req.files 来取。</p>
+<p>然后前端这样传：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"IE=edge"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Document<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/axios@0.24.0/dist/axios.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"fileInput"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"file"</span> <span class="hljs-attr">multiple</span>/&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-keyword">const</span> fileInput = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">'#fileInput'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">formData2</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-keyword">const</span> data = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FormData</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="17">            data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'name'</span>,<span class="hljs-string">'光'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="18">            data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'age'</span>, <span class="hljs-number">20</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">            [...fileInput.<span class="hljs-property">files</span>].<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">                data.<span class="hljs-title function_">append</span>(<span class="hljs-string">'bbb'</span>, item)</span>
+<span class="code-block-extension-codeLine" data-line-num="21">            })</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23">            <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">post</span>(<span class="hljs-string">'http://localhost:3333/bbb'</span>, data);</span>
+<span class="code-block-extension-codeLine" data-line-num="24">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="25">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="26"></span>
+<span class="code-block-extension-codeLine" data-line-num="27">        fileInput.<span class="hljs-property">onchange</span> = formData2;</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>input 标签添加 multiple 属性允许多选。</p>
+<p>onchange 的时候取出每个 file，通过 append 方法添加到 bbb 字段。</p>
+<p>（这里fileInput.files 是一个伪数组，要转成数组才能用 forEach 方法）</p>
+<p>这样 bbb 实际上就保存着上传的多个文件了。</p>
+<p>我们传下试试：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0eeb79f63a32459880387fdd77e175ff~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>node 服务的 req.files 接收到了多个文件：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/635b42c3666449f98fe5b103e4ee1ff6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>并且 uploads 目录下也多了俩文件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3f54d762ec9f4859bf11167704a90f50~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是多文件上传。</p>
+<p>那如果传了超过 2 个文件呢？</p>
+<p>会报错。</p>
+<p>我们添加一个错误处理中间件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c9e8b6172d2d4091bc99faad4a24d57b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 express 里，约定有 4 个参数的中间件为错误处理中间件。</p>
+<p>一旦某个中间件出了错，express 就会向后找错误处理中间件来调用，如果没有，那就用默认错误处理中间件，返回 500 响应。</p>
+<p>我们多传几个文件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d21a96c36e954a19b4e8aba780e803e5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到服务端打印了报错：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/87026b0af4f54654800da3e49f36c3b7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样我们只要返回对应的响应就好了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">app.<span class="hljs-title function_">post</span>(<span class="hljs-string">'/bbb'</span>, upload.<span class="hljs-title function_">array</span>(<span class="hljs-string">'bbb'</span>, <span class="hljs-number">2</span>), <span class="hljs-keyword">function</span> (<span class="hljs-params">req, res, next</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'req.files'</span>, req.<span class="hljs-property">files</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'req.body'</span>, req.<span class="hljs-property">body</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}, <span class="hljs-keyword">function</span>(<span class="hljs-params">err, req, res, next</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">if</span>(err <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">MulterError</span> &amp;&amp; err.<span class="hljs-property">code</span> === <span class="hljs-string">'LIMIT_UNEXPECTED_FILE'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        res.<span class="hljs-title function_">status</span>(<span class="hljs-number">400</span>).<span class="hljs-title function_">end</span>(<span class="hljs-string">'Too many files uploaded'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="8">})</span>
+</code></pre>
+<p>这样再次上传超过 2 个文件，就会收到服务端的 400 的响应，提示文件上传过多：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5ef28fb2f5f5442bb741575986bd3058~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e92ab5dca01c43e08a3671dbac4c4657~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>更复杂一点的情况，如果多个字段都会上传文件，而且限制也都不同呢？</p>
+<p>那可以这样处理：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">app.<span class="hljs-title function_">post</span>(<span class="hljs-string">'/ccc'</span>, upload.<span class="hljs-title function_">fields</span>([</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    { <span class="hljs-attr">name</span>: <span class="hljs-string">'aaa'</span>, <span class="hljs-attr">maxCount</span>: <span class="hljs-number">3</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    { <span class="hljs-attr">name</span>: <span class="hljs-string">'bbb'</span>, <span class="hljs-attr">maxCount</span>: <span class="hljs-number">2</span> }</span>
+<span class="code-block-extension-codeLine" data-line-num="4">]), <span class="hljs-keyword">function</span> (<span class="hljs-params">req, res, next</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'req.files'</span>, req.<span class="hljs-property">files</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'req.body'</span>, req.<span class="hljs-property">body</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">})</span>
+</code></pre>
+<p>通过 fields 方法指定每个字段的名字和最大数量，然后接收到请求后通过 req.files['xxx'] 来取对应的文件信息。</p>
+<p>其他非文件字段，同样是通过 req.body 来取。</p>
+<p>前端写下对应的代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">formData3</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> data = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FormData</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'name'</span>,<span class="hljs-string">'光'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'age'</span>, <span class="hljs-number">20</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    data.<span class="hljs-title function_">append</span>(<span class="hljs-string">'aaa'</span>, fileInput.<span class="hljs-property">files</span>[<span class="hljs-number">0</span>]);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    data.<span class="hljs-title function_">append</span>(<span class="hljs-string">'aaa'</span>, fileInput.<span class="hljs-property">files</span>[<span class="hljs-number">1</span>]);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    data.<span class="hljs-title function_">append</span>(<span class="hljs-string">'bbb'</span>, fileInput.<span class="hljs-property">files</span>[<span class="hljs-number">2</span>]);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    data.<span class="hljs-title function_">append</span>(<span class="hljs-string">'bbb'</span>, fileInput.<span class="hljs-property">files</span>[<span class="hljs-number">3</span>]);</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">post</span>(<span class="hljs-string">'http://localhost:3333/ccc'</span>, data);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+</code></pre>
+<p>这里本来要写两个 file input 分别上传 aaa、bbb 的文件，这里为了测试方便简化了下。</p>
+<p>浏览器里再次上传：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4dde061ac96e409eac92e326c4b8fdbf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>服务端收到了 aaa 和 bbb 的文件：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/545c45358f6841898fccbb00027ace25~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>此外，如果我们并不知道有哪些字段是 file 呢？</p>
+<p>这时候可以用 any 来接收：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">app.<span class="hljs-title function_">post</span>(<span class="hljs-string">'/ddd'</span>, upload.<span class="hljs-title function_">any</span>(), <span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'req.files'</span>, req.<span class="hljs-property">files</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'req.body'</span>, req.<span class="hljs-property">body</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">});</span>
+</code></pre>
+<p>改下前端代码，这次设置 aaa、bbb、ccc、ddd 4 个 file 字段：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">formData4</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> data = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FormData</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'name'</span>,<span class="hljs-string">'光'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'age'</span>, <span class="hljs-number">20</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'aaa'</span>, fileInput.<span class="hljs-property">files</span>[<span class="hljs-number">0</span>]);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'bbb'</span>, fileInput.<span class="hljs-property">files</span>[<span class="hljs-number">1</span>]);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'ccc'</span>, fileInput.<span class="hljs-property">files</span>[<span class="hljs-number">2</span>]);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'ddd'</span>, fileInput.<span class="hljs-property">files</span>[<span class="hljs-number">3</span>]);</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">post</span>(<span class="hljs-string">'http://localhost:3333/ddd'</span>, data);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+</code></pre>
+<p>再次上传 4 个文件，可以看到服务端接收到了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1a6c68ba82f34c05b826e2246a603540~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>只不过这时候不是 key、value 的形式了，需要自己遍历数组来查找。</p>
+<p>还有一个问题，如何修改保存的文件名呢？</p>
+<p>之前是通过 dest 指定了保存的目录：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6661ecc1f35447398aa9a1518eef622c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在这样写：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> storage = multer.<span class="hljs-title function_">diskStorage</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">destination</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">req, file, cb</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-keyword">try</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">            fs.<span class="hljs-title function_">mkdirSync</span>(path.<span class="hljs-title function_">join</span>(process.<span class="hljs-title function_">cwd</span>(), <span class="hljs-string">'my-uploads'</span>));</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        }<span class="hljs-keyword">catch</span>(e) {}</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-title function_">cb</span>(<span class="hljs-literal">null</span>, path.<span class="hljs-title function_">join</span>(process.<span class="hljs-title function_">cwd</span>(), <span class="hljs-string">'my-uploads'</span>))</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">filename</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">req, file, cb</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-keyword">const</span> uniqueSuffix = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>() + <span class="hljs-string">'-'</span> + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">1E9</span>) + <span class="hljs-string">'-'</span> + file.<span class="hljs-property">originalname</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-title function_">cb</span>(<span class="hljs-literal">null</span>, file.<span class="hljs-property">fieldname</span> + <span class="hljs-string">'-'</span> + uniqueSuffix)</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">});</span>
+</code></pre>
+<p>自己指定怎么存储，multer.distkStorage 是磁盘存储，通过 destination、filename 的参数分别指定保存的目录和文件名。</p>
+<p>这里要先创建下用到的目录，然后再返回它的路径。</p>
+<p>file 对象就是之前打印的那种：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/075b0caa35b2429598617db296a744a7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们用时间戳 Date.now() 加上Math.random() 乘以 10 的 9 次方，然后取整，之后加上原来的文件名。</p>
+<p>测试下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/109991d821854b7c970febb679424292~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后浏览器再次上传：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8d3778bdd0c94564b3688e66fb3285ea~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>就可以看到目录和文件名都修改了：
+<img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c672b4cf3d2f4db384c031062d91f8ca~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fmulter-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/multer-test" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>express 的 multer 包是用来处理 multipart/form-data 格式的文件上传请求的。</p>
+<p>通过 single 方法处理单个字段的单个文件，array 方法处理单个字段的多个文件，fields 方法处理多个字段的文件，any 处理任意数量字段的文件，分别用 req.file 和 req.files 来取解析出的文件。</p>
+<p>其余非文件字段不会处理，还是通过 req.body 来取。</p>
+<p>类似文件数量过多等错误，会抛出对应的 error 对象，在错误处理中间件里处理并返回对应的响应就好了。</p>
+<p>Nest 的文件上传就是通过 multer 包实现的，下节我们来学下 Nest 里怎么使用 multer。</p></div>

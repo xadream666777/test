@@ -1,0 +1,156 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>Nest 内置了很多装饰器，大多数功能都是通过装饰器来使用的。</p>
+<p>但当这些装饰器都不满足需求的时候，能不能自己开发呢？</p>
+<p>装饰器比较多的时候，能不能把多个装饰器合并成一个呢？</p>
+<p>自然是可以的。</p>
+<p>很多内置装饰器我们都可以自己实现。</p>
+<p>我们来试试看：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">vbnet</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-vbnet code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-built_in">new</span> <span class="hljs-keyword">custom</span>-decorator -p npm</span>
+</code></pre>
+<p>创建个 nest 项目。</p>
+<p>执行</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g decorator aaa <span class="hljs-attr">--flat</span></span>
+</code></pre>
+<p>创建个 decorator。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/34a2f8ed60a3463dbfacdae8bc18db87~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个装饰器就是自定义的装饰器。</p>
+<p>之前我们是这样用的 @SetMetadata</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a85dbbd4a45b4c5a8bcf7993164a8d2a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后加个 Guard 取出来做一些判断：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g guard aaa <span class="hljs-attr">--flat</span> <span class="hljs-attr">--no-spec</span></span>
+</code></pre>
+<p>guard 里使用 reflector 来取 metadata：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CanActivate</span>, <span class="hljs-title class_">ExecutionContext</span>, <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Reflector</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/core'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Observable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AaaGuard</span> implements <span class="hljs-title class_">CanActivate</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  @<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">Reflector</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  private <span class="hljs-attr">reflector</span>: <span class="hljs-title class_">Reflector</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-title function_">canActivate</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">context</span>: <span class="hljs-title class_">ExecutionContext</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  ): boolean | <span class="hljs-title class_">Promise</span>&lt;boolean&gt; | <span class="hljs-title class_">Observable</span>&lt;boolean&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">reflector</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">'aaa'</span>, context.<span class="hljs-title function_">getHandler</span>()));</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="18">}</span>
+</code></pre>
+<p>加到路由上：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/70f5dbc7b8aa46669f37d0663c2f4219~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p>然后访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000" ref="nofollow noopener noreferrer">http://localhost:3000</a> 可以看到打印的 metadata</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b0dafaa775240379f7cdd3547f8c8bf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但是不同 metadata 有不同的业务场景，有的是用于权限的，有的是用于其他场景的。</p>
+<p>但现在都用 @SetMetadata 来设置太原始了。</p>
+<p>这时候就可以这样封装一层：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7af839f85a644f0d9b534f316cdc8305~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>装饰器就可以简化成这样：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5596734fbcbc442f92d5b91c7ae98984~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>还有，有没有觉得现在装饰器太多了，能不能合并成一个呢？</p>
+<p>当然也是可以的。</p>
+<p>这样写：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { applyDecorators, <span class="hljs-title class_">Get</span>, <span class="hljs-title class_">UseGuards</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Aaa</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./aaa.decorator'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AaaGuard</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./aaa.guard'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">Bbb</span>(<span class="hljs-params">path, role</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">return</span> <span class="hljs-title function_">applyDecorators</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-title class_">Get</span>(path),</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-title class_">Aaa</span>(role),</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-title class_">UseGuards</span>(<span class="hljs-title class_">AaaGuard</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  )</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<p>在自定义装饰器里通过 applyDecorators 调用其他装饰器。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9f6aba8b0b4d46ceb3e8ce4ca699d136~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这三个 handler 的装饰器都是一样的效果。</p>
+<p>这就是自定义方法装饰器。</p>
+<p>此外，也可以自定义参数装饰器：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { createParamDecorator, <span class="hljs-title class_">ExecutionContext</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title class_">Ccc</span> = <span class="hljs-title function_">createParamDecorator</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-function">(<span class="hljs-params">data: string, ctx: ExecutionContext</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">return</span> <span class="hljs-string">'ccc'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="7">);</span>
+</code></pre>
+<p>先用用看：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/049a351152e84649ac59ac1794270c09~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>大家猜这个 c 参数的值是啥？</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2eca5013dd2a4353aa056f8cf6738b34~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没错，就是 ccc，也就是说参数装饰器的返回值就是参数的值。</p>
+<p>回过头来看看这个装饰器：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d1e24d56299b4fcc8016633dbaeb5f84~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>data 很明显就是传入的参数，而 ExecutionContext 前面用过，可以取出 request、response 对象。</p>
+<p>这样那些内置的 @Param、@Query、@Ip、@Headers 等装饰器，我们是不是能自己实现了呢？</p>
+<p>我们来试试看：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { createParamDecorator, <span class="hljs-title class_">ExecutionContext</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Request</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title class_">MyHeaders</span> = <span class="hljs-title function_">createParamDecorator</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-function">(<span class="hljs-params">key: string, ctx: ExecutionContext</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">const</span> <span class="hljs-attr">request</span>: <span class="hljs-title class_">Request</span> = ctx.<span class="hljs-title function_">switchToHttp</span>().<span class="hljs-title function_">getRequest</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">return</span> key ? request.<span class="hljs-property">headers</span>[key.<span class="hljs-title function_">toLowerCase</span>()] : request.<span class="hljs-property">headers</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">);</span>
+</code></pre>
+<p>通过 ExecutionContext 取出 request 对象，然后调用 getHeader 方法取到 key 对应的请求头返回。</p>
+<p>效果如下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/06295629b23d4ce5a0f6b6266053e607~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>分别通过内置的 @Headers 装饰器和我们自己实现的 @MyHeaders 装饰器来取请求头，结果是一样的。</p>
+<p>再来实现下 @Query 装饰器：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title class_">MyQuery</span> = <span class="hljs-title function_">createParamDecorator</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-function">(<span class="hljs-params">key: string, ctx: ExecutionContext</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-keyword">const</span> <span class="hljs-attr">request</span>: <span class="hljs-title class_">Request</span> = ctx.<span class="hljs-title function_">switchToHttp</span>().<span class="hljs-title function_">getRequest</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-keyword">return</span> request.<span class="hljs-property">query</span>[key];</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="6">);</span>
+</code></pre>
+<p>用一下试试看：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/170ee0fa7c6e4b93925fe4ae529c0920~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eefd9211413d47ba88eb35460e5a97bb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>和内置的 Query 用起来一毛一样！</p>
+<p>同理，其他内置参数装饰器我们也能自己实现。</p>
+<p>而且这些装饰器和内置装饰器一样，可以使用 Pipe 做参数验证和转换：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ff3a66af71ed46de86c271f18fe05b4f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/01487cf59b00422f94731a9324394e59~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8deb7674a4324d15b62043305dbca6c5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>知道了如何自定义方法和参数的装饰器，那 class 的装饰器呢？</p>
+<p>其实这个和方法装饰器的定义方式一样：</p>
+<p>比如单个装饰器：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9262db3b20574da3a40c8d30b88401e6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5fc1008f19e747ab8d1be64a1b504276~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到自定义装饰器生效了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee94a6fa7bca460cb6a646bab2a5302e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也可以通过 applyDecorators 组合多个装饰器：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ae3041a6f8d74fa3aa193dee0f928818~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/acbc270d31214cf0b70a159e2ee34426~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 guard 里加一条打印：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0e84006ac2134962b02300ed11c18430~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b6a472090a5a442aa4d999c99051bff9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到 metadata 也设置成功了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/73a3a453c06c4510853ca290d76c5c08~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fcustom-decorator" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/custom-decorator" ref="nofollow noopener noreferrer">小册仓库</a></p>
+<h2 data-id="heading-0">总结</h2>
+<p>内置装饰器不够用的时候，或者想把多个装饰器合并成一个的时候，都可以自定义装饰器。</p>
+<p>方法的装饰器就是传入参数，调用下别的装饰器就好了，比如对 @SetMetadata 的封装。</p>
+<p>如果组合多个方法装饰器，可以使用 applyDecorators api。</p>
+<p>class 装饰器和方法装饰器一样。</p>
+<p>还可以通过 createParamDecorator 来创建参数装饰器，它能拿到 ExecutionContext，进而拿到 reqeust、response，可以实现很多内置装饰器的功能，比如 @Query、@Headers 等装饰器。</p>
+<p>通过自定义方法和参数的装饰器，可以让 Nest 代码更加的灵活。</p></div>

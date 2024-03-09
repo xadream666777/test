@@ -1,0 +1,303 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>Exception Filter 是在 Nest 应用抛异常的时候，捕获它并返回一个对应的响应。</p>
+<p>比如路由找不到时返回 404：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3b9d75dc99fc4121a6679f7530555925~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=598&amp;h=300&amp;s=33718&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>服务端报错时返回 500：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/27012d32c72f472186b05bbfa3f6bfe4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=540&amp;h=296&amp;s=29295&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>参数的错误返回 400：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/96886fcf1ee7463889c6ec18ae45a099~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=494&amp;h=304&amp;s=32943&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这些都是 Exception Filter 做的事情。</p>
+<p>那么，如果我们想自定义异常时返回的响应格式呢？</p>
+<p>这种就要自定义 Exception Filter 了。</p>
+<p>创建个 nest 项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> exception<span class="hljs-operator">-</span><span class="hljs-keyword">filter</span><span class="hljs-operator">-</span>test</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f859b57160eb4facbedd424e1beeb017~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=970&amp;h=684&amp;s=168165&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把它跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8c48febb788f4c94b8fedb1ff01e0630~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1526&amp;h=334&amp;s=115093&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000" ref="nofollow noopener noreferrer">http://localhost:3000</a> 可以看到 hello world，代表服务跑起来了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2d5bd0d07fcb4477814ca97b8fe287ff~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=550&amp;h=170&amp;s=15840&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 controller 里抛个异常：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6513d46aec8c406ba44a1e6593c9288e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=994&amp;h=486&amp;s=112600&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HttpException</span>(<span class="hljs-string">'xxxx'</span>, <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">BAD_REQUEST</span>)</span>
+</code></pre>
+<p>这个 HttpStatus 就是一些状态码的常量：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4f1c9abeb20640b988eed80ab6f7fb9b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1110&amp;h=524&amp;s=171231&amp;e=gif&amp;f=34&amp;b=222222" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候刷新页面，返回的就是 400 对应的响应：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f04c970babc949df9c342131f610a21e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=600&amp;h=280&amp;s=25680&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个响应的格式是内置的 Exception Filter 生成的。</p>
+<p>当然，你也可以直接抛具体的异常：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/813ffdfd373d4d4fbb00ee8408f35c35~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=918&amp;h=248&amp;s=48310&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/00fd127d5c70464290bfcd27a40a9628~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=582&amp;h=314&amp;s=31111&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们自己定义个 exception filter：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g <span class="hljs-attribute">filter</span> hello <span class="hljs-attr">--flat</span> <span class="hljs-attr">--no-spec</span></span>
+</code></pre>
+<p>--flat 是不生成 hello 目录，--no-spec 是不生成测试文件。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b1e3e7ac8284574b058710e89d9e751~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=670&amp;h=70&amp;s=17647&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/13da92ec51ae4f6596fed68444879d00~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1172&amp;h=284&amp;s=62603&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>@Catch 指定要捕获的异常，这里指定 BadRequestException。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ArgumentsHost</span>, <span class="hljs-title class_">BadRequestException</span>, <span class="hljs-title class_">Catch</span>, <span class="hljs-title class_">ExceptionFilter</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Catch</span>(<span class="hljs-title class_">BadRequestException</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloFilter</span> implements <span class="hljs-title class_">ExceptionFilter</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-keyword">catch</span>(<span class="hljs-attr">exception</span>: <span class="hljs-title class_">BadRequestException</span>, <span class="hljs-attr">host</span>: <span class="hljs-title class_">ArgumentsHost</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">debugger</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+</code></pre>
+<p>先打个断点。</p>
+<p>在 AppModule 里引入：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d675e362c14d4b5898ba56ac4fc23f6d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=846&amp;h=484&amp;s=93395&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">app.<span class="hljs-title function_">useGlobalFilters</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">HelloFilter</span>());</span>
+</code></pre>
+<p>如果你想局部启用，可以加在 handler 或者 controller 上：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/991278f81105477baf1fc9426ca38db7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=504&amp;h=182&amp;s=30353&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a18e5b669d3845f2b092982b644bea2c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=490&amp;h=150&amp;s=25435&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后新建个调试配置文件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d286f2ac98dd4e5e99f57a2ac803eb0e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=640&amp;h=390&amp;s=45127&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>输入调试配置：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/de2342ca2649488f86a3085daf20e45a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=872&amp;h=840&amp;s=116234&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"node"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">"request"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"launch"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"debug nest"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">"runtimeExecutable"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"npm"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">"args"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-string">"run"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-string">"start:dev"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">"skipFiles"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-string">"&lt;node_internals&gt;/**"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">"console"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"integratedTerminal"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<p>把之前的服务关掉，点击调试启动：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b3c4753f4795472881a96add2a298858~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1324&amp;h=852&amp;s=176647&amp;e=png&amp;b=1c1c1c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>刷新页面，代码会在断点处断住：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9ba99ed6372c413bbfd4050248dccac2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1598&amp;h=858&amp;s=238183&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们只要根据异常信息返回对应的响应就可以了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d01b846ffbe8485fad5d1d838eca3525~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1076&amp;h=540&amp;s=129790&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ArgumentsHost</span>, <span class="hljs-title class_">BadRequestException</span>, <span class="hljs-title class_">Catch</span>, <span class="hljs-title class_">ExceptionFilter</span>, <span class="hljs-title class_">HttpException</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Response</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Catch</span>(<span class="hljs-title class_">BadRequestException</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloFilter</span> implements <span class="hljs-title class_">ExceptionFilter</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">catch</span>(<span class="hljs-attr">exception</span>: <span class="hljs-title class_">BadRequestException</span>, <span class="hljs-attr">host</span>: <span class="hljs-title class_">ArgumentsHost</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> http = host.<span class="hljs-title function_">switchToHttp</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">const</span> response = http.<span class="hljs-property">getResponse</span>&lt;<span class="hljs-title class_">Response</span>&gt;();</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">const</span> statusCode = exception.<span class="hljs-title function_">getStatus</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    response.<span class="hljs-title function_">status</span>(statusCode).<span class="hljs-title function_">json</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="13">       <span class="hljs-attr">code</span>: statusCode,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">       <span class="hljs-attr">message</span>: exception.<span class="hljs-property">message</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">       <span class="hljs-attr">error</span>: <span class="hljs-string">'Bad Request'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">       <span class="hljs-attr">xxx</span>: <span class="hljs-number">111</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="18">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="19">}</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+</code></pre>
+<p>这样，抛异常时返回的响应就是自定义的了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cf1ce8c1a18945a98ee2e4babae2994a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=550&amp;h=356&amp;s=32092&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但我们只是 @Catch 了 BadRequestException</p>
+<p>如果抛的是其他异常，依然是原来的格式：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0ae44ad88cb34a4c809a3aa9e35265f3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=904&amp;h=226&amp;s=47330&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>比如我抛一个 BadGatewayException。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aa4500ea58224c8a990fde02ecfcaf2f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=570&amp;h=304&amp;s=30168&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>依然是默认格式。</p>
+<p>那我们只要 @Catch 指定 HttpException 不就行了？</p>
+<p>因为 BadRequestExeption、BadGateWayException 等都是它的子类。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a3e384391b13481ea29e678c14602f21~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=920&amp;h=740&amp;s=150347&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>试一下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/947030e2ced443cd9ed1f4d8555e2f87~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=574&amp;h=344&amp;s=31776&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2df461a79adc4d61b0bcc172dad6bbcd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=538&amp;h=344&amp;s=31635&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>确实，现在所有的 HttpException 都会被处理了。</p>
+<p>但其实这也有个问题。</p>
+<p>就是当我们用了 ValidationPipe 的时候。</p>
+<p>比如我们加一个路由：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Post</span>(<span class="hljs-string">'aaa'</span>) </span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-title function_">aaa</span>(<span class="hljs-params">@Body() aaaDto: AaaDto </span>){</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>然后创建 src/aaa.dto.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AaaDto</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">aaa</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    </span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">bbb</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>安装用到的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install --save <span class="hljs-keyword">class</span>-validator <span class="hljs-keyword">class</span>-transformer</span>
+</code></pre>
+<p>然后给 AaaDto 添加几个校验规则：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">IsEmail</span>, <span class="hljs-title class_">IsNotEmpty</span>, <span class="hljs-title class_">IsNumber</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"class-validator"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AaaDto</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @<span class="hljs-title class_">IsNotEmpty</span>({<span class="hljs-attr">message</span>: <span class="hljs-string">'aaa 不能为空'</span>})</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @<span class="hljs-title class_">IsEmail</span>({}, {<span class="hljs-attr">message</span>: <span class="hljs-string">'aaa 不是邮箱格式'</span>})</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">aaa</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    </span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @<span class="hljs-title class_">IsNumber</span>({}, {<span class="hljs-attr">message</span>: <span class="hljs-string">'bbb 不是数字'</span>})</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    @<span class="hljs-title class_">IsNotEmpty</span>({<span class="hljs-attr">message</span>: <span class="hljs-string">'bbb 不能为空'</span>})</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">bbb</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<p>在 main.ts 启用 ValidationPipe：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/649786f904ea41b1b2cdd4d43492bae6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=866&amp;h=608&amp;s=122015&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">app.<span class="hljs-title function_">useGlobalPipes</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ValidationPipe</span>());</span>
+</code></pre>
+<p>在 postman 里测试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/298928b550af4817bb070d12c37f8b70~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=914&amp;h=818&amp;s=82850&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，提示的错误也不对了。</p>
+<p>因为我们自定义的 exception filter 会拦截所有 HttpException，但是没有对这种情况做支持。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5df5b55aa61b4499a6cf23718bd13d4b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=872&amp;h=620&amp;s=123385&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>先不加这个 filter。</p>
+<p>这时候响应是这样的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3eec351b99ec4674846958c92693fe47~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=880&amp;h=894&amp;s=90951&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们对这种情况做下支持：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c26c24ed49b64c908fdbb398519592b9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=886&amp;h=590&amp;s=121580&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>启用自定义的 filter，然后打个断点：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/052703cecab44c65835f5d0ffb6d3f4a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1036&amp;h=594&amp;s=122550&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再次访问会在断点处断住：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/95c13555449345f2b59b1dd88bbea4e6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1036&amp;h=598&amp;s=151151&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到 ValidationPipe 的 response 格式是这样的。</p>
+<p>所以我们可以这样改：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/48446a774ec84fa58563fea546afe6a1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1310&amp;h=738&amp;s=172236&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ArgumentsHost</span>, <span class="hljs-title class_">BadRequestException</span>, <span class="hljs-title class_">Catch</span>, <span class="hljs-title class_">ExceptionFilter</span>, <span class="hljs-title class_">HttpException</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Response</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Catch</span>(<span class="hljs-title class_">HttpException</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloFilter</span> implements <span class="hljs-title class_">ExceptionFilter</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">catch</span>(<span class="hljs-attr">exception</span>: <span class="hljs-title class_">HttpException</span>, <span class="hljs-attr">host</span>: <span class="hljs-title class_">ArgumentsHost</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> http = host.<span class="hljs-title function_">switchToHttp</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">const</span> response = http.<span class="hljs-property">getResponse</span>&lt;<span class="hljs-title class_">Response</span>&gt;();</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">const</span> statusCode = exception.<span class="hljs-title function_">getStatus</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">const</span> res = exception.<span class="hljs-title function_">getResponse</span>() <span class="hljs-keyword">as</span> { <span class="hljs-attr">message</span>: string[] };</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    </span>
+<span class="code-block-extension-codeLine" data-line-num="14">    response.<span class="hljs-title function_">status</span>(statusCode).<span class="hljs-title function_">json</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="15">       <span class="hljs-attr">code</span>: statusCode,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">       <span class="hljs-attr">message</span>: res?.<span class="hljs-property">message</span>?.<span class="hljs-property">join</span> ? res?.<span class="hljs-property">message</span>?.<span class="hljs-title function_">join</span>(<span class="hljs-string">','</span>) : exception.<span class="hljs-property">message</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">       <span class="hljs-attr">error</span>: <span class="hljs-string">'Bad Request'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="18">       <span class="hljs-attr">xxx</span>: <span class="hljs-number">111</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="20">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="21">}</span>
+</code></pre>
+<p>如果 response.message 是个数组，就返回 join 的结果，否则还是返回 exception.message</p>
+<p>再试下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0d4b65e69c6f4ec38777e76d70c36ccc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=950&amp;h=806&amp;s=87413&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fcbb65dfb38d4a3bae2a06d2abca9fc2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=554&amp;h=326&amp;s=31640&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在，ValidationPipe 的错误和其他的错误就都返回了正确的格式。</p>
+<p>那如果我想在 Filter 里注入 AppService 呢？</p>
+<p>这就需要改一下注册方式：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/579bb3c079f94392a19e817f937b88b4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=896&amp;h=600&amp;s=123262&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>不用 useGlobalFilters 注册了，而是在 AppModule 里注册一个 token 为 APP_FILTER 的 provider：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d674aeefea6d444298bba83448e6f414~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=876&amp;h=718&amp;s=125118&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">{</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">provide</span>: <span class="hljs-variable constant_">APP_FILTER</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">useClass</span>: <span class="hljs-title class_">HelloFilter</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>Nest 会把所有 token 为 APP_FILTER 的 provider 注册为全局 Exception Filter。</p>
+<p>注册多个 Filter 也是这么写。</p>
+<p>其余的全局 Guard、Interceptor、Pipe 也是这样注册：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/53bc0c71ad5e4dd5ac6896f933cf57b3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=578&amp;h=222&amp;s=28288&amp;e=png&amp;b=222222" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样注册的好处就是可以注入其他 provider 了：</p>
+<p>比如我注入了 AppService，然后调用它的 getHello 方法：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c0febd36852749139bd753a31ccfa169~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1228&amp;h=984&amp;s=218038&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ArgumentsHost</span>, <span class="hljs-title class_">BadRequestException</span>, <span class="hljs-title class_">Catch</span>, <span class="hljs-title class_">ExceptionFilter</span>, <span class="hljs-title class_">HttpException</span>, <span class="hljs-title class_">Inject</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Response</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Catch</span>(<span class="hljs-title class_">HttpException</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloFilter</span> implements <span class="hljs-title class_">ExceptionFilter</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  @<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">AppService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  private <span class="hljs-attr">service</span>: <span class="hljs-title class_">AppService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-keyword">catch</span>(<span class="hljs-attr">exception</span>: <span class="hljs-title class_">HttpException</span>, <span class="hljs-attr">host</span>: <span class="hljs-title class_">ArgumentsHost</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">const</span> http = host.<span class="hljs-title function_">switchToHttp</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">const</span> response = http.<span class="hljs-property">getResponse</span>&lt;<span class="hljs-title class_">Response</span>&gt;();</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">const</span> statusCode = exception.<span class="hljs-title function_">getStatus</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-keyword">const</span> res = exception.<span class="hljs-title function_">getResponse</span>() <span class="hljs-keyword">as</span> { <span class="hljs-attr">message</span>: string[] };</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    </span>
+<span class="code-block-extension-codeLine" data-line-num="19">    response.<span class="hljs-title function_">status</span>(statusCode).<span class="hljs-title function_">json</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="20">       <span class="hljs-attr">code</span>: statusCode,</span>
+<span class="code-block-extension-codeLine" data-line-num="21">       <span class="hljs-attr">message</span>: res?.<span class="hljs-property">message</span>?.<span class="hljs-property">join</span> ? res?.<span class="hljs-property">message</span>?.<span class="hljs-title function_">join</span>(<span class="hljs-string">','</span>) : exception.<span class="hljs-property">message</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="22">       <span class="hljs-attr">error</span>: <span class="hljs-string">'Bad Request'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="23">       <span class="hljs-attr">xxx</span>: <span class="hljs-number">111</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="24">       <span class="hljs-attr">yyy</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">service</span>.<span class="hljs-title function_">getHello</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="26">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="27">}</span>
+</code></pre>
+<p>可以看到，service 方法调用成功了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3fc8070b467e469abaec739549f12104~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=888&amp;h=872&amp;s=91087&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>此外，如果你想自定义 Exception 也是可以的。</p>
+<p>比如添加一个 src/unlogin.filter.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ArgumentsHost</span>, <span class="hljs-title class_">Catch</span>, <span class="hljs-title class_">ExceptionFilter</span>, <span class="hljs-title class_">HttpStatus</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Response</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UnLoginException</span>{</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attr">message</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">message?</span>){</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span> = message;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">@<span class="hljs-title class_">Catch</span>(<span class="hljs-title class_">UnLoginException</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="13"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UnloginFilter</span> implements <span class="hljs-title class_">ExceptionFilter</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-keyword">catch</span>(<span class="hljs-attr">exception</span>: <span class="hljs-title class_">UnLoginException</span>, <span class="hljs-attr">host</span>: <span class="hljs-title class_">ArgumentsHost</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">const</span> response = host.<span class="hljs-title function_">switchToHttp</span>().<span class="hljs-property">getResponse</span>&lt;<span class="hljs-title class_">Response</span>&gt;();</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    response.<span class="hljs-title function_">status</span>(<span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">UNAUTHORIZED</span>).<span class="hljs-title function_">json</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-attr">code</span>: <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">UNAUTHORIZED</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-attr">message</span>: <span class="hljs-string">'fail'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-attr">data</span>: exception.<span class="hljs-property">message</span> || <span class="hljs-string">'用户未登录'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    }).<span class="hljs-title function_">end</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="22">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="23">}</span>
+</code></pre>
+<p>我们创建了一个 UnloginException 的异常。</p>
+<p>然后在 ExceptionFilter 里 @Catch 了它。</p>
+<p>在 AppModule 里注册这个全局 Filter：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b219d2fc7303447486687e1496569c8d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=866&amp;h=892&amp;s=153175&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">{</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">provide</span>: <span class="hljs-variable constant_">APP_FILTER</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">useClass</span>: <span class="hljs-title class_">UnloginFilter</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>之后在 AppController 里抛出这个异常：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/417033967a124ab1966d8f2e2f167caa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=634&amp;h=268&amp;s=48195&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器里访问下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7a0b0dd568ba4b55a5c7a8474f20f262~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=592&amp;h=298&amp;s=29084&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，返回的是我们自定义的格式。</p>
+<p>也就是说，可以用自定义 Exception Filter 捕获内置的或者自定义的 Exception。</p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fexception-filter-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/exception-filter-test" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们学习了自定义 Exception Filter。</p>
+<p>通过 @Catch 指定要捕获的异常，然后在 catch 方法里拿到异常信息，返回对应的响应。</p>
+<p>如果捕获的是 HttpException，要注意兼容下 ValidationPipe 的错误格式的处理。</p>
+<p>filter 可以通过 @UseFilters 加在 handler 或者 controller 上，也可以在 main.ts 用 app.useGlobalFilters 全局启用。</p>
+<p>如果 filter 要注入其他 provider，就要通过 AppModule 里注册一个 token 为 APP_FILTER 的 provider 的方式。</p>
+<p>此外，捕获的 Exception 也是可以自定义的。</p>
+<p>这样，我们就可以自定义异常和异常返回的响应格式了。</p></div>

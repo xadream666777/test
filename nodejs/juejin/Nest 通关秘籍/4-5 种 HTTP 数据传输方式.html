@@ -1,0 +1,340 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p data-relingo-block="true">对于前端来说，后端主要是提供 http 接口来传输数据，而这种数据传输的方式主要有 5 种：</p>
+<ul>
+<li data-relingo-block="true">url param</li>
+<li data-relingo-block="true">query</li>
+<li data-relingo-block="true">form-urlencoded</li>
+<li data-relingo-block="true">form-data</li>
+<li data-relingo-block="true">json</li>
+</ul>
+<p data-relingo-block="true">我们分别来看一下：</p>
+<h2 data-id="heading-0" data-relingo-block="true">url param</h2>
+<p data-relingo-block="true">我们可以把参数写在 url 中，比如：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">http:<span class="hljs-comment">//guang.zxg/person/1111</span></span>
+</code></pre>
+<p data-relingo-block="true">这里的 1111 就是路径中的参数（url param），服务端框架或者单页应用的路由都支持从 url 中取出参数。</p>
+<h2 data-id="heading-1" data-relingo-block="true">query</h2>
+<p data-relingo-block="true">通过 url 中 ？后面的用 &amp; 分隔的字符串传递数据。比如：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">http://guang.zxg/person?<span class="hljs-attr">name</span>=guang&amp;age=<span class="hljs-number">20</span></span>
+</code></pre>
+<p data-relingo-block="true">这里的 name 和 age 就是 query 传递的数据。</p>
+<p data-relingo-block="true">其中非英文的字符和一些特殊字符要经过编码，可以使用 encodeURIComponent 的 api 来编码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> query = <span class="hljs-string">"?name="</span> + <span class="hljs-built_in">encodeURIComponent</span>(<span class="hljs-string">'光'</span>) + <span class="hljs-string">"&amp;age=20"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-comment">// ?name=%E5%85%89&amp;age=20</span></span>
+</code></pre>
+<p data-relingo-block="true">或者使用封装了一层的 query-string 库来处理。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> queryString = <span class="hljs-built_in">require</span>(<span class="hljs-string">'query-string'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">queryString.<span class="hljs-title function_">stringify</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">name</span>: <span class="hljs-string">'光'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attr">age</span>: <span class="hljs-number">20</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">});</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-comment">// ?name=%E5%85%89&amp;age=20</span></span>
+</code></pre>
+<h2 data-id="heading-2" data-relingo-block="true">form-urlencoded</h2>
+<p data-relingo-block="true">直接用 form 表单提交数据就是这种，它和 query 字符串的方式的区别只是放在了 body 里，然后指定下 content-type 是 <code>application/x-www-form-urlencoded</code>。</p>
+<p data-relingo-block="true"><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b09a4411e26a40a0be7272dae3213eeb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">因为内容也是 query 字符串，所以也要用 encodeURIComponent 的 api 或者 query-string 库处理下。</p>
+<p data-relingo-block="true">这种格式也很容易理解，get 是把数据拼成 query 字符串放在 url 后面，于是表单的 post 提交方式的时候就直接用相同的方式把数据放在了 body 里。</p>
+<p data-relingo-block="true">通过 &amp; 分隔的 form-urlencoded 的方式需要对内容做 url encode，如果传递大量的数据，比如上传文件的时候就不是很合适了，因为文件 encode 一遍的话太慢了，这时候就可以用 form-data。</p>
+<h2 data-id="heading-3" data-relingo-block="true">form-data</h2>
+<p data-relingo-block="true">form data 不再是通过 &amp; 分隔数据，而是用 --------- + 一串数字做为 boundary 分隔符。因为不是 url 的方式了，自然也不用再做 url encode。</p>
+<p data-relingo-block="true"><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/af563395e1984ea5b90a19a04ce6730f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">form-data 需要指定 content type 为 <code>multipart/form-data</code>，然后指定 boundary 也就是分割线。</p>
+<p data-relingo-block="true">body 里面就是用 boundary 分隔符分割的内容。</p>
+<p data-relingo-block="true">很明显，这种方式适合传输文件，而且可以传输多个文件。</p>
+<p data-relingo-block="true">但是毕竟多了一些只是用来分隔的 boundary，所以请求体会增大。</p>
+<h2 data-id="heading-4" data-relingo-block="true">json</h2>
+<p data-relingo-block="true">form-urlencoded 需要对内容做 url encode，而 form data 则需要加很长的 boundary，两种方式都有一些缺点。如果只是传输 json 数据的话，不需要用这两种。</p>
+<p data-relingo-block="true">可以直接指定content type 为 application/json 就行：</p>
+<p data-relingo-block="true"><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c429166d35264cea922ebe45d399d4ef~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">我们平时传输 json 数据基本用的是这种。</p>
+<p data-relingo-block="true">那这 5 种接口怎么用 Nest 实现呢？</p>
+<p data-relingo-block="true">我们分别看一下：</p>
+<p data-relingo-block="true">首先我们要把 Nest 服务端跑起来，并且支持 api 接口、静态页面。</p>
+<p data-relingo-block="true">Nest 创建一个 crud 服务是非常快的，只需要这么几步：</p>
+<ul>
+<li data-relingo-block="true">安装 @nestjs/cli，使用 nest new xxx 创建一个 Nest 的项目，</li>
+</ul>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> xxx</span>
+</code></pre>
+<p data-relingo-block="true"><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/90a973017feb47e48e69c5054b2faa83~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=942&amp;h=738&amp;s=241806&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<ul>
+<li data-relingo-block="true">在根目录执行 nest g resource person 快速生成 person 模块的 crud 代码</li>
+</ul>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g resource person</span>
+</code></pre>
+<p data-relingo-block="true"><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/11b0c13aa815440eac113ad6b73f42a7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=834&amp;h=458&amp;s=111235&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<ul>
+<li data-relingo-block="true">nest start --watch 启动 Nest 服务</li>
+</ul>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">start</span> <span class="hljs-comment">--watch</span></span>
+</code></pre>
+<p data-relingo-block="true"><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3a5e59b898a14bfbbfa649299f91d2ec~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1536&amp;h=550&amp;s=228917&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">这样一个有 person 的 crud 接口的服务就跑起来了。</p>
+<p data-relingo-block="true">服务跑起来以后是这样的</p>
+<p data-relingo-block="true"><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/47547045ae0e48f0959e9f52b284cfe7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">打印出了有哪些接口可以用，可以在浏览器测试下：</p>
+<p data-relingo-block="true"><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b290de4da2f249358342ceb7aa3c3dcf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">api 接口跑通了，再支持下静态资源的访问：</p>
+<p data-relingo-block="true">main.ts 是负责启动 Nest 的 ioc 容器的，调用下 useStaticAssets 来支持静态资源的请求：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">NestExpressApplication</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/platform-express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">bootstrap</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-keyword">const</span> app = <span class="hljs-keyword">await</span> <span class="hljs-title class_">NestFactory</span>.<span class="hljs-property">create</span>&lt;<span class="hljs-title class_">NestExpressApplication</span>&gt;(<span class="hljs-title class_">AppModule</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  app.<span class="hljs-title function_">useStaticAssets</span>(<span class="hljs-string">'public'</span>, { <span class="hljs-attr">prefix</span>: <span class="hljs-string">'/static'</span>});</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">await</span> app.<span class="hljs-title function_">listen</span>(<span class="hljs-number">3000</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-title function_">bootstrap</span>();</span>
+</code></pre>
+<p data-relingo-block="true">（注意要给 create 方法传入 NestExpressApplication 的泛型参数才有 useStaticAssets这些方法）</p>
+<p data-relingo-block="true">我们指定 prefix 为 static，然后在静态文件目录 public 下添加一个 html：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>hello<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p data-relingo-block="true">重启服务，然后浏览器访问下试试：</p>
+<p data-relingo-block="true"><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7a1c5ea5d5c44227b083db1bd516f950~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">api 接口和静态资源的访问都支持了，接下来就分别实现下 5 种前后端 http 数据传输的方式吧。</p>
+<h2 data-id="heading-5" data-relingo-block="true">url param</h2>
+<p data-relingo-block="true">url param 是 url 中的参数，Nest 里通过 :参数名 的方式来声明（比如下面的 :id），然后通过 @Param(参数名) 的装饰器取出来注入到 controller：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">@Controller</span>(<span class="hljs-string">'api/person'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PersonController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-meta">@Get</span>(<span class="hljs-string">':id'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-title function_">urlParam</span>(<span class="hljs-params"><span class="hljs-meta">@Param</span>(<span class="hljs-string">'id'</span>) id: <span class="hljs-built_in">string</span></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">return</span> <span class="hljs-string">`received: id=<span class="hljs-subst">${id}</span>`</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+</code></pre>
+<p data-relingo-block="true">@Controller('api/person') 的路由和 @Get(':id') 的路由会拼到一起，也就是只有 /api/person/xxx 的 get 请求才会走到这个方法。</p>
+<p data-relingo-block="true">前端代码就是一个 get 方法，参数放在 url 里：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/axios@0.24.0/dist/axios.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">urlParam</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'/api/person/1'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);            </span>
+<span class="code-block-extension-codeLine" data-line-num="11">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-title function_">urlParam</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="13">   <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+</code></pre>
+<p data-relingo-block="true">启动服务，在浏览器访问下：</p>
+<p data-relingo-block="true"><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/03cc5b8bea74411eb1d2c13ff9951be2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">控制台打印了服务端返回的消息，证明服务端拿到了通过 url param 传递的数据。</p>
+<p data-relingo-block="true">通过 url 传递数据的方式除了 url param 还有 query：</p>
+<h2 data-id="heading-6" data-relingo-block="true">query</h2>
+<p data-relingo-block="true">query 是 url 中 ? 后的字符串，需要做 url encode。</p>
+<p data-relingo-block="true">在 Nest 里，通过 @Query 装饰器来取：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">@Controller</span>(<span class="hljs-string">'api/person'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PersonController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-meta">@Get</span>(<span class="hljs-string">'find'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-title function_">query</span>(<span class="hljs-params"><span class="hljs-meta">@Query</span>(<span class="hljs-string">'name'</span>) name: <span class="hljs-built_in">string</span>, <span class="hljs-meta">@Query</span>(<span class="hljs-string">'age'</span>) age: <span class="hljs-built_in">number</span></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">return</span> <span class="hljs-string">`received: name=<span class="hljs-subst">${name}</span>,age=<span class="hljs-subst">${age}</span>`</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+</code></pre>
+<p data-relingo-block="true">注意，这个 find 的路由要放到 :id 的路由前面，因为 Nest 是从上往下匹配的，如果放在后面，那就匹配到 :id 的路由了。</p>
+<p data-relingo-block="true"><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9c07cbcf33e64205904f6dd0a813cda6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">前端代码同样是通过 axios 发送一个 get 请求：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/axios@0.24.0/dist/axios.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">query</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'/api/person/find'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">                <span class="hljs-attr">params</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">                    <span class="hljs-attr">name</span>: <span class="hljs-string">'光'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">                    <span class="hljs-attr">age</span>: <span class="hljs-number">20</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">                }</span>
+<span class="code-block-extension-codeLine" data-line-num="14">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);            </span>
+<span class="code-block-extension-codeLine" data-line-num="16">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-title function_">query</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="18">   <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p data-relingo-block="true">参数通过 params 指定，axios 会做 url encode，不需要自己做。</p>
+<p data-relingo-block="true">然后测试下：</p>
+<p data-relingo-block="true"><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f4648b0e210f49f2885e0f2e10654cdc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">服务端成功接受了我们通过 query 传递的数据。</p>
+<p data-relingo-block="true">上面两种（url param、query）是通过 url 传递数据的方式，下面 3 种是通过 body 传递数据。</p>
+<h2 data-id="heading-7" data-relingo-block="true">form urlencoded</h2>
+<p data-relingo-block="true">form urlencoded 是通过 body 传输数据，其实是把 query 字符串放在了 body 里，所以需要做 url encode：</p>
+<p data-relingo-block="true"><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e33a33bdee4541eaab6af22108010161~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">用 Nest 接收的话，使用 @Body 装饰器，Nest 会解析请求体，然后注入到 dto 中。</p>
+<p data-relingo-block="true">dto 是 data transfer object，就是用于封装传输的数据的对象：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CreatePersonDto</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">name</span>: <span class="hljs-built_in">string</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">age</span>: <span class="hljs-built_in">number</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CreatePersonDto</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./dto/create-person.dto'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-meta">@Controller</span>(<span class="hljs-string">'api/person'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PersonController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-meta">@Post</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-title function_">body</span>(<span class="hljs-params"><span class="hljs-meta">@Body</span>() createPersonDto: CreatePersonDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">return</span> <span class="hljs-string">`received: <span class="hljs-subst">${<span class="hljs-built_in">JSON</span>.stringify(createPersonDto)}</span>`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+</code></pre>
+<p data-relingo-block="true">前端代码使用 post 方式请求，指定 content type 为 <code>application/x-www-form-urlencoded</code>，用 qs 做下 url encode：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/axios@0.24.0/dist/axios.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/qs@6.10.2/dist/qs.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">formUrlEncoded</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">            <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">post</span>(<span class="hljs-string">'/api/person'</span>, <span class="hljs-title class_">Qs</span>.<span class="hljs-title function_">stringify</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="11">                <span class="hljs-attr">name</span>: <span class="hljs-string">'光'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">                <span class="hljs-attr">age</span>: <span class="hljs-number">20</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">            }), {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">                <span class="hljs-attr">headers</span>: { <span class="hljs-string">'content-type'</span>: <span class="hljs-string">'application/x-www-form-urlencoded'</span> }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);  </span>
+<span class="code-block-extension-codeLine" data-line-num="17">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-title function_">formUrlEncoded</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p data-relingo-block="true">测试下：</p>
+<p data-relingo-block="true"><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e2579657d1464c618e7ef7f5b1032f2d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">服务端成功的接收到了数据。</p>
+<p data-relingo-block="true">其实比起 form urlencoded，使用 json 来传输更常用一些：</p>
+<h2 data-id="heading-8" data-relingo-block="true">json</h2>
+<p data-relingo-block="true">json 需要指定 content-type 为 <code>application/json</code>，内容会以 JSON 的方式传输：</p>
+<p data-relingo-block="true"><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c1e8cb55184943d9be3df6ccf9644f74~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">后端代码同样使用 @Body 来接收，不需要做啥变动。form urlencoded 和 json 都是从 body 取值，Nest 内部会根据 content type 做区分，使用不同的解析方式。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">@Controller</span>(<span class="hljs-string">'api/person'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PersonController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-meta">@Post</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-title function_">body</span>(<span class="hljs-params"><span class="hljs-meta">@Body</span>() createPersonDto: CreatePersonDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">return</span> <span class="hljs-string">`received: <span class="hljs-subst">${<span class="hljs-built_in">JSON</span>.stringify(createPersonDto)}</span>`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+</code></pre>
+<p data-relingo-block="true">前端代码使用 axios 发送 post 请求，默认传输 json 就会指定 content type 为 <code>application/json</code>，不需要手动指定：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/axios@0.24.0/dist/axios.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">json</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">post</span>(<span class="hljs-string">'/api/person'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">                <span class="hljs-attr">name</span>: <span class="hljs-string">'光'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">                <span class="hljs-attr">age</span>: <span class="hljs-number">20</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="13">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);     </span>
+<span class="code-block-extension-codeLine" data-line-num="14">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-title function_">json</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p data-relingo-block="true">测试下：</p>
+<p data-relingo-block="true"><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8976bc8696d846a58e4812a7ab5f6d2f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">服务端成功接收到了通过 json 传递的数据！</p>
+<p data-relingo-block="true">json 和 form urlencoded 都不适合传递文件，想传输文件要用 form data：</p>
+<h2 data-id="heading-9" data-relingo-block="true">form data</h2>
+<p data-relingo-block="true">form data 是用 -------- 作为 boundary 分隔传输的内容的：</p>
+<p data-relingo-block="true"><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2e22d13b586a4d358cb569acd4cf35dc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">Nest 解析 form data 使用 FilesInterceptor 的拦截器，用 @UseInterceptors 装饰器启用，然后通过 @UploadedFiles 来取。非文件的内容，同样是通过 @Body 来取。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AnyFilesInterceptor</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/platform-express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CreatePersonDto</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./dto/create-person.dto'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-meta">@Controller</span>(<span class="hljs-string">'api/person'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PersonController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-meta">@Post</span>(<span class="hljs-string">'file'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-meta">@UseInterceptors</span>(<span class="hljs-title class_">AnyFilesInterceptor</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-attr">dest</span>: <span class="hljs-string">'uploads/'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  }))</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-title function_">body2</span>(<span class="hljs-params"><span class="hljs-meta">@Body</span>() createPersonDto: CreatePersonDto, <span class="hljs-meta">@UploadedFiles</span>() files: <span class="hljs-built_in">Array</span>&lt;Express.Multer.File&gt;</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(files);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">return</span> <span class="hljs-string">`received: <span class="hljs-subst">${<span class="hljs-built_in">JSON</span>.stringify(createPersonDto)}</span>`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+</code></pre>
+<p data-relingo-block="true">这一步需要</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm <span class="hljs-selector-tag">i</span> -D <span class="hljs-keyword">@types</span>/multer</span>
+</code></pre>
+<p data-relingo-block="true">引入相关类型声明。</p>
+<p data-relingo-block="true">前端代码使用 axios 发送 post 请求，指定 content type 为 <code>multipart/form-data</code>：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/axios@0.24.0/dist/axios.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"fileInput"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"file"</span> <span class="hljs-attr">multiple</span>/&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-keyword">const</span> fileInput = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">'#fileInput'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">formData</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">            <span class="hljs-keyword">const</span> data = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FormData</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="13">            data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'name'</span>,<span class="hljs-string">'光'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">            data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'age'</span>, <span class="hljs-number">20</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'file1'</span>, fileInput.<span class="hljs-property">files</span>[<span class="hljs-number">0</span>]);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            data.<span class="hljs-title function_">set</span>(<span class="hljs-string">'file2'</span>, fileInput.<span class="hljs-property">files</span>[<span class="hljs-number">1</span>]);</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">            <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">post</span>(<span class="hljs-string">'/api/person/file'</span>, data, {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">                <span class="hljs-attr">headers</span>: { <span class="hljs-string">'content-type'</span>: <span class="hljs-string">'multipart/form-data'</span> }</span>
+<span class="code-block-extension-codeLine" data-line-num="20">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="21">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);     </span>
+<span class="code-block-extension-codeLine" data-line-num="22">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="23"></span>
+<span class="code-block-extension-codeLine" data-line-num="24">        fileInput.<span class="hljs-property">onchange</span> = formData;</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p data-relingo-block="true">file input 指定 multiple 可以选择多个文件。</p>
+<p data-relingo-block="true">测试下：</p>
+<p data-relingo-block="true"><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/29fbb5ee24af48c1b1744c129c77fb7a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">服务端接收到了 name 和 age：</p>
+<p data-relingo-block="true"><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c56d6418815c4726a493d4f1ffef72b0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">去服务器控制台看下：</p>
+<p data-relingo-block="true"><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8924b69b7c044b65a475ad8576f6c549~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true"><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/78efe5d63a0846799583ca66f3dc5c39~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p data-relingo-block="true">可以看到，服务器成功的接收到了我们上传的文件。</p>
+<p data-relingo-block="true">代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Ffive-transmission-method" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/five-transmission-method" ref="nofollow noopener noreferrer">小册仓库</a>里，可以跑跑试试。</p>
+<h2 data-id="heading-10" data-relingo-block="true">总结</h2>
+<p data-relingo-block="true">我们用 axios 发送请求，使用 Nest 起后端服务，实现了 5 种 http/https 的数据传输方式：</p>
+<p data-relingo-block="true">其中前两种是 url 中的：</p>
+<ul>
+<li data-relingo-block="true"><strong>url param</strong>： url 中的参数，Nest 中使用 @Param 来取</li>
+<li data-relingo-block="true"><strong>query</strong>：url 中 ? 后的字符串，Nest 中使用 @Query 来取</li>
+</ul>
+<p data-relingo-block="true">后三种是 body 中的：</p>
+<ul>
+<li data-relingo-block="true"><strong>form urlencoded</strong>： 类似 query 字符串，只不过是放在 body 中。Nest 中使用 @Body 来取，axios 中需要指定 content type 为 <code>application/x-www-form-urlencoded</code>，并且对数据用 qs 或者 query-string 库做 url encode</li>
+<li data-relingo-block="true"><strong>json</strong>： json 格式的数据。Nest 中使用 @Body 来取，axios 中不需要单独指定 content type，axios 内部会处理。</li>
+<li data-relingo-block="true"><strong>form data</strong>：通过 ----- 作为 boundary 分隔的数据。主要用于传输文件，Nest 中要使用 FilesInterceptor 来处理其中的 binary 字段，用 @UseInterceptors 来启用，其余字段用 @Body 来取。axios 中需要指定 content type 为 <code>multipart/form-data</code>，并且用 FormData 对象来封装传输的内容。</li>
+</ul>
+<p data-relingo-block="true">这 5 种 http 的传输数据的方式覆盖了绝大多数开发场景，如果你想进阶全栈，理解这 5 种接口是首先要做到的。</p></div>

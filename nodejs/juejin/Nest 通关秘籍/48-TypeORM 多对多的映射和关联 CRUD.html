@@ -1,0 +1,256 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>一对一我们是通过 @OneToOne 和 @JoinColumn 来把 Entity 映射成数据库表：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c40b8c521165441991a762e9c7cc3395~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Entity 之间的引用关系，转换为数据库表之间的外键关联的关系。</p>
+<p>一对多我们是通过 @OneToMany 和 @ManyToOne 来把 Entity 映射成数据库表：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d18957782a1d4dbcac78b8cdc865b407~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它并不需要 @JoinColumn 来指定外键列，因为外键一定在多的那一边。</p>
+<p>那多对多呢？</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0e664bb6f14743729dd67f7b870d8a06~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>前面讲过，在数据库里，我们是通过中间表来保存这种多对多的关系的：</p>
+<p>把多对多拆成了两个一对多：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ac6f99b6f208400d8061f16bbde3e3e4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那在 TypeORM 里如何映射这种关系呢？</p>
+<p>我们新建个项目试一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">kotlin</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-kotlin code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx <span class="hljs-symbol">typeorm@</span>latest <span class="hljs-keyword">init</span> --name typeorm-relation-mapping3 --database mysql</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6be12f3d655242d791245f9311571bf8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>进入项目目录，安装驱动包 mysql2：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install mysql2</span>
+</code></pre>
+<p>然后修改 data-source.ts 的配置：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> <span class="hljs-string">"reflect-metadata"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">DataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title class_">AppDataSource</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DataSource</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">type</span>: <span class="hljs-string">"mysql"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">host</span>: <span class="hljs-string">"localhost"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">port</span>: <span class="hljs-number">3306</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">username</span>: <span class="hljs-string">"root"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">password</span>: <span class="hljs-string">"guang"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">database</span>: <span class="hljs-string">"typeorm_test"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">synchronize</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">logging</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-attr">entities</span>: [<span class="hljs-title class_">User</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">migrations</span>: [],</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">subscribers</span>: [],</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-attr">poolSize</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-attr">connectorPackage</span>: <span class="hljs-string">'mysql2'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-attr">extra</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">        <span class="hljs-attr">authPlugin</span>: <span class="hljs-string">'sha256_password'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="22">})</span>
+</code></pre>
+<p>这次我们创建 Article 和 Tag 两个实体：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx typeorm entity:create src/entity/Article</span>
+<span class="code-block-extension-codeLine" data-line-num="2">npx typeorm entity:create src/entity/Tag</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dd3a67aa516543b7a5a4591ae27ecbb2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>添加一些属性：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Article</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">length</span>: <span class="hljs-number">100</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'文章标题'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">title</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">type</span>: <span class="hljs-string">'text'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'文章内容'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-attr">content</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">}</span>
+</code></pre>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Tag</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">length</span>: <span class="hljs-number">100</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">name</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+</code></pre>
+<p>然后在 data-source.ts 里引入这俩 Entity：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/42be5aed5ca44586b6aebdf15c365c62~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把 index.ts 的代码去掉：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a00e5ff72efd4b3993146e9f56cbd113~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后 npm run start</p>
+<p>可以看到它生成了两个 Entity 的建表 sql：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ac374c12012b4eddbcad023f86132b99~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后把这两个表删掉，我们来添加多对多的关联关系：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/07c79c344e5341d7884874b616cf06f8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 Entity 里通过 @ManyToMany 关联。</p>
+<p>比如一篇文章可以有多个标签：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d52e7c12b55f43c99bf77f5a5548f906~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再 npm run start</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/daac35c8e10147719fcf818d28d30576~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>你会看到 3 条建表 sql，分别是 article、tag 和中间表 article_tags_tag</p>
+<p>并且 article_tags_tag 还有 2 个外键分别引用着两个表。</p>
+<p>级联删除和级联更新都是 CASCADE，也就是说这两个表的记录删了，那它在中间表中的记录也会跟着被删。</p>
+<p>就这样就映射成功了。</p>
+<p>你也可以自己指定中间表的名字：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5e941d66ca6444cfb1b9be079decfa04~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们插入点数据试试：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Article</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/Article"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Tag</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/Tag"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> a1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Article</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    a1.<span class="hljs-property">title</span> = <span class="hljs-string">'aaaa'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    a1.<span class="hljs-property">content</span> = <span class="hljs-string">'aaaaaaaaaa'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">const</span> a2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Article</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    a2.<span class="hljs-property">title</span> = <span class="hljs-string">'bbbbbb'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    a2.<span class="hljs-property">content</span> = <span class="hljs-string">'bbbbbbbbbb'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">const</span> t1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Tag</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    t1.<span class="hljs-property">name</span> = <span class="hljs-string">'ttt1111'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-keyword">const</span> t2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Tag</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    t2.<span class="hljs-property">name</span> = <span class="hljs-string">'ttt2222'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-keyword">const</span> t3 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Tag</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    t3.<span class="hljs-property">name</span> = <span class="hljs-string">'ttt33333'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="23"></span>
+<span class="code-block-extension-codeLine" data-line-num="24">    a1.<span class="hljs-property">tags</span> = [t1,t2];</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    a2.<span class="hljs-property">tags</span> = [t1,t2,t3];</span>
+<span class="code-block-extension-codeLine" data-line-num="26"></span>
+<span class="code-block-extension-codeLine" data-line-num="27">    <span class="hljs-keyword">const</span> entityManager = <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-keyword">await</span> entityManager.<span class="hljs-title function_">save</span>(t1);</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    <span class="hljs-keyword">await</span> entityManager.<span class="hljs-title function_">save</span>(t2);</span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-keyword">await</span> entityManager.<span class="hljs-title function_">save</span>(t3);</span>
+<span class="code-block-extension-codeLine" data-line-num="32"></span>
+<span class="code-block-extension-codeLine" data-line-num="33">    <span class="hljs-keyword">await</span> entityManager.<span class="hljs-title function_">save</span>(a1);</span>
+<span class="code-block-extension-codeLine" data-line-num="34">    <span class="hljs-keyword">await</span> entityManager.<span class="hljs-title function_">save</span>(a2);</span>
+<span class="code-block-extension-codeLine" data-line-num="35"></span>
+<span class="code-block-extension-codeLine" data-line-num="36">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+</code></pre>
+<p>创建了两篇文章，3 个标签，建立它们的关系之后，先保存所有的 tag，再保存 article。</p>
+<p>跑一下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9eede1ca003742cca0435b005e9928ec~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，3 个标签、2 篇文章，还有两者的关系，都插入成功了。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ebd75621331b422f937dd32a20d1a546~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3eddc2d736aa48f297b3817e81067d9d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/30e5cc2e8767462c914de819305e3138~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再来查询：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> article = <span class="hljs-keyword">await</span> entityManager.<span class="hljs-title function_">find</span>(<span class="hljs-title class_">Article</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">relations</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">tags</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="5">});</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(article);</span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(article.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span>=&gt;</span> item.<span class="hljs-property">tags</span>))</span>
+</code></pre>
+<p>同样是通过 relations 指定关联查询：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e2241f97590c416c8e574d4f011384e5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也可以手动用 query builder 来 join 查询：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> article = <span class="hljs-keyword">await</span> entityManager</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    .<span class="hljs-title function_">createQueryBuilder</span>(<span class="hljs-title class_">Article</span>, <span class="hljs-string">"a"</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    .<span class="hljs-title function_">leftJoinAndSelect</span>(<span class="hljs-string">"a.tags"</span>, <span class="hljs-string">"t"</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    .<span class="hljs-title function_">getMany</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    </span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(article);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(article.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span>=&gt;</span> item.<span class="hljs-property">tags</span>))</span>
+</code></pre>
+<p>结果一样：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/12653fa1b3cf4d0597fad9dec012b9d0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>或者先拿到 Article 的 Repository 再创建 query builder 来查询也行：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> article = <span class="hljs-keyword">await</span> entityManager</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    .<span class="hljs-title function_">getRepository</span>(<span class="hljs-title class_">Article</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    .<span class="hljs-title function_">createQueryBuilder</span>( <span class="hljs-string">"a"</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    .<span class="hljs-title function_">leftJoinAndSelect</span>(<span class="hljs-string">"a.tags"</span>, <span class="hljs-string">"t"</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    .<span class="hljs-title function_">getMany</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(article);</span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(article.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span>=&gt;</span> item.<span class="hljs-property">tags</span>))</span>
+</code></pre>
+<p>那如果文章多加了一些标签或者删除了一些标签，怎么修改呢？</p>
+<p>比如我把 id 为 2 的文章的标签只保留包含 111 的，并且还改了标题：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> article = <span class="hljs-keyword">await</span> entityManager.<span class="hljs-title function_">findOne</span>(<span class="hljs-title class_">Article</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">id</span>: <span class="hljs-number">2</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">relations</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">tags</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="8">});</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">article.<span class="hljs-property">title</span> = <span class="hljs-string">"ccccc"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">article.<span class="hljs-property">tags</span> = article.<span class="hljs-property">tags</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">name</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">'ttt111'</span>));</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14"><span class="hljs-keyword">await</span> entityManager.<span class="hljs-title function_">save</span>(article);</span>
+</code></pre>
+<p>之前它是有 3 个标签的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b620f462cab048ea876594595a1c03f0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>npm run start 跑一下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/961aeb4deaef44e8a463edb3481a4a36~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它会先查出 id 为 2 的 article 有哪些标签，查出了 1、2、3。</p>
+<p>然后会把他和 id 为 2 的 article 的关系，(2, 2) (2, 3) 从中间表中删除。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/815df41dc4a74463b56419d29e075a2d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样就这个 article 就只有 id 为 1 的 tag 了。</p>
+<p>此外，更新 article.title 的是另一个 update 语句：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/264fcc9452a743638b412d67fd69a2c6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>至于删除就简单了，因为中间表的外键设置了 CASCADE 的级联删除，这样只要你删除了 article 或者 tag，它都会跟着删除关联记录。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">await</span> entityManager.<span class="hljs-title function_">delete</span>(<span class="hljs-title class_">Article</span>, <span class="hljs-number">1</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">await</span> entityManager.<span class="hljs-title function_">delete</span>(<span class="hljs-title class_">Tag</span>, <span class="hljs-number">1</span>);</span>
+</code></pre>
+<p>如果 tag 里也想有文章的引用呢？</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/360a971be7c449e3841c89325473245d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那就加一个 @ManyToMany 的映射属性。</p>
+<p>只不过它还需要第二个参数指定外键列在哪里。</p>
+<p>而且不止这里要加，article 里也要加：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/284dd14811dd4d6cb964711dd83c2549~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>为什么呢？</p>
+<p>因为如果当前 Entity 对应的表是包含外键的，那它自然就知道怎么找到关联的 Entity。</p>
+<p>但如果当前 Entity 是不包含外键的那一方，怎么找到对方呢？</p>
+<p>这时候就需要手动指定通过哪个外键列来找当前 Entity 了。</p>
+<p>之前 OneToOne、OnToMany 都是这样：</p>
+<p>比如一对一的 user 那方，不维护外键，所以需要第二个参数来指定通过哪个外键找到 user。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0d52c74903154221be13daf6df188671~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>一对多的 department 那方，不维护外键，所以需要第二个参数来指定通过哪个外键找到 department：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d0ccf65f61694282b130fcc0f8831ff0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而多对多的时候，双方都不维护外键，所以都需要第二个参数来指定外键列在哪里，怎么找到当前 Entity。</p>
+<p>然后我们通过 tag 来关联查询下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> tags = <span class="hljs-keyword">await</span> entityManager.<span class="hljs-title function_">find</span>(<span class="hljs-title class_">Tag</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">relations</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">articles</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="5">});</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(tags);</span>
+</code></pre>
+<p>也是能成功关联查出来的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b1bbab6da23c464da16f1f5c81b77450~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Ftypeorm-relation-mapping3" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/typeorm-relation-mapping3" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们学了多对多关系在 Entity 里怎么映射，是通过 @ManyToMany 和 @JoinTable 来声明的。</p>
+<p>但如果双方都保留了对方的引用，需要第二个参数来指定关联的外键列在哪，也就是如何查找当前 entity。</p>
+<p>多对多关系的修改只要查出来之后修改下属性，然后 save，TypeORM 会自动去更新中间表。</p>
+<p>至此，一对一、一对多、多对多关系的 Entity 如何映射到数据库的 table，如何增删改查，我们就都学会了。</p></div>

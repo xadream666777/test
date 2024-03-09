@@ -1,0 +1,119 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>Nest 实现了一套模块系统，模块可以通过 imports 声明对其他模块的引用。</p>
+<p>那 Module 和 Module 如果相互引用、形成循环依赖了怎么办？</p>
+<p>这节我们就来学习下循环依赖的处理方式。</p>
+<p>执行</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> <span class="hljs-keyword">module</span>-test -p npm</span>
+</code></pre>
+<p>创建一个 nest 项目。</p>
+<p>然后执行</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g <span class="hljs-keyword">module</span> aaa</span>
+<span class="code-block-extension-codeLine" data-line-num="2">nest g <span class="hljs-keyword">module</span> bbb</span>
+</code></pre>
+<p>创建两个 Module。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b145b0bb0e9b4f859c9d75d048a659bd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后这两个 Module 相互引用。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b52f40029b84469fa53c670856d62fb6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/31b0562d4fa948c18624a0889f2c247b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候你执行</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">start</span> <span class="hljs-operator">-</span>w</span>
+</code></pre>
+<p>把服务跑起来，会报这样的错误：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0894ff37cf7a42cab36ca61ea7cad9bc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>意思是在解析 BbbModule 的时候，它的第一个 imports 是 undefined。</p>
+<p>这有两个原因，一个是这个值本来就是 undefined，第二个就是形成了循环依赖。</p>
+<p>因为 Nest 创建 Module 的时候会递归创建它的依赖，而它的依赖又依赖了这个 Module，所以没法创建成功，拿到的就是 undefined。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5bda90b0fd1e4f0fbd4f872e2c7ae327~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那怎么办呢？</p>
+<p>其实我们可以先单独创建这两个 Module，然后再让两者关联起来。</p>
+<p>也就是用 forwardRef 的方式：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0f2e08ce8fb944868db92d7be777331c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dae2d5625c504e21a3c5330aabc13231~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>因为我们用了 nest start --watch 的方式启动的，nest 会自动重启，这时候就没有错误了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cfaf18c45ea04f99b78f0e82ec140446~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>nest 会单独创建两个 Module，之后再把 Module 的引用转发过去，也就是 forwardRef 的含义。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cd11a70d489e49109dd1dbfe472fb733~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>除了 Module 和 Module 之间会循环依赖以外，provider 之间也会。</p>
+<p>比如 Service 里可以注入别的 Service，自身也可以用来注入。</p>
+<p>所以也会有循环引用。</p>
+<p>我们来测试下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g service ccc <span class="hljs-attr">--no-spec</span> <span class="hljs-attr">--flat</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">nest g service ddd <span class="hljs-attr">--no-spec</span> <span class="hljs-attr">--flat</span></span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c377ed6b535a4a649b65fbaa3258b71c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>分别创建 ccc 和 ddd 两个 service，--no-spec 是不生成测试文件，--flat 是平铺。</p>
+<p>就会创建这两个 service，并在 AppModule 引入了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/958176426526409aba5af44f47d7af98~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4455caf154c24001bc67a5a31ada8ae7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1ec94f9a9eb849e8bf5011735555a8d8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们让两者相互注入：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CccService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./ccc.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DddService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-title function_">constructor</span>(<span class="hljs-params">private cccService: CccService</span>) {}</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-title function_">ddd</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">cccService</span>.<span class="hljs-title function_">ccc</span>()  + <span class="hljs-string">'ddd'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">DddService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./ddd.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CccService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-title function_">constructor</span>(<span class="hljs-params">private dddService: DddService</span>) {}</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-title function_">ccc</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-keyword">return</span> <span class="hljs-string">'ccc'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-title function_">eee</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dddService</span>.<span class="hljs-title function_">ddd</span>() + <span class="hljs-string">'eee'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<p>两个 service 分别依赖了对方的方法。</p>
+<p>在 AppService 里调用下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CccService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./ccc.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">DddService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./ddd.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">private cccService: CccService, private dddService: DddService</span>){}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-title function_">getHello</span>(): string {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dddService</span>.<span class="hljs-title function_">ddd</span>() + <span class="hljs-variable language_">this</span>.<span class="hljs-property">cccService</span>.<span class="hljs-title function_">eee</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+</code></pre>
+<p>这时候 nest start --watch 会报错：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/14ca2992e0a54e5a8fa277946691a1ac~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>说是没法解析 DddService 的依赖，也是因为循环依赖导致的。</p>
+<p>这时候也是通过 forwardRef 解决：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f1bc24f5721e483bbcd293551be7084b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/27e95c0964c748ea8edca908ef6c3d40~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候就不能用默认的注入方式了，通过 @Inject 手动指定注入的 token，这里是 forwardRef 的方式注入。</p>
+<p>这样报错就没了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/830830a9b3014d938676715f2f73510a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/18746407a2c04e058f1ce0223c8ef8b8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>两个 service 的相互调用也成功了。</p>
+<p>这样我们就解决了循环依赖的问题。</p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fcircular-dependency" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/circular-dependency" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>Module 之间可以相互 imports，Provider 之间可以相互注入，这两者都会形成循环依赖。</p>
+<p>解决方式就是两边都用 forwardRef 来包裹下。</p>
+<p>它的原理就是 nest 会先创建 Module、Provider，之后再把引用转发到对方，也就是 forward ref。</p></div>

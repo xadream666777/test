@@ -1,0 +1,270 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>我们学习了 Nest 如何自定义 logger，也学习了 Winston 的使用。</p>
+<p>那如何在 Nest 里集成 Winston 呢？</p>
+<p>这节我们来实现下。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> nest-winston-test</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2a6ddf416f7847b4a12d9fc2732a0307~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1044&amp;h=734&amp;s=179723&amp;e=png&amp;b=020202" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>创建个 nest 项目。</p>
+<p>在 src 添加一个 MyLogger.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">LoggerService</span>, <span class="hljs-title class_">LogLevel</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyLogger</span> implements <span class="hljs-title class_">LoggerService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-title function_">log</span>(<span class="hljs-params">message: string, context: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`---log---[<span class="hljs-subst">${context}</span>]---`</span>, message)</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-title function_">error</span>(<span class="hljs-params">message: string, context: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`---error---[<span class="hljs-subst">${context}</span>]---`</span>, message)</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-title function_">warn</span>(<span class="hljs-params">message: string, context: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`---warn---[<span class="hljs-subst">${context}</span>]---`</span>, message)</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<p>然后在 main.ts 里引入：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/832f3c922d9a42ec9c72f4f3e6ae1e15~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=898&amp;h=454&amp;s=93386&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">app.<span class="hljs-title function_">useLogger</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">MyLogger</span>());</span>
+</code></pre>
+<p>把服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/63a4ccef41024896984cc364a8ddae11~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1234&amp;h=292&amp;s=71857&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在的 logger 就换成我们自己的了。</p>
+<p>然后在 AppController 里添加 logger：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7f85411fb623487294b99ea259f8f329~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1126&amp;h=592&amp;s=124574&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6a60d5d558794fe7b448267881887987~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=622&amp;h=208&amp;s=18157&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/139cd0a1b1dd4178b250a24b12e85164~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=998&amp;h=368&amp;s=72573&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样就完成了 logger 的自定义。</p>
+<p>接下来只要换成 winston 的 logger 就好了。</p>
+<p>安装 winston：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span>  winston</span>
+</code></pre>
+<p>然后改下 MyLogger：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ConsoleLogger</span>, <span class="hljs-title class_">LoggerService</span>, <span class="hljs-title class_">LogLevel</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { createLogger, format, <span class="hljs-title class_">Logger</span>, transports } <span class="hljs-keyword">from</span> <span class="hljs-string">'winston'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyLogger</span> implements <span class="hljs-title class_">LoggerService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    private <span class="hljs-attr">logger</span>: <span class="hljs-title class_">Logger</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) {    </span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span> = <span class="hljs-title function_">createLogger</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="10">            <span class="hljs-attr">level</span>: <span class="hljs-string">'debug'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">            <span class="hljs-attr">format</span>: format.<span class="hljs-title function_">combine</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="12">                format.<span class="hljs-title function_">colorize</span>(),</span>
+<span class="code-block-extension-codeLine" data-line-num="13">                format.<span class="hljs-title function_">simple</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="14">            ),</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            <span class="hljs-attr">transports</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="16">                <span class="hljs-keyword">new</span> transports.<span class="hljs-title class_">Console</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="17">            ]</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-title function_">log</span>(<span class="hljs-params">message: string, context: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'info'</span>, <span class="hljs-string">`[<span class="hljs-subst">${context}</span>] <span class="hljs-subst">${message}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-title function_">error</span>(<span class="hljs-params">message: string, context: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="26">        <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'error'</span>, <span class="hljs-string">`[<span class="hljs-subst">${context}</span>] <span class="hljs-subst">${message}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="27">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-title function_">warn</span>(<span class="hljs-params">message: string, context: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="30">        <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'warn'</span>, <span class="hljs-string">`[<span class="hljs-subst">${context}</span>] <span class="hljs-subst">${message}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="31">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="32">}</span>
+</code></pre>
+<p>把 console.log 换成 winston 的 logger。</p>
+<p>再跑下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a6d7b41086534c52984e9b820425b72d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1040&amp;h=420&amp;s=97595&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在的日志就是 winston 的了。</p>
+<p>只不过和 nest 原本的日志格式不大一样。</p>
+<p>这个简单，我们自己写一下这种格式就好了。</p>
+<p>安装 dayjs 格式化日期：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> dayjs</span>
+</code></pre>
+<p>安装 chalk 来打印颜色：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> chalk<span class="hljs-keyword">@4</span></span>
+</code></pre>
+<p>注意：这里用的是 chalk 4.x 的版本。</p>
+<p>然后来实现下 nest 日志的格式：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ConsoleLogger</span>, <span class="hljs-title class_">LoggerService</span>, <span class="hljs-title class_">LogLevel</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> chalk <span class="hljs-keyword">from</span> <span class="hljs-string">'chalk'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> dayjs <span class="hljs-keyword">from</span> <span class="hljs-string">'dayjs'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { createLogger, format, <span class="hljs-title class_">Logger</span>, transports } <span class="hljs-keyword">from</span> <span class="hljs-string">'winston'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyLogger</span> implements <span class="hljs-title class_">LoggerService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    private <span class="hljs-attr">logger</span>: <span class="hljs-title class_">Logger</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-variable language_">super</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    </span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span> = <span class="hljs-title function_">createLogger</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="14">            <span class="hljs-attr">level</span>: <span class="hljs-string">'debug'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            <span class="hljs-attr">transports</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="16">                <span class="hljs-keyword">new</span> transports.<span class="hljs-title class_">Console</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="17">                    <span class="hljs-attr">format</span>: format.<span class="hljs-title function_">combine</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="18">                        format.<span class="hljs-title function_">colorize</span>(),</span>
+<span class="code-block-extension-codeLine" data-line-num="19">                        format.<span class="hljs-title function_">printf</span>(<span class="hljs-function">(<span class="hljs-params">{context, level, message, time}</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">                            <span class="hljs-keyword">const</span> appStr = chalk.<span class="hljs-title function_">green</span>(<span class="hljs-string">`[NEST]`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="21">                            <span class="hljs-keyword">const</span> contextStr = chalk.<span class="hljs-title function_">yellow</span>(<span class="hljs-string">`[<span class="hljs-subst">${context}</span>]`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        </span>
+<span class="code-block-extension-codeLine" data-line-num="23">                            <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${appStr}</span> <span class="hljs-subst">${time}</span> <span class="hljs-subst">${level}</span> <span class="hljs-subst">${contextStr}</span> <span class="hljs-subst">${message}</span> `</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="24">                        })</span>
+<span class="code-block-extension-codeLine" data-line-num="25">                    ),</span>
+<span class="code-block-extension-codeLine" data-line-num="26">                })</span>
+<span class="code-block-extension-codeLine" data-line-num="27">            ]</span>
+<span class="code-block-extension-codeLine" data-line-num="28">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="30"></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-title function_">log</span>(<span class="hljs-params">message: string, context: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="32">        <span class="hljs-keyword">const</span> time = <span class="hljs-title function_">dayjs</span>(<span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>()).<span class="hljs-title function_">format</span>(<span class="hljs-string">'YYYY-MM-DD HH:mm:ss'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="33"></span>
+<span class="code-block-extension-codeLine" data-line-num="34">        <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'info'</span>, message, { context, time });</span>
+<span class="code-block-extension-codeLine" data-line-num="35">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="36"></span>
+<span class="code-block-extension-codeLine" data-line-num="37">    <span class="hljs-title function_">error</span>(<span class="hljs-params">message: string, context: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="38">        <span class="hljs-keyword">const</span> time = <span class="hljs-title function_">dayjs</span>(<span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>()).<span class="hljs-title function_">format</span>(<span class="hljs-string">'YYYY-MM-DD HH:mm:ss'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="39"></span>
+<span class="code-block-extension-codeLine" data-line-num="40">        <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'info'</span>, message, { context, time });</span>
+<span class="code-block-extension-codeLine" data-line-num="41">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="42"></span>
+<span class="code-block-extension-codeLine" data-line-num="43">    <span class="hljs-title function_">warn</span>(<span class="hljs-params">message: string, context: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="44">        <span class="hljs-keyword">const</span> time = <span class="hljs-title function_">dayjs</span>(<span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>()).<span class="hljs-title function_">format</span>(<span class="hljs-string">'YYYY-MM-DD HH:mm:ss'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="45"></span>
+<span class="code-block-extension-codeLine" data-line-num="46">        <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'info'</span>, message, { context, time });</span>
+<span class="code-block-extension-codeLine" data-line-num="47">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="48">}</span>
+</code></pre>
+<p>这里用到了 printf 的 format 函数，它可以自定义打印的日志格式。</p>
+<p>我们用 chalk 加上了颜色，并且打印了 dayjs 格式化的时间。</p>
+<p>效果是这样的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5586d8f5b4cd4305bea2797bf2e459de~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1338&amp;h=392&amp;s=126132&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>是不是和 nest 原本的日志很像了？</p>
+<p>然后我们再加一个 File 的 transport。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9db123bf4e974ca7a6e3cb0cf3ce8056~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1378&amp;h=952&amp;s=184712&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>指定为 json 格式，加上时间戳：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">new</span> transports.<span class="hljs-title class_">File</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">format</span>: format.<span class="hljs-title function_">combine</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        format.<span class="hljs-title function_">timestamp</span>(),</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        format.<span class="hljs-title function_">json</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    ),</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">filename</span>: <span class="hljs-string">'111.log'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">dirname</span>: <span class="hljs-string">'log'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">})</span>
+</code></pre>
+<p>console 的日志是这样的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f5a4bb470c244503ac0a6d9cd4cc6dc6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1292&amp;h=372&amp;s=126240&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>file 的日志是这样的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ecb310931904490f8569e929cd5334fe~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2032&amp;h=274&amp;s=107610&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，我们就完成了 nest 和 winston 的集成。</p>
+<p>我们还可以进一步把它封装成一个动态模块。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6e3b134ef6834e20af7011c1ddb674f2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=722&amp;h=110&amp;s=28520&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">DynamicModule</span>, <span class="hljs-title class_">Global</span>, <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">LoggerOptions</span>, createLogger } <span class="hljs-keyword">from</span> <span class="hljs-string">'winston'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">MyLogger</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./MyLogger'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">WINSTON_LOGGER_TOKEN</span> = <span class="hljs-string">'WINSTON_LOGGER'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">@<span class="hljs-title class_">Global</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="8">@<span class="hljs-title class_">Module</span>({})</span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">WinstonModule</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    public <span class="hljs-keyword">static</span> <span class="hljs-title function_">forRoot</span>(<span class="hljs-attr">options</span>: <span class="hljs-title class_">LoggerOptions</span>): <span class="hljs-title class_">DynamicModule</span> {    </span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">            <span class="hljs-attr">module</span>: <span class="hljs-title class_">WinstonModule</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">            <span class="hljs-attr">providers</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="15">                {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">                    <span class="hljs-attr">provide</span>: <span class="hljs-variable constant_">WINSTON_LOGGER_TOKEN</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">                    <span class="hljs-attr">useValue</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">MyLogger</span>(options)</span>
+<span class="code-block-extension-codeLine" data-line-num="18">                }</span>
+<span class="code-block-extension-codeLine" data-line-num="19">            ],</span>
+<span class="code-block-extension-codeLine" data-line-num="20">            <span class="hljs-attr">exports</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="21">                <span class="hljs-variable constant_">WINSTON_LOGGER_TOKEN</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">            ]</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        };</span>
+<span class="code-block-extension-codeLine" data-line-num="24">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">}</span>
+<span class="code-block-extension-codeLine" data-line-num="26"></span>
+</code></pre>
+<p>添加 forRoot 方法，接收 winston 的 createLogger 方法的参数，返回动态模块的 providers、exports。</p>
+<p>用 useValue 创建 logger 对象作为 provider。</p>
+<p>这里的 MyLogger 是之前那个复制过来的，但需要改一下 constructor：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/064e62df7d7549fab47b1074d919548e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1586&amp;h=700&amp;s=206697&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-title function_">constructor</span>(<span class="hljs-params">options</span>) {    </span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span> = <span class="hljs-title function_">createLogger</span>(options)</span>
+<span class="code-block-extension-codeLine" data-line-num="3">}</span>
+</code></pre>
+<p>然后在 AppModule 引入下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ad440d150d934da7aa711b62dce8e17d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1562&amp;h=1234&amp;s=251865&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppController</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.controller'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">WinstonModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./winston/winston.module'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">import</span> { transports, format } <span class="hljs-keyword">from</span> <span class="hljs-string">'winston'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> chalk <span class="hljs-keyword">from</span> <span class="hljs-string">'chalk'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-attr">imports</span>: [<span class="hljs-title class_">WinstonModule</span>.<span class="hljs-title function_">forRoot</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-attr">level</span>: <span class="hljs-string">'debug'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">transports</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="12">          <span class="hljs-keyword">new</span> transports.<span class="hljs-title class_">Console</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="13">              <span class="hljs-attr">format</span>: format.<span class="hljs-title function_">combine</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="14">                  format.<span class="hljs-title function_">colorize</span>(),</span>
+<span class="code-block-extension-codeLine" data-line-num="15">                  format.<span class="hljs-title function_">printf</span>(<span class="hljs-function">(<span class="hljs-params">{context, level, message, time}</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">                      <span class="hljs-keyword">const</span> appStr = chalk.<span class="hljs-title function_">green</span>(<span class="hljs-string">`[NEST]`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="17">                      <span class="hljs-keyword">const</span> contextStr = chalk.<span class="hljs-title function_">yellow</span>(<span class="hljs-string">`[<span class="hljs-subst">${context}</span>]`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="18">  </span>
+<span class="code-block-extension-codeLine" data-line-num="19">                      <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${appStr}</span> <span class="hljs-subst">${time}</span> <span class="hljs-subst">${level}</span> <span class="hljs-subst">${contextStr}</span> <span class="hljs-subst">${message}</span> `</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">                  })</span>
+<span class="code-block-extension-codeLine" data-line-num="21">              ),</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23">          }),</span>
+<span class="code-block-extension-codeLine" data-line-num="24">          <span class="hljs-keyword">new</span> transports.<span class="hljs-title class_">File</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="25">              <span class="hljs-attr">format</span>: format.<span class="hljs-title function_">combine</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="26">                  format.<span class="hljs-title function_">timestamp</span>(),</span>
+<span class="code-block-extension-codeLine" data-line-num="27">                  format.<span class="hljs-title function_">json</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="28">              ),</span>
+<span class="code-block-extension-codeLine" data-line-num="29">              <span class="hljs-attr">filename</span>: <span class="hljs-string">'111.log'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="30">              <span class="hljs-attr">dirname</span>: <span class="hljs-string">'log'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">          })</span>
+<span class="code-block-extension-codeLine" data-line-num="32">      ]</span>
+<span class="code-block-extension-codeLine" data-line-num="33">  })],</span>
+<span class="code-block-extension-codeLine" data-line-num="34">  <span class="hljs-attr">controllers</span>: [<span class="hljs-title class_">AppController</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="35">  <span class="hljs-attr">providers</span>: [<span class="hljs-title class_">AppService</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="36">})</span>
+<span class="code-block-extension-codeLine" data-line-num="37"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppModule</span> {}</span>
+<span class="code-block-extension-codeLine" data-line-num="38"></span>
+</code></pre>
+<p>之后改一下 main.ts 里用的 logger：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/42d162c402d144e3b2f7d5f9268ef399~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1092&amp;h=502&amp;s=104732&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">app.<span class="hljs-title function_">useLogger</span>(app.<span class="hljs-title function_">get</span>(<span class="hljs-variable constant_">WINSTON_LOGGER_TOKEN</span>));</span>
+</code></pre>
+<p>功能正常：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2241720859204baaaf86b519c85e3273~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1294&amp;h=438&amp;s=129221&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>只不过现在就没必要每次都 new 了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/06cd31d3fde048e199b09f19a550c9f2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1074&amp;h=728&amp;s=160802&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>改成 inject 的方式，始终使用同一个实例，性能更好：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Inject</span>(<span class="hljs-variable constant_">WINSTON_LOGGER_TOKEN</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">private logger;</span>
+</code></pre>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fnest-winston-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/nest-winston-test" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们集成了 nest 和 winston。</p>
+<p>前面我们学过了如何自定义 Nest 的 logger，现在只要在 Logger 的实现里改成 winston 的 logger 就好了。</p>
+<p>只是想要保持 nest 原本日志的格式，需要用 printf 自定义。我们使用 dayjs + chalk 自定义了 winston 的日志格式。</p>
+<p>当然，打印到 File 的日志，依然是 json 的。</p>
+<p>之后封装了个动态模块，在 forRoot 方法里传入 options，模块内创建 winston 的 logger 实例。并且这个模块声明为全局模块。</p>
+<p>这样，在应用的各处都可以注入我们自定义的基于 winston 的 logger 了。</p></div>

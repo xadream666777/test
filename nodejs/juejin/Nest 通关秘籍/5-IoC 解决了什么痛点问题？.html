@@ -1,0 +1,140 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>后端系统中，会有很多对象：</p>
+<ul>
+<li>Controller 对象：接收 http 请求，调用 Service，返回响应</li>
+<li>Service 对象：实现业务逻辑</li>
+<li>Repository 对象：实现对数据库的增删改查</li>
+</ul>
+<p>此外，还有数据库链接对象 DataSource，配置对象 Config 等等。</p>
+<p>这些对象有着错综复杂的关系：</p>
+<p>Controller 依赖了 Service 实现业务逻辑，Service 依赖了 Repository 来做增删改查，Repository 依赖 DataSource 来建立连接，DataSource 又需要从 Config 对象拿到用户名密码等信息。</p>
+<p>这就导致了创建这些对象是很复杂的，你要理清它们之间的依赖关系，哪个先创建哪个后创建。</p>
+<p>比如这样：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> config = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Config</span>({ <span class="hljs-attr">username</span>: <span class="hljs-string">'xxx'</span>, <span class="hljs-attr">password</span>: <span class="hljs-string">'xxx'</span>});</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> dataSource = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DataSource</span>(config);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">const</span> repository = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Repository</span>(dataSource);</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">const</span> service = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Service</span>(repository);</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-keyword">const</span> controller = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Controller</span>(service);</span>
+</code></pre>
+<p>要经过一系列的初始化之后才可以使用 Controller 对象。</p>
+<p>而且像 config、dataSource、repository、service、controller 等这些对象不需要每次都 new 一个新的，一直用一个就可以，也就是保持单例。</p>
+<p>在应用初始化的时候，需要理清依赖的先后关系，创建一大堆对象组合起来，还要保证不要多次 new，是不是很麻烦？</p>
+<p>没错，这是一个后端系统都有的痛点问题。</p>
+<p>解决这个痛点的方式就是 IoC（Inverse of Control）。</p>
+<p>java 的 Spring 就实现了 IoC，Nest 也同样实现了。</p>
+<p>那什么是 IoC 呢？</p>
+<p>之前我们手动创建和组装对象不是很麻烦么，我能不能在 class 上声明依赖了啥，然后让工具去分析我声明的依赖关系，根据先后顺序自动把对象创建好了并组装起来呢？</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6a02ad15e2504619920e06730a00fedb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=932&amp;h=550&amp;s=103716&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>比如这样声明 AppController 依赖了这两个 Service，然后让工具分析依赖自动帮我创建好这三个对象并设置依赖关系。</p>
+<p>这就是 IoC 的实现思路。</p>
+<p>它有一个放对象的容器，程序初始化的时候会扫描 class 上声明的依赖关系，然后把这些 class 都给 new 一个实例放到容器里。</p>
+<p>创建对象的时候，还会把它们依赖的对象注入进去。</p>
+<p>这样不就完成了自动的对象创建和组装么？</p>
+<p>这种依赖注入的方式叫做 Dependency Injection，简称 DI。</p>
+<p>而这种方案为什么叫 IoC 也很容易理解了，本来是手动 new 依赖对象，然后组装起来，现在是声明依赖了啥，等待被注入。</p>
+<p>从主动创建依赖到被动等待依赖注入，这就是 Inverse of Control，反转控制。</p>
+<p>在 class 上声明依赖的方式，大家都选择了装饰器的方式（在 java 里这种语法叫做注解）。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2d890fa5e94e49beb7b296589afb4452~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=898&amp;h=540&amp;s=101458&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>比如上面就是声明这个 class 要放到 IOC 容器里，然后它的依赖是啥。</p>
+<p>这样 IOC 容器扫描到它就知道怎么创建它的对象了。</p>
+<p>知道了 IOC 是啥，下面我们来看看真实的 Nest 项目里是怎么用 IoC 的：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx nest <span class="hljs-keyword">new</span> nest-ioc</span>
+</code></pre>
+<p>执行上面的命令，它会创建一个 nest 项目：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c646a1a3d6e346dab7cc4ed507997ba7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>选择一个 npm 包管理工具，然后 nest cli 会自动创建项目结构并安装依赖：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2e06a93b361f49888d95bd78a05b55eb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后进入这个目录，执行 npm run start，把服务跑起来：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fb4b95248dbd4a9493e6b3e05d407f1a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000" ref="nofollow noopener noreferrer">http://localhost:3000</a> 就可以看到 nest 服务返回的 hello world：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60b7f8ba57a84eebaf895b818a494416~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们看看代码里它是怎么创建对象的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/08429e4340cf4baf851b2bacb1359cd0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它有一个 AppService 声明了 @Injectable，代表这个 class 可注入，那么 nest 就会把它的对象放到 IOC 容器里。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/362872afddcc4a6d8b45e73926c95fe7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>AppController 声明了 @Controller，代表这个 class 可以被注入，nest 也会把它放到 IoC 容器里。</p>
+<p>AppController 的构造器参数依赖了 AppService。</p>
+<p>或者这样通过属性的方式声明依赖：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1145a8a972404fc9a68a5207f7a236bd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=586&amp;h=392&amp;s=58460&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>前者是构造器注入，后者是属性注入，两种都可以。</p>
+<p>为什么 Controller 是单独的装饰器呢？</p>
+<p>因为 Service 是可以被注入也是可以注入到别的对象的，所以用 @Injectable 声明。</p>
+<p>而 Controller 只需要被注入，所以 nest 单独给它加了 @Controller 的装饰器。</p>
+<p>然后在 AppModule 里引入：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6bddbc6b4da34e87bfbaea8245c4b634~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>通过 @Module 声明模块，其中 controllers 是控制器，只能被注入。</p>
+<p>providers 里可以被注入，也可以注入别的对象，比如这里的 AppService。</p>
+<p>然后在入口模块里跑起来：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b8862d45d9c04adc98230c81042e9b4a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那么 nest 就会从 AppModule 开始解析 class 上通过装饰器声明的依赖信息，自动创建和组装对象。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5245830454164037a3001c6c4288a8b3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>所以 AppController 只是声明了对 AppService 的依赖，就可以调用它的方法了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1a0ad84c4cec43bc8c0bbbc2de99e8f5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>nest 在背后自动做了对象创建和依赖注入的工作。</p>
+<p>nest 还加了模块机制，可以把不同业务的 controller、service 等放到不同模块里。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g <span class="hljs-keyword">module</span> other</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2ee471d1a60e4c428046a2dac1ff0b82~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=644&amp;h=106&amp;s=26693&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>会生成如下代码：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d33f113a003b4738a5642240df83535e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1204&amp;h=326&amp;s=66266&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用 nest cli 的 generate 命令生成一个模块。</p>
+<p>会在 AppModule 里自动 imports 这个模块：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/49df422f1ac842f3b3b1f27089ef029f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=928&amp;h=452&amp;s=97333&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当 import 别的模块后，那个模块 exports 的 provider 就可以在当前模块注入了。</p>
+<p>比如我们再生成 OtherService：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g service other</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/41684f4682384465bc0a7697318bdbc8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=752&amp;h=138&amp;s=34546&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>会生成 Service 的代码：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/484501bfb1404c55a4ac311183782541~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=802&amp;h=254&amp;s=39504&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>并自动添加到 OtherModule 的 providers 中：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc073d7985964d66ac58d02ad1dd50e4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=836&amp;h=320&amp;s=57692&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们改下 OtherService，添加一个方法：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5c35a8d474b44d029d8ebbd465e22b7a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=774&amp;h=418&amp;s=50522&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 OtherModule 里 exports：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/14a2fe1b44ed4373a1c619a8ba69a679~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=814&amp;h=334&amp;s=64784&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那当 AppModule 引用了 OtherModule 之后，就可以注入它 exports 的 OtherService 了。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7166b487dde24df6988e8358c0b1cd23~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1336&amp;h=902&amp;s=76285&amp;e=png&amp;b=fefaf9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们在 AppService 里注入下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">OtherService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./other/other.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">  @<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">OtherService</span>) </span>
+<span class="code-block-extension-codeLine" data-line-num="8">  private <span class="hljs-attr">otherService</span>:<span class="hljs-title class_">OtherService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-title function_">getHello</span>(): string {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">return</span> <span class="hljs-string">'Hello World!'</span> + <span class="hljs-variable language_">this</span>.<span class="hljs-property">otherService</span>.<span class="hljs-title function_">xxx</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+</code></pre>
+<p>把服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/110accc85c7a409395c52f33f44ba9ce~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1450&amp;h=410&amp;s=127228&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问下，可以看到 AppModule 的 AppService 调用 OtherModule 的 OtherService 成功了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e6bea726dbab477da9cbeca914e296b2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=560&amp;h=222&amp;s=18540&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是 Nest 的 IoC 机制。</p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fnest-ioc" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/nest-ioc" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>后端系统有很多的对象，这些对象之间的关系错综复杂，如果手动创建并组装对象比较麻烦，所以后端框架一般都提供了 IoC 机制。</p>
+<p>IoC 机制是在 class 上标识哪些是可以被注入的，它的依赖是什么，然后从入口开始扫描这些对象和依赖，自动创建和组装对象。</p>
+<p>Nest 里通过 @Controller 声明可以被注入的 controller，通过 @Injectable 声明可以被注入也可以注入别的对象的 provider，然后在 @Module 声明的模块里引入。</p>
+<p>并且 Nest 还提供了 Module 和 Module 之间的 import，可以引入别的模块的 provider 来注入。</p>
+<p>虽然 Nest 这套实现了 IoC 的模块机制看起来繁琐，但是却解决了后端系统的对象依赖关系错综复杂的痛点问题。</p></div>

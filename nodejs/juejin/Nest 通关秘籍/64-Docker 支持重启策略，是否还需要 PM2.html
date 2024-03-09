@@ -1,0 +1,140 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>前面我们学习了 Docker、Docker Compose，并在 Docker 容器里通过 pm2-runtime 来跑的 node 服务。</p>
+<p>主要是用 pm2 可以在进程崩溃的时候重启进程的功能。</p>
+<p>而其实这个功能 Docker 也是有的。</p>
+<p>我们来试一下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/79d19e3ae36b43db873c883bfed5e831~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">'xxx'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">}, <span class="hljs-number">1000</span>);</span>
+</code></pre>
+<p>1s 以后抛一个错误，进程会终止。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b01b5671e64c49d8bbac08b0351a6937~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们把它放到 Docker 容器里跑。</p>
+<p>写个 dockerfile：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">docker</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-docker code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">FROM node:18-alpine3.14</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">WORKDIR /app</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">COPY ./index.js .</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">CMD ["node", "/app/index.js"]</span>
+</code></pre>
+<p>然后构建成镜像：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">shell</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-shell code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker build -t restart-test:first .</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/30be5a3744f6419a835911a927f6e0d9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 docker desktop 里可以看到：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/442eb01bbb4f480199d473cf41d87c0e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后把它跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker run <span class="hljs-attr">--name</span>=restart-test-container restart-test<span class="hljs-selector-pseudo">:first</span></span>
+</code></pre>
+<p>可以看到，容器 1s 后就停掉了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b27ad9f647c84e7c8b52644a5831f0cd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当进程退出的时候，容器也会停止。</p>
+<p>docker run 的时候也可以指定重启策略：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">scss</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-scss code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker run -d <span class="hljs-attr">--restart</span>=always <span class="hljs-attr">--name</span>=restart-test-container2 restart-test<span class="hljs-selector-pseudo">:first</span></span>
+</code></pre>
+<p>这次加上 -d 把它放到后台跑。</p>
+<p>--restart 指定总是重启。</p>
+<p>然后你在 docker desktop 里就可以看到它一直在 restart：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3588c2f8a4964de09fb232ce2b1d172e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>打印了很多次错误日志：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7d9da6312cb0441bbe32c69d0f787564~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>你可以点击停止，就不会再重启了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a4d553a0a8cf465ab25bc1b1eaa40f51~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是 docker 的自动重启功能。</p>
+<p>前面说过，pm2 也可以自动重启。</p>
+<p>我们试试：</p>
+<p>新建个 222.Dockerfile:</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">docker</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-docker code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">FROM node:18-alpine3.14</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">WORKDIR /app</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">COPY ./index.js .</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">RUN npm install -g pm2</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">CMD ["pm2-runtime", "/app/index.js"]</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+</code></pre>
+<p>然后 build 一下，生成镜像：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker build <span class="hljs-operator">-</span>t restart<span class="hljs-operator">-</span>test:<span class="hljs-keyword">second</span> <span class="hljs-operator">-</span>f <span class="hljs-number">222.</span>Dockerfile .</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eae0f072c6ce4622b6c46733dd27db78~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e9fcfa27f56a4cb69ea935a28679b29b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后跑一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker run -d <span class="hljs-attr">--name</span>=restart-test-container3 restart-test:second</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9ad67906ce364991acbe830204e06aff~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候你会发现容器一直是运行状态，但是内部的进程一直在重启：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/caf61e221d2c4f76a5efc38e0694f5e5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也就是说，Docker 的自动重启功能和 PM2 的自动重启功能是重合的。</p>
+<p>那还有必要用 PM2 么？</p>
+<p>其实 PM2 诞生的时候是没有 Docker 这种容器技术的，那时候都是直接部署在机器上，这时候自然需要一个进程管理工具来做进程的重启、负载均衡等功能。这是 PM2 当年很流行的原因。</p>
+<p>但后来有了 Docker，里面跑的进程崩溃之后，Docker 容器支持自动重启。</p>
+<p>所以，大多数情况下，没必要再用 PM2 了。</p>
+<p>而且如果你用了 K8S 这种容器编排工具，那更没必要用 PM2 了，直接让 K8S 去调度、重启容器就可以。</p>
+<p>但也有另一种说法，Docker 重新跑容器的成本，是比容器内 PM2 重新跑进程的成本高的，所以用 PM2 来管理进程更好一点。</p>
+<p>综上，有了 Docker 基本没大有必要用 PM2 了。但如果单独跑 Docker 容器，还是可以结合 pm2-runtime 来提高重启速度的。</p>
+<p>然后我们继续来看 Docker 的重启策略：</p>
+<p>默认是 no，也就是不自动重启。</p>
+<p>我们测试了 always，是容器退出时总是重启。</p>
+<p>其实还有 on-failure 和 unless-stopped 这两种：</p>
+<p>on-failure 是只有在非正常退出的时候才重启，相比之下，always 不管是不是非正常退出都重启。</p>
+<p>而且 on-failure 还可以指定最多重启几次，比如 on-failure:3 是最多重启三次。</p>
+<p>我们试一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker run -d <span class="hljs-attr">--restart</span>=<span class="hljs-literal">on</span>-failure:<span class="hljs-number">2</span> --name=restart-test-container4 restart-test:first</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f2f20974e8414438baf8e031343884fd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到容器重启了 2 次，一共打印了 3 次错误就不再重启了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aecb683f615e4df5817857492d662dcd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再来试试 unless-stopped：</p>
+<p>unless-stopped 是除非手动停止，否则总是会重启。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker run -d <span class="hljs-attr">--restart</span>=unless-stopped <span class="hljs-attr">--name</span>=restart-test-container5 restart-test<span class="hljs-selector-pseudo">:first</span></span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/44c481d7b3a14646afeeca1869242df1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到容器一直在重启：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2ee727df0f3c4255b288997a0bacd872~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>除非点击停止按钮，也就是执行 docker stop 才会停止：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/23e73caafe1f4b8d9da4fa258043fa37~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker stop restart-test-container5</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/37f82a673df44b2dba54dad27b47406c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6cb0ae15b4864ca2bc211e985e86522e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那看起来和 always 也没啥区别呀，都是只有手动 stop 才能停止，否则一直重启。</p>
+<p>还是有区别的，就是在 Docker Deamon 重启的时候。</p>
+<p>现在 docker-test-container2 是用的 always 的重启策略，docker-test-container5 是用的 unless-stopped 的重启策略:</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c10f4ad725ac4f949ca99d498df45cfe~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这俩容器都停掉了。</p>
+<p>现在我们重启 Docker：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c795fc3e9b67418eb32ccc804f7148d5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p>他会重启跑 Docker Engine ，也就是 Docker Deamon 的后台进程。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/86d55f34b6e5426f87d014a701f97578~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候你会发现，always 重启策略的容器又跑起来了，而 unless-stopped 的容器没有重启。这就是这俩的区别：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/daf46a72601f43af877f5b6eee7dff41~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p>Docker Compose 是用于同时跑多个 Docker 容器的，它自然也支持 restart 的配置：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1c171bb5150949c5b1657523e6b96799~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fdocker-restart-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/docker-restart-test" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>Docker 是支持自动重启的，可以在 docker run 的时候通过 --restart 指定重启策略，或者 Docker Compose 配置文件里配置 restart。</p>
+<p>有 4 种重启策略：</p>
+<ul>
+<li>no: 容器退出不自动重启（默认值）</li>
+<li>always：容器退出总是自动重启，除非 docker stop。</li>
+<li>on-failure：容器非正常退出才自动重启，还可以指定重启次数，如 on-failure:5</li>
+<li>unless-stopped：容器退出总是自动重启，除非 docker stop</li>
+</ul>
+<p>重启策略为 always 的容器在 Docker Deamon 重启的时候容器也会重启，而 unless-stopped 的不会。</p>
+<p>其实我们用 PM2 也是主要用它进程崩溃的时候重启的功能，而在有了 Docker 之后，用它的必要性就不大了。</p>
+<p>当然，进程重启的速度肯定是比容器重启的速度快一些的，如果只是 Docker 部署，可以结合 pm2-runtime 来做进程的重启。</p>
+<p>绝大多数情况下，直接用 Docker 跑 node 脚本就行，不需要 PM2。</p></div>

@@ -1,0 +1,370 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>懒加载（Lazy Load）是指将部分资源延迟加载，从而优化页面渲染时用户体验的优化手段。
+懒加载的优化目标可以是浏览器中一切需要HTTP请求响应的资源，这一节我们将专注于代码模块（Module）的懒加载实现。</p>
+<p>在<a href="https://link.juejin.cn?target=https%3A%2F%2Fvuejs.org%2Fguide%2Fintroduction.html" target="_blank" rel="nofollow noopener noreferrer" title="https://vuejs.org/guide/introduction.html" ref="nofollow noopener noreferrer">Vue.js官方文档页面</a>中，就对渲染搜索框组件的JS代码模块进行了懒加载优化，这部分组件的代码被分割成了一个独立的 <code>VPAlgoliaSearchBox.d8791224.js</code>文件，并延迟到页面渲染后、用户点击搜索框时才加载，从而为页面初始化节省了 28 KB（占总体积近10%）的JS加载体积及解析执行开销，低投入高产出地改善了用户体验。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4e07997995014e5f8c4b151f962aa0d1~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=985&amp;s=217032&amp;e=png&amp;b=292929" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但是要如何为前端项目实施懒加载，往往需要细致入微的分析。</p>
+<h2 data-id="heading-0">1. 模块懒加载核心原理</h2>
+<p>首先让我们从模块懒加载的原理讲起。</p>
+<p>代码模块懒加载的实现核心基于2项原理：</p>
+<ul>
+<li>代码模块化</li>
+<li>动态导入语法<code>import()</code></li>
+</ul>
+<h3 data-id="heading-1">1. 代码模块化</h3>
+<p>现代前端工程普遍基于Webpack、Rollup等工具的打包能力，实现源代码模块化，把源代码分割为多个独立的模块（Module），对应独立的JS、CSS文件，从而方便地隔离命名空间、封装代码、复用模块、管理依赖。</p>
+<p>前端领域主要的模块化规范有2类，分别是：</p>
+<ul>
+<li>ES Module：ECMAScript 标准定义的模块化规范，主要使用 <code>export</code>&amp;&amp; <code>import</code> 语法，实现模块的导入和导出。</li>
+<li>Common JS Module：是被Node.js采用的模块化规范，使用 <code>require()</code> 函数和 <code>module.exports</code>对象实现模块的导入导出功能。</li>
+</ul>
+<p>正是因为基于模块化的开发模式，我们才能实现对指定模块，例如某个JS文件、某个CSS文件，进行懒加载。</p>
+<h3 data-id="heading-2">2. Webpack 模块动态导入特性</h3>
+<p>Webpack等现代前端构建工具的**<a href="https://link.juejin.cn?target=https%3A%2F%2Fwebpack.js.org%2Fguides%2Fcode-splitting%2F%23dynamic-imports" target="_blank" rel="nofollow noopener noreferrer" title="https://webpack.js.org/guides/code-splitting/#dynamic-imports" ref="nofollow noopener noreferrer">动态导入（Dynamic Import）</a>** 特性是JS懒加载得以实现的基础。</p>
+<p>动态导入在ES模块化规范的基础上新增了**<code>import()</code>** API，使用该语法：</p>
+<ul>
+<li>导入语句会返回一个<code>Promise</code>实例，模块加载成功后将转变为<code>fullfilled</code>状态，加载失败则为<code>failed</code>状态。</li>
+<li>在构建时，对应模块会被拆分为独立的区块（<code>chunk</code>），生成独立的产物文件。</li>
+<li>在运行时，会在模块需要加载执行时，通过动态添加<code>script</code>标签，触发下载并运行对应的产物文件。</li>
+</ul>
+<p>使用示例：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>&nbsp;</th><th>普通写法</th><th>懒加载写法</th></tr></thead><tbody><tr><td>代码示例</td><td>import LoginPage from '../pages/login'</td><td>const LoginPage = import('../pages/login')</td></tr></tbody></table>
+<p><code>import()</code>还可以通过<a href="https://link.juejin.cn?target=https%3A%2F%2Fwebpack.js.org%2Fapi%2Fmodule-methods%2F%23magic-comments" target="_blank" rel="nofollow noopener noreferrer" title="https://webpack.js.org/api/module-methods/#magic-comments" ref="nofollow noopener noreferrer">魔法注释（magic comment）</a> 配置动态导入的方式，文件名称等细节，详细配置如下：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>&nbsp;</th><th>介绍</th><th>使用示例</th><th>效果</th></tr></thead><tbody><tr><td>webpackChunkName</td><td>指定产出文件的名称。如果为多个不同的动态导入的模块，备注同一个<code>webpackChunkName</code>，那么这些模块就会被合并为一个区块，最终合并到同一个打包产物文件中。<br>这个技巧，也可以用于把多个模块合并为一个产物文件。</td><td><code>const LoginPage = import(        /* webpackChunkName: "login" */   '../pages/login' )</code></td><td>在Webpack打包构建时，@/pages/login对应模块会被组成名为login的区块，如果是JS类型，则最终产物文件名就是login.js。<br>如果没有声明<code>webpackChunkName</code>，通常会以区块（chunk）的数字ID作为产物文件名。</td></tr><tr><td><code>webpackMode</code></td><td>指定加载模块的方式，可选值包括：<code>lazy</code>（默认值）：懒加载目标模块，打包构建时模块文件会分割出1个独立的区块chunk，对应1个产物文件。<br>只在模块导入语句<code>import()</code>执行时才发起HTTP请求加载其产物文件。<code>lazy-once</code>：专用于动态导入路径，会把所有动态路径匹配的模块文件合并为1个chunk，打包成1个产物文件。<br>运行时，执行<code>import()</code>加载产物文件时会复用同一个资源。eager：目标模块打包构建不会产生额外的chunk，也就不会有产物文件，而是会把对应模块的代码合并进已有的chunk中。</td><td><code>// 1. lazy-once async function getIcon(name) {   return import(             /* webpackMode: "lazy-once" */   `../image/${name}.svg` ) }  const HomeIcon = getIcon('home') const BlogIcon = await getIcon('blog')  // 2. eager const LoginPage = import(        /* webpackMode: "eager" */   '../pages/login' )</code></td><td><code>lazy-once</code>设置为lazy-once的多个.svg文件模块，会被打包成1个chunk，产生1个独立的产物文件。多次调用<code>getIcon(name)</code>也不会重复发送网络请求，加载资源，而是会复用已经加载的资源文件。<br><code>eager</code>没有额外的打包产物文件。但是import()仍然返回一个Promise实例。</td></tr></tbody></table>
+<blockquote>
+<p>在2023年，动态导入语法已经成为ECMA Script 标准的一部分，在全球浏览器平台有96%以上的支持率，浏览器兼容性详情：<a href="https://link.juejin.cn?target=https%3A%2F%2Fcaniuse.com%2F%3Fsearch%3Ddynamic%2520import" target="_blank" rel="nofollow noopener noreferrer" title="https://caniuse.com/?search=dynamic%20import" ref="nofollow noopener noreferrer">caniuse.com/?search=dyn…</a></p>
+</blockquote>
+<h2 data-id="heading-3">2. 示例：为前端项目实施懒加载优化</h2>
+<p>我们仍然以这本书配套的前端优化示例项目 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo" ref="nofollow noopener noreferrer">fe-optimization-demo</a> 为例，演示实施懒加载优化的核心流程。</p>
+<h3 data-id="heading-4">1. 分析懒加载目标模块</h3>
+<p>首先，我们要具体问题具体分析，根据项目的模块构成、业务逻辑，分析可以实施懒加载的模块，必备的工具是<code>webpack-bundle-analyzer-plugin</code>。</p>
+<h4 data-id="heading-5">打包构建分析神器：<code>webpack-bundle-analyzer-plugin</code></h4>
+<p>工欲善其事必先利其器，<code>webpack-bundle-analyzer-plugin</code>是我们处理分析打包构建问题的必备神器。</p>
+<p>它作为一个Webpack插件，可以在Webpack运行时，收集各个产物文件的体积大小、模块包含关系等数据，并以HTML文件的形式生成一份可视化图表供我们分析。</p>
+<p>示例项目中已经配置好了这一插件，配置源码：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo%2Fblob%2Fmain%2Fwebpack%2Fcommon.config.js%23L16" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo/blob/main/webpack/common.config.js#L16" ref="nofollow noopener noreferrer">github.com/JuniorTour/…</a></p>
+<p>用 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo" ref="nofollow noopener noreferrer">fe-optimization-demo</a> 项目的<code>main</code>分支，运行<code>npm run build</code>就能生成一份，如下图所示的图表：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fecfd8c0c35b4b4aab15d40bd570d032~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=239736&amp;e=png&amp;b=6590d9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这张图表中，左侧是页面控制功能，主要有：</p>
+<ul>
+<li>
+<p>体积类型（Treemap sizes）：</p>
+<ul>
+<li>输入的源代码体积（Stat）</li>
+<li>输出的打包构建后产物体积（Parsed）</li>
+<li>经过Gzip压缩的打包构建后产物体积（Gzipped）</li>
+</ul>
+</li>
+<li>
+<p>显示合并模块内容（Show content of concatenated modules (inaccurate)）：勾选后可以粗略的显示被Webpack <code>ModuleConcatenationPlugin</code>合并优化过的模块内容。</p>
+</li>
+<li>
+<p>搜索（Search）：支持输入正则表达式，根据模块文件名，过滤只显示部分模块。</p>
+</li>
+</ul>
+<p>右侧是每个产物文件所包含模块的可视化图表，图表中每个方块就代表了一个模块（Module），方块的大小代表了其体积的大小，方块之间的包含关系代表模块的包含关系。</p>
+<p>例如上图中最大的的蓝色方块就是打包产物文件<code>vendors.102eae...js</code>文件所包含的各个模块，其中包括：</p>
+<ul>
+<li>
+<p>面积最大（也就是代码模块体积最大）的<code>@hot-loader/react-dom</code>模块</p>
+</li>
+<li>
+<p><code>effector/effector.mjs</code></p>
+</li>
+<li>
+<p>......</p>
+</li>
+</ul>
+<p>使用<code>webpack-bundle-analyzer</code>也非常简单，只需要2步。</p>
+<p>首先，安装依赖：<code>npm install --save-dev webpack-bundle-analyzer</code></p>
+<p>其次，添加到 Webpack 配置中，示例代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> { <span class="hljs-title class_">BundleAnalyzerPlugin</span> } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'webpack-bundle-analyzer'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-comment">// ...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attr">plugins</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">new</span> <span class="hljs-title class_">BundleAnalyzerPlugin</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-attr">analyzerMode</span>: <span class="hljs-string">'static'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-attr">defaultSizes</span>: <span class="hljs-string">'gzip'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">openAnalyzer</span>: <span class="hljs-literal">false</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    }),</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  ]</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+</code></pre>
+<p><code>webpack-bundle-analyzer</code>有一些常用的配置项：</p>
+<ul>
+<li>
+<p><code>analyzerMode</code>：生成报告的模式，可选值有：</p>
+<ul>
+<li><code>server</code>：在本地启动一个静态资源服务器，访问服务器URL（默认是<a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A8888%2F%25EF%25BC%2589%25E5%25B0%25B1%25E5%258F%25AF%25E4%25BB%25A5%25E7%259C%258B%25E5%2588%25B0%25E6%258A%25A5%25E5%2591%258A%25E3%2580%2582" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:8888/%EF%BC%89%E5%B0%B1%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0%E6%8A%A5%E5%91%8A%E3%80%82" ref="nofollow noopener noreferrer">http://localhost:8888/）就可以看到报告。</a></li>
+<li><code>json</code>：生成一个JSON文件包含模块的体积、包含内容数据。</li>
+<li><code>static</code>（推荐选项）：生成一个静态HTML文件，包含可视化图表的代码和模块数据。</li>
+<li><code>disabled</code>：不生成任何报告。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>可以用于通过环境变量动态改变<code>disabled</code>值，控制是否运行插件、生成报告。</p>
+<p>对不需要报告的开发环境，关闭<code>webpack-bundle-analyzer</code>，可以减少打包编译耗时。</p>
+<p>例如：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// common.config.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">new</span> <span class="hljs-built_in">BundleAnalyzerPlugin</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-comment">// ...      </span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  disabled: !!process.env.enableBundleAnalyzer,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}),</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-comment">// package.json</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-string">"scripts"</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-string">"build"</span>: <span class="hljs-string">"cross-env NODE_ENV=production webpack"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-string">"build-with-bundle-analyzer"</span>: <span class="hljs-string">"cross-env NODE_ENV=production enableBundleAnalyzer=true webpack"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+</blockquote>
+<ul>
+<li>
+<p><code>defaultSizes</code>：默认的体积类型，可选值对应生成的可视化图表HTML页面左侧的体积类型（Treemap sizes）选项，有：</p>
+<ul>
+<li><code>'stat'</code>：源码体积。</li>
+<li><code>'parsed'</code> ：输出的打包构建后产物体积。</li>
+<li><code>'gzip'</code>：经过Gzip压缩的打包构建后产物体积。<strong>推荐选择，因为</strong>更接近生产环境的体积</li>
+</ul>
+</li>
+<li>
+<p><code>openAnalyzer</code>：是否在构建完成后自动打开生成的HTML图表，可选值有<code>true</code>、<code>false</code>。</p>
+</li>
+</ul>
+<p>分析了项目当前的模块构成，我们再学习2种确定懒加载目标模块的思路。</p>
+<h4 data-id="heading-6">1. 按路由</h4>
+<p>第一种思路是按照前端路由分析懒加载的目标。</p>
+<p>常见的单页应用（SPA）前端项目会基于前端路由，形成许多路由路径对应的页面组件，例如登录页<code>/login</code>对应的模块，源码主要写在<code>login.tsx</code>文件中。</p>
+<p>用户访问时，一般只需要渲染1个路由，其余的路由暂时不需要加载运行，我们就可以对这些暂不运行的页面组件进行懒加载优化。</p>
+<p>以我们的示例项目为例，路由路径和对应页面组件有：</p>
+<ul>
+<li><code>/``login</code>：<code>'@/pages/login'</code></li>
+<li><code>/registration</code>：<code>'@/pages/registration'</code></li>
+<li><code>/home</code>：<code>'@/pages/home'</code></li>
+<li><code>/article</code>：<code>'@/pages/article'</code></li>
+<li>......</li>
+</ul>
+<p>这些页面组件模块都可以进行懒加载优化，延迟加载其代码，推迟到组件需要渲染时再加载，从而减轻页面初始化时的性能负担。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fe195616bf5c4cb6a811c73d0eab3992~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=204918&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h4 data-id="heading-7">2. 按模块体积</h4>
+<p>第一种思路是按照<strong>模块体积大小</strong>分析懒加载的目标。</p>
+<p>我们使用<code>webpack-bundle-analyzer-plugin</code>生成的可视化图表，观察各个模块的体积，把体积较大的模块作为懒加载优化的目标。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dfb1e294b6b9452b9a9e0bb5aec763b8~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=237705&amp;e=png&amp;b=6690d9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在我们的示例项目中，按体积大小排序，前几大模块排名如下：</p>
+<ul>
+<li><code>react-dom.production.min.js</code></li>
+<li><code>effector.mjs</code></li>
+<li><code>react-hook-form/dist/index.esm.mjs</code>：6.83 KB</li>
+<li><code>axios</code></li>
+<li><code>history</code></li>
+<li><code>react.production.min.js</code></li>
+<li><code>mardown-to-jsx/dist/index.modern.js</code>: 5.39 KB</li>
+</ul>
+<p>这其中大多数都是项目初始化的核心依赖模块，例如<code>react-dom</code>, <code>axios</code>，没有这些模块，前端页面无法完成渲染，所以不建议进行懒加载优化处理。</p>
+<p>但是<code>react-hook-form/dist/index.esm.mjs</code>、<code>mardown-to-jsx/dist/index.modern.js</code>这2个模块，则并非页面初始化渲染所必须的模块，可以进行懒加载优化。</p>
+<p>并且因为这2个模块的体积较大，预计懒加载后也会有较好的优化效果。</p>
+<h3 data-id="heading-8">2. 修改导入代码</h3>
+<p>确定了优化的目标模块，就可以开始修改代码，实现懒加载了。</p>
+<p>实现懒加载的工作量，主要在于<strong>修改导入</strong>，也就是把原来基于<code>import * from 'moduleName'</code>语法直接导入的代码，改成<code>import()</code>动态导入语法。</p>
+<p>要注意的细节是：一定要找到目标模块的<strong>所有</strong>导入，统一修改为动态导入。</p>
+<p>如果遗漏了部分直接导入没有改成动态导入，那么目标模块并不会被拆分为独立区块<code>chunk</code>、不会产生独立的产物文件。因为如果遗漏部分<code>import * from</code>直接导入语法，目标模块会被<code>Webpack</code>判断为无法动态导入。</p>
+<p>所以我们要全局搜索目标模块的所有导入，统一改为动态导入，同时还可以通过魔法注释设置统一的模块名称，加载方式，确保所有导入可以被拆分为一个独立文件。</p>
+<p>请看代码示例：</p>
+<h4 data-id="heading-9">1. 示例路由组件模块改动</h4>
+<p>对于路由组件模块，懒加载优化前，我们使用的是直接导入路由组件：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// app.tsx</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> <span class="hljs-title class_">ArticlePage</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'@/pages/article'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> <span class="hljs-title class_">EditorPage</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'@/pages/editor'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> <span class="hljs-title class_">HomePage</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'@/pages/home'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">import</span> <span class="hljs-title class_">LoginPage</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'@/pages/login'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">import</span> <span class="hljs-title class_">NoMatchPage</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'@/pages/no-match'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">import</span> <span class="hljs-title class_">ProfilePage</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'@/pages/profile'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">import</span> <span class="hljs-title class_">RegistrationPage</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'@/pages/registration'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-keyword">import</span> <span class="hljs-title class_">SettingsPage</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'@/pages/settings'</span>;</span>
+</code></pre>
+<p>要为这些组件实现懒加载，主要需要3步：</p>
+<ol>
+<li>改动1：直接导入改为动态导入</li>
+<li>改动2：对于<code>React</code>组件类模块，还需要使用框架提供的<code>lazy()</code>包裹动态导入语法，从而将导入的模块转变为<code>React</code>组件（<code>FiberNode</code>）。</li>
+</ol>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// app.tsx</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { lazy, <span class="hljs-title class_">Suspense</span>, useState, useCallback } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> <span class="hljs-title class_">LoginPage</span> = <span class="hljs-title function_">lazy</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">import</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-comment">/* webpackChunkName: "login" */</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-string">'@/pages/login'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">));</span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">const</span> <span class="hljs-title class_">RegistrationPage</span> = <span class="hljs-title function_">lazy</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">import</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-comment">/* webpackChunkName: "registration" */</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-string">'@/pages/registration'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">));</span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-keyword">const</span> <span class="hljs-title class_">HomePage</span> = <span class="hljs-title function_">lazy</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">import</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-comment">/* webpackChunkName: "home" */</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-string">'@/pages/home'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">));</span>
+<span class="code-block-extension-codeLine" data-line-num="16"><span class="hljs-keyword">const</span> <span class="hljs-title class_">EditorPage</span> = <span class="hljs-title function_">lazy</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">import</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  <span class="hljs-comment">/* webpackChunkName: "editor" */</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">  <span class="hljs-string">'@/pages/editor'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">));</span>
+<span class="code-block-extension-codeLine" data-line-num="20"><span class="hljs-keyword">const</span> <span class="hljs-title class_">SettingsPage</span> = <span class="hljs-title function_">lazy</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">import</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="21">  <span class="hljs-comment">/* webpackChunkName: "settings" */</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">  <span class="hljs-string">'@/pages/settings'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">));</span>
+<span class="code-block-extension-codeLine" data-line-num="24"><span class="hljs-keyword">const</span> <span class="hljs-title class_">ProfilePage</span> = <span class="hljs-title function_">lazy</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">import</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="25">  <span class="hljs-comment">/* webpackChunkName: "profile" */</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">  <span class="hljs-string">'@/pages/profile'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">));</span>
+<span class="code-block-extension-codeLine" data-line-num="28"><span class="hljs-keyword">const</span> <span class="hljs-title class_">ArticlePage</span> = <span class="hljs-title function_">lazy</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">import</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="29">  <span class="hljs-comment">/* webpackChunkName: "article" */</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30">  <span class="hljs-string">'@/pages/article'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">));</span>
+<span class="code-block-extension-codeLine" data-line-num="32"><span class="hljs-keyword">const</span> <span class="hljs-title class_">NoMatchPage</span> = <span class="hljs-title function_">lazy</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">import</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="33">  <span class="hljs-comment">/* webpackChunkName: "no-match" */</span></span>
+<span class="code-block-extension-codeLine" data-line-num="34">  <span class="hljs-string">'@/pages/no-match'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="35">));</span>
+</code></pre>
+<ol start="3">
+<li>改动3：最后别忘了配合<code> &lt;Suspense fallback={&lt;Loading  ``/``&gt;} &gt;</code> 组件，在懒加载的组件模块代码加载过程中，为前端应用的UI提供替代UI（<code>fallback</code>）。</li>
+</ol>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">  &lt;<span class="hljs-title class_">Suspense</span> fallback={<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Spinner</span> /&gt;</span></span>}&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-comment">// &lt;Route</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Suspense</span> /&gt;</span></span></span>
+</code></pre>
+<h4 data-id="heading-10">2. 示例：NPM模块 <code>mardown-to-jsx/dist/index.modern.js</code></h4>
+<p>对于NPM模块，不使用懒加载、直接导入NPM包的代码是这样的：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> <span class="hljs-title class_">Markdown</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'markdown-to-jsx'</span>;</span>
+</code></pre>
+<p>开启懒加载后的改动，主要有2步：</p>
+<ol>
+<li>改动1：直接导入改为动态导入</li>
+</ol>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// import Markdown from 'markdown-to-jsx';</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Row</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@/shared/ui'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { selectors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../model'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Tags</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./tags'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">let</span> <span class="hljs-title class_">Markdown</span> = <span class="hljs-literal">null</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">let</span> startLoad = <span class="hljs-literal">false</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-keyword">function</span> <span class="hljs-title function_">lazyLoadMarkdownToJSX</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-keyword">if</span> (startLoad) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  startLoad = <span class="hljs-literal">true</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-title function_">import</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-comment">/* webpackChunkName: "markdown-to-jsx" */</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-string">'markdown-to-jsx'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">  )</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    .<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params"><span class="hljs-variable language_">module</span></span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-title class_">Markdown</span> = <span class="hljs-variable language_">module</span>.<span class="hljs-property">default</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    .<span class="hljs-title function_">catch</span>(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(err);</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="24">}</span>
+<span class="code-block-extension-codeLine" data-line-num="25"></span>
+<span class="code-block-extension-codeLine" data-line-num="26"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">Content</span> = (<span class="hljs-params"></span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="27">  <span class="hljs-title function_">lazyLoadMarkdownToJSX</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="28">  <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Markdown</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="30">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="31">  <span class="hljs-keyword">const</span> { body } = selectors.<span class="hljs-title function_">useArticle</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="32"></span>
+<span class="code-block-extension-codeLine" data-line-num="33">  <span class="hljs-keyword">return</span> (</span>
+<span class="code-block-extension-codeLine" data-line-num="34">    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Row</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"article-content"</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="35">      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"col-xs-12"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="36">        <span class="hljs-tag">&lt;<span class="hljs-name">Markdown</span>&gt;</span>{body}<span class="hljs-tag">&lt;/<span class="hljs-name">Markdown</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="37">        <span class="hljs-tag">&lt;<span class="hljs-name">Tags</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="38">      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="39">    <span class="hljs-tag">&lt;/<span class="hljs-name">Row</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="40">  );</span>
+<span class="code-block-extension-codeLine" data-line-num="41">};</span>
+</code></pre>
+<ol start="2">
+<li>改动2：为模块加载过程中的调用，添加保护的兜底逻辑。确保模块未加载时，组件不会直接调用模块，进而导致前端应用报错崩溃。</li>
+</ol>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">Content</span> = (<span class="hljs-params"></span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-title function_">lazyLoadMarkdownToJSX</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Markdown</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="6">}</span>
+</code></pre>
+<p>另外，Vue.js 框架同样支持懒加载，请看示例代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// 1. vue-router 路由组件懒加载</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-comment">// 文档：https://router.vuejs.org/guide/advanced/lazy-loading.html</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> <span class="hljs-title function_">UserDetails</span> = (<span class="hljs-params"></span>) =&gt; <span class="hljs-title function_">import</span>(<span class="hljs-string">'./views/UserDetails.vue'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">const</span> router = <span class="hljs-title function_">createRouter</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-comment">// ...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">routes</span>: [{ <span class="hljs-attr">path</span>: <span class="hljs-string">'/users/:id'</span>, <span class="hljs-attr">component</span>: <span class="hljs-title class_">UserDetails</span> }],</span>
+<span class="code-block-extension-codeLine" data-line-num="8">})</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-comment">// 2. Vue.js 组件懒加载</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-comment">// 文档：https://vuejs.org/guide/components/async.html</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">&lt;script setup&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="13"><span class="hljs-keyword">import</span> { defineAsyncComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'vue'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15"><span class="hljs-keyword">const</span> <span class="hljs-title class_">AdminPage</span> = <span class="hljs-title function_">defineAsyncComponent</span>(<span class="hljs-function">() =&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">  <span class="hljs-title function_">import</span>(<span class="hljs-string">'./components/AdminPageComponent.vue'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="17">)</span>
+<span class="code-block-extension-codeLine" data-line-num="18">&lt;/script&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20"><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">  <span class="hljs-tag">&lt;<span class="hljs-name">AdminPage</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22"><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span></span>
+</code></pre>
+<h3 data-id="heading-11">3. 验证懒加载效果</h3>
+<p>优化目标模块都改成了动态导入，懒加载代码改造就算初步完成了，我们就可以继续用<code>webpack-bundle-analyzer-plugin</code>开始验证懒加载的效果。</p>
+<p>运行<code>npm run build-with-bundle-analyzer</code>后，就能得到懒加载后的模块分布可视化图：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/11dac127b9644c2e8ea2915a9e0ac0c7~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=270646&amp;e=png&amp;b=6798d9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>仔细观察这张图，我们会发现路由组件确实已经被拆分为独立产物文件：<code>login.${hash}.js</code>。<code>home.${hash}.js</code>等等，但是我们专门处理过的<code>markdown-to-jsx</code>模块却<strong>没有被拆分</strong>为独立产物文件，仍然留在了<code>vendors.${hash}.js</code>之中，这显然不符合预期。</p>
+<p>这正是懒加载的常见问题之一，下一节我们将专门探讨3类懒加载实施的常见问题，帮助大家轻松驾驭懒加载。</p></div>

@@ -1,0 +1,419 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>CSS是前端应用的基石之一，但CSS的开发体验却饱受诟病，为什么会有这样的反差呢？</p>
+<p>让我们从一道<strong>简单</strong>的面试题开始说起。</p>
+<h2 data-id="heading-0">1. 一道简单的CSS面试题</h2>
+<p><strong>问题：下列HTML代码在浏览器中加载渲染后，</strong> <strong><code>body元素</code></strong> <strong>中2个</strong> <strong><code>div元素</code></strong> <strong>的前景色</strong> <strong><code>color</code></strong> <strong>分别是什么？</strong></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>简单的 CSS 面试题<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-selector-class">.blue</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attribute">color</span>: blue;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-selector-class">.red</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attribute">color</span>: red;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"blue red"</span>&gt;</span>我是什么颜色？<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"red blue"</span>&gt;</span>我是什么颜色？<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<details>
+  <summary>点击展开答案</summary>
+答案：2个`div`的前景色`color`分别是`red`和`red`。
+<p>因为CSS样式最终是否生效，取决于CSS规则<strong>声明</strong>的先后<strong>顺序</strong>，而非CSS class的先后顺序。</p>
+</details>
+<p>这是个易错题，即使有多年的CSS开发经验，也会因为对CSS<strong>隐式规则</strong>的疏忽而判断错误。</p>
+<p>理解了这道面试题，CSS在开发中的痛点就可见一斑了。</p>
+<h2 data-id="heading-1">2. CSS开发体验痛点</h2>
+<p>CSS最显著的痛点就是<strong>可维护性差</strong>，具体表现在：</p>
+<h3 data-id="heading-2">1. 语法简陋</h3>
+<p>CSS并非编程语言，其语法缺乏逻辑控制，变量，循环等特性，不便于编写复杂的动态样式，对如今业务逻辑复杂的前端应用来说，语法堪称简陋。</p>
+<h3 data-id="heading-3">2. 全局作用域污染</h3>
+<p>CSS默认运行在全局作用域中，同时模块化能力又有限，类名样式对所有元素生效，导致类名冲突难以避免，样式容易被覆盖。</p>
+<h3 data-id="heading-4">3. 选择器规则复杂</h3>
+<p>CSS的类名选择符特性依赖优先级生效，但优先级计算规则又相当复杂，对人类开发者并不友好。</p>
+<h3 data-id="heading-5">4. 代码关联性差</h3>
+<p>CSS与JS、HTML配合紧密，代码却又相互隔离，缺乏关联，导致开发者需要在3者之间频繁切换注意力，对开发效率和体验都有负面影响。</p>
+<p>避免开发者频繁切换注意力，从而提高开发效率，也是Vue.js提出单文件组件（即SFC、<code>.vue</code>文件）和<code>React.js</code>使用JSX的初衷。</p>
+<h3 data-id="heading-6">5. 样式生效依赖隐式规则</h3>
+<p>CSS的样式最终是否生效，<strong>隐式</strong>的依赖许多难以控制的因素，例如：</p>
+<ul>
+<li>CSS 规则声明的先后顺序：或者说<code>style</code>或<code>link</code>标签在HTML中的先后顺序。（即本节开头面试题的<strong>考点</strong>）</li>
+<li>元素继承关系：部分CSS样式规则可以在应用到父元素后，通过继承关系，应用到子元素上。</li>
+</ul>
+<p>这些因素在开发实践中通常<strong>难以控制</strong>，尤其是现代的前端工程大都依赖打包构建工具，将模块化的代码，合并成产物文件。对于有成百上千个组件模块的前端项目，CSS代码合并后的顺序往往不能控制，甚至难以预测。</p>
+<blockquote>
+<p>注：以Webpack为例，其对CSS代码进行打包时，是基于导入CSS文件的顺序，决定的产物代码的顺序。</p>
+<p>具体到我们常用的组件开发模式，也就是Webpack遍历组件依赖关系时，确定的组件依赖顺序。如果有大量组件相互依赖、引用，这个依赖关系非常难以预测，也就很难控制CSS产物代码的舒顺序。</p>
+<p>来源：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack%2Fissues%2F215" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/webpack/webpack/issues/215" ref="nofollow noopener noreferrer">github.com/webpack/web…</a></p>
+</blockquote>
+<blockquote>
+<p>注：CSS痛点导致开发问题的例子：</p>
+<ul>
+<li>Next.js 因 style 标签先后顺序导致样式错乱BUG，饱受困扰多年，仍未能修复：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Fissues%2F16630" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/vercel/next.js/issues/16630" ref="nofollow noopener noreferrer">github.com/vercel/next…</a></li>
+<li>Stack Overflow上关于CSS覆盖顺序的提问：<a href="https://link.juejin.cn?target=https%3A%2F%2Fstackoverflow.com%2Fquestions%2F9459062%2Fin-which-order-do-css-stylesheets-override" target="_blank" rel="nofollow noopener noreferrer" title="https://stackoverflow.com/questions/9459062/in-which-order-do-css-stylesheets-override" ref="nofollow noopener noreferrer">stackoverflow.com/questions/9…</a></li>
+<li>第10节《细粒度代码分割》提到的代码分割后CSS覆盖问题：<a href="https://juejin.cn/book/7306163555449962533/section/7311383850400120884#heading-10" target="_blank" title="https://juejin.cn/book/7306163555449962533/section/7311383850400120884#heading-10">juejin.cn/book/730616…</a></li>
+</ul>
+</blockquote>
+<h2 data-id="heading-7">3. CSS开发体验优化方案</h2>
+<p>有痛点就有解决方案，过去许多年来，业界也为解决CSS的痛点尝试过众多解决方案，接下来我们一起来了解6类CSS优化方案的利弊得失。</p>
+<h3 data-id="heading-8">1. 类名命名原则</h3>
+<p>第一类解决方案是类名命名原则，代表工具是BEM方法论：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgetbem.com%2F%25E3%2580%2582" target="_blank" rel="nofollow noopener noreferrer" title="https://getbem.com/%E3%80%82" ref="nofollow noopener noreferrer">getbem.com/。</a></p>
+<p>这类解决方案提供了一套编写CSS的原则，约定在开发时将CSS的类名class分成3部分：</p>
+<ol>
+<li>块<code>Block</code>：是一个抽象概念，表示使用这个字符串作为类名的元素，都属于一个部分，有相对独立的功能。例如<code>.block，.navbar</code>类名。</li>
+<li>元素<code>Element</code>：块的组成部分，总是和块相连使用，以2个下划线作为分隔。例如<code>.block__element, .navbar__dropdown</code>类名。</li>
+<li>修饰符<code>Modifier</code>：用于标识块和元素的细节外观，以2个中横线作为分隔。例如<code>.block-element--modifier, .navbar__dropdown--disabled</code>类名。</li>
+</ol>
+<p>这3类概念组成的类名，对应的就是BEM的全称：Block Element Modifier。</p>
+<p>BEM规则通过提供统一的CSS class命名规范，让开发者使用统一的大小写规则和下划线等符号，实现为不同的组件和元素，命名不同的CSS类名class。</p>
+<p>同时致力于尽量让CSS类名选择符保持<strong>最低的优先级</strong>，只有一个类选择器，避免CSS缺乏作用域特性导致难以维护优先级的痛点。</p>
+<h4 data-id="heading-9">缺点</h4>
+<ol>
+<li>
+<p><strong>BEM类名冗长</strong>：大量的BEM类名会导致整个页面的HTML标签代码视觉上略显冗长，甚至混乱难以辨认。例如：<code>.navigation</code> <em><code>_</code></em> <code>menu-item--active-with-submenu, .product __image-container--with-overlay-and-zoom</code>，这样的类名让人类来阅读辨别并非易事。</p>
+</li>
+<li>
+<p><strong>依赖开发者主观上遵守规范，可靠性不强</strong>：但人又往往是不可靠因素，导致在实践中，对同一元素的类名命名容易因人而异，对块元素，修饰符的定义出现分歧，不得不依赖代码评审保持规则约束。</p>
+</li>
+</ol>
+<h3 data-id="heading-10">2. CSS 预处理器</h3>
+<p>第二类解决方案是最常见的CSS 预处理，代表工具是<code>Sass</code>和<code>Less</code>。</p>
+<p>这类方案基于配套的代码编译工具，拓展了CSS的语法，通过为CSS增加变量，函数，嵌套等特性，来解决CSS可维护性较差的痛点。</p>
+<p>以Less为例，通过使用less-loader <a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.webpackjs.com%2Floaders%2Fless-loader%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://www.webpackjs.com/loaders/less-loader/" ref="nofollow noopener noreferrer">www.webpackjs.com/loaders/les…</a>，就能在基于<code>webpack</code>构建的前端项目中编写.less后缀的样式文件，使用原生CSS所没有的变量，嵌套，函数等特性。</p>
+<p><code>Less</code>的代码示例如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">// <span class="hljs-attribute">src</span>/style/demo<span class="hljs-selector-class">.less</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">// <span class="hljs-number">1</span>. 函数 mixin</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-selector-class">.bordered</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attribute">border-top</span>: dotted <span class="hljs-number">1px</span> black;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attribute">border-bottom</span>: solid <span class="hljs-number">2px</span> black;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">}</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">// <span class="hljs-number">2</span>. 变量 variable</span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-keyword">@fontSize</span>: <span class="hljs-number">16px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">// <span class="hljs-number">3</span>. 嵌套 nested</span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-selector-id">#header</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-attribute">font-size</span>: @fontSize;</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+</code></pre>
+<p>上述<code>demo.less</code>文件中的Less语法代码，在浏览器中不能直接解析生效，需要经过编译后，产生如下CSS代码，供我们在开发生产环境使用：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-selector-class">.bordered</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attribute">border-top</span>: dotted <span class="hljs-number">1px</span> black;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attribute">border-bottom</span>: solid <span class="hljs-number">2px</span> black;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-selector-id">#header</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">16px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+</code></pre>
+<h4 data-id="heading-11">缺点</h4>
+<ol>
+<li>
+<p><strong>有额外学习成本</strong>：需要专门学习<code>Sass</code>和<code>Less</code>的语法，有一定时间成本。</p>
+</li>
+<li>
+<p><strong>不便于调试</strong>：使用<code>Sass</code>和<code>Less</code>编写的源码和最终浏览器中运行的产物CSS代码不一定能精确匹配，会增加开发调试的难度，一般需要额外配合<code>CSS sourcemap</code>使用。</p>
+</li>
+<li>
+<p><strong>拖慢构建耗时</strong>：用预处理器编写的<code>Sass</code>和<code>Less</code>代码，需要使用专用的编译器，例如<code>sass-loader,less-loader</code>，编译后才能在生产环境中使用，会导致前端项目构建的耗时显著增加。</p>
+</li>
+</ol>
+<h3 data-id="heading-12">3. CSS 后处理器</h3>
+<p>第三类解决方案是后处理器，代表工具是PostCSS：<a href="https://link.juejin.cn?target=https%3A%2F%2Fpostcss.org%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://postcss.org/" ref="nofollow noopener noreferrer">postcss.org/</a>。</p>
+<p>和预处理器直接提供新语法、新特性不同，后处理器PostCSS通过提供一套类似Babel的CSS语法编译工具和插件系统，来对已有的CSS进行后置处理，更注重通过生态中的各类插件，实现特定功能，例如：</p>
+<ol>
+<li>
+<p>嵌套语法插件：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fpostcss%2Fpostcss-nested" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/postcss/postcss-nested" ref="nofollow noopener noreferrer">github.com/postcss/pos…</a></p>
+</li>
+<li>
+<p>自动增加浏览器兼容前缀插件：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fpostcss%2Fautoprefixer" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/postcss/autoprefixer" ref="nofollow noopener noreferrer">github.com/postcss/aut…</a></p>
+</li>
+<li>
+<p>CSS代码压缩：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fcssnano%2Fcssnano" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/cssnano/cssnano" ref="nofollow noopener noreferrer">github.com/cssnano/css…</a></p>
+</li>
+</ol>
+<h4 data-id="heading-13">缺点</h4>
+<ol>
+<li>有额外学习成本和工具链配置成本：使用PostCSS的配置相对更加复杂，需要专门的<code>postcss.config.js</code>配置文件，来设置使用的插件及其选项。</li>
+</ol>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// postcss.config.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-comment">/** <span class="hljs-doctag">@type</span> {<span class="hljs-type">import('postcss-load-config').Config</span>} */</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> config = {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">plugins</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-built_in">require</span>(<span class="hljs-string">'autoprefixer'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-built_in">require</span>(<span class="hljs-string">'postcss-nested'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  ]</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = config</span>
+</code></pre>
+<ol start="2">
+<li>
+<p><strong>拖慢构建耗时</strong>：PostCSS为了实现对CSS语法树的编译解析并应用插件转化代码（Transform），有额外的编译开销，会导致构建耗时变长，</p>
+</li>
+</ol>
+<h3 data-id="heading-14">4. 原子化CSS</h3>
+<p>第四类解决方案，是近两年在前端领域非常流行的原子化CSS方案。</p>
+<p>代表工具是：Tailwind CSS：<a href="https://link.juejin.cn?target=https%3A%2F%2Ftailwindcss.com%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://tailwindcss.com/" ref="nofollow noopener noreferrer">tailwindcss.com/</a>，据说Tailwind的作者靠这一个开源项目，一年就挣到了30万美元，火爆程度可见一斑。</p>
+<p>这类方案通过提供<strong>预定义</strong>的<strong>细粒度</strong>CSS样式和<strong>类名</strong>，来提高CSS的开发效率，减少自定义的样式和类名，从根本上尽可能避免CSS类名和样式容易冲突覆盖，难以维护的痛点。</p>
+<p>以Tailwind为例，其特点有：</p>
+<ol>
+<li>
+<p>Tailwind提供的预定义CSS样式和类名，基于<strong>工具优先utility-first</strong>的思想，有独特的规律，例如：</p>
+<ol>
+<li>
+<p>样式化文字尺寸的：</p>
+<ol>
+<li><code>text-xs</code>：<code>font-size: 0.75rem; /* 12px </code><em><code>/ line-height: 1rem; /</code></em> <code>16px */</code></li>
+<li><code>text-sm</code>：<code>font-size: 0.875rem; /* 14px </code><em><code>/ line-height: 1.25rem; /</code></em> <code>20px */</code></li>
+<li><code>text-lg</code>：<code>font-size: 1.125rem; /* 18px </code><em><code>/ line-height: 1.75rem; /</code></em> <code>28px */</code></li>
+</ol>
+</li>
+<li>
+<p>样式化尺寸大小的：</p>
+<ol>
+<li><code>w-4</code>：<code>width: 1rem; /* 16px */</code></li>
+<li><code>w-8</code>：<code>width: 2rem; /* 32px */</code></li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>可配置性：Tailwind还支持修改预定义类名的具体样式，可以通过专门的 <code>tailwind.config.js</code> 来配置，例如修改默认的文字大小配置：</p>
+</li>
+</ol>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">theme</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">fontSize</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">      <span class="hljs-string">'xs'</span>: <span class="hljs-string">'0.75rem'</span>,    <span class="hljs-comment">// 自定义字体尺寸 'xs'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-string">'sm'</span>: <span class="hljs-string">'0.875rem'</span>,   <span class="hljs-comment">// 自定义字体尺寸 'sm'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-string">'lg'</span>: <span class="hljs-string">'1.125rem'</span>,   <span class="hljs-comment">// 自定义字体尺寸 'lg'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-comment">// 添加更多自定义的字体尺寸...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-comment">// 其他的配置...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<ol start="3">
+<li>
+<p>轻量无冗余代码：Tailwind自带移除未使用类名和CSS代码的特性，会尽可能减少产物CSS代码的体积。</p>
+</li>
+</ol>
+<h4 data-id="heading-15">缺点</h4>
+<p>Tailwind显著提高了CSS的可维护性，有很多优点，但是他也存在缺点，主要有：</p>
+<ol>
+<li>
+<p><strong>有一定学习成本</strong>：其预定义的CSS类名规则比较特殊，想要灵活运用，需要一定的时间来熟悉。</p>
+</li>
+<li>
+<p><strong>可读性略差</strong>：有很多开发者认为预定义的原子化CSS类名不够直观、难以理解，写出来的代码可读性不好。</p>
+</li>
+<li>
+<p><strong>没有解决CSS样式生效依赖隐式规则的痛点</strong>：例如开头的CSS面试题，如果使用2个Tailwind的文字颜色类名，最终生效的样式仍然取决于隐式的、难以控制的规则定义顺序。</p>
+</li>
+</ol>
+<h3 data-id="heading-16">5. 初级CSS In JS</h3>
+<p>第五类解决方案是CSS In JS（下文简称<strong>CIJ</strong>），也就是把CSS和JS相结合，这类方案致力于实现在JS代码中编写CSS的解决方案，通过复用JS的作用域，逻辑判断等特性来强化CSS。</p>
+<p>代表工具有：</p>
+<ul>
+<li>styled-components：<a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fstyled-components%25EF%25BC%258C" target="_blank" rel="nofollow noopener noreferrer" title="https://www.npmjs.com/package/styled-components%EF%BC%8C" ref="nofollow noopener noreferrer">www.npmjs.com/package/sty…</a></li>
+<li>emotion.js：<a href="https://link.juejin.cn?target=https%3A%2F%2Femotion.sh%2Fdocs%2Fintroduction" target="_blank" rel="nofollow noopener noreferrer" title="https://emotion.sh/docs/introduction" ref="nofollow noopener noreferrer">emotion.sh/docs/introd…</a></li>
+</ul>
+<p>以styled-components为例，CSS in JS的代码示例如下：<a href="https://link.juejin.cn?target=https%3A%2F%2Fstyled-components.com%2Fdocs%2Fbasics%23styling-any-component" target="_blank" rel="nofollow noopener noreferrer" title="https://styled-components.com/docs/basics#styling-any-component" ref="nofollow noopener noreferrer">styled-components.com/docs/basics…</a></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> <span class="hljs-title function_">Link</span> = (<span class="hljs-params">{ className, children }</span>) =&gt; (</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">className</span>=<span class="hljs-string">{className}</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    {children}</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">);</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">const</span> <span class="hljs-title class_">StyledLink</span> = <span class="hljs-title function_">styled</span>(<span class="hljs-title class_">Link</span>)<span class="hljs-string">`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  color: #BF4F74;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  font-weight: bold;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">`;</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-title function_">render</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-tag">&lt;<span class="hljs-name">Link</span>&gt;</span>Unstyled, boring Link<span class="hljs-tag">&lt;/<span class="hljs-name">Link</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-tag">&lt;<span class="hljs-name">StyledLink</span>&gt;</span>Styled, exciting Link<span class="hljs-tag">&lt;/<span class="hljs-name">StyledLink</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">);</span>
+</code></pre>
+<p>基于<code>styled-components</code>的<code>styled()</code>API，我们可以对React组件进行加工。</p>
+<p>例如上述代码运行后，会生成一个<strong>哈希字符串</strong>作为<strong>类名</strong>，指向我们编写在<code>styled()</code>方法后的CSS样式，并将该类名添加到返回的新组件<code>StyledLink</code>上，让该组件被样式化。</p>
+<p>例如下图中的类名<code>.lmIyLq</code>就是我们编写的CSS In JS代码生成的<strong>哈希字符串类名：</strong></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/47e60cf477ff4d108273c126cfd22ef4~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1407&amp;h=665&amp;s=112197&amp;e=png&amp;b=2b2b2b" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>因为是在JS中编写CSS代码的需求，我们还可以利用逻辑判断，方便地编写动态样式，例如在下列代码中：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> <span class="hljs-title class_">Button</span> = styled.<span class="hljs-property">button</span><span class="hljs-string">`  </span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    background: <span class="hljs-subst">${(props) =&gt; (props.primary ? <span class="hljs-string">"#6495ED"</span> : <span class="hljs-string">"#2b2b2b"</span>)}</span>;  </span>
+<span class="code-block-extension-codeLine" data-line-num="3">    color: white;  </span>
+<span class="code-block-extension-codeLine" data-line-num="4">    font-size: 24px;  </span>
+<span class="code-block-extension-codeLine" data-line-num="5">    padding: 12px;  </span>
+<span class="code-block-extension-codeLine" data-line-num="6">    cursor: pointer;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">`;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-comment">// 使用时通过改变组件的 primary 属性来实现动态变化样式：</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">primary</span>&gt;</span>Hello, I am a Primary Button<span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span></span></span>
+</code></pre>
+<p>我们使用<a href="https://link.juejin.cn?target=https%3A%2F%2Fstyled-components.com%2Fdocs%2Fbasics%23adapting-based-on-props" target="_blank" rel="nofollow noopener noreferrer" title="https://styled-components.com/docs/basics#adapting-based-on-props" ref="nofollow noopener noreferrer">基于组件属性适配样式（adapting-based-on-props）</a>的特性，在编写CIJ代码时，基于传入组件的<code>props.primary</code>，改变<code>background</code>CSS规则的值。</p>
+<p>这类CIJ方案的一大显著优势是<strong>学习成本极低</strong>，只要会写CSS代码，就可以无缝切换到编写CIJ代码中。</p>
+<h4 data-id="heading-17">缺点</h4>
+<ol>
+<li>有运行时额外性能开销：</li>
+</ol>
+<p>因为本质上是在JS中编写CSS代码，所以CSS in JS解决方案普遍需要在JS运行时，通过执行额外的代码逻辑，动态生成CSS，实现CSS样式化，会对前端应用的渲染性能有所影响。</p>
+<p>不过具体影响程度一般不大，尤其是相较于对开发体验带来的显著优化，这点负面影响可以忽略。</p>
+<p>如果非常在意对运行时的影响，也可以考虑使用构建时生成静态文件的CSS in JS解决方案，规避这一缺点，例如<code>linaria</code>：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fcallstack%2Flinaria" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/callstack/linaria" ref="nofollow noopener noreferrer">github.com/callstack/l…</a></p>
+<h3 data-id="heading-18">6. 进阶CSS In JS：css prop</h3>
+<p>第六类解决方案是CSS In JS的进阶优化版css prop，这类方案通过在CIJ的基础上，为前端组件例如JSX增加专门的<code>css</code>属性来容纳CSS代码，来实现极致简单高效的CSS开发方式。</p>
+<p>代表工具是Emotion的 css prop：<a href="https://link.juejin.cn?target=https%3A%2F%2Femotion.sh%2Fdocs%2Fcss-prop" target="_blank" rel="nofollow noopener noreferrer" title="https://emotion.sh/docs/css-prop" ref="nofollow noopener noreferrer">emotion.sh/docs/css-pr…</a></p>
+<h4 data-id="heading-19">示例：为前端项目增加 Emotion css prop</h4>
+<blockquote>
+<p>完整代码示例，请参考：《feat: add css prop》：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo%2Fpull%2F10" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo/pull/10" ref="nofollow noopener noreferrer">github.com/JuniorTour/…</a></p>
+<p>注意！下列示例只适用于React版本&gt;=16.14.0的前端项目。</p>
+<p>官方文档：<a href="https://link.juejin.cn?target=https%3A%2F%2Femotion.sh%2Fdocs%2Fcss-prop%23babel-preset" target="_blank" rel="nofollow noopener noreferrer" title="https://emotion.sh/docs/css-prop#babel-preset" ref="nofollow noopener noreferrer">emotion.sh/docs/css-pr…</a></p>
+</blockquote>
+<p>增加 Emotion CSS prop的步骤非常简单，只需要安装并引入<code>@emotion/babel-plugin</code>这一官方babel插件：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">scss</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-scss code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> <span class="hljs-keyword">@emotion</span>/react <span class="hljs-keyword">@emotion</span>/babel-plugin</span>
+</code></pre>
+<p>再修改babel配置，启用<code>importSource: '@emotion/react'</code>，引入<code>@emotion/babel-plugin</code>即可：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// babel.config.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">presets</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    [</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-string">'@babel/preset-react'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      { <span class="hljs-attr">runtime</span>: <span class="hljs-string">'automatic'</span>, <span class="hljs-attr">importSource</span>: <span class="hljs-string">'@emotion/react'</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    ],</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-attr">plugins</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-string">'@emotion/babel-plugin'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-comment">// 其他 Babel 配置...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+</code></pre>
+<p>这样，我们就为前端项目增加了<code>css</code>prop的支持，直接在JSX中的HTML标签编写css属性，就可以被编译成对应的CSS代码，并生成一个唯一的哈希字符串作为ID。</p>
+<p><code>css</code>prop的代码示例如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">StrictMode</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { render } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { css } <span class="hljs-keyword">from</span> <span class="hljs-string">'@emotion/react'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">const</span> dynamicColor = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() % <span class="hljs-number">2</span> === <span class="hljs-number">0</span> ? <span class="hljs-string">'darkgreen'</span> : <span class="hljs-string">'yellow'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-title function_">render</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">StrictMode</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    {/* 1. 对象风格 CIJ */}</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">css</span>=<span class="hljs-string">{{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">fontSize:</span> '<span class="hljs-attr">32px</span>',</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">color:</span> '<span class="hljs-attr">red</span>',</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      }}</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      CSS In JS DEMO</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    {/* 2. 字符串风格 CIJ */}</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-attr">css</span>=<span class="hljs-string">{css</span>`</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        <span class="hljs-attr">background-color:</span> <span class="hljs-attr">hotpink</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        &amp;<span class="hljs-attr">:hover</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">          <span class="hljs-attr">color:</span> ${<span class="hljs-attr">dynamicColor</span>};</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">      `}</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="27">      css prop 动态样式示例</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29">  <span class="hljs-tag">&lt;/<span class="hljs-name">StrictMode</span>&gt;</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="30">  <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">'root'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="31">);</span>
+</code></pre>
+<p>有2种写法：</p>
+<ol>
+<li>对象风格：CSS规则需要用小驼峰命名法改写，例如<code>font-size</code>改为<code>fontSize</code>。</li>
+<li>字符串风格：CSS规则命名可以和元素CSS保持一致，但是需要额外导入<code>css</code>方法。</li>
+</ol>
+<p>此外，CSS prop不仅支持写入CSS规则，更支持写入有<strong>嵌套</strong>逻辑的CSS代码，例如：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">jsx</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-jsx code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">&lt;div</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  css={{</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">fontSize</span>: <span class="hljs-string">'32px'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">color</span>: <span class="hljs-string">'red'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-string">'.child-class'</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">color</span>: <span class="hljs-string">'blue'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-string">'&amp; button'</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'green'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  }}</span>
+<span class="code-block-extension-codeLine" data-line-num="12">&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-variable constant_">CSS</span> <span class="hljs-title class_">In</span> <span class="hljs-variable constant_">JS</span> <span class="hljs-variable constant_">DEMO</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">  &lt;div className=<span class="hljs-string">"child-class"</span>&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    child-<span class="hljs-keyword">class</span> <span class="hljs-title class_">div</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    &lt;button type=<span class="hljs-string">"button"</span>&gt;<span class="hljs-title class_">Button</span>&lt;/button&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  &lt;/div&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="18">&lt;/div&gt;</span>
+</code></pre>
+<h4 data-id="heading-20">对比优势</h4>
+<p>下面，我们通过对比：</p>
+<ul>
+<li>传统的BEM 类名命名原则</li>
+<li>基于 React 框架 JSX 语法的 Emotion 的 <code>css</code> prop</li>
+</ul>
+<p>两种解决方案的异同来进一步理解<code>css</code> prop的优势。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>对比项</th><th>BEM 类名命名原则</th><th>Emotion 的 <code>css</code> prop 解决方案</th></tr></thead><tbody><tr><td>源码示例：实现动态样式</td><td>代码行数较<strong>多</strong>，约<strong>22</strong>行代码：<br> <img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9d4c3636d4224d2589ba52903d089547~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=503&amp;h=384&amp;s=17467&amp;e=png&amp;b=282828" alt="image.png" loading="lazy" class="medium-zoom-image"> <br>另外还需要配套JS逻辑，实现样式切换，代码示例如下：<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2fedb07f816c443b857e02871206d7a6~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=503&amp;h=471&amp;s=23657&amp;e=png&amp;b=292929" alt="image.png" loading="lazy" class="medium-zoom-image"></td><td>代码行数较<strong>少</strong>，约<strong>12</strong>行代码：<img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8046dfb14a344eebba8dff8ceffe28ad~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=465&amp;h=447&amp;s=22578&amp;e=png&amp;b=282828" alt="image.png" loading="lazy" class="medium-zoom-image"></td></tr><tr><td>生产环境代码</td><td>与源代码相同，包含3个class类名：<code>.block__div</code>、<code>.block__div--color-green</code>、<code>.block__div--color-yellow</code></td><td>编译后的代码，会自动生成2个唯一哈希字符串作为类名：<code>.css-1gjlitb:hover {     color: yellow; }  .css-1gjlitb {     backrgound-color: hotpink; }</code> <img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/06965bddebd14d3ea45eb92bc555bd6a~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1919&amp;h=414&amp;s=105655&amp;e=png&amp;b=2c2c2c" alt="" loading="lazy" class="medium-zoom-image"></td></tr><tr><td>痛点1：样式生效依赖隐式规则</td><td><strong>未解决痛点</strong><br>样式是否生效，仍然依赖CSS规则声明的<strong>先后顺序</strong>，一旦CSS规则的声明顺序变化，最终生效的样式就会变化，极易导致样式错乱。</td><td><strong>痛点解决</strong><br>每段样式都有各自独立的唯一哈希字符串作为CSS class，样式是否生效，不依赖CSS规则声明的<strong>先后顺序</strong>，不论CSS规则的声明顺序如何变化，样式都能保持稳定。</td></tr><tr><td>痛点2：CSS 选择符的优先级复杂</td><td><strong>未解决痛点</strong><br>开发者自行构思命名规则复杂的 class，消耗时间精力，还容易重复、优先级冲突，开发体验较差。</td><td><strong>痛点解决</strong><br>所有CSS样式都有自动生成的CSS class，无需区分对比优先级，从根本上避免了class优先级冲突覆盖，开发体验更好。</td></tr><tr><td>代码提示</td><td>有代码提示</td><td>有代码提示<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1dda6379a5f44235ba46d9e8418e1fbd~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1455&amp;h=728&amp;s=203363&amp;e=png&amp;b=212121" alt="" loading="lazy" class="medium-zoom-image"></td></tr></tbody></table>
+<p>基于CIJ和<code>css</code>prop的这些特性，CSS的各类痛点得以解决：</p>
+<ol>
+<li><strong>语法更加强大</strong>：CSS In JS的特性，为CSS赋予了逻辑判断，嵌套，局部作用域，便捷复用等能力，大幅强化了CSS的语法和特性。</li>
+<li><strong>全局作用域污染</strong>：css prop用生成的唯一哈希字符串作为类名，避免了CSS默认处于全局作用域时自定义的类名容易冲突的问题。</li>
+<li><strong>选择器规则复杂</strong>：css prop会自动生成哈希字符串作为类名，从根本上解决了<strong>命名</strong>这一编程领域永恒的难题，使用css prop根本就不用耗费时间构思类名要叫什么，更不需要学习记忆复杂的选择符规则，能显著节省开发者的时间和精力。</li>
+<li><strong>代码关联性差</strong>：使用CSS In JS，再搭配JSX，将前端的三块基石HTML、JS和CSS紧密地关联在了一起，开发者不必在三者之间切换注意力，开发体验能得到显著优化。</li>
+<li><strong>样式生效依赖隐式规则</strong>：css prop生成的哈希字符串类名，天然的可以避免类名冲突、优先级覆盖等问题。</li>
+</ol>
+<p>最后，最重要的是，这一解决方案几乎<strong>没有学习成本</strong>，只要会写CSS，就会写css prop，不需要再学习任何规则。开发者几乎没有任何学习成本，就能解决大部分CSS维护性差的痛点，投入几乎为零，产出却非常巨大，是近年来最为完美的解决方案，笔者强烈推荐各位一试。</p></div>

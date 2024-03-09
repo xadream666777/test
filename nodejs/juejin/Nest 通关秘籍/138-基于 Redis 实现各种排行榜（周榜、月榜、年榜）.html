@@ -1,0 +1,399 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>生活中各种排行榜可太多了。</p>
+<p>比如经常有瓜的微博文娱榜：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/895af4664f9c4d408bb3af1a3ad3fe8b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1080&amp;h=2400&amp;s=707863&amp;e=jpg&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>掘金的文章榜：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eb4f4b0f17c14e8db8c970921d52ed77~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1450&amp;h=1034&amp;s=254377&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>作者榜：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a5cdddd483994ca0b4b30cace85d46ab~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2010&amp;h=1280&amp;s=446810&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>微信的步数排行榜：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8faab6319eff4995bef431ba5d648df6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1080&amp;h=2400&amp;s=475034&amp;e=jpg&amp;b=f6f5f5" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我最近订的自习室也有学习时长排行榜：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b76913360af465397faa8726871cf14~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1080&amp;h=2400&amp;s=446365&amp;e=jpg&amp;b=fcfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>排行的依据各有不同，有的是根据学习时长，有的是根据阅读数、点赞数，有的是根据搜索次数等。</p>
+<p>那这些排行榜是怎么实现的呢？</p>
+<p>有的同学说，在 mysql 里加一个排序的字段，比如热度，然后根据根据这个字段来排序不就行了？</p>
+<p>这样是能完成功能，但是效率太低了。</p>
+<p>数据库的读写性能比 Redis 低很多，而且可能这个排序的依据只是一个临时数据，不需要存到数据库里。</p>
+<p>一般涉及到排行榜，都是用 Redis 来做，因为它有一个专为排行榜准备的数据结构：有序集合 ZSET。</p>
+<p>它有这些命令：</p>
+<p><strong>ZADD</strong>：往集合中添加成员</p>
+<p><strong>ZREM</strong>：从集合中删除成员</p>
+<p><strong>ZCARD</strong>：集合中的成员个数</p>
+<p><strong>ZSCORE</strong>：某个成员的分数</p>
+<p><strong>ZINCRBY</strong>：增加某个成员的分数</p>
+<p><strong>ZRANK</strong>：成员在集合中的排名</p>
+<p><strong>ZRANGE</strong>：打印某个范围内的成员</p>
+<p><strong>ZRANGESTORE</strong>：某个范围内的成员，放入新集合</p>
+<p><strong>ZCOUNT</strong>：集合中分数在某个返回的成员个数</p>
+<p><strong>ZDIFF</strong>：打印两个集合的差集</p>
+<p><strong>ZDIFFSTORE</strong>：两个集合的差集，放入新集合</p>
+<p><strong>ZINTER</strong>：打印两个集合的交集</p>
+<p><strong>ZINTERSTORE</strong>：两个集合的交集，放入新集合</p>
+<p><strong>ZINTERCARD</strong>：两个集合的交集的成员个数</p>
+<p><strong>ZUNION</strong>：打印两个集合的并集</p>
+<p><strong>ZUNIONSTORE</strong>：两个集合的并集，放回新集合</p>
+<p>我们依次来试一下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5a956d7f9f434c3aa3a97ac728539a7f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1886&amp;h=408&amp;s=78708&amp;e=png&amp;b=121212" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">redis</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-redis code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZADD set1 1 mem1 2 mem2 3 mem3</span>
+</code></pre>
+<p>在 RedisInsight 里输入命令，点击执行。</p>
+<p>点击刷新就可以看到这个集合：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/07c822cc10144c0d829d63a7851d6194~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2112&amp;h=486&amp;s=97806&amp;e=png&amp;b=121212" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>三个成员，分数分别是 1、2、3</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f8ad9d771a03471baaed48004c7e22cb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1758&amp;h=760&amp;s=72686&amp;e=png&amp;b=1a1a1a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用命令看的话就是 ZRANGE：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8360e1995a34411b9f78b42470e25221~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1396&amp;h=636&amp;s=47921&amp;e=png&amp;b=121212" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZRANGE set1 0 -1</span>
+</code></pre>
+<p>范围从 0 到 -1 就是返回全部。</p>
+<p>默认是分数从小到大排序，也可以从大到小，加个 REV 就行：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6c2274688df24252b6f1af2fa6e6d34d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=640&amp;h=604&amp;s=32033&amp;e=png&amp;b=111111" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZRANGE set1 0 -1 REV</span>
+</code></pre>
+<p>还可以用 ZRANGESTORE 把它存入新集合：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dee4156d2a21452f9df5000b0cd5b3d1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=814&amp;h=542&amp;s=33577&amp;e=png&amp;b=131313" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZRANGESTORE rangeset set1 0 -1</span>
+</code></pre>
+<p>查看下新集合：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZRANGE rangeset 0 -1</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/50ecf49386114801aeab23920d74d6ba~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=652&amp;h=588&amp;s=29240&amp;e=png&amp;b=111111" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>删除个成员试试：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/00cabb70cf4646b5a47fa4b4f13c1713~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=546&amp;h=526&amp;s=21630&amp;e=png&amp;b=141414" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZREM set1 mem1</span>
+</code></pre>
+<p>再查看下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/33f92801ae5b494e8128597c1c062d26~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=590&amp;h=566&amp;s=25035&amp;e=png&amp;b=111111" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZRANGE set1 0 -1</span>
+</code></pre>
+<p>用 ZCARD 查看集合的成员个数：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9a98952d1ed5497d832f7504ae104b89~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=530&amp;h=540&amp;s=22247&amp;e=png&amp;b=141414" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZCARD set1</span>
+</code></pre>
+<p>用 ZSCORE 查看某个成员的分数：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/62a0fcae34644e75a0e9b885b350d3eb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=586&amp;h=526&amp;s=22440&amp;e=png&amp;b=131313" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用 ZRANK 查看成员在集合内的排名：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e8bc518809ac41f2870f4bdacfc8be32~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=596&amp;h=518&amp;s=23513&amp;e=png&amp;b=121212" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZRANK set1 mem2</span>
+</code></pre>
+<p>然后用 ZINCRBY 给成员增加分数：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/72d32e595e9749439810722b7388aa9b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=568&amp;h=532&amp;s=21346&amp;e=png&amp;b=121212" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZINCRBY set1 3 mem2</span>
+</code></pre>
+<p>看下新排名：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d8f8bf78ef574f449938869d196d3fbd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=662&amp;h=554&amp;s=26498&amp;e=png&amp;b=101010" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZRANGE set1 0 -1</span>
+</code></pre>
+<p>mem2 就到下面去了。</p>
+<p>再创建一个集合 set2：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/307e9040f5ca4b1089e0eaf8defbdd0e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=598&amp;h=530&amp;s=27282&amp;e=png&amp;b=131313" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZADD set2 4 aaa 6 bbb</span>
+</code></pre>
+<p>用 ZUNION 合并下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZUNION 2 set1 set2</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0127cdaf4fe2489bad1ec981effefe98~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=576&amp;h=630&amp;s=31858&amp;e=png&amp;b=101010" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>还可以加上分数一起：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZUNION 2 set1 set2 WITHSCORES</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/02c6bbc5651e417cb43ad35c9ca256ce~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=832&amp;h=762&amp;s=46886&amp;e=png&amp;b=0c0c0c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>或者把合并后放到另一个集合：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc9243e2262e486b8c45f2d210f7de5d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=712&amp;h=520&amp;s=30388&amp;e=png&amp;b=121212" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZUNIONSTORE set3 2 set1 set2</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/842a9bdc20f341579da82c5bb894aca5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=558&amp;h=610&amp;s=31416&amp;e=png&amp;b=0f0f0f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZRANGE set3 0 -1</span>
+</code></pre>
+<p>交集和差集的命令也差不多，就不一个个试了。</p>
+<p>并集合并的时候相同的 key 的 score 会求和。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ZADD s1 1 aa 2 bb</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">ZADD s2 1 aa 3 cc</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">ZUNIONSTORE s3 2 s1 s2</span>
+</code></pre>
+<p>在 s1 和 s2 集合中都有 aa，合并到 s3 之后 aa 的分数也合并了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/67681baa9fc24e1f8d7384da1ddf636a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1508&amp;h=710&amp;s=65434&amp;e=png&amp;b=1b1b1b" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>周榜、月榜、年榜就是这么实现的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b76913360af465397faa8726871cf14~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1080&amp;h=2400&amp;s=446365&amp;e=jpg&amp;b=fcfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>月榜就是对周榜的合并，然后年榜就是月榜的合并，最后就会算出一个新的排行榜。</p>
+<p>我们用 Nest 实现下类似的排行榜功能：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> ranking-list-test</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bd50fea9c1484a23b5bfd18e0ceda0a8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=914&amp;h=698&amp;s=162505&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>安装 redis 的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> redis</span>
+</code></pre>
+<p>然后创建个 redis 模块：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g <span class="hljs-keyword">module</span> redis</span>
+<span class="code-block-extension-codeLine" data-line-num="2">nest g service redis</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eaf36dbe385544309bc35de23c2a45a7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=722&amp;h=196&amp;e=webp&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 RedisModule 创建连接 redis 的 provider，导出 RedisService，并把这个模块标记为 @Global 模块</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Global</span>, <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'redis'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">RedisService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./redis.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Global</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">providers</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-title class_">RedisService</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-attr">provide</span>: <span class="hljs-string">'REDIS_CLIENT'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-keyword">async</span> <span class="hljs-title function_">useFactory</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-keyword">const</span> client = <span class="hljs-title function_">createClient</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="13">            <span class="hljs-attr">socket</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">                <span class="hljs-attr">host</span>: <span class="hljs-string">'localhost'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">                <span class="hljs-attr">port</span>: <span class="hljs-number">6379</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">connect</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-keyword">return</span> client;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="22">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="23">  <span class="hljs-attr">exports</span>: [<span class="hljs-title class_">RedisService</span>]</span>
+<span class="code-block-extension-codeLine" data-line-num="24">})</span>
+<span class="code-block-extension-codeLine" data-line-num="25"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RedisModule</span> {}</span>
+</code></pre>
+<p>然后在 RedisService 里注入 REDIS_CLIENT，并封装一些方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">RedisClientType</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'redis'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RedisService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @<span class="hljs-title class_">Inject</span>(<span class="hljs-string">'REDIS_CLIENT'</span>) </span>
+<span class="code-block-extension-codeLine" data-line-num="8">    private <span class="hljs-attr">redisClient</span>: <span class="hljs-title class_">RedisClientType</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">zRankingList</span>(<span class="hljs-params">key: string, start: number = <span class="hljs-number">0</span>, end: number = -<span class="hljs-number">1</span></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-keyword">const</span> keys = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">zRange</span>(key, start, end, {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">            <span class="hljs-attr">REV</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-keyword">const</span> rankingList = {};</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i&lt; keys.<span class="hljs-property">length</span>; i++){</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            rankingList[keys[i]] = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">zScore</span>(key, keys[i]);</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-keyword">return</span> rankingList;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">zAdd</span>(<span class="hljs-params">key: string, members: Record&lt;string, number&gt;</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-keyword">const</span> mems = [];</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> members) {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">            mems.<span class="hljs-title function_">push</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="25">                <span class="hljs-attr">value</span>: key,</span>
+<span class="code-block-extension-codeLine" data-line-num="26">                <span class="hljs-attr">score</span>: members[key]</span>
+<span class="code-block-extension-codeLine" data-line-num="27">            });        </span>
+<span class="code-block-extension-codeLine" data-line-num="28">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="29">        <span class="hljs-keyword">return</span>  <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">zAdd</span>(key, mems);</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="31"></span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">zScore</span>(<span class="hljs-params">key: string, member: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="33">        <span class="hljs-keyword">return</span>  <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">zScore</span>(key, member);</span>
+<span class="code-block-extension-codeLine" data-line-num="34">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="35"></span>
+<span class="code-block-extension-codeLine" data-line-num="36">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">zRank</span>(<span class="hljs-params">key: string, member: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="37">        <span class="hljs-keyword">return</span>  <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">zRank</span>(key, member);</span>
+<span class="code-block-extension-codeLine" data-line-num="38">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="39"></span>
+<span class="code-block-extension-codeLine" data-line-num="40">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">zIncr</span>(<span class="hljs-params">key: string, member: string, increment: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="41">        <span class="hljs-keyword">return</span>  <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">zIncrBy</span>(key, increment, member)</span>
+<span class="code-block-extension-codeLine" data-line-num="42">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="43"></span>
+<span class="code-block-extension-codeLine" data-line-num="44">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">zUnion</span>(<span class="hljs-params">newKey: string, keys: string[]</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="45">        <span class="hljs-keyword">if</span>(!keys.<span class="hljs-property">length</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="46">            <span class="hljs-keyword">return</span> []</span>
+<span class="code-block-extension-codeLine" data-line-num="47">        };</span>
+<span class="code-block-extension-codeLine" data-line-num="48">        <span class="hljs-keyword">if</span>(keys.<span class="hljs-property">length</span> === <span class="hljs-number">1</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="49">            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">zRankingList</span>(keys[<span class="hljs-number">0</span>]);</span>
+<span class="code-block-extension-codeLine" data-line-num="50">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="51"></span>
+<span class="code-block-extension-codeLine" data-line-num="52">        <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">zUnionStore</span>(newKey, keys);</span>
+<span class="code-block-extension-codeLine" data-line-num="53"></span>
+<span class="code-block-extension-codeLine" data-line-num="54">        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">zRankingList</span>(newKey);</span>
+<span class="code-block-extension-codeLine" data-line-num="55">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="56"></span>
+<span class="code-block-extension-codeLine" data-line-num="57">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">keys</span>(<span class="hljs-params">pattern: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="58">        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">keys</span>(pattern);    </span>
+<span class="code-block-extension-codeLine" data-line-num="59">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="60">}</span>
+</code></pre>
+<p>这里我们对 zset 的命令进行了封装，比如 zRange 只会返回成员名，我们顺带把分数也取出来。</p>
+<p>暴露 zAdd、zScore、zRank、zIncr 等方法。</p>
+<p>zUnion 要做下边界的处理，如果只传了一个 set 的名字，就染回这个 set 的内容，否则才合并。</p>
+<p>创建一个 ranking 模块：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">lua</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-lua code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g <span class="hljs-built_in">module</span> ranking</span>
+<span class="code-block-extension-codeLine" data-line-num="2">nest g controller ranking <span class="hljs-comment">--no-spec</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">nest g service ranking <span class="hljs-comment">--no-spec</span></span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ca093838eec144deaf478aefe1bd3739~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1032&amp;h=280&amp;s=75766&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们就实现下自习室学习时长的月榜和年榜吧。</p>
+<p>实现下 RankingService：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">RedisService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./../redis/redis.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> dayjs <span class="hljs-keyword">from</span> <span class="hljs-string">'dayjs'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RankingService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">RedisService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">redisService</span>: <span class="hljs-title class_">RedisService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    private <span class="hljs-title function_">getMonthKey</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-keyword">const</span> dateStr = <span class="hljs-title function_">dayjs</span>().<span class="hljs-title function_">format</span>(<span class="hljs-string">'YYYY-MM'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-keyword">return</span> <span class="hljs-string">`learning-ranking-month:<span class="hljs-subst">${dateStr}</span>`</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    private <span class="hljs-title function_">getYearKey</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-keyword">const</span> dateStr = <span class="hljs-title function_">dayjs</span>().<span class="hljs-title function_">format</span>(<span class="hljs-string">'YYYY'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-keyword">return</span> <span class="hljs-string">`learning-ranking-year:<span class="hljs-subst">${dateStr}</span>`</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">join</span>(<span class="hljs-params">name: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">zAdd</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMonthKey</span>(), { [name]: <span class="hljs-number">0</span> });</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">addLearnTime</span>(<span class="hljs-params">name:string, time: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="26">        <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">zIncr</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMonthKey</span>(), name, time);</span>
+<span class="code-block-extension-codeLine" data-line-num="27">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">getMonthRanking</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="30">        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">zRankingList</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMonthKey</span>(), <span class="hljs-number">0</span>, <span class="hljs-number">10</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="31">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="32"></span>
+<span class="code-block-extension-codeLine" data-line-num="33">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">getYearRanking</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="34">        <span class="hljs-keyword">const</span> dateStr = <span class="hljs-title function_">dayjs</span>().<span class="hljs-title function_">format</span>(<span class="hljs-string">'YYYY'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="35">        <span class="hljs-keyword">const</span> keys = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">keys</span>(<span class="hljs-string">`learning-ranking-month:<span class="hljs-subst">${dateStr}</span>-*`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="36"></span>
+<span class="code-block-extension-codeLine" data-line-num="37">        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">zUnion</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getYearKey</span>(), keys);</span>
+<span class="code-block-extension-codeLine" data-line-num="38">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="39">}</span>
+</code></pre>
+<p>这里用到了 dayjs，安装下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> dayjs</span>
+</code></pre>
+<p>月份的榜单是 learning-ranking-mongth:2024-01、learning-ranking-mongth:2024-02 这样的格式。</p>
+<p>年份的榜单是 learning-ranking-mongth:2023、learning-ranking-mongth:2024 这样的格式。</p>
+<p>我们用 dayjs 拿到当前的年份和月份，拼接出需要的 key。</p>
+<p>年份的榜单就是拿到用 learning-ranking-month:当前年份- 开头的所有 zset，做下合并。</p>
+<p>在 RankingController 加一下接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Controller</span>, <span class="hljs-title class_">Get</span>, <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Query</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">RankingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./ranking.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Controller</span>(<span class="hljs-string">'ranking'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RankingController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">RankingService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">rankingService</span>: <span class="hljs-title class_">RankingService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    @<span class="hljs-title class_">Get</span>(<span class="hljs-string">'join'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">join</span>(<span class="hljs-params">@Query(<span class="hljs-string">'name'</span>) name: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">rankingService</span>.<span class="hljs-title function_">join</span>(name);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    @<span class="hljs-title class_">Get</span>(<span class="hljs-string">'learn'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">addLearnTime</span>(<span class="hljs-params">@Query(<span class="hljs-string">'name'</span>) name:string, @Query(<span class="hljs-string">'time'</span>) time: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">rankingService</span>.<span class="hljs-title function_">addLearnTime</span>(name, <span class="hljs-built_in">parseFloat</span>(time));</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    @<span class="hljs-title class_">Get</span>(<span class="hljs-string">'monthRanking'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">getMonthRanking</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">rankingService</span>.<span class="hljs-title function_">getMonthRanking</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="26"></span>
+<span class="code-block-extension-codeLine" data-line-num="27">    @<span class="hljs-title class_">Get</span>(<span class="hljs-string">'yearRanking'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">getYearRanking</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="29">        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">rankingService</span>.<span class="hljs-title function_">getYearRanking</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    }   </span>
+<span class="code-block-extension-codeLine" data-line-num="31">}</span>
+</code></pre>
+<p>join 是加入自习室，learn 是增加学习时长，monthRanking 和 yearRanking 是拿到月榜和年榜。</p>
+<p>把服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/beeb51e757d2420d842b38e470f7cc00~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1626&amp;h=526&amp;s=243473&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 postman 里调用下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">localhost:3000/ranking/join?<span class="hljs-attr">name</span>=guang</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a97a74e8b1c3472b81243d6a13bc7f42~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=798&amp;h=486&amp;s=49735&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">localhost:3000/ranking/join?<span class="hljs-attr">name</span>=dong</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4a5d5407bae542538e1fe82e33395044~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=834&amp;h=508&amp;s=50805&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">localhost:3000/ranking/join?<span class="hljs-attr">name</span>=xiaohong</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/447497049a044e03b4ad7e5fec13106d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=818&amp;h=482&amp;s=50845&amp;e=png&amp;b=fafafa" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>调用 join 接口，加入三个同学。</p>
+<p>看下现在的月榜：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">localhost:3000/ranking/monthRanking</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4b853d2f94b640a6a1b99e9210ee5e31~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=854&amp;h=604&amp;s=61985&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 RedisInsight 里看下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0cae0e1e536243f58f5f4816ac97871c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1114&amp;h=394&amp;s=41369&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3c42317043a44a31813ee265ce01a395~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1398&amp;h=716&amp;s=75205&amp;e=png&amp;b=1b1b1b" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后调用 learn 接口，增加学习时长：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">localhost:3000/ranking/learn?<span class="hljs-attr">name</span>=dong&amp;time=<span class="hljs-number">1</span></span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/42fe163b497e4e87a962ef59f104b020~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=930&amp;h=530&amp;s=52054&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">localhost:3000/ranking/learn?<span class="hljs-attr">name</span>=guang&amp;time=<span class="hljs-number">2</span></span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e7a00ff1c3174b5eb8b6b8ad416ad5df~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=828&amp;h=512&amp;s=50445&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">localhost:3000/ranking/learn?<span class="hljs-attr">name</span>=xiaohong&amp;time=<span class="hljs-number">5</span></span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dd04544984174f71931f4f2e2c8c54d8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=904&amp;h=502&amp;s=51566&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">localhost:3000/ranking/monthRanking</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b2893cc2eab34c2cbde9bf6c6b080d21~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=874&amp;h=610&amp;s=58590&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们改下本地时间（mac 和 windows 改本地时间的方式不一样）：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/71cc6666159d46d9a29733893a030bfd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=972&amp;h=714&amp;s=81104&amp;e=png&amp;b=f1edea" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再调用 join 接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">localhost:3000/ranking/join?<span class="hljs-attr">name</span>=guang</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a97a74e8b1c3472b81243d6a13bc7f42~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=798&amp;h=486&amp;s=49735&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">localhost:3000/ranking/join?<span class="hljs-attr">name</span>=dong</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4a5d5407bae542538e1fe82e33395044~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=834&amp;h=508&amp;s=50805&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">localhost:3000/ranking/join?<span class="hljs-attr">name</span>=xiaogang</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a465751d23d04e29b65f8e2213e55a99~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=768&amp;h=492&amp;s=49518&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>之后增加学习时长：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">localhost:3000/ranking/learn?<span class="hljs-attr">name</span>=dong&amp;time=<span class="hljs-number">2</span></span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/196cbe861cd3404e8ea4e6e3f612cf03~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=874&amp;h=478&amp;s=50637&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">localhost:3000/ranking/learn?<span class="hljs-attr">name</span>=guang&amp;time=<span class="hljs-number">3</span></span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee692a502a5d4675b5fc17af21a257e9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=876&amp;h=494&amp;s=50919&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">localhost:3000/ranking/learn?<span class="hljs-attr">name</span>=xiaogang&amp;time=<span class="hljs-number">4</span></span>
+</code></pre>
+<p>然后看下 3 月份的月榜：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/461d946832254886900f83491b3bbd1b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=858&amp;h=502&amp;s=51092&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>还有年榜：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6e6b7c7751974570b23f4c8f5427e8c9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=780&amp;h=658&amp;s=60070&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，年榜是合并了所有月榜的结果。</p>
+<p>在 RedisInsight 里看下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a2d7c497ada84c29920bdb0529789b40~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1098&amp;h=598&amp;s=71311&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>每个月榜和年榜都是单独的 zset。</p>
+<p>这样我们就实现了学习时长的排行榜。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b76913360af465397faa8726871cf14~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1080&amp;h=2400&amp;s=446365&amp;e=jpg&amp;b=fcfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>至于用户自己的排名和时长，就用 zScore、zRank 来实现。</p>
+<p>也就是这个我的排名功能：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/388f457677374ca3aa86bdc156ae64c0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=922&amp;h=564&amp;s=540511&amp;e=png&amp;b=374b6a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>案例代码上传了<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Franking-list-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/ranking-list-test" ref="nofollow noopener noreferrer">小册仓库</a></p>
+<h2 data-id="heading-0">总结</h2>
+<p>生活中我们经常会见到各种排行榜，以及它们的周榜、月榜、年榜等。</p>
+<p>这些排行榜的功能都是用 redis 的 zset 有序集合实现的。</p>
+<p>它保存的值都有一个分数，会自动排序。</p>
+<p>多个集合之间可以求并集、交集、差集。</p>
+<p>通过并集的方式就能实现月榜合并成年榜的功能。</p>
+<p>以后见到各种排行榜，你会不会想到 Redis 的 zset 呢？</p></div>

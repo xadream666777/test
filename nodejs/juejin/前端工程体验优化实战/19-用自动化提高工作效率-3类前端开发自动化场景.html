@@ -1,0 +1,703 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>这一节我们将以前端工程中的3类场景为例，介绍用自动化工具优化开发体验，提高工作效率的解决方案。</p>
+<h2 data-id="heading-0">1. <strong>自动化代码检查</strong></h2>
+<p>第一类应用自动化场景是对代码的语法错误、代码风格进行提交前自动化检查。</p>
+<p>首先我们了解一些前端工程常用的代码检查工具。</p>
+<h3 data-id="heading-1">1. <strong>ESLint</strong></h3>
+<p>ESLint是前端领域最流行的静态代码分析工具，最常见的用途是帮助开发者在编写代码时，实时检查语法错误，此外还有提供插件系统，支持自定义代码检查规则，具有很强的拓展性。</p>
+<h4 data-id="heading-2"><strong>常用配置简介</strong></h4>
+<ol>
+<li><code>rules</code>规则：用于配置代码的校验规则，以及不符合规则时的处理方式（例如抛出Error或Warning），是ESLint的核心配置。</li>
+</ol>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// .eslintrc.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">rules<span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    'arrow-body-style'<span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span>        <span class="hljs-comment">// 关闭，等于 "off"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    'no-shadow'<span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span>               <span class="hljs-comment">// 仅警告，等于 "warn"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    'no-use-before-define'<span class="hljs-punctuation">:</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span>    <span class="hljs-comment">// 报错，等于 "error"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<ol start="2">
+<li><code>plugins</code>插件：用于暴露额外的规则（<code>rules</code>）和全局配置。</li>
+<li><code>parser</code>&amp;&amp; <code>parserOptions</code>：指定想要支持的语言类型及细节配置（例如是否支持JSX、JS语法版本）。</li>
+<li><code>extends</code>：指定继承其他配置文件。</li>
+<li><code>overrides</code>：指定只针对于部分文件的覆盖规则，例如对.vue文件关闭部分规则：</li>
+</ol>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-comment">// ...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">overrides</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-attr">files</span>: [<span class="hljs-string">'**/*.+(vue)'</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">rules</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">         <span class="hljs-string">'no-use-before-define'</span>: <span class="hljs-number">0</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="11">};</span>
+</code></pre>
+<ol start="6">
+<li><code>env</code>：用于指定项目运行的全局环境和相关的语法规则，例如指定当前代码运行在浏览器环境中<code>env: { browser: true},</code>，之后使用<code>window</code>全局变量就会被ESLint</li>
+<li><code>globals</code>：指定全局变量及其是否可读写状态，例如：</li>
+</ol>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">"globals"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">"var1"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"writable"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-attr">"var2"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"readonly"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-attr">"Promise"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"off"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<ol start="8">
+<li>
+<p><code>ignorePatterns</code>: 指定忽略、不检查的文件匹配模式，例如<code>ignorePatterns: ['dist', "**/vendor/*.js"],</code></p>
+</li>
+</ol>
+<h4 data-id="heading-3"><strong>使用方式简介</strong></h4>
+<p>在项目根目录增加默认的配置文件<code>eslint.config.js</code>或<code>.eslintrc.js</code>后，就可以用命令行调用ESLint对项目中的文件进行检查了，推荐配置为<code>lint</code>命令：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">"scripts"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">"lint"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"eslint . --ext .js,.jsx,.ts,.tsx"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<p>此外，我们也可以为代码编辑器配置保存后，自动运行ESLint。</p>
+<p>例如为VSCode配置，文件保存后，自动运行ESLint，并自动修复可被修复的报错，只需要修改配置文件如下部分即可实现：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"> # VSCode settings.json</span>
+<span class="code-block-extension-codeLine" data-line-num="2"> <span class="hljs-attr">"editor.codeActionsOnSave"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">"source.fixAll.eslint"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span> <span class="hljs-punctuation">}</span></span>
+</code></pre>
+<h4 data-id="heading-4"><strong>实现自定义ESLint输出格式</strong></h4>
+<p>ESLint 的 <a href="https://link.juejin.cn?target=https%3A%2F%2Feslint.org%2Fdocs%2Flatest%2Fdeveloper-guide%2Fworking-with-custom-formatters" target="_blank" rel="nofollow noopener noreferrer" title="https://eslint.org/docs/latest/developer-guide/working-with-custom-formatters" ref="nofollow noopener noreferrer">Custom Formatter</a> 是实践中非常有用的功能，可以实现过滤部分规则和文件的自定义输出格式。</p>
+<p>在实践中为项目增加ESLint时，项目的现存报错较多，期望按规则分类，再依次修复时，这个功能就可以帮助我们快速梳理分类报错及来源，解决反复编辑配置文件或使用复杂命令行的痛点。</p>
+<p>示例代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// ./eslint-file-path-formatter.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">function</span> <span class="hljs-title function_">containRules</span>(<span class="hljs-params">result, targetRuleId</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-keyword">if</span> (!result || !targetRuleId) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-keyword">return</span> result.<span class="hljs-property">messages</span>.<span class="hljs-title function_">some</span>(<span class="hljs-function">(<span class="hljs-params">cur</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-comment">// console.log(`cur?.ruleId = ${cur?.ruleId}`);</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">if</span> (cur?.<span class="hljs-property">ruleId</span>?.<span class="hljs-title function_">includes</span>(targetRuleId)) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15"><span class="hljs-keyword">const</span> targetRules = <span class="hljs-string">'prop-types'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">results, context</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">  <span class="hljs-keyword">const</span> summary = [];</span>
+<span class="code-block-extension-codeLine" data-line-num="19">  results.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">cur</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">containRules</span>(cur, targetRules)) {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">      summary.<span class="hljs-title function_">push</span>(<span class="hljs-string">`'<span class="hljs-subst">${cur.filePath}</span>',`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="23">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="24">  </span>
+<span class="code-block-extension-codeLine" data-line-num="25">  <span class="hljs-comment">// fs.writeFileSync('eslint-error-files.txt', summary.join('\n'));</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">  <span class="hljs-comment">// return 'Done Write';</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">  <span class="hljs-keyword">return</span> summary.<span class="hljs-title function_">join</span>(<span class="hljs-string">'\n'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="28">};</span>
+</code></pre>
+<p>这段代码中我们通过指定<code>targetRules</code>变量，过滤出了部分信息包含<code>'prop-types'</code>的ESLint报错，帮我们专注于修复该规则的报错。</p>
+<p>使用方法也很简单，只需要使用<code>eslint</code>的<code>-f</code>选项即可：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sh</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sh code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">eslint . -f ./eslint-file-path-formatter.js </span>
+</code></pre>
+<h3 data-id="heading-5">2. <strong>Prettier</strong></h3>
+<p>Prettier 是一个代码格式化工具，致力于让前端项目中不同开发者的代码保持一致的<strong>代码风格</strong>。支持定制化配置，可以方便地集成到ESLint或代码编辑器中。</p>
+<h4 data-id="heading-6"><strong>常用配置简介</strong></h4>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">"printWidth"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">80</span><span class="hljs-punctuation">,</span>  <span class="hljs-comment">// 单行代码的最大宽度</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">"tabWidth"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span>     <span class="hljs-comment">// 缩进使用的空格数</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">"useTabs"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span>  <span class="hljs-comment">// 使用空格而不是制表符进行缩进</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attr">"semi"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>      <span class="hljs-comment">// 在语句末尾添加分号</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">"singleQuote"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>     <span class="hljs-comment">// 使用单引号而不是双引号</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">"trailingComma"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"es5"</span><span class="hljs-punctuation">,</span>  <span class="hljs-comment">// 在多行对象或数组最后一个元素后添加逗号</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<h3 data-id="heading-7">3. <strong>Editor Config</strong></h3>
+<p>EditorConfig 也是用于定义<strong>代码风格</strong>的工具，特点是：</p>
+<ol>
+<li>跨编辑器原生支持：<a href="https://link.juejin.cn?target=https%3A%2F%2Feditorconfig.org%2F%23%3A~%3Atext%3DNo%2520Plugin%2520Necessary-%2CThese%2520editors%2C-come%2520bundled%2520with" target="_blank" rel="nofollow noopener noreferrer" title="https://editorconfig.org/#:~:text=No%20Plugin%20Necessary-,These%20editors,-come%20bundled%20with" ref="nofollow noopener noreferrer">VSCode、Webstorm等众多主流编辑器都原生支持</a>，不需要额外安装插件。</li>
+<li>编写<strong>时</strong>生效：和Prettier在代码编写<strong>后</strong>，重新格式化代码不同，EditorConfig 致力于在代码编写<strong>时</strong>就让开发者保持一致的格式。使用EditorConfig时，用编辑器编写的代码默认就会按配置规则生成，例如设置缩进空格数为2个空格，敲下回车换行后，编辑器会默认生成2个空格缩进的新一行。</li>
+</ol>
+<p>它通过使用项目根目录下文件名为 <code>.editorconfig</code> 的配置文件，在不同的编辑器中自动应用一致的代码风格规则。</p>
+<h4 data-id="heading-8"><strong>常用配置简介</strong></h4>
+<ol>
+<li><code>root</code>: 指定是否应将当前配置文件视为顶级配置文件。如果设置为 <code>true</code>，则该文件是顶级配置文件，不会继承其他配置文件。</li>
+<li><code>indent_style</code>: 指定缩进的样式。可以是 <code>tab</code>（制表符）或 <code>space</code>（空格）。</li>
+<li><code>indent_size</code> : 指定缩进的大小。对于 <code>indent_style</code> 为 <code>space</code> 的情况，表示空格的数量。对于 <code>indent_style</code> 为 <code>tab</code> 的情况，该项会被忽略。</li>
+<li><code>end_of_line</code>: 指定换行符的样式。可以是 <code>lf</code>（仅换行符），<code>cr</code>（仅回车符）或 <code>crlf</code>（回车符和换行符）。</li>
+</ol>
+<blockquote>
+<p>使用Windows系统进行Git add时，经常见到的<code>LF &amp;&amp; CRLF</code>提示：<code>warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it</code>。就可以用<code>end_of_line</code>这项配置避免提示反复出现。</p>
+</blockquote>
+<ol start="5">
+<li>
+<p><code>insert_final_newline</code>: 指定是否在文件末尾插入一个空行。可以是 <code>true</code>（插入）或 <code>false</code>（不插入）。</p>
+</li>
+<li>
+<p><code>max_line_length</code>: 指定行的最大长度限制。超过该限制的行将被视为违规。可以是一个整数值。</p>
+</li>
+</ol>
+<p><code>.editorconfig</code>配置文件示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"># EditorConfig is awesome<span class="hljs-punctuation">:</span> https<span class="hljs-punctuation">:</span><span class="hljs-comment">//EditorConfig.org</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">root = <span class="hljs-keyword">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"># Unix-style newlines with a newline ending every file</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-punctuation">[</span>*<span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">end_of_line = lf</span>
+<span class="code-block-extension-codeLine" data-line-num="7">insert_final_newline = <span class="hljs-keyword">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9"># Matches multiple files with brace expansion notation</span>
+<span class="code-block-extension-codeLine" data-line-num="10"># Set default charset</span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-punctuation">[</span>*.<span class="hljs-punctuation">{</span>js<span class="hljs-punctuation">,</span>py<span class="hljs-punctuation">}</span><span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">charset = utf<span class="hljs-number">-8</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">indent_style = space</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15"># For .js file<span class="hljs-punctuation">,</span> use <span class="hljs-number">2</span> space indentation</span>
+<span class="code-block-extension-codeLine" data-line-num="16"><span class="hljs-punctuation">[</span>*.js<span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">indent_size = <span class="hljs-number">2</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19"># For .py file<span class="hljs-punctuation">,</span> use <span class="hljs-number">4</span> space indentation</span>
+<span class="code-block-extension-codeLine" data-line-num="20"><span class="hljs-punctuation">[</span>*.py<span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">indent_size = <span class="hljs-number">4</span></span>
+</code></pre>
+<h3 data-id="heading-9">4. <strong>Stylelint</strong></h3>
+<p>Stylelint 是用于检测 CSS 代码中错误和不规范代码的静态代码分析工具，它提供了一套可配置的规则，配置文件为 <code>.stylelintrc</code> 或 <code>stylelint.config.js</code>。</p>
+<h4 data-id="heading-10"><strong>常用配置简介</strong></h4>
+<ol>
+<li>
+<p><code>extends</code>: 指定继承的配置，可以扩展预定义的配置，例如 <code>stylelint-config-standard</code>、<code>stylelint-config-recommended</code>，或者指定自定义的配置文件路径。</p>
+</li>
+<li>
+<p><code>ignoreFiles</code>: 指定要忽略的文件或文件夹，可以是多个用逗号分隔 Glob 模式字符串组成的数组。例如<code>ignoreFiles": ["**/*.js"]</code>。</p>
+</li>
+<li>
+<p><code>rules</code>: 指定规则的配置，可以对每一条规则配置是否启用等细节。</p>
+</li>
+<li>
+<p><code>plugins</code>: 指定要使用的 Stylelint 插件，扩展 Stylelint 的功能，提供额外的规则或功能。</p>
+</li>
+</ol>
+<h3 data-id="heading-11">5. <strong>Commitlint</strong></h3>
+<p>CommitLint 是一个用于规范Git提交消息格式的工具，它可以在Git提交前对提交时附带的消息进行检查，确保Git消息都符合预定义的格式，帮助团队保持一致的提交消息风格。</p>
+<p>消息格式一般约定为：<code>类型(影响范围?): 主题</code>，例如：</p>
+<ul>
+<li>feat(ci): 使用ESBuild加速CI构建</li>
+<li>fix(home): 修复首页按钮样式错乱</li>
+<li>chore: 清理冗余代码</li>
+</ul>
+<p>如果Git commit 提交的消息不符合CommitLint配置的规则，就会被抛出一个错误，阻止本次提交。</p>
+<p>CommitLint 的独立配置文件为 <code>.commitlintrc</code> 或 <code>commitlint.config.js</code>。</p>
+<h4 data-id="heading-12"><strong>常用配置简介</strong></h4>
+<ol>
+<li><code>extends</code>: 指定继承的配置，可以通过配置<code>{extends: ['@commitlint/config-conventional']}"</code>使用预定义的一套配置 <code>@commitlint/config-conventional</code>，也可以额外指定自定义的配置文件路径。</li>
+<li><code>rules</code>: 指定具体每一条规则的配置，开启或关闭，以及。</li>
+<li><code>prompt</code>: 指定辅助提交消息的命令行配置，可以帮助开发者以交互式命令行的形式生成符合规则的Commit消息，例如：</li>
+</ol>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b400f1b477124db4bce33bdae6133293~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1650&amp;h=258&amp;s=53572&amp;e=png&amp;b=282c34" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>上述介绍的各类工具往往需要手动运行才能对代码进行检查，在实践中容易遗漏，所以最好的做法是为这些检查工具配置<strong>自动化运行</strong>的逻辑。</p>
+<h3 data-id="heading-13"><strong>示例：为前端项目增加Git提交前统一检查</strong></h3>
+<p>对代码进行统一检查这件事，过早检查（例如每编写一行代码就检查一次）会打扰开发体验，太晚检查（例如代码合入主分支时）又容易导致错误积累太多，难以修复。</p>
+<p>所以最好时机就是在开发者执行<code>git commit</code>代码提交时，业界也有<code>husky</code>和<code>lint-staged</code>成熟的工具帮助我们实现这一目标。</p>
+<p>下面我们就演示一下接入<code>husky</code>和<code>lint-staged</code>，建立Git提交前统一检查的实现方式。</p>
+<h4 data-id="heading-14">1. <strong>安装配置</strong> <strong><code>lint-staged</code></strong></h4>
+<p><code>lint-staged</code>是专用于过滤出处于Git暂存区（git add 后，状态为<code>staged</code>）的文件列表并执行命令的工具，可以帮助我们避免对项目所有文件进行全量代码检查修复，导致检查耗时太长。</p>
+<p>首先当然还是安装工具NPM包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install lint-staged <span class="hljs-attr">--save-dev</span></span>
+</code></pre>
+<p>接下来，我们就来配置并使用<code>lint-staged</code>，实现只对修改过、并且被<code>git add</code>添加到Git暂存区的文件进行ESLint检查和Prettier样式修复。</p>
+<p>配置很简单，只需要在package.json中添加key为<code>lint-staged</code>的对象就可作为配置生效，格式是</p>
+<ul>
+<li><code>"目标文件 Glob 模式字符串": "想要执行的命令"</code>，例如：</li>
+</ul>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-comment">// 其他 package.json 内容</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">"lint-staged"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">"*.js"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"eslint --fix"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<p>对于我们的示例项目，我们需要对暂存区的所有<code>.js, .ts, .tsx, .jsx</code>格式文件进行ESLint 和 Prettier 2项检查，所以我们的配置如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">"lint-staged"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">"*.{j,t}{s,sx}"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">      <span class="hljs-string">"eslint --fix"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-string">"prettier --write"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<p>但仅有<code>lint-staged</code>，还不能实现在git commit前提交运行指定命令，我们还需要使用<code>husky</code>。</p>
+<h4 data-id="heading-15">2. <strong>安装配置</strong> <strong><code>husky</code></strong></h4>
+<p><code>husky</code>是一个支持多平台的Git hook工具，可以在commit、push等Git事件发生时，执行我们指定的命令。</p>
+<p>首先让我们安装并初始化，只需要1行命令：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">csharp</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-csharp code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx husky-<span class="hljs-keyword">init</span> &amp;&amp; npm install</span>
+</code></pre>
+<p>就会帮我们配置好<code>husky</code>，具体来说这行命令做了3件事：</p>
+<ol>
+<li>在<code>package.json</code>中添加了1个<code>scripts</code>命令：<code>"prepare": "husky install"</code>，这个<code>prepare</code>命令是package.json自带的<a href="https://link.juejin.cn?target=https%3A%2F%2Fdocs.npmjs.com%2Fcli%2Fv9%2Fusing-npm%2Fscripts%23life-cycle-scripts" target="_blank" rel="nofollow noopener noreferrer" title="https://docs.npmjs.com/cli/v9/using-npm/scripts#life-cycle-scripts" ref="nofollow noopener noreferrer">生命周期命令</a>，会在<code>npm install</code>之前自动执行一次，帮助我们新加入项目开发的同事执行<code>husky install</code>安装好<code>husky</code>。</li>
+<li>新建了一个实例配置文件 <code>./husky/pre-commit</code> ：在这个配置文件中可以以类似shell脚本的语法声明想要在<code>git commit</code>运行前执行的命令。</li>
+</ol>
+<p>对于我们的前端项目，我们需要把默认的<code>npm test</code>改为<code>npx lint-staged</code>，声明我们希望在git commit提交前，运行<code>lint-staged</code>，根据其配置调用各类工具，检查处于Git暂存区的文件。</p>
+<p><code>./husky/pre-commit</code>文件示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sh</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sh code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">#!/usr/bin/env sh</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">. <span class="hljs-string">"<span class="hljs-subst">$(dirname -- <span class="hljs-string">"<span class="hljs-variable">$0</span>"</span>)</span>/_/husky.sh"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">npx lint-staged</span>
+</code></pre>
+<h4 data-id="heading-16">3. <strong>验证Git提交前检查功能</strong></h4>
+<p>有了上述配置，我们在项目源码中编写代码后，运行<code>git commit</code>时，就会运行我们在<code>lint-staged</code>配置中指定<code>eslint --fix</code>和<code>prettier --write</code>命令，对新增的代码进行统一的自动化检查，如果有语法错误或代码风格问题被检测到，提交就会被中断，从而避免异常代码被合入主分支，甚至部署到线上，提前暴露问题，优化开发体验。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5bfdd6d7699f464d95ca1ff27faac2e5~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1237&amp;h=943&amp;s=137899&amp;e=png&amp;b=1a1a1a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<blockquote>
+<p>注：特殊情况下，可以通过<code>--no-verify</code> 参数，临时跳过<code>husky</code>的检查，例如：<code>git commit -m "feat: 紧急上线" --no-verify</code></p>
+</blockquote>
+<h2 data-id="heading-17">2. 一错不再错-用自动化测试避免功能衰退</h2>
+<p>笔者前些年一直不理解自动化测试的意义是什么，感觉自己日常开发工作已经不堪重负，哪里还有时间再投入到编写测试用例中呢？</p>
+<p>而且写自动化测试的目的，也只是验证我已经实现的功能，既然已经实现了，还有什么测试的必要呢？</p>
+<p>自动化测试难道不是在浪费时间吗？</p>
+<p>这种思想的转折点是笔者开发开源库<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Fvue-template-babel-compiler" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/vue-template-babel-compiler" ref="nofollow noopener noreferrer">vue-template-babel-compiler</a>时。</p>
+<p>当时这个库刚刚开始开发，经常需要在添加新代码逻辑后，回过头去测试验证已有的功能逻辑是否仍然正常，进行了大量的重复测试工作，非常影响开发体验和效率。</p>
+<p>这时我才意识到自动化测试的意义所在，如果在添加新的代码逻辑时，有足够数量的自动化测试，可以帮我验证已有的功能逻辑一切正常、不受影响，我就可以从重复繁琐的测试中解放出来，把更多的时间精力投入到功能开发中去。</p>
+<p>有自动化测试保驾护航，每次改动代码后，只要我花上几秒钟执行一行<code>npm run test</code>命令，看到它返回测试用例全部通过，我就可以信心满满的提交新写的代码，不必担心功能出现衰退（Regression）。</p>
+<p>犯错不可怕，可怕的是一错再错。自动化测试就是帮助我们减轻测试工作负担、避免重复犯错，规避功能衰退的灵丹妙药。</p>
+<p>自动化测试无法保证我们不出新BUG，但是能确保我们不会重复出现旧BUG，帮助我们避免在同一个地方跌倒两次，同时把我们从重复繁琐的测试工作解放出来。</p>
+<p>为前端项目增加自动化测试很简单，工作量不大，对开发体验的提升又十分显著，投入产出比极高。</p>
+<p>下面我们就来学习2个久经考验的自动化测试工具及其接入示例。</p>
+<h3 data-id="heading-18">1. <strong>单元测试框架 Jest</strong></h3>
+<p>单元测试（Unit Test）是指测试项目内函数、组件等独立小规模单元模块的测试类型。</p>
+<p>业内最负盛名的框架就是<a href="https://link.juejin.cn?target=https%3A%2F%2Fjestjs.io%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://jestjs.io/" ref="nofollow noopener noreferrer">Jest</a>，已经迭代了29+个版本，长盛不衰，功能强大又简单易用。作为一个基础框架，对Node.js，React 组件、Vue.js组件等等前端框架都有拓展支持。</p>
+<p>对于我们项目中的React 组件进行基于Jest的单元测试，需要3项依赖：</p>
+<ul>
+<li><code>jest</code>：框架运行时，提供运行测试用例的<code>test(name, fn, timeout)</code>方法，和众多判断测试运行状态的断言，例如“期望变量具有值为1的length属性”： <code>expect(variable).toHaveLength(1)</code>。</li>
+<li><code>@testing-library/react</code>：主要提供<code>render(ui: React.ReactElement&lt;any&gt;,options?: {})</code>方法，帮助我们在Jest环境中快速方便的运行React 的JSX语法，渲染出对应DOM。</li>
+<li><code>jest-environment-jsdom</code>：专用于Jest框架的Node.js环境DOM API模拟实现，用于确保Jest运行在Node.js环境中时，也有浏览器的各类API供我们的组件调用，例如react-router需要的History API，确保测试用例运行有正确的DOM输出。</li>
+</ul>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install jest <span class="hljs-variable">@testing</span><span class="hljs-operator">-</span>library<span class="hljs-operator">/</span>react jest<span class="hljs-operator">-</span>environment<span class="hljs-operator">-</span>jsdom <span class="hljs-comment">--save-dev</span></span>
+</code></pre>
+<blockquote>
+<p>如果遇到 peerDependecy 报错，建议修改 @testing-library/react 版本号，例如项目使用React@17，请安装@testing-library/react@12</p>
+</blockquote>
+<p>配置示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// ./jest.config.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">testEnvironment</span>: <span class="hljs-string">'jest-environment-jsdom'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">moduleNameMapper</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-string">'\.(css|less|scss|sass)$'</span>: <span class="hljs-string">'identity-obj-proxy'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="7">};</span>
+</code></pre>
+<p>基础配置完成后，就可以开始正式编写了测试用例了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// ./src\app\ui\app\app.spec.tsx</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { render, screen } <span class="hljs-keyword">from</span> <span class="hljs-string">'@testing-library/react'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">App</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'../../index'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-title function_">describe</span>(<span class="hljs-string">'Render APP'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-title function_">it</span>(<span class="hljs-string">'renders APP correctly'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-title function_">render</span>(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span></span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">const</span> conduitAnchorEle = screen.<span class="hljs-title function_">queryAllByText</span>(<span class="hljs-string">'conduit'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-title function_">expect</span>(conduitAnchorEle).<span class="hljs-title function_">toHaveLength</span>(<span class="hljs-number">1</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="12">});</span>
+</code></pre>
+<p>上述测试用例代码中，我们首先调用<code>describe()</code>创建了一个测试组，目的是为了把同一类型、相同目标的测试用例组织在一起，便于统一管理，例如添加<code>beforeEach(), afterAll()</code>等钩子函数。</p>
+<p>接下来，使用<code>it(name, TestFn)</code>创建了一个测试用例，在第2个参数的函数中就可以编写我们的测试内容了。</p>
+<p>测试的内容很简单，调用<code>@testing-library/react</code>提供的可以在Node.js环境渲染React组件的<code>render()</code>方法，将<code>&lt;App /&gt;</code>组件渲染到当前的内存上下文中，我们就可以进一步用<code>screen</code>类中的<code>queryAllByText()</code>等API获取、检测组件的执行逻辑、DOM渲染是否符合预期。</p>
+<p>并最终使用jest的断言API <code>expect()</code>，判断这次的代码运行是否符合我们的预期，渲染出了1个<code>conduitAnchorEle</code>元素（<code>.toHaveLength(1)</code>）。</p>
+<p>除了对组件进行测试外，我们还可以对功能函数进行测试，例如下列测试用例代码对<code>limit</code>函数的各类情况进行自动化测试：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// utils.ts</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> limit = (<span class="hljs-attr">count</span>: number, <span class="hljs-attr">pageIndex</span>: number): <span class="hljs-function"><span class="hljs-params">string</span> =&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-string">`limit=<span class="hljs-subst">${count}</span>&amp;offset=<span class="hljs-subst">${pageIndex * count}</span>`</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-comment">// utils.test.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">import</span> { limit } <span class="hljs-keyword">from</span> <span class="hljs-string">'../utils'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-title function_">describe</span>(<span class="hljs-string">'limit'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-title function_">it</span>(<span class="hljs-string">'should return the correct limit string'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">const</span> count = <span class="hljs-number">10</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">const</span> pageIndex = <span class="hljs-number">2</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">const</span> result = <span class="hljs-title function_">limit</span>(count, pageIndex);</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-title function_">expect</span>(result).<span class="hljs-title function_">toEqual</span>(<span class="hljs-string">`limit=<span class="hljs-subst">${count}</span>&amp;offset=<span class="hljs-subst">${pageIndex}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">  <span class="hljs-title function_">it</span>(<span class="hljs-string">'should handle zero count correctly'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-keyword">const</span> count = <span class="hljs-number">0</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-keyword">const</span> pageIndex = <span class="hljs-number">5</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-keyword">const</span> result = <span class="hljs-title function_">limit</span>(count, pageIndex);</span>
+<span class="code-block-extension-codeLine" data-line-num="23"></span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-title function_">expect</span>(result).<span class="hljs-title function_">toEqual</span>(<span class="hljs-string">`limit=<span class="hljs-subst">${count}</span>&amp;offset=<span class="hljs-subst">${pageIndex}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="25">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="26"></span>
+<span class="code-block-extension-codeLine" data-line-num="27">  <span class="hljs-title function_">it</span>(<span class="hljs-string">'should handle negative pageIndex correctly'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-keyword">const</span> count = <span class="hljs-number">20</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-keyword">const</span> pageIndex = -<span class="hljs-number">3</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="30"></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-keyword">const</span> result = <span class="hljs-title function_">limit</span>(count, pageIndex);</span>
+<span class="code-block-extension-codeLine" data-line-num="32"></span>
+<span class="code-block-extension-codeLine" data-line-num="33">    <span class="hljs-title function_">expect</span>(result).<span class="hljs-title function_">toEqual</span>(<span class="hljs-string">`limit=<span class="hljs-subst">${count}</span>&amp;offset=<span class="hljs-subst">${pageIndex}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="34">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="35">});</span>
+</code></pre>
+<h3 data-id="heading-19">2. <strong>端到端测试框架 Playwright</strong></h3>
+<p>端到端测试（End To End Test, E2E）是指测试项目从一端到另一端（如客户端到服务端）完整操作流程的测试类型。</p>
+<p>近年来业内最流行的E2E测试工具非 Playwright （<a href="https://link.juejin.cn?target=https%3A%2F%2Fplaywright.dev%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://playwright.dev/" ref="nofollow noopener noreferrer">playwright.dev/</a>）莫属，它由微软开源，支持使用Chrome、FireFox、Edge、Safari等各大浏览器运行测试用例，可用于检查前端项目的浏览器兼容性，开发体验极佳。</p>
+<p>Playwright安装使用非常简单：推荐使用<code>npm init</code>命令安装，在命令行中执行：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">kotlin</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-kotlin code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm <span class="hljs-keyword">init</span> <span class="hljs-symbol">playwright@</span>latest</span>
+</code></pre>
+<p>在安装过程中，会通过交互式命令行的形式，引导选择安装CI配置、浏览器运行时等可选依赖，体验较好：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-title class_">Need</span> to install the following <span class="hljs-attr">packages</span>:</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  create-playwright@<span class="hljs-number">1.17</span><span class="hljs-number">.128</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-title class_">Ok</span> to proceed? (y) y</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-title class_">Getting</span> started <span class="hljs-keyword">with</span> writing end-to-end tests <span class="hljs-keyword">with</span> <span class="hljs-title class_">Playwright</span>:</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-title class_">Initializing</span> project <span class="hljs-keyword">in</span> <span class="hljs-string">'.'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">✔ <span class="hljs-title class_">Where</span> to put your end-to-end tests? · tests</span>
+<span class="code-block-extension-codeLine" data-line-num="7">✔ <span class="hljs-title class_">Add</span> a <span class="hljs-title class_">GitHub</span> <span class="hljs-title class_">Actions</span> workflow? (y/N) · <span class="hljs-literal">false</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">✔ <span class="hljs-title class_">Install</span> <span class="hljs-title class_">Playwright</span> browsers (can be done manually via <span class="hljs-string">'npx playwright install'</span>)? (Y/n) · <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">✔ <span class="hljs-title class_">Install</span> <span class="hljs-title class_">Playwright</span> operating system dependencies (requires sudo / root - can be done manually via <span class="hljs-string">'sudo npx playwright install-deps'</span>)? (y/N) · <span class="hljs-literal">false</span></span>
+</code></pre>
+<p>安装过程主要会生成：</p>
+<ul>
+<li>
+<p>安装<code>@playwright/test</code>核心依赖</p>
+</li>
+<li>
+<p><code>./playwright.config.ts</code>：默认配置一套，其中：</p>
+<ul>
+<li><code>workers</code>字段指定运行测试时开启多少个Node.js线程，默认为<code>undefined</code>，表示不限线程数量，playwright会尽可能地对每个测试用例开启一个独立线程，以便加快测试完成速度。</li>
+<li><code>reporter</code>字段指定测试结果的汇总报告形式，默认为<code>'html'</code>，即测试结果会生成一份HTML页面（如下图）以便于观看。此外常用的还有JSON格式报告（<code>['json', { outputFile: './report.json' }]</code>），可用于进一步处理测试结果。</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/050147c633bc46e885421ef45cb9b961~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1912&amp;h=971&amp;s=117874&amp;e=png&amp;b=151515" alt="" loading="lazy" class="medium-zoom-image"></p>
+<ul>
+<li><code>projects</code>字段可用于指定使用哪些浏览器运行时进行兼容性测试，可以按需增减。例如：</li>
+</ul>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { defineConfig, devices } <span class="hljs-keyword">from</span> <span class="hljs-string">'@playwright/test'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">defineConfig</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">projects</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">name</span>: <span class="hljs-string">'firefox'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-attr">use</span>: { …devices[<span class="hljs-string">'Desktop Firefox'</span>] },</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-attr">name</span>: <span class="hljs-string">'Microsoft Edge'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">use</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        …devices[<span class="hljs-string">'Desktop Edge'</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">channel</span>: <span class="hljs-string">'msedge'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-attr">name</span>: <span class="hljs-string">'Google Chrome'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-attr">use</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        …devices[<span class="hljs-string">'Desktop Chrome'</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="20">        <span class="hljs-attr">channel</span>: <span class="hljs-string">'chrome'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    },  {  name : <span class="hljs-string">'Mobile Chrome'</span> ,  use : { …devices[ <span class="hljs-string">'Pixel 5'</span> ] }, }, {  name : <span class="hljs-string">'Mobile Safari'</span> ,  use : { …devices[ <span class="hljs-string">'iPhone 12'</span> ] }, },</span>
+<span class="code-block-extension-codeLine" data-line-num="23">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="24">});</span>
+</code></pre>
+<ul>
+<li>
+<p>示例测试用例2个：</p>
+<ul>
+<li><code>tests\example.spec.ts</code>：基础API简单示例</li>
+<li><code>tests-examples\demo-todo-app.spec.ts</code>：对一个TODO List 前端应用进行增删改查操作的复杂示例</li>
+</ul>
+</li>
+</ul>
+<p>安装完成后，执行<code>npx playwright test example.spec.ts</code>，即可运行自动生成的测试用例，运行后的测试结果保存在<code>./playwright-report/index.html</code>，可以通过运行<code>npx playwright show-report</code>供本地浏览。</p>
+<p>常用的命令行参数还有：</p>
+<ul>
+<li>运行所有测试用例：<code>npx playwright test</code></li>
+<li>运行文件名包含关键字example的测试用例：<code>npx playwright test example</code></li>
+<li><code>--debug</code>以调试模式运行测试用例：<code>npx playwright test example.spec.ts --debug</code>，运行后，将自动打开浏览器窗口和Playwright的调试工具，允许我们一步步调试运行目标测试用例。测试工具中的Pick Locator 按钮也可以帮助我们快速定位测试目标元素基于Playwright API的选择符。</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ca5b7014fb534343af902e99c465f40d~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1862&amp;h=984&amp;s=221013&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>了解了基础用法，下面再演示一下为示例前端项目增加一个基本的E2E测试用例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// ./tests/homepage.spec.ts</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { test, expect } <span class="hljs-keyword">from</span> <span class="hljs-string">'@playwright/test'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-title function_">test</span>(<span class="hljs-string">'Home page should render successfully'</span>, <span class="hljs-keyword">async</span> ({ page }) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-keyword">await</span> page.<span class="hljs-title function_">goto</span>(<span class="hljs-string">'http://localhost:4100/home/'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-keyword">await</span> <span class="hljs-title function_">expect</span>(page).<span class="hljs-title function_">toHaveTitle</span>(<span class="hljs-regexp">/《现代前端工程体验优化》示例项目/</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-keyword">await</span> <span class="hljs-title function_">expect</span>(<span class="hljs-keyword">await</span> page.<span class="hljs-title function_">getByRole</span>(<span class="hljs-string">'link'</span>, { <span class="hljs-attr">name</span>: <span class="hljs-string">'《现代前端工程体验优化》demo'</span> }))</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    .<span class="hljs-title function_">toBeVisible</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-keyword">const</span> signUpPageLinkBtn = <span class="hljs-keyword">await</span> page.<span class="hljs-title function_">getByRole</span>(<span class="hljs-string">'link'</span>, { <span class="hljs-attr">name</span>: <span class="hljs-string">'Sign Up'</span> });</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-keyword">await</span> <span class="hljs-title function_">expect</span>(signUpPageLinkBtn).<span class="hljs-title function_">toBeVisible</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-keyword">await</span> signUpPageLinkBtn.<span class="hljs-title function_">click</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">  <span class="hljs-keyword">await</span> page.<span class="hljs-title function_">waitForTimeout</span>(<span class="hljs-number">500</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">  <span class="hljs-keyword">await</span> <span class="hljs-title function_">expect</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-keyword">await</span> page.<span class="hljs-title function_">getByRole</span>(<span class="hljs-string">'button'</span>, { <span class="hljs-attr">name</span>: <span class="hljs-string">'Sign Up'</span> }),</span>
+<span class="code-block-extension-codeLine" data-line-num="18">  ).<span class="hljs-title function_">toBeVisible</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="19">});</span>
+</code></pre>
+<p>这个测试用例在本地环境的主页页面（<a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A4100%2Fhome%2F" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:4100/home/" ref="nofollow noopener noreferrer">http://localhost:4100/home/</a>）上：</p>
+<ol>
+<li>调用playwright的运行时API<code> page.getByRole()</code>获取页面上的DOM元素引用。</li>
+<li>并执行一系列点击操作并调用断言（<code>expect()</code>），判断页面是否成功渲染，页面标题、链接和按钮等元素是否正常显示（<code>toBeVisible()</code>）。</li>
+</ol>
+<p>另外，我们还需要运行前端应用的本地开发环境，供Playwright访问，这一点Playwright贴心地提供了<a href="https://link.juejin.cn?target=https%3A%2F%2Fplaywright.dev%2Fdocs%2Ftest-webserver%23configuring-a-web-server" target="_blank" rel="nofollow noopener noreferrer" title="https://playwright.dev/docs/test-webserver#configuring-a-web-server" ref="nofollow noopener noreferrer">webServer</a>配置，可以在测试用例开始前，自动执行命令、启动测试用环境。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">defineConfig</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">webServer</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">command</span>: <span class="hljs-string">'npm run dev'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">port</span>: <span class="hljs-number">4100</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">reuseExistingServer</span>: !process.<span class="hljs-property">env</span>.<span class="hljs-property">CI</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">stdout</span>: <span class="hljs-string">'pipe'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">stderr</span>: <span class="hljs-string">'pipe'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">timeout</span>: <span class="hljs-number">60</span> * <span class="hljs-number">1000</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+</code></pre>
+<p>最后，在<code>package.json</code>中添加运行命令后，即可方便地运行这个测试用例，得到测试结果。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">"scripts"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>    </span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">"test:ci"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"npx playwright test"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<p>这些测试用例积少成多，能有效避免我们的前端优化出现功能衰退，当我们作为开发者以忐忑不安的心情，看到测试用例全部通过时，相信对自动化测试的意义会有更切身的体会，能真切地感受到自动化测试对工作效率和开发体验的巨大提升。</p>
+<h2 data-id="heading-20">3. <strong>持续集成(Continuous Integration，CI)</strong></h2>
+<p>上面介绍的许多工具，严格来说还是半自动化状态，其运行必须依赖开发者的手动调用。</p>
+<p>要想实现真正的全自动化，<strong>持续集成</strong>必不可少。</p>
+<p>持续集成(Continuous Integration，CI)是一种软件开发实践，使用专用的CI环境，自动执行构建，测试，部署等步骤，从而预先发现问题，确保代码质量，优化开发体验。</p>
+<h3 data-id="heading-21"><strong>CI工具简介</strong></h3>
+<p>近年来，比较流行的CI工具主要有：</p>
+<h4 data-id="heading-22">1. <strong>GitLab CI</strong></h4>
+<p>和GitLab代码仓库配套的持续集成工具。通过代码中的<code>.gitlab-ci.yml</code>配置文件定义多组工作(<code>job</code>)及其执行的命令(<code>script</code>)，来实现自动化运行构建测试等步骤。</p>
+<p>示例配置如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">yaml</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-yaml code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">image:</span> <span class="hljs-string">node:latest</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-comment"># 定义工作 job</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-attr">build:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attr">stage:</span> <span class="hljs-string">build</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">script:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-bullet">-</span> <span class="hljs-string">npm</span> <span class="hljs-string">install</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-bullet">-</span> <span class="hljs-string">npm</span> <span class="hljs-string">run</span> <span class="hljs-string">build</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-attr">deploy:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-attr">stage:</span> <span class="hljs-string">deploy</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-attr">script:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-bullet">-</span> <span class="hljs-string">aws</span> <span class="hljs-string">s3</span> <span class="hljs-string">sync</span> <span class="hljs-string">dist</span> <span class="hljs-string">s3://your-bucket-name</span> <span class="hljs-string">--acl</span> <span class="hljs-string">public-read</span>  <span class="hljs-comment"># 上传静态资源到CDN</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-attr">only:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-bullet">-</span> <span class="hljs-string">master</span>  <span class="hljs-comment"># 仅在 master 分支上触发部署</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16"><span class="hljs-comment"># 定义全局变量</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17"><span class="hljs-attr">variables:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">  <span class="hljs-attr">NODE_ENV:</span> <span class="hljs-string">production</span></span>
+</code></pre>
+<p>上述示例中，<code>.gitlab-ci.yml</code>文件定义了两个job：</p>
+<ol>
+<li>
+<p><code>build</code>：用于构建前端项目，它使用<code>node:latest</code>镜像作为运行环境，执行了安装依赖和构建命令，并将构建后的输出目录dist/定义为构建产物(artifacts)。</p>
+</li>
+<li>
+<p><code>deploy</code>：用于部署前端项目，使用<code>aws</code>命令行，将<code>dist</code>目录中的构建产物上传到CDN服务器，同时指定了该工作只在<code>master</code>分支上触发。</p>
+</li>
+</ol>
+<h4 data-id="heading-23">2. <strong>GitHub Actions</strong></h4>
+<p>是和GitHub仓库配套的持续集成工具，类似Gitlab CI，也有工作<code>job</code>的概念，可以指定工作的具体步骤<code>steps</code>要执行哪些自动化命令，以及执行的条件（<code>on</code>）。</p>
+<p>下面是一个基础的前端应用GitHub Actions配置：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">yaml</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-yaml code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">name:</span> <span class="hljs-string">Front-End</span> <span class="hljs-string">CI</span> <span class="hljs-string">Example</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-attr">on:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">push:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">branches:</span> [ <span class="hljs-string">"main"</span> ]</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">pull_request:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">branches:</span> [ <span class="hljs-string">"main"</span> ]</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-attr">jobs:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-attr">build:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">steps:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v3</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Use</span> <span class="hljs-string">Node.js</span> <span class="hljs-number">18</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/setup-node@v3</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-attr">with:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-attr">node-version:</span> <span class="hljs-string">'18.x'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-attr">cache:</span> <span class="hljs-string">'npm'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">npm</span> <span class="hljs-string">install</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">npm</span> <span class="hljs-string">run</span> <span class="hljs-string">build</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">npm</span> <span class="hljs-string">test</span></span>
+</code></pre>
+<p>主要包含1个<code>build</code>job，其具体工作步骤是：</p>
+<ul>
+<li>使用<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fmarketplace%3Ftype%3Dactions" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/marketplace?type=actions" ref="nofollow noopener noreferrer">GitHub actions市场</a>（类似NPM）中的<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Factions%2Fcheckout" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/actions/checkout" ref="nofollow noopener noreferrer">actions/checkout@v3</a>，下载并切换Git仓库的代码。</li>
+<li>再使用<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Factions%2Fsetup-node" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/actions/setup-node" ref="nofollow noopener noreferrer">actions/setup-node</a>，初始化Node.js环境。</li>
+<li>最后执行<code>npm install、npm run build、npm run test</code>等一系列命令，实现自动化运行构建和测试。</li>
+</ul>
+<p>通过以上示例可以看出，GitHub actions因为有繁荣的<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fmarketplace%3Ftype%3Dactions" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/marketplace?type=actions" ref="nofollow noopener noreferrer">GitHub actions市场</a>，所以能像复用NPM包那样，快速搭建出CI，开发体验和效率都比较好，这是GitHub actions的一大<strong>优势</strong>。</p>
+<h4 data-id="heading-24">3. Jenkins</h4>
+<p>Jenkins（<a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.jenkins.io%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://www.jenkins.io/" ref="nofollow noopener noreferrer">www.jenkins.io/</a>）是一套独立且开源的持续集成解决方案，包含可视化操作界面前端应用，运行环境服务器应用以及繁荣的插件生态。</p>
+<p>和上文提到的2类CI不同，</p>
+<ul>
+<li>Jenkins支持私有化部署，也就是说可以用自己拥有的服务器运行Jenkins，进而执行各类自动化步骤。这也是Jenkins的一大<strong>特有优势</strong>。</li>
+<li>另一方面，Jenkins有一套可视化前端界面，可以供开发者直观地创建、配置要执行CI的项目及其具体工作。</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd90c1f01d9841aba2ba5a31bf475962~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=983&amp;h=565&amp;s=144009&amp;e=png&amp;b=efefef" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Jenkins也支持通过代码仓库内的<code>Jenkinsfile</code>文件配置实现指定工作及具体步骤，<code>Jenkinsfile</code>是一种基于<code>Groovy</code>语言的脚本文件，可用于描述整个构建和部署的流程。</p>
+<p>以下是一个基础的前端应用的 Jenkinsfile 示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">yaml</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-yaml code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-string">pipeline</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-string">agent</span> <span class="hljs-string">any</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-string">stages</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-string">stage('Checkout')</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">            <span class="hljs-string">steps</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">                <span class="hljs-string">checkout</span> <span class="hljs-string">scm</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-string">stage('Install</span> <span class="hljs-string">dependencies')</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">            <span class="hljs-string">steps</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">                <span class="hljs-string">sh</span> <span class="hljs-string">'npm install'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-string">stage('Build')</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">            <span class="hljs-string">steps</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">                <span class="hljs-string">sh</span> <span class="hljs-string">'npm run build'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-string">stage('Test')</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">            <span class="hljs-string">steps</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="25">                <span class="hljs-string">sh</span> <span class="hljs-string">'npm test'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="27">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29">        <span class="hljs-string">stage('Deploy')</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="30">            <span class="hljs-string">steps</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="31">                <span class="hljs-string">//</span> <span class="hljs-string">添加部署到服务器的步骤</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">                <span class="hljs-string">//</span> <span class="hljs-string">sh</span> <span class="hljs-string">'npm run deploy'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="33">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="34">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="35">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="36">}</span>
+</code></pre>
+<p>了解了流行的CI工具后，接下来，我们就以开发体验较好的GitHub Action CI为例，演示CI的3种实用场景。</p>
+<h3 data-id="heading-25">1. <strong>创建MR时自动化运行构建，检查和测试</strong></h3>
+<p>CI最常见也最实用的场景就是帮我们运行本节介绍的各类代码检查和测试。</p>
+<p>但因为CI有独立的运行环境和时机，所以常见的用法是在创建MR时，用CI自动化执行项目构建，代码检查和各类测试。</p>
+<p>在创建MR时进行这些工作也是前端开发必不可少的保障，能有效保证主分支代码因为代码错误导致质量恶化，避免项目线上环境出现语法错误等严重缺陷。</p>
+<p>用GitHub Action实现创建MR时运行自动化检查非常简单，只需要20+行代码配置即可实现：</p>
+<blockquote>
+<p>完整代码示例：《feat: Test and ci》<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo%2Fpull%2F12%2Fchecks" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo/pull/12/checks" ref="nofollow noopener noreferrer">github.com/JuniorTour/…</a></p>
+</blockquote>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">yaml</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-yaml code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">name:</span> <span class="hljs-string">'Merge Request CI'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-attr">on:</span> </span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">pull_request:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">branches:</span> [ <span class="hljs-string">"main"</span> ]</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-comment"># 定义工作 job</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-attr">jobs:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-attr">build:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">name:</span> <span class="hljs-string">build</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">steps:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Checkout</span> <span class="hljs-string">🛎️</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v3</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Use</span> <span class="hljs-string">Node.js</span> <span class="hljs-number">18.</span><span class="hljs-string">x</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/setup-node@v3</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-attr">with:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">          <span class="hljs-attr">node-version:</span> <span class="hljs-string">'18.x'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Installing</span> <span class="hljs-string">my</span> <span class="hljs-string">packages</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">        <span class="hljs-attr">run:</span> <span class="hljs-string">npm</span> <span class="hljs-string">install</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Lint</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-attr">run:</span> <span class="hljs-string">npm</span> <span class="hljs-string">run</span> <span class="hljs-string">lint</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Build</span> <span class="hljs-string">App</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">        <span class="hljs-attr">run:</span> <span class="hljs-string">npm</span> <span class="hljs-string">run</span> <span class="hljs-string">build</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Test</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">        <span class="hljs-attr">run:</span> <span class="hljs-string">npm</span> <span class="hljs-string">run</span> <span class="hljs-string">test:ci</span></span>
+</code></pre>
+<p>上述配置中，我们首先通过<code>on</code>关键字，指定了这份配置触发的时机是创建PR时（<code>pull_request:</code>），并且目标分支为<code>main</code>（<code>branches: [ "main" ]</code>）。</p>
+<p>然后，定义了1个工作 job名为<code>build</code>，在这个工作中，我们同样使用市场中已有的Actions片段<code>actions/checkout@v3</code>和<code>actions/setup-node@v3</code>，方便快速地初始化CI环境。</p>
+<p>接下来一步步执行，安装依赖和我们在<code>package.json</code>中定义的代码检查、构建和playwright <code>e2e</code>测试命令。</p>
+<p>这样就实现了，当创建PR（MR）时，自动构建、检查代码并运行自动化测试，这些自动化工作的结果都会在PR页面可视化展示，如果CI运行报错、未完成，MR就不能顺利合入。</p>
+<p>反之，代码没有语法错误、构建成功、测试用例顺利通过，MR才能合入主分支，有效地保护了代码质量。自动化执行各类重复的工作，也可以显著节省开发者的时间和精力。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/329066d98dc7405a888a35735f7c3061~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1366&amp;h=622&amp;s=89887&amp;e=png&amp;b=0f141a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h3 data-id="heading-26">2. <strong>自动化发布NPM包</strong></h3>
+<p>第二类要介绍的CI使用场景是《自动化发布NPM包》。</p>
+<p>对于需要发布NPM包的代码仓库，我们也可以使用GitHub Action和市场中的配置，简单方便地实现，配置如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">yaml</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-yaml code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">name:</span> <span class="hljs-string">'PublishLatestVersion'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-attr">on:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">push:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">tags:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-bullet">-</span> <span class="hljs-string">'v*'</span> <span class="hljs-comment"># Push events to matching v*, i.e. v1.0, v20.15.10</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-attr">jobs:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-attr">publish:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">steps:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/setup-node@v1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">with:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">          <span class="hljs-attr">node-version:</span> <span class="hljs-number">14</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">yarn</span> <span class="hljs-string">install</span> <span class="hljs-string">--frozen-lockfile</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">yarn</span> <span class="hljs-string">test</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">JS-DevTools/npm-publish@v1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-attr">with:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">          <span class="hljs-attr">token:</span> <span class="hljs-string">${{</span> <span class="hljs-string">secrets.NPM_TOKEN</span> <span class="hljs-string">}}</span></span>
+</code></pre>
+<p>这份配置，触发的时机比较特殊，是在Git仓库收到了推送的<code>tags</code>时，并且tags的名称以<code>v</code>字母开头（<code>'v*'</code>）才会触发。执行后续定义的<code>jobs</code>。</p>
+<p>这样我们就可以配合<a href="https://link.juejin.cn?target=https%3A%2F%2Fgit-scm.com%2Fbook%2Fen%2Fv2%2FGit-Basics-Tagging" target="_blank" rel="nofollow noopener noreferrer" title="https://git-scm.com/book/en/v2/Git-Basics-Tagging" ref="nofollow noopener noreferrer">Git tags</a>同步管理NPM发布，甚至可以在GitHub的页面中全程可视化操作，创建tags，实现自动化发布NPM包。相较于在本地开发环境手动输入<code>npm publish</code>，还能进行自动化测试，开发体验非常好，效率更高。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3b2a510e9ff74f74bea92e47466da646~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1053&amp;h=689&amp;s=84780&amp;e=png&amp;b=0f131a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h3 data-id="heading-27">3. <strong>GitHub pages 自动部署</strong></h3>
+<p>第二类要介绍的CI使用场景是《自动化部署GitHub Pages》。</p>
+<p>GitHub Pages是GitHub提供的静态页面部署功能，许多开源库的文档、示例页面都是使用Pages部署，自带域名（例如：<a href="https://link.juejin.cn?target=https%3A%2F%2Fjuniortour.github.io%2Fes6-mario%2Fpublic%2Fdist%2Findex.html%25EF%25BC%2589%25E5%2592%258CCDN%25E3%2580%2582%25EF%25BC%258C%25E7%25AE%2580%25E5%258D%2595%25E6%2598%2593%25E7%2594%25A8%25EF%25BC%258C%25E5%2590%258C%25E6%2597%25B6%25E5%258A%259F%25E8%2583%25BD%25E5%25BC%25BA%25E5%25A4%25A7%25E3%2580%2582" target="_blank" rel="nofollow noopener noreferrer" title="https://juniortour.github.io/es6-mario/public/dist/index.html%EF%BC%89%E5%92%8CCDN%E3%80%82%EF%BC%8C%E7%AE%80%E5%8D%95%E6%98%93%E7%94%A8%EF%BC%8C%E5%90%8C%E6%97%B6%E5%8A%9F%E8%83%BD%E5%BC%BA%E5%A4%A7%E3%80%82" ref="nofollow noopener noreferrer">juniortour.github.io/es6-mario/p…</a></p>
+<p>复用市场中的Actions模板：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJamesIves%2Fgithub-pages-deploy-action" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JamesIves/github-pages-deploy-action" ref="nofollow noopener noreferrer">JamesIves/github-pages-deploy-action</a>，即可快速实现以自动化构建项目，并部署到GitHub Pages。</p>
+<p>完整配置代码如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">yaml</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-yaml code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">name:</span> <span class="hljs-string">GitHub</span> <span class="hljs-string">Pages</span> <span class="hljs-string">deploy</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-attr">on:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">push:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">branches:</span> [<span class="hljs-string">main</span>]</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-attr">jobs:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-attr">build:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">steps:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Checkout</span> <span class="hljs-string">🛎️</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v2.3.1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Use</span> <span class="hljs-string">Node.js</span> <span class="hljs-number">16.</span><span class="hljs-string">x</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/setup-node@v1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">with:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">          <span class="hljs-attr">node-version:</span> <span class="hljs-string">'16.x'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Installing</span> <span class="hljs-string">my</span> <span class="hljs-string">packages</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">        <span class="hljs-attr">run:</span> <span class="hljs-string">npm</span> <span class="hljs-string">install</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Build</span> <span class="hljs-string">my</span> <span class="hljs-string">App</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-attr">run:</span> <span class="hljs-string">npm</span> <span class="hljs-string">run</span> <span class="hljs-string">build</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">npm</span> <span class="hljs-string">run</span> <span class="hljs-string">export</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">touch</span> <span class="hljs-string">./out/.nojekyll</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Deploy</span> <span class="hljs-string">🚀</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">        <span class="hljs-attr">uses:</span> <span class="hljs-string">JamesIves/github-pages-deploy-action@v4.4.1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">        <span class="hljs-attr">with:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">          <span class="hljs-attr">token:</span> <span class="hljs-string">${{</span> <span class="hljs-string">secrets.CI_GITHUB_TOKEN</span> <span class="hljs-string">}}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29">          <span class="hljs-attr">BRANCH:</span> <span class="hljs-string">public</span> <span class="hljs-comment"># The branch the action should deploy to.</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30">          <span class="hljs-attr">FOLDER:</span> <span class="hljs-string">out</span> <span class="hljs-comment"># The folder the action should deploy.</span></span>
+</code></pre>
+<p>这份配置会在代码push到<code>main</code>分支时触发，依次执行<code>npm install</code>、<code>npm run build</code>、和<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJamesIves%2Fgithub-pages-deploy-action" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JamesIves/github-pages-deploy-action" ref="nofollow noopener noreferrer">JamesIves/github-pages-deploy-action</a>内置的静态资源部署步骤。实现代码推送后，自动化构建、部署GitHub Pages。</p>
+<h2 data-id="heading-28"><strong>总结</strong></h2>
+<p>这一节我们为了进一步优化开发体验、提高工作效率，了解了5类前端开发时常用的自动化代码检查工具：</p>
+<ol>
+<li>ESLint</li>
+<li>Prettier</li>
+<li>Editor Config</li>
+<li>Stylelint</li>
+<li>Commitlint</li>
+</ol>
+<p>又学习了自动化测试的意义和Jest、Playwright这2个测试工具的使用方法。</p>
+<p>最后，将这些工具融会贯通，探索了持续集成的用法和GitHub Actions的3种实用场景。</p></div>

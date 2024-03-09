@@ -1,0 +1,184 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>Nest 支持创建 HTTP 服务、WebSocket 服务，还有基于 TCP 通信的微服务。</p>
+<p>这些不同类型的服务都需要 Guard、Interceptor、Exception Filter 功能。</p>
+<p>那么问题来了：</p>
+<p>不同类型的服务它能拿到的参数是不同的，比如 http 服务可以拿到 request、response 对象，而 ws 服务就没有，如何让 Guard、Interceptor、Exception Filter 跨多种上下文复用呢？</p>
+<p>Nest 的解决方法是 ArgumentHost 和 ExecutionContext 类。</p>
+<p>我们来看一下：</p>
+<p>创建个项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> argument-host -p npm</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6b471adbf830411ca1d354bcefc432e2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后创建一个 filter：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g <span class="hljs-attribute">filter</span> aaa <span class="hljs-attr">--flat</span> <span class="hljs-attr">--no-spec</span></span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b12f151047c149cfafaf56008050eaa7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/688c6a8866094f4fb3c856388f55afad~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Nest 会 catch 所有未捕获异常，如果是 Exception Filter 声明的异常，那就会调用 filter 来处理。</p>
+<p>那 filter 怎么声明捕获什么异常的呢？</p>
+<p>我们创建一个自定义的异常类：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8e06805576cf454cb1c7bbeaf32d6071~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 @Catch 装饰器里声明这个 filter 处理该异常：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/df934d51ad8a4c28a7fc508aa03b8eb7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后需要启用它：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a6b42c9ea42d48c589a94c54b2086692~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>路由级别启用 AaaFilter，并且在 handler 里抛了一个 AaaException 类型的异常。</p>
+<p>也可以全局启用：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2c9aef7430854839806205caf1d527ba~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000" ref="nofollow noopener noreferrer">http://localhost:3000</a> 就可以看到 filter 被调用了。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1b2a85e711034ecc9cae601116e9c6de~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>filter 的第一个参数就是异常对象，那第二个参数呢？</p>
+<p>可以看到，它有这些方法：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6eb7cc19228e43eaae03c74224247c21~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们用调试的方式跑一下：</p>
+<p>点击 create launch.json file 创建一个调试配置文件：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e241308c2aec4d089b1e37952c1d4266~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 .vscode/launch.json 添加这样的调试配置：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"pwa-node"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">"request"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"launch"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"debug nest"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">"runtimeExecutable"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"npm"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">"args"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-string">"run"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-string">"start:dev"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">"skipFiles"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-string">"&lt;node_internals&gt;/**"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">"console"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"integratedTerminal"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<p>点击调试启动：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4804c8349c1c479490bbb7858c89e5cf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>打个断点：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3ff48d4d155f4093955a5530a9bd5735~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000" ref="nofollow noopener noreferrer">http://localhost:3000</a> 就可以看到它断住了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5eaf214cf7f14265b83e75706d3b10ca~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们分别调用下这些方法试试：</p>
+<p>在 debug console 输入 host，可以看到它有这些属性方法：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/89e79c3bd5c34093abdfee81d444b356~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>host.getArgs 方法就是取出当前上下文的 reqeust、response、next 参数。</p>
+<p>因为当前上下文是 http。</p>
+<p>host.getArgByIndex 方法是根据下标取参数：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8aa128775aa14c1cb7bcb9d3de8e3944~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这种按照下标取参数的写法不太建议用，因为不同上下文参数不同，这样写就没法复用到 ws、tcp 等上下文了。</p>
+<p>一般是这样来用：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2cc5c684064b433db5786b18c9d31841~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果是 ws、基于 tcp 的微服务等上下文，就分别调用 host.swtichToWs、host.switchToRpc 方法。</p>
+<p>这样，就可以在 filter 里处理多个上下文的逻辑，跨上下文复用 filter了。</p>
+<p>比如这样：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ArgumentsHost</span>, <span class="hljs-title class_">Catch</span>, <span class="hljs-title class_">ExceptionFilter</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Response</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AaaException</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./AaaException'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Catch</span>(<span class="hljs-title class_">AaaException</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AaaFilter</span> implements <span class="hljs-title class_">ExceptionFilter</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-keyword">catch</span>(<span class="hljs-attr">exception</span>: <span class="hljs-title class_">AaaException</span>, <span class="hljs-attr">host</span>: <span class="hljs-title class_">ArgumentsHost</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">if</span>(host.<span class="hljs-title function_">getType</span>() === <span class="hljs-string">'http'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-keyword">const</span> ctx = host.<span class="hljs-title function_">switchToHttp</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-keyword">const</span> response = ctx.<span class="hljs-property">getResponse</span>&lt;<span class="hljs-title class_">Response</span>&gt;();</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-keyword">const</span> request = ctx.<span class="hljs-property">getRequest</span>&lt;<span class="hljs-title class_">Request</span>&gt;();</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">      response</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        .<span class="hljs-title function_">status</span>(<span class="hljs-number">500</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        .<span class="hljs-title function_">json</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="16">          <span class="hljs-attr">aaa</span>: exception.<span class="hljs-property">aaa</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">          <span class="hljs-attr">bbb</span>: exception.<span class="hljs-property">bbb</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(host.<span class="hljs-title function_">getType</span>() === <span class="hljs-string">'ws'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(host.<span class="hljs-title function_">getType</span>() === <span class="hljs-string">'rpc'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="24">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">}</span>
+</code></pre>
+<p>刷新页面，就可以看到 filter 返回的响应：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/16b17a64564744f4bf483d2684ab2ff2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cf77ed4a38a143118ca53d1f0209d86f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>所以说，<strong>ArgumentHost 是用于切换 http、ws、rpc 等上下文类型的，可以根据上下文类型取到对应的 argument</strong>。</p>
+<p>那 guard 和 interceptor 里呢？</p>
+<p>我们创建个 guard 试一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g guard aaa <span class="hljs-attr">--no-spec</span> <span class="hljs-attr">--flat</span></span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c417e73986894a6ea688b65babb67731~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到它传入的是 ExecutionContext：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a7339271b8da4772a7cfe62711b7155a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>有这些方法：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6037df49c67f4984bcb038a2a7d91cb4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>是不是很眼熟？</p>
+<p>没错，ExecutionContext 是 ArgumentHost 的子类，扩展了 getClass、getHandler 方法。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1678748b78284271a2df863bdd62f113~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>多加这两个方法是干啥的呢？</p>
+<p>我们调试下看看：</p>
+<p>路由级别启用 Guard：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0cc63d408105453582745a23633c0b3c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 Guard 里打个断点：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/556eb91f23804c26a7de45b7e36300e4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>调用下 context.getClass 和 getHandler：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/47d6d34aba214e9ea09298244d36c70f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3d152e0fdd124481b98dee5f82993112~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>会发现这俩分别是要调用的 controller 的 class 以及要调用的方法。</p>
+<p>为什么 ExecutionContext 里需要多出这俩方法呢？</p>
+<p>因为 Guard、Interceptor 的逻辑可能要根据目标 class、handler 有没有某些装饰而决定怎么处理。</p>
+<p>比如权限验证的时候，我们会先定义几个角色：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/926acc6954eb44279599761e1e31eafd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后定义这样一个装饰器：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6452d250fba04ffbbc81564bb431761e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它的作用是往修饰的目标上添加 roles 的 metadata。</p>
+<p>然后在 handler 上添加这个装饰器，参数为 admin，也就是给这个 handler 添加了一个 roles 为 admin 的metadata。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d8220fc247254968bea2fe0c94d1695e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样在 Guard 里就可以根据这个 metadata 决定是否放行了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CanActivate</span>, <span class="hljs-title class_">ExecutionContext</span>, <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Reflector</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/core'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Observable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Role</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./role'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AaaGuard</span> implements <span class="hljs-title class_">CanActivate</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">private reflector: Reflector</span>) {}</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-title function_">canActivate</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">context</span>: <span class="hljs-title class_">ExecutionContext</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  ): boolean | <span class="hljs-title class_">Promise</span>&lt;boolean&gt; | <span class="hljs-title class_">Observable</span>&lt;boolean&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">const</span> requiredRoles = <span class="hljs-variable language_">this</span>.<span class="hljs-property">reflector</span>.<span class="hljs-property">get</span>&lt;<span class="hljs-title class_">Role</span>[]&gt;(<span class="hljs-string">'roles'</span>, context.<span class="hljs-title function_">getHandler</span>());</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-keyword">if</span> (!requiredRoles) {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-keyword">const</span> { user } = context.<span class="hljs-title function_">switchToHttp</span>().<span class="hljs-title function_">getRequest</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-keyword">return</span> requiredRoles.<span class="hljs-title function_">some</span>(<span class="hljs-function">(<span class="hljs-params">role</span>) =&gt;</span> user &amp;&amp; user.<span class="hljs-property">roles</span>?.<span class="hljs-title function_">includes</span>(role));</span>
+<span class="code-block-extension-codeLine" data-line-num="22">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="23">}</span>
+</code></pre>
+<p>这里我需要 Nest 注入 reflector，但并不需要在模块的 provider 声明。</p>
+<p>guard、interceptor、middleware、pipe、filter 都是 Nest 的特殊 class，当你通过 @UseXxx 使用它们的时候，Nest 就会扫描到它们，创建对象它们的对象加到容器里，就已经可以注入依赖了。</p>
+<p>刷新页面，可以看到返回的是 403：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6fc0c88d1a384b0ba006fced5c2676f7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这说明 Guard 生效了。</p>
+<p>这就是 Guard 里的 ExecutionContext 参数的用法。</p>
+<p>同样，在 interceptor 里也有这个：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g interceptor aaa <span class="hljs-attr">--no-spec</span> <span class="hljs-attr">--flat</span></span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cf2342f7ce0c4a58a0660673da273f73~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/988f8f637d1f4328815c6ffb9d9a859b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>同样可以通过 reflector 取出 class 或者 handler 上的 metdadata。</p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fargument-host" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/argument-host" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>为了让 Filter、Guard、Exception Filter 支持 http、ws、rpc 等场景下复用，Nest 设计了 ArgumentHost 和 ExecutionContext 类。</p>
+<p>ArgumentHost 可以通过 getArgs 或者 getArgByIndex 拿到上下文参数，比如 request、response、next 等。</p>
+<p>更推荐的方式是根据 getType 的结果分别 switchToHttp、switchToWs、swtichToRpc，然后再取对应的 argument。</p>
+<p>而 ExecutionContext 还提供 getClass、getHandler 方法，可以结合 reflector 来取出其中的 metadata。</p>
+<p>在写 Filter、Guard、Exception Filter 的时候，是需要用到这些 api 的。</p></div>

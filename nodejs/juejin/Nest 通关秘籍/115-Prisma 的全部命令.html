@@ -1,0 +1,299 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>上节我们入门了 prisma，定义了 model 和表的映射，并且做了 CRUD。</p>
+<p>这节来过一遍 Prisma 的全部命令。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx prisma -h</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8d4303e562914ed4b5a96c870236f787~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1074&amp;h=678&amp;s=89326&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>有这些：</p>
+<ul>
+<li>
+<p>init：创建 schema 文件</p>
+</li>
+<li>
+<p>generate： 根据 shcema 文件生成 client 代码</p>
+</li>
+<li>
+<p>db：同步数据库和 schema</p>
+</li>
+<li>
+<p>migrate：生成数据表结构更新的 sql 文件</p>
+</li>
+<li>
+<p>studio：用于 CRUD 的图形化界面</p>
+</li>
+<li>
+<p>validate：检查 schema 文件的语法错误</p>
+</li>
+<li>
+<p>format：格式化 schema 文件</p>
+</li>
+<li>
+<p>version：版本信息</p>
+</li>
+</ul>
+<p>我们一个个来过一遍。</p>
+<p>先创建个新项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-built_in">mkdir</span> prisma-all-command</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-built_in">cd</span> prisma-all-command</span>
+<span class="code-block-extension-codeLine" data-line-num="3">npm init -y</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/141cc568db0b4429983749d95b566e7e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=826&amp;h=652&amp;s=134319&amp;e=png&amp;b=000000" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>全局安装 prisma，这个是命令行工具的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install -g prisma</span>
+</code></pre>
+<h2 data-id="heading-0">prisma init</h2>
+<p>首先来试一下 init 命令：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5cda9096e9424c8ba9b052b1a8cd6deb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=924&amp;h=784&amp;s=98010&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个就是创建 schema 文件的，可以指定连接的 database，或者指定 url。</p>
+<p>我们试一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">csharp</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-csharp code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">prisma <span class="hljs-keyword">init</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/803a110c492a4c5bbd5320fa958a7a2d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1048&amp;h=578&amp;s=115206&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>执行 init 命令后生成了 prisma/shcema.prisma 和 .env 文件：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a1ea30a82f614f0788dcc0f4feb1ef93~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1152&amp;h=480&amp;s=100047&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ab0670632c5d4b9e9dde8b31980f57e1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1880&amp;h=474&amp;s=131957&amp;e=png&amp;b=1e1e1e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>包含了 db provider，也就是连接的数据库，以及连接的 url：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5ff37b1eb71845b4954ac732351274fa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=662&amp;h=460&amp;s=62932&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ca9dccf4f98b4482bd99091a38cb9694~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1314&amp;h=348&amp;s=86946&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>删掉这俩文件，重新生成。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">csharp</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-csharp code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">prisma <span class="hljs-keyword">init</span> --datasource-provider mysql</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/27c14f5b72f94224b6a097f04db4514d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1276&amp;h=432&amp;s=84377&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样生成的就是连接 mysql 的 provider 和 url 了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a9e42e14e6e24405b187215b17f7ffa8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=718&amp;h=448&amp;s=61405&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9ca1667c732a49beb7e5b6ef45f3e623~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1056&amp;h=332&amp;s=72335&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>其实就是改这两处的字符串，prisma init 之后自己改也行。</p>
+<p>再删掉这俩文件，我们重新生成。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">prisma init --url mysql://root:guang@localhost:3306/prisma_test</span>
+</code></pre>
+<p>这次指定连接字符串。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0958cfc6e85e408f972af7234fe6d06b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1068&amp;h=402&amp;s=71532&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，provider 会根据你指定的 url 来识别，并且 .env 里的 url 就是我们传入的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/58d4c30da19f465a859912b080bea712~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=646&amp;h=448&amp;s=59576&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a4a2fc484bcc4410807e8df4f9fdba68~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=998&amp;h=360&amp;s=69200&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h2 data-id="heading-1">prisma db</h2>
+<p>创建完 schema 文件，如何定义 model 呢？</p>
+<p>其实 init 命令的打印提示了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0686752fafa743b6a8f676d266c09f30~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1018&amp;h=338&amp;s=113647&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>你可以执行 prisma db pull 把数据库里的表同步到 schema 文件。</p>
+<p>我们试一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">prisma db pull</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/51bf4749e5014463bec0b72e62d4a31d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1034&amp;h=254&amp;s=44743&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>提示发现了 2 个 model 并写入了 schema 文件。</p>
+<p>现在连接的 prisma_test 数据库里是有这两个表的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5ed443a246eb42cab0d33ffbc8d0260c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1086&amp;h=346&amp;s=115481&amp;e=png&amp;b=edeae8" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>生成的 model 定义是这样的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b66238684b3442a09d700a27016361c3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1158&amp;h=988&amp;s=165063&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>其中，@@index 是定义索引，这里定义了 authorId 的外键索引。</p>
+<p>此外，db 命令还有别的功能：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">prisma db -h</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a32adf5922464877b0adf1307e880ddd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1222&amp;h=532&amp;s=73319&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>试下 prisma db push 命令：</p>
+<p>首先在 mysql workbench 里把这两个表删掉：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/71913e8985064aa99ea3b2ef1bc43c67~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=576&amp;h=640&amp;s=190018&amp;e=png&amp;b=ddd8d4" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后执行 db push：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">perl</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-perl code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">prisma db <span class="hljs-keyword">push</span></span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/677514acfbd848b99bdd602398c6d539~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1098&amp;h=420&amp;s=69492&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>提示同步到了 database，并且生成了 client 代码。</p>
+<p>在 mysql workbench 里可以看到新的表：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/98b31be7183d4f06a77085b7d6ecc220~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1048&amp;h=396&amp;s=119733&amp;e=png&amp;b=efecea" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>seed 命令是执行脚本插入初始数据到数据库。</p>
+<p>我们用 ts 来写，先安装相关依赖：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install typescript ts<span class="hljs-operator">-</span>node <span class="hljs-variable">@types</span><span class="hljs-operator">/</span>node <span class="hljs-comment">--save-dev</span></span>
+</code></pre>
+<p>创建 tsconfig.json</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">csharp</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-csharp code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx tsc --<span class="hljs-keyword">init</span></span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d143ca746d04f349b0cf5e51c25138b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=668&amp;h=388&amp;s=42942&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后写下初始化脚本 prisma/seed.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">PrismaClient</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@prisma/client'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> prisma = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PrismaClient</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">log</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">emit</span>: <span class="hljs-string">'stdout'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-attr">level</span>: <span class="hljs-string">'query'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="10">});</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">user</span>.<span class="hljs-title function_">create</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">data</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            <span class="hljs-attr">name</span>: <span class="hljs-string">'东东东'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-attr">email</span>: <span class="hljs-string">'dongdong@dong.com'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">            <span class="hljs-title class_">Post</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">                <span class="hljs-attr">create</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="19">                    {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">                        <span class="hljs-attr">title</span>: <span class="hljs-string">'aaa'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="21">                        <span class="hljs-attr">content</span>: <span class="hljs-string">'aaaa'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">                    },</span>
+<span class="code-block-extension-codeLine" data-line-num="23">                    {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">                        <span class="hljs-attr">title</span>: <span class="hljs-string">'bbb'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">                        <span class="hljs-attr">content</span>: <span class="hljs-string">'bbbb'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">                    }</span>
+<span class="code-block-extension-codeLine" data-line-num="27">                ]</span>
+<span class="code-block-extension-codeLine" data-line-num="28">            },</span>
+<span class="code-block-extension-codeLine" data-line-num="29">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(user)</span>
+<span class="code-block-extension-codeLine" data-line-num="32">}</span>
+<span class="code-block-extension-codeLine" data-line-num="33"></span>
+<span class="code-block-extension-codeLine" data-line-num="34"><span class="hljs-title function_">main</span>();</span>
+</code></pre>
+<p>在 package.json 添加 seed 命令的配置：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/87217c1c49bf4913893345662f6f6be5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=760&amp;h=266&amp;s=39724&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">"prisma"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">"seed"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"npx ts-node prisma/seed.ts"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+</code></pre>
+<p>然后执行 seed：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">prisma db seed</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b961266c00740a9919edc4808f23f78~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1190&amp;h=462&amp;s=111968&amp;e=png&amp;b=191919" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p>在 mysql workbench 里可以看到数据被正确插入了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b16e1310a2934ddab9d9484737eea28d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1004&amp;h=270&amp;s=74168&amp;e=png&amp;b=ebe8e7" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0ce6c95394ab4be2bdd14ec036c50771~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1078&amp;h=278&amp;s=87217&amp;e=png&amp;b=ebe8e7" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>其实 seed 命令就是把跑脚本的过程封装了一下，和直接用 ts-node 跑没啥区别。</p>
+<p>然后是 prisma db execute，这个是用来执行 sql 的。</p>
+<p>比如我写一个 prisma/test.sql 的文件：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">delete</span> <span class="hljs-keyword">from</span> Post <span class="hljs-keyword">WHERE</span> id <span class="hljs-operator">=</span> <span class="hljs-number">2</span>;</span>
+</code></pre>
+<p>然后执行 execute：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">prisma db execute --file prisma/test.sql --schema prisma/schema.prisma</span>
+</code></pre>
+<p>这里 --file 就是指定 sql 文件的。</p>
+<p>而 --schema 指定 schema 文件，主要是从中拿到数据库连接信息。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/740213f0e2fb44ad872f142604d8153d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1098&amp;h=72&amp;s=17399&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后去 mysql workbench 里看一下，确实 id 为 2 的 Post 数据没有了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cd48653b11a34700b6c1004d30133445~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=594&amp;h=196&amp;s=46389&amp;e=png&amp;b=f9f9f9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是 db 的 4 个命令。</p>
+<h2 data-id="heading-2">prisma migrate</h2>
+<p>mirgrate 是迁移的意思，在这里是指表的结构变化。</p>
+<p>prisma migrate 有这些子命令：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ec74ce5adfa74ac8938f8e25d9785c2f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1364&amp;h=780&amp;s=113533&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们分别来看一下。</p>
+<p>首先是 prisma migrate dev。</p>
+<p>这个我们前面用过，它会根据 schema 的变化生成 sql 文件，并执行这个 sql，还会生成 client 代码。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">csharp</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-csharp code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">prisma migrate dev --name <span class="hljs-keyword">init</span></span>
+</code></pre>
+<p>因为之前创建过表，并且有数据。</p>
+<p>它会提示是否要 reset：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ac08e229620d4630b561324018f442e8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1038&amp;h=104&amp;s=22468&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>选择是，会应用这次 mirgration，生成 sql 文件：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e7fa4cf793f34ea4aa932145689ac945~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1520&amp;h=768&amp;s=162100&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>并且会生成 client 代码，而且会自动执行 prisma db seed，插入初始化数据。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/504d374d37e04c2f81527b7f7220af53~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=974&amp;h=184&amp;s=57122&amp;e=png&amp;b=e0dcdc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6da5ff447888459dbb5f9aa2635a5dcd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1040&amp;h=228&amp;s=82594&amp;e=png&amp;b=e1dddd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样就既创建了表，又插入了初始数据，还生成了 client。</p>
+<p>我们开发的时候经常用这个命令。</p>
+<p>在 prisma/migrations 下会保存这次 migration 的 sql 文件。</p>
+<p>目录名是 “年月日时分秒_名字” 的格式：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1d2e09eb5e92415190ab5d9543cf752c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1350&amp;h=708&amp;s=184394&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那如果我们改一下 schema 文件，再次执行 migrate dev 呢？</p>
+<p>在 Post 的 model 定义里添加 tag 字段：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/966dd7e9f05844f59ec7a21d5a48d0d9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=718&amp;h=362&amp;s=66261&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">kotlin</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-kotlin code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">tag       String  <span class="hljs-meta">@default(<span class="hljs-string">""</span>)</span></span>
+</code></pre>
+<p>然后 migrate dev：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">prisma migrate dev <span class="hljs-attr">--name</span> age-field</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60aeda069c8d49e1b6bc4ca96bc34e4a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1148&amp;h=482&amp;s=79639&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这次生成的 sql 只包含了修改表结构的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/263be9c0f79642c7bf1ccae880a7e885~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1684&amp;h=482&amp;s=106419&amp;e=png&amp;b=1e1e1e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在数据库中有个 _prisma_migrations 表，记录着数据库 migration 的历史：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/966c50e637734075885ac7c1d1aa22a9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1540&amp;h=374&amp;s=168626&amp;e=png&amp;b=efecec" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果把这个表删掉，再次 mirgate dev 就会有前面的是否 reset 的提示了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ac08e229620d4630b561324018f442e8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1038&amp;h=104&amp;s=22468&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果你想手动触发reset，可以用 reset 命令：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25f8c02994ec4444a07c9b6473fa66b0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1034&amp;h=248&amp;s=27802&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它会清空数据然后执行所有 migration</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">perl</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-perl code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">prisma migrate <span class="hljs-keyword">reset</span></span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d073ff389c6e4fe1ab01db0e92ee96ab~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1178&amp;h=250&amp;s=40671&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>会提示会丢失数据，确认后就会重置表，然后执行所有 migration：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3f8338316afb484a99daf135a8a867d2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1396&amp;h=1024&amp;s=199694&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>还会生成 client 代码，并且执行 prisma db seed 来初始化数据。</p>
+<h2 data-id="heading-3">prisma generate</h2>
+<p>generate 命令只是用来生成 client 代码的，他并不会同步数据库：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/389524ff126640cc94dba4aa11266dc7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1124&amp;h=528&amp;s=98490&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>只是根据 schema 定义，在 node_modules/@prisma/client 下生成代码，用于 CRUD。</p>
+<h2 data-id="heading-4">prisma studio</h2>
+<p>这个是可以方便 CRUD 数据的图形界面：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">prisma studio</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/71f520804d274b1885d893700770255a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=698&amp;h=136&amp;s=23271&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>选择一个 model：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/48c5d2f35a2342c280bb3a89a2316f17~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1002&amp;h=588&amp;s=33259&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>会展示它的所有数据：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0c465185b0cb470c868e6ed6c39c1e6d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2196&amp;h=432&amp;s=65652&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以编辑记录：
+<img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/14fbcdeb5cab47ab86947c781fceef91~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2276&amp;h=466&amp;s=66399&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>删除记录：
+<img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2f54d499d21d4c90a4088ee4168568f2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1290&amp;h=372&amp;s=47902&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>新增记录：
+<img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c390aa8733ac4bc099a1499962396671~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2490&amp;h=390&amp;s=85642&amp;e=png&amp;b=fef5f3" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>不过一般我们都用 mysql workbench 来做。</p>
+<h2 data-id="heading-5">prisma validate</h2>
+<p>这个是用来检查 schema 文件是否有语法错误的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2b7ea663f0eb48f4ae030e46d0669fbe~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1198&amp;h=152&amp;s=38453&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>比如我写错一个类型，然后执行 validate：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">prisma validate</span>
+</code></pre>
+<p>会提示这里有错误：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/63ed6335516b4af299f59101ed1f2b38~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1428&amp;h=1064&amp;s=191466&amp;e=png&amp;b=1c1c1c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然，我们安装了 prisma 的插件之后，可以直接在编辑器里看到这个错误：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/807848e678334c21b1cf05cd38ad9292~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1540&amp;h=192&amp;s=42469&amp;e=png&amp;b=222222" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>就和 eslint 差不多。</p>
+<h2 data-id="heading-6">prisma format</h2>
+<p>这个是用来格式化 prisma 文件的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0d4efddbf59a4296aa70b850d535e503~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1298&amp;h=756&amp;s=163530&amp;e=gif&amp;f=27&amp;b=1f1f1e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然，你安装了 prisma 的 vscode 插件之后，也可以直接用编辑器的 format：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e4cedcab3cbc410cb54daf87cbf884bd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1536&amp;h=904&amp;s=346763&amp;e=gif&amp;f=22&amp;b=222222" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h2 data-id="heading-7">prisma version</h2>
+<p>这个就是展示一些版本信息的，比较简单：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b7848d2360d44a49fa8f513bee2062e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1322&amp;h=340&amp;s=89218&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fprisma-all-command" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/prisma-all-command" ref="nofollow noopener noreferrer">小册仓库</a></p>
+<h2 data-id="heading-8">总结</h2>
+<p>这节我们学习了 prisma 的全部命令：</p>
+<ul>
+<li>
+<p>init：创建 schema 文件</p>
+</li>
+<li>
+<p>generate： 根据 shcema 文件生成 client 代码</p>
+</li>
+<li>
+<p>db：同步数据库和 schema</p>
+</li>
+<li>
+<p>migrate：生成数据表结构更新的 sql 文件</p>
+</li>
+<li>
+<p>studio：用于 CRUD 的图形化界面</p>
+</li>
+<li>
+<p>validate：检查 schema 文件的语法错误</p>
+</li>
+<li>
+<p>format：格式化 schema 文件</p>
+</li>
+<li>
+<p>version：版本信息</p>
+</li>
+</ul>
+<p>其中，prisma init、prisma migrate dev 是最常用的。</p>
+<p>prisma db pull、prisma db push 也可以方便的用来做 schema 和数据库的同步。</p>
+<p>常用的命令也没有几个，多拥几遍就熟了。</p></div>

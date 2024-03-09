@@ -1,0 +1,265 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>TypeORM 怎么用我们已经学会了，在 Nest 里用那不就是再封装一层的事情么？</p>
+<p>那怎么封装呢？</p>
+<p>先回忆下 TypeORM 的流程：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/df762fa8ccb948f6ae3ca66a92640975~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>DataSource 里存放着数据库连接的配置，比如用户名、密码、驱动包、连接池配置等等。</p>
+<p>而 Entity 里通过 @Entity、@PrimaryGeneratedColumn、@Column 等装饰器来建立数据库表的映射关系。</p>
+<p>同时还有 Entity 之间的 @OneToOne、@OneToMany、@ManyToMany 的关系，这些会映射成数据库表通过外键、中间表来建立的关系。</p>
+<p>DataSource.initialize 的时候，会和数据库服务建立连接，如果配置了 synchronize，还会生成建表 sql 语句来创建表。</p>
+<p>DataSource 初始化之后就可以拿到 EntityManager 了，由它负责对各种 Entity 进行增删改查，比如 find、delete、save 等方法，还可以通过 query builder 来创建复杂的查询。</p>
+<p>如果你只是想做对单个 Entity 的 CRUD，那可以拿到这个 Entity 的 Repository 类，它同样有上面的那些方法，只是只能用来操作单个 Entity。</p>
+<p>这就是 TypeORM 的流程。</p>
+<p>那如果让你把 TypeORM 的 api 封装一层，做成一个 TypeOrmModule，你会怎么封装呢？</p>
+<p>很明显，这里的 datasource 的配置是需要手动传入的，也就是说需要做成动态模块，支持根据传入的配置来动态产生模块内容。</p>
+<p>而动态模块的规范里就 3 种方法名： register、forRoot、forFeature。</p>
+<p>这里很明显要用 forRoot，也就是只需要注册一次，然后这个模块会在各处被使用。</p>
+<p>类似这样：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">TypeOrmModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'xxx'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attr">imports</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-title class_">TypeOrmModule</span>.<span class="hljs-title function_">forRoot</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-attr">type</span>: <span class="hljs-string">'mysql'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-attr">host</span>: <span class="hljs-string">'localhost'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">port</span>: <span class="hljs-number">3306</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-attr">username</span>: <span class="hljs-string">'root'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">password</span>: <span class="hljs-string">'root'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-attr">database</span>: <span class="hljs-string">'test'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-attr">entities</span>: [],</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-attr">synchronize</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    }),</span>
+<span class="code-block-extension-codeLine" data-line-num="16">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="17">})</span>
+<span class="code-block-extension-codeLine" data-line-num="18"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppModule</span> {}</span>
+</code></pre>
+<p>然后内部就根据传入的配置来创建 DataSource，调用 intialize 方法，之后就拿到 EntityManager，可以做 CRUD 了。</p>
+<p>但是 Entity 肯定会分散在各个业务模块，每个模块都通过 forRoot 引入那个模块太麻烦，我们干脆把它用 @Global 声明成全局的。</p>
+<p>这样每个模块里就都可以注入 EntityManager 来用了，不需要 imports。</p>
+<p>那如果我想用 Repository 的方式来 CRUD 呢？</p>
+<p>那可以先注入 EntityManager，然后再通过 EntityManager.getRepository(XxxEntity) 来拿呀。</p>
+<p>或者可以再做一个动态模块，传入 Entity，返回它的 Repository。</p>
+<p>这种局部的动态模块，一般都是用 forFeature 的名字：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">TypeOrmModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'xxxx'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">UsersService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./users.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./user.entity'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">imports</span>: [<span class="hljs-title class_">TypeOrmModule</span>.<span class="hljs-title function_">forFeature</span>([<span class="hljs-title class_">User</span>])],</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-attr">providers</span>: [<span class="hljs-title class_">UsersService</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-attr">controllers</span>: [],</span>
+<span class="code-block-extension-codeLine" data-line-num="10">})</span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UsersModule</span> {}</span>
+</code></pre>
+<p>比如传入 User，内部通过 EntityManager.getRepository(User) 来拿到 UserEntity。</p>
+<p>这样 UserService 里就可以通过 UserRepository 来实现增删改查了。</p>
+<p>这个封装思路貌似挺完美。</p>
+<p>那我们来看看 @nestjs/typeorm 是怎么封装的吧。</p>
+<p>创建个 Nest 项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest new nest-typeorm -p npm</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8a6e9e36f3ca4a14b0fd3de776a95dfd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后创建一个 crud 的模块：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g resource user</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a5075fae10254d63bd2cf8ad91f94122~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>生成的 service 里的 crud 并没有真正实现：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/46fc3a67e2ec4316adfaec375eccf1ea~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们引入 typeorm 来实现下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install --save @nestjs/typeorm typeorm mysql2</span>
+</code></pre>
+<p>typeorm、mysql2 的包我们很熟悉了，而 @nestjs/typeorm 就是把 typeorm api 封装了一层的包。</p>
+<p>它提供了一个模块，我们在入口引入下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6e13329a222840aba51eaeeac4bfc923~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>连接配置和前几节一样，引入 User 的 Entity。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">TypeOrmModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/typeorm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppController</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.controller'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./user/entities/user.entity'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">UserModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./user/user.module'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-attr">imports</span>: [<span class="hljs-title class_">UserModule</span>, </span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-title class_">TypeOrmModule</span>.<span class="hljs-title function_">forRoot</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">type</span>: <span class="hljs-string">"mysql"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-attr">host</span>: <span class="hljs-string">"localhost"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-attr">port</span>: <span class="hljs-number">3306</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-attr">username</span>: <span class="hljs-string">"root"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-attr">password</span>: <span class="hljs-string">"guang"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-attr">database</span>: <span class="hljs-string">"typeorm_test"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-attr">synchronize</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-attr">logging</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-attr">entities</span>: [<span class="hljs-title class_">User</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-attr">poolSize</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="21">      <span class="hljs-attr">connectorPackage</span>: <span class="hljs-string">'mysql2'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-attr">extra</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">          <span class="hljs-attr">authPlugin</span>: <span class="hljs-string">'sha256_password'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="24">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    }),</span>
+<span class="code-block-extension-codeLine" data-line-num="26">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="27">  <span class="hljs-attr">controllers</span>: [<span class="hljs-title class_">AppController</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="28">  <span class="hljs-attr">providers</span>: [<span class="hljs-title class_">AppService</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="29">})</span>
+<span class="code-block-extension-codeLine" data-line-num="30"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppModule</span> {}</span>
+</code></pre>
+<p>然后在 User 的 Entity 里加一些映射的信息：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">name</span>: <span class="hljs-string">'aaa_user'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">})</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">User</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">name</span>: <span class="hljs-string">'aaa_name'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">length</span>: <span class="hljs-number">50</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">name</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+</code></pre>
+<p>给映射的表给个名字叫 aaa_user，然后有两个字段，分别是 id 和 name。</p>
+<p>我们跑一下试试：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p>看到建表 sql 了没：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/17e9cf1c9bb64b24a284e31aae3ad137~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这部分和我们单独跑 typeorm 没啥区别：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/96316f78b76c4e52b7866e61f26ebea4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后是增删改查，我们可以注入 EntityManager：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9d2e561b1e2d4c9ebd0883e8bc290c45~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用它来做增删改查：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">InjectEntityManager</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/typeorm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">EntityManager</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'typeorm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CreateUserDto</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./dto/create-user.dto'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">UpdateUserDto</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./dto/update-user.dto'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./entities/user.entity'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  </span>
+<span class="code-block-extension-codeLine" data-line-num="11">  @<span class="hljs-title class_">InjectEntityManager</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  private <span class="hljs-attr">manager</span>: <span class="hljs-title class_">EntityManager</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-title function_">create</span>(<span class="hljs-params">createUserDto: CreateUserDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">User</span>, createUserDto);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">  <span class="hljs-title function_">findAll</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">find</span>(<span class="hljs-title class_">User</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="20">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">  <span class="hljs-title function_">findOne</span>(<span class="hljs-params">id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">findOne</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">      <span class="hljs-attr">where</span>: { id }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="26">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="27"></span>
+<span class="code-block-extension-codeLine" data-line-num="28">  <span class="hljs-title function_">update</span>(<span class="hljs-params">id: number, updateUserDto: UpdateUserDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="30">      <span class="hljs-attr">id</span>: id,</span>
+<span class="code-block-extension-codeLine" data-line-num="31">      ...updateUserDto</span>
+<span class="code-block-extension-codeLine" data-line-num="32">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="33">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="34"></span>
+<span class="code-block-extension-codeLine" data-line-num="35">  <span class="hljs-title function_">remove</span>(<span class="hljs-params">id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="36">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">delete</span>(<span class="hljs-title class_">User</span>, id);</span>
+<span class="code-block-extension-codeLine" data-line-num="37">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="38">}</span>
+</code></pre>
+<p>这里的 save、findOne、delete 方法我们都用过。</p>
+<p>然后我们用 postman 来试一下：</p>
+<p>发个 post 请求，带上要添加的数据：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1ef0c48d0fe040d88820706200f2fb92~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>服务端打印了 insert 的 sql 语句：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2af612ecebe440719493cf640fe5e2f6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>表里也可以看到这条数据了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/740b205a84904e968c7d07633fa19055~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>对应的是这个 handler：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/16fe1d2698ad4a379249a89b1134bd5d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再试下查询：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/76a51c3c8a1041e48ea52afc270af1ff~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/edb12e9e2725428d98d17464cb7fe7b2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1a8f0dc6e05e4afcadd494803b5e713e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>单个查询和全部查询都是可以的。</p>
+<p>再就是修改：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5a6f759f88c64506a410f0207762f4b9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 controller 里是接受 patch 的请求。</p>
+<p>在 postman 里发一下：
+<img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f929e6895c404f3aba17ece1fa5de823~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到生成了 update 的 sql 语句：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/031bd62a97e64098a91d9851cc4d8a1d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>数据库中的数据也被修改了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e464da1c56ed441685fb49d1e7b57131~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再试试删除：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1dd221fef5fb4da99ab1bbe5e42f46b5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 postman 里发送 delete 的请求：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/34165ecd295344aeb2546a997c2e2cac~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到生成了 delete 的 sql 语句：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cece97ea84f04b45b68bb56e2e06ed82~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>数据库里的数据确实被删除了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b1b0c6f2bad648f9861f9496cbe50a48~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>至此，我们就正式打通了从请求到数据库的整个流程！</p>
+<p>这里的 CRUD 部分用到的 api 我们都用过好多遍了。</p>
+<p>只不过现在是通过 TypeOrm.forRoot 来传入的数据源的配置，通过 @InjectEntityManager 来注入的 entityManager 对象。</p>
+<p>直接用 EntityManager 的缺点是每个 api 都要带上对应的 Entity：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cfc252a1a7c243c88aa16481f5af5cd9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>简便方法就是先 getRepository(User) 拿到 user 对应的 Repository 对象，再调用这些方法。</p>
+<p>比如这样：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0e9ebb1b29024f34bd9186d5f44cc09c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那还不如直接注入 User 对应的 Respository 就好了。</p>
+<p>Nest 对这个做了封装，在 user 模块引入 TypeOrmModule.forFeature 对应的动态模块，传入 User 的 Entity：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b7e4981aa0cc4f32bf60ffaf427bd6bd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>就可以在模块里注入 Repository 了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d96a2ff1caa84f9692b91da3b00588cc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它有的方法和 EntityManager 一样，只是只能用来操作当前 Entity。</p>
+<p>此外，你还可以注入 DataSource：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bfe11daae44d47f0bfd9016ca98c3823~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>不过这个不常用。</p>
+<p>这就是 Nest 里集成 TypeOrm 的方式。</p>
+<p>有了 TypeOrm 的使用基础之后，学起来还是非常简单的。</p>
+<p>那它是怎么实现的呢？</p>
+<p>我们来看下源码：</p>
+<p>首先，我们通过引入 TypeOrmModule.forRoot 的动态模块的时候：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6e4244a962614d9795249a596336fd1b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它会引入 TypeOrmCoreModule.forRoot 的动态模块：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/284f2b11ae7d420a8307ce1467d4a022~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里面根据 options 创建 DataSource 和 EntityManager 放到模块的 provider 里，并放到了 exports 里。</p>
+<p>而且，更重要的是这个模块是 @Global 的全局模块。</p>
+<p>因此，dataSource 和 entityManager 就可以在任意的地方注入了。</p>
+<p>上面那两个方法里，创建 DataSource 的过程就是传入参数，调用 intialize 方法：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a86d1bde720542af9a9755faf97c3ee2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而创建 entityManager，则是注入 dataSource 取 manager 属性就好了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/216ad7d4a6344478852e7b5dc87e73f7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后 TypeOrmModule.forFeature 则是通过全局的 dataSource.getRepository 拿到参数对应的 Repository 对象，作为模块内的 provider。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5aa2a1ad90894ae6b574fccb83b2ff52~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/527455f570c246caa184ed8695e0308c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样引入这个动态模块的模块内就可以注入这些 Entity 对应的 Repository 了。</p>
+<p>这就是 @nestjs/typeorm 的 TypeOrmModule.forRoot 和 TypeOrmModule.forFeature 的实现原理。</p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fnest-typeorm" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/nest-typeorm" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>我们会了用 TypeOrm 来连接和增删改查数据库表，在 Nest 里集成只是对 TyprOrm 的 api 封装了一层。</p>
+<p>使用方式是在根模块 TypeOrmModule.forRoot 传入数据源配置。</p>
+<p>然后就可以在各处注入 DataSource、EntityManager 来做增删改查了。</p>
+<p>如果想用 Repository 来简化操作，还可以在用到的模块引入 TypeOrmModule.forFeature 的动态模块，传入 Entity，会返回对应的 Repository。</p>
+<p>这样就可以在模块内注入该 Repository 来用了。</p>
+<p>它的原理是 TypeOrmModule.forRoot 对应的动态模块是全局的，导出了 dataSource、entityManager，所以才可以到处注入。</p>
+<p>而 TypeOrmModule.forFeature 则会根据吧传入 Entity 对应的 Repository 导出，这样就可以在模块内注入了。</p>
+<p>这就是 Nest 里集成 TypeOrm 的方式和实现原理。</p>
+<p>至此，我们就可以打通从请求到数据库的流程了。</p></div>

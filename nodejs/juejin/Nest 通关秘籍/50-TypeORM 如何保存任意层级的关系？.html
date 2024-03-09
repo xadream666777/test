@@ -1,0 +1,284 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>我们经常会见到一些多级分类的场景：</p>
+<p>比如京东的商品分类：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ec05bb2792fb4de7a3f9033ccdcb2a69~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1450&amp;h=618&amp;s=172213&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>新闻网站的新闻分类：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/880d4154f083438d95a4aacca95ac235~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1684&amp;h=504&amp;s=165044&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这种多层级的数据怎么存储呢？</p>
+<p>有同学会说，很简单啊，这不就是一对多么，二级分类就用两个表，三级分类就用三个表。</p>
+<p>这样是可以，但是都是分类，表结构是一样的，分到多个表里是不是有点冗余。</p>
+<p>更重要的是，如果层级关系经常调整呢？</p>
+<p>比如有的时候会变成二级分类，有的时候会更多级分类呢？</p>
+<p>这时候用普通的多表之间的一对多就不行了。</p>
+<p>一般这种多级分类的业务，我们都会在一个表里存储，然后通过 parentId 进行子关联来实现。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/09005167be4b44c4919a1505a1c48a8a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1082&amp;h=166&amp;s=64518&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 TypeORM 里也对这种场景做了支持。</p>
+<p>我们新建个项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> typeorm-tree-entity-test</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2192b95684e2424fa3e8fc7c7508ab54~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1056&amp;h=684&amp;s=172605&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>进入项目目录，创建一个 CRUD 模块：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g resource city <span class="hljs-attr">--no-spec</span></span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a78595f650ff47af952c458a4797814f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1086&amp;h=362&amp;s=92907&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后安装 TypeORM 的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install --save @nestjs/typeorm typeorm mysql2</span>
+</code></pre>
+<p>在 app.module.ts 引入下 TypeOrmModule：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppController</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.controller'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CityModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./city/city.module'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">TypeOrmModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/typeorm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-attr">imports</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-title class_">CityModule</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-title class_">TypeOrmModule</span>.<span class="hljs-title function_">forRoot</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">type</span>: <span class="hljs-string">"mysql"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-attr">host</span>: <span class="hljs-string">"localhost"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-attr">port</span>: <span class="hljs-number">3306</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-attr">username</span>: <span class="hljs-string">"root"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-attr">password</span>: <span class="hljs-string">"guang"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-attr">database</span>: <span class="hljs-string">"tree_test"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-attr">synchronize</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-attr">logging</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-attr">entities</span>: [<span class="hljs-title class_">City</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-attr">poolSize</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="21">      <span class="hljs-attr">connectorPackage</span>: <span class="hljs-string">'mysql2'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-attr">extra</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">          <span class="hljs-attr">authPlugin</span>: <span class="hljs-string">'sha256_password'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="24">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="26">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="27">  <span class="hljs-attr">controllers</span>: [<span class="hljs-title class_">AppController</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="28">  <span class="hljs-attr">providers</span>: [<span class="hljs-title class_">AppService</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="29">})</span>
+<span class="code-block-extension-codeLine" data-line-num="30"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppModule</span> {}</span>
+</code></pre>
+<p>在 mysql workbench 里创建这个 database：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3ff3e4978327485f8fbd4d71c937b87e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1576&amp;h=1108&amp;s=227443&amp;e=png&amp;b=e8e8e8" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>指定字符集为 utf8mb4，点击 apply。</p>
+<p>然后改下 city.entity.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">CreateDateColumn</span>, <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span>, <span class="hljs-title class_">Tree</span>, <span class="hljs-title class_">TreeChildren</span>, <span class="hljs-title class_">TreeParent</span>, <span class="hljs-title class_">UpdateDateColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Tree</span>(<span class="hljs-string">'closure-table'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">City</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    @<span class="hljs-title class_">Column</span>({ <span class="hljs-attr">default</span>: <span class="hljs-number">0</span> })</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">status</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    @<span class="hljs-title class_">CreateDateColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">createDate</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    @<span class="hljs-title class_">UpdateDateColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">updateDate</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    </span>
+<span class="code-block-extension-codeLine" data-line-num="18">    @<span class="hljs-title class_">Column</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-attr">name</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    @<span class="hljs-title class_">TreeChildren</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-attr">children</span>: <span class="hljs-title class_">City</span>[];</span>
+<span class="code-block-extension-codeLine" data-line-num="23"></span>
+<span class="code-block-extension-codeLine" data-line-num="24">    @<span class="hljs-title class_">TreeParent</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-attr">parent</span>: <span class="hljs-title class_">City</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="26">}</span>
+</code></pre>
+<p>把服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p>可以看到，自动创建了 2 个表：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/01d1a8bd802749b29d5cce1f96937dc9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1496&amp;h=810&amp;s=365517&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们在 mysql workbench 里看下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7c97d6b09c6b4a539fd347041e0ce915~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1494&amp;h=738&amp;s=283914&amp;e=png&amp;b=eeeceb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f5f3a9e2fe0c47b6a2fc61659598d5d1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1518&amp;h=660&amp;s=184583&amp;e=png&amp;b=f2f0ef" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到 parentId 引用了自身的 id。</p>
+<p>并且还有个 city_closure 表：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fa891eb34ad14823ab89e2bf97d19779~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1184&amp;h=502&amp;s=134674&amp;e=png&amp;b=eeebea" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f6e18421386140bdaabd25e7918141c6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=978&amp;h=928&amp;s=116043&amp;e=png&amp;b=f7f7f7" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f3b23f5f994b49f2b81cd42490944b5a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1098&amp;h=884&amp;s=138591&amp;e=png&amp;b=f8f8f8" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>两个外键都引用了 city 表的 id。</p>
+<p>先不着急解释为什么是这样的，我们插入一些数据试试：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2bd72cd660104d2db6dba0b1dfdf16e5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1150&amp;h=974&amp;s=179655&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 CityService 的 findAll 方法里插入数据，然后再查出来。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">InjectEntityManager</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-attr">entityManager</span>: <span class="hljs-title class_">EntityManager</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findAll</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> city = <span class="hljs-keyword">new</span> <span class="hljs-title class_">City</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    city.<span class="hljs-property">name</span> = <span class="hljs-string">'华北'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(city);</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">const</span> cityChild = <span class="hljs-keyword">new</span> <span class="hljs-title class_">City</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    cityChild.<span class="hljs-property">name</span> = <span class="hljs-string">'山东'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">const</span> parent = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOne</span>(<span class="hljs-title class_">City</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">name</span>: <span class="hljs-string">'华北'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-keyword">if</span>(parent){</span>
+<span class="code-block-extension-codeLine" data-line-num="17">      cityChild.<span class="hljs-property">parent</span> = parent</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">City</span>, cityChild)</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">getTreeRepository</span>(<span class="hljs-title class_">City</span>).<span class="hljs-title function_">findTrees</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="22">}</span>
+</code></pre>
+<p>这里创建了两个 city 的 entity，第二个的 parent 指定为第一个。</p>
+<p>用 save 保存。</p>
+<p>然后再 getTreeRepository 调用 findTrees 把数据查出来。</p>
+<p>浏览器访问下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3db93902b4414325a22ddb8ff390a898~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1000&amp;h=848&amp;s=101783&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到数据插入成功了，并且返回了树形结构的结果。</p>
+<p>在 mysql workbench 里看下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e8aebbf1b5ac40f98a0e59f5fcb9da34~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1566&amp;h=304&amp;s=135656&amp;e=png&amp;b=f0eeed" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 city 表里保存着 city 记录之间的父子关系，通过 parentId 关联。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0b8848e1726f4c9798b2881bd214eade~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1074&amp;h=346&amp;s=94811&amp;e=png&amp;b=ebe7e6" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 city_closure 表里记录了也记录了父子关系。</p>
+<p>把插入数据的代码注释掉：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/309af302c46246bab265e2866dc5daa3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1060&amp;h=840&amp;s=138982&amp;e=png&amp;b=1f1f1f" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p>重新插入数据：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findAll</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> city = <span class="hljs-keyword">new</span> <span class="hljs-title class_">City</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    city.<span class="hljs-property">name</span> = <span class="hljs-string">'华南'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(city);</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">const</span> cityChild1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">City</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    cityChild1.<span class="hljs-property">name</span> = <span class="hljs-string">'云南'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">const</span> parent = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOne</span>(<span class="hljs-title class_">City</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">name</span>: <span class="hljs-string">'华南'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">if</span>(parent){</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      cityChild1.<span class="hljs-property">parent</span> = parent</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">City</span>, cityChild1)</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-keyword">const</span> cityChild2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">City</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    cityChild2.<span class="hljs-property">name</span> = <span class="hljs-string">'昆明'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-keyword">const</span> parent2 = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOne</span>(<span class="hljs-title class_">City</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-attr">name</span>: <span class="hljs-string">'云南'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    <span class="hljs-keyword">if</span>(parent){</span>
+<span class="code-block-extension-codeLine" data-line-num="27">      cityChild2.<span class="hljs-property">parent</span> = parent2</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">City</span>, cityChild2)</span>
+<span class="code-block-extension-codeLine" data-line-num="30"></span>
+<span class="code-block-extension-codeLine" data-line-num="31"><span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">getTreeRepository</span>(<span class="hljs-title class_">City</span>).<span class="hljs-title function_">findTrees</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="32">}</span>
+</code></pre>
+<p>跑一下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/969dedc554804eb4afb6270732b566ab~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1212&amp;h=1530&amp;s=225036&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，二层和三层的关系都可以正常的存储和查询。</p>
+<p>把插入数据的代码注释掉，我们测试下其他方法：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/85e1af4043864252b935ec5b20d44bad~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1076&amp;h=566&amp;s=84302&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>findRoots 查询的是所有根节点：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findAll</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">getTreeRepository</span>(<span class="hljs-title class_">City</span>).<span class="hljs-title function_">findRoots</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="3">}</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eec4a40bb8f94373a7e10b26b2d9b37e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=928&amp;h=766&amp;s=89965&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findAll</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> parent = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOne</span>(<span class="hljs-title class_">City</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-attr">name</span>: <span class="hljs-string">'云南'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">getTreeRepository</span>(<span class="hljs-title class_">City</span>).<span class="hljs-title function_">findDescendantsTree</span>(parent)</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+</code></pre>
+<p>findDescendantsTree 是查询某个节点的所有后代节点。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/405114be08374b68a7243b4ac25df582~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=930&amp;h=774&amp;s=96677&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findAll</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> parent = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOne</span>(<span class="hljs-title class_">City</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-attr">name</span>: <span class="hljs-string">'云南'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">getTreeRepository</span>(<span class="hljs-title class_">City</span>).<span class="hljs-title function_">findAncestorsTree</span>(parent)</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+</code></pre>
+<p>findAncestorsTree 是查询某个节点的所有祖先节点。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6280a2b801f94413b438b03f3d842b29~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=862&amp;h=668&amp;s=88188&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里换成 findAncestors、findDescendants 就是用扁平结构返回：
+<img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/71e0e019184c4ebfaa1003a59d7796d2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=938&amp;h=790&amp;s=92170&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9ada83b0f7374f27aa81567b144bd6ca~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=920&amp;h=748&amp;s=90133&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把 findTrees 换成 find 也是会返回扁平的结构：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b1c36560d40b424ca478fe243137e0a2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1036&amp;h=1506&amp;s=205030&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>还可以调用 countAncestors 和 countDescendants 来计数：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findAll</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> parent = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOne</span>(<span class="hljs-title class_">City</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-attr">name</span>: <span class="hljs-string">'云南'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">getTreeRepository</span>(<span class="hljs-title class_">City</span>).<span class="hljs-title function_">countAncestors</span>(parent)</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/121deae269254913b4688aa22d288af7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=724&amp;h=192&amp;s=18501&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这些 api 都是很实用的。</p>
+<p>回过头来，再看下 @Tree 的 entity：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5411b6d46ed8449fab93a04324cc4f69~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=710&amp;h=1008&amp;s=130946&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>通过 @TreeChildren 声明的属性里存储着它的 children 节点，通过 @TreeParent 声明的属性里存储着它的 parent 节点。</p>
+<p>并且这个 entity 要用 @Tree 声明。</p>
+<p>参数可以指定 4 中存储模式：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7169db370cfb447087144e5230fd3a14~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=522&amp;h=224&amp;s=33445&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们一般都是用 closure-table，或者 materialized-path。</p>
+<p>其余两种有点问题：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0ee820886cd542789afe9f1237d2eac4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2282&amp;h=588&amp;s=180913&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2bef3d51a5364b1ea95ac6ce80a3bad7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2298&amp;h=704&amp;s=177666&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把两个表删掉：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0e80203993df42bb930aee3a81997769~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=734&amp;h=682&amp;s=205244&amp;e=png&amp;b=e7e3e2" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>改成 materialized-path 重新跑：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1e681d533cba4e37bf3f32a996d86e99~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=722&amp;h=424&amp;s=66894&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，现在只生成了一个表：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c1e1ad9fef9d40ee9ec10d8a68698b6b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1394&amp;h=294&amp;s=100451&amp;e=png&amp;b=e7e4e3" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>只是这个表多了一个 mpath 字段。</p>
+<p>我们添加点数据：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findAll</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> city = <span class="hljs-keyword">new</span> <span class="hljs-title class_">City</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    city.<span class="hljs-property">name</span> = <span class="hljs-string">'华北'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(city);</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">const</span> cityChild = <span class="hljs-keyword">new</span> <span class="hljs-title class_">City</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    cityChild.<span class="hljs-property">name</span> = <span class="hljs-string">'山东'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">const</span> parent = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOne</span>(<span class="hljs-title class_">City</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">name</span>: <span class="hljs-string">'华北'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">if</span>(parent){</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      cityChild.<span class="hljs-property">parent</span> = parent</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">City</span>, cityChild)</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">getTreeRepository</span>(<span class="hljs-title class_">City</span>).<span class="hljs-title function_">findTrees</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="19">}</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0325a3bcde3b4bbfb0f18506f51337ed~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1018&amp;h=834&amp;s=99746&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，它通过 mpath 路径存储了当前节点的访问路径，从而实现了父子关系的记录：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/70fb53967f1c49e789b13e618c5e257a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=928&amp;h=260&amp;s=72682&amp;e=png&amp;b=f7f7f7" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>其实这些存储细节我们不用关心，不管是 closure-table 用两个表存储也好，或者 materialized-path 用一个表多加一个 mpath 字段存储也好，都能完成同样的功能。</p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Ftypeorm-tree-entity-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/typeorm-tree-entity-test" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们基于 TyepORM 实现了任意层级的关系的存储。</p>
+<p>在 entity 上使用 @Tree 标识，然后通过 @TreeParent 和 @TreeChildren 标识存储父子节点的属性。</p>
+<p>之后可以用 getTreeRepository 的 find、findTrees、findRoots、findAncestorsTree、findAncestors、findDescendantsTree、findDescendants、countDescendants、countAncestors 等 api 来实现各种关系的查询。</p>
+<p>存储方式可以指定 closure-table 或者 materialized-path，这两种方式一个用单表存储，一个用两个表，但实现的效果是一样的。</p>
+<p>以后遇到任意层级的数据的存储，就是用 Tree Entity 吧。</p></div>

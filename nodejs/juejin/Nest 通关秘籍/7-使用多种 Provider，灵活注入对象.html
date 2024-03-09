@@ -1,0 +1,182 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>Nest 实现了 IoC 容器，会从入口模块开始扫描，分析 Module 之间的引用关系，对象之间的依赖关系，自动把 provider 注入到目标对象。</p>
+<p>而这个 provider 也有好几种，这节我们就来看一下。</p>
+<p>我们创建个 nest 项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">vbnet</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-vbnet code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-built_in">new</span> <span class="hljs-keyword">custom</span>-provider</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5387a7abd38847dd81d041295bc9752f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=848&amp;h=686&amp;s=275790&amp;e=png&amp;b=020202" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到 AppService 是被 @Injectable 修饰的 class：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/503ed384731f4ec2b3ffcd7398884917~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 Module 的 providers 里声明：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c6d42361e0b547ec848f337f674c27ec~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是 provider。</p>
+<p>其实这是一种简写，完整的写法是这样的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/97d89fe1295f4898b8efb818cbcf022e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">{</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">provide</span>: <span class="hljs-title class_">AppService</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">useClass</span>: <span class="hljs-title class_">AppService</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>通过 provide 指定 token，通过 useClass 指定对象的类，Nest 会自动对它做实例化后用来注入。</p>
+<p>在 AppController 的构造器里参数里声明了 AppService 的依赖，就会自动注入：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eecb757fc96c43d9ad3bb166eeec2393~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果不想用构造器注入，也可以属性注入：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/10fad8a2e44c466999a1615b6b561166~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">AppService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">private readonly <span class="hljs-attr">appService</span>: <span class="hljs-title class_">AppService</span>;</span>
+</code></pre>
+<p>通过 @Inject 指定注入的 provider 的 token 即可。</p>
+<p>有的同学说，在构造器参数里指定 AppService 的依赖的时候也没指定 token 啊？</p>
+<p>那是因为 AppService 这个 class 本身就是 token。</p>
+<p>当然，这个 token 也可以是字符串：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0805d65c9d074b5c85288d73928f6e39~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">{</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">provide</span>: <span class="hljs-string">'app_service'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">useClass</span>: <span class="hljs-title class_">AppService</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>如果 token 是字符串的话，注入的时候就要用 @Inject 手动指定注入对象的 token 了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fb6d3baa60634eb1845d6759e90c51c5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Inject</span>(<span class="hljs-string">'app_service'</span>) private readonly <span class="hljs-attr">appService</span>: <span class="hljs-title class_">AppService</span></span>
+</code></pre>
+<p>我们调试下：</p>
+<p>点击调试面板的 create launch.json file，创建调试配置文件：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/541ac1195d0643789f05b1751ad27d71~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>添加这样一个调试配置：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"node"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">"request"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"launch"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"debug nest"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">"runtimeExecutable"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"npm"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">"args"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-string">"run"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-string">"start:dev"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">"skipFiles"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-string">"&lt;node_internals&gt;/**"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">"console"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"integratedTerminal"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<p>在 getHello 方法打个断点，点击调试启动：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7c4ead0a6f2f4090bfbdae01458094d1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1446&amp;h=1080&amp;s=136411&amp;e=png&amp;b=1c1c1c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000" ref="nofollow noopener noreferrer">http://localhost:3000</a> ，代码会在断点处断住。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a56e26fbc724b3ebcc184eb7eb7dd5c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1872&amp;h=1310&amp;s=328087&amp;e=png&amp;b=1c1c1c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，这时候 appService 就有值了。</p>
+<p>也就是说，用字符串或者 class 做 token 的 provider，都可以正确被注入到目标对象。</p>
+<p>相比之下，用 class 做 token 可以省去 @Inject，比较简便。</p>
+<p>除了指定 class 外，还可以直接指定一个值，让 IoC 容器来注入。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/572363326c364b05ac54a72b0c84b2b7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">{</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">provide</span>: <span class="hljs-string">'person'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">useValue</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-attr">name</span>: <span class="hljs-string">'aaa'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-attr">age</span>: <span class="hljs-number">20</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+</code></pre>
+<p>使用 provide 指定 token，使用 useValue 指定值。</p>
+<p>然后在对象里注入它：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/861e16c386de4bc783d0c617414afc1d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Inject</span>(<span class="hljs-string">'person'</span>) private readonly <span class="hljs-attr">person</span>: {<span class="hljs-attr">name</span>: string, <span class="hljs-attr">age</span>: number}</span>
+</code></pre>
+<p>调试一下可以看到，确实是注入了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4111c661544e43e8b84cd55aa64a3891~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>provider 的值可能是动态产生的，Nest 也同样支持：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">{</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">provide</span>: <span class="hljs-string">'person2'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-title function_">useFactory</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">            <span class="hljs-attr">name</span>: <span class="hljs-string">'bbb'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">            <span class="hljs-attr">desc</span>: <span class="hljs-string">'cccc'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+</code></pre>
+<p>我们可以使用 useFactory 来动态创建一个对象。</p>
+<p>在对象里注入：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d1533e1b359f48268f04a15849242849~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Inject</span>(<span class="hljs-string">'person2'</span>) private readonly <span class="hljs-attr">person2</span>: {<span class="hljs-attr">name</span>: string, <span class="hljs-attr">desc</span>: string}</span>
+</code></pre>
+<p>类型是 {name: string, age: number} 。</p>
+<p>调试下，也是可以拿到创建出的对象的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d3700565f2434399a4debd44cd7890fe~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个 useFactory 支持通过参数注入别的 provider：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e6f2d3acc1144107bd8c20e8f0c6a1dc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">{</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">provide</span>: <span class="hljs-string">'person3'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-title function_">useFactory</span>(<span class="hljs-params">person: { name: string }, appService: AppService</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-attr">name</span>: person.<span class="hljs-property">name</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">desc</span>: appService.<span class="hljs-title function_">getHello</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-attr">inject</span>: [<span class="hljs-string">'person'</span>, <span class="hljs-title class_">AppService</span>]</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+</code></pre>
+<p>通过 inject 声明了两个 token，一个是字符串 token 的 person，一个是 class token 的 AppService。</p>
+<p>也就是注入这两个 provider：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b16f838981da41838058d98c46ed28b2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 return 那里打个断点。</p>
+<p>可以看到，在调用 useFactory 方法的时候，Nest 就会注入这两个对象：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/98d5adad4b3243c0938373a8ec7fc614~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>useFactory 支持异步：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/395855d591fa4170a3b6cf22c5b6e16e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">{</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">provide</span>: <span class="hljs-string">'person5'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-keyword">async</span> <span class="hljs-title function_">useFactory</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">await</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-built_in">setTimeout</span>(resolve, <span class="hljs-number">3000</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-attr">name</span>: <span class="hljs-string">'bbb'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">desc</span>: <span class="hljs-string">'cccc'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="12">},</span>
+</code></pre>
+<p>Nest 会等拿到异步方法的结果之后再注入：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/feec815403a24b4a876edebc9d766786~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样就可以更灵活的创建注入对象。</p>
+<p>此外，provider 还可以通过 useExisting 来指定别名：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2b7c4ae6ba8a49fdbea47270b7745c01~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">{</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">provide</span>: <span class="hljs-string">'person4'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">useExisting</span>: <span class="hljs-string">'person2'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>这里就是给 person2 的 token 的 provider 起个新的 token 叫做 person4。</p>
+<p>然后就可以用新 token 来注入了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/84b3884c85434ee78f9ec36c4584798d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这些自定义 provider 的方式里，最常用的是 useClass，不过我们一般会用简写，也就是直接指定 class。</p>
+<p>useClass 的方式由 IoC 容器负责实例化，我们也可以用 useValue、useFactory 直接指定对象。</p>
+<p>useExisting 只是用来起别名的，有的场景下会用到。</p>
+<p>比如 @nestjs/typeorm 里就用到了 useValue、useFactory、useExisting：</p>
+<p>它用 useValue 来<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fnestjs%2Ftypeorm%2Fblob%2F153da09a384fdbf797b66e4500b69a72a7a47b78%2Flib%2Ftypeorm-core.module.ts%23L113-L116" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/nestjs/typeorm/blob/153da09a384fdbf797b66e4500b69a72a7a47b78/lib/typeorm-core.module.ts#L113-L116" ref="nofollow noopener noreferrer">注入一段字符串</a>：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/15215da691aa4fb5b52e38c20b7cdaa7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用 useFactory 根据传入的 options <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fnestjs%2Ftypeorm%2Fblob%2F153da09a384fdbf797b66e4500b69a72a7a47b78%2Flib%2Ftypeorm-core.module.ts%23L83-L101" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/nestjs/typeorm/blob/153da09a384fdbf797b66e4500b69a72a7a47b78/lib/typeorm-core.module.ts#L83-L101" ref="nofollow noopener noreferrer">动态创建数据库连接对象</a>：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5cbc4ddcecee4f8e89f089af85fa77a1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用 useExisting 给 DataSource 起了一个 Connection 的<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fnestjs%2Ftypeorm%2Fblob%2F153da09a384fdbf797b66e4500b69a72a7a47b78%2Flib%2Ftypeorm-core.module.ts%23L68-L71" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/nestjs/typeorm/blob/153da09a384fdbf797b66e4500b69a72a7a47b78/lib/typeorm-core.module.ts#L68-L71" ref="nofollow noopener noreferrer">别名</a>：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f45fa90bb49943e18db58300fc5cf8ad~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里是一个版本用了 Connection，一个版本用了 DataSource，通过 useExisting 起别名就可以兼容两者。</p>
+<p>此外，如果觉得构造器注入写起来不方便，可以使用属性注入，效果一样：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a058deb301c0444fa650bd68cde366fb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1754ddc10e9144efbd79921cfb62ea05~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fcustom-provider" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/custom-provider" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>一般情况下，provider 是通过 @Injectable 声明，然后在 @Module 的 providers 数组里注册的 class。</p>
+<p>默认的 token 就是 class，这样不用使用 @Inject 来指定注入的 token。</p>
+<p>但也可以用字符串类型的 token，不过注入的时候要用 @Inject 单独指定。</p>
+<p>除了可以用 useClass 指定注入的 class，还可以用 useValue 直接指定注入的对象。</p>
+<p>如果想动态生成对象，可以使用 useFactory，它的参数也注入 IOC 容器中的对象，然后动态返回 provider 的对象。</p>
+<p>如果想起别名，可以用 useExisting 给已有的 token，指定一个新 token。</p>
+<p>灵活运用这些 provider 类型，就可以利用 Nest 的 IOC 容器中注入任何对象。</p></div>

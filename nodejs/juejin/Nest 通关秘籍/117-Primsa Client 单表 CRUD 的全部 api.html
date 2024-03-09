@@ -1,0 +1,656 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>我们学了 Prisma 的命令、schema 的语法，这节来过一遍 Prisma Client 的 api。</p>
+<p>这节只涉及单个表的 CRUD 的 api。</p>
+<p>创建个新项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-built_in">mkdir</span> prisma-client-api</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-built_in">cd</span> prisma-client-api</span>
+<span class="code-block-extension-codeLine" data-line-num="3">npm init -y</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d8927d892bc04c8f95ac37a8fa63ab68~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=870&amp;h=700&amp;s=88483&amp;e=png&amp;b=000000" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>进入项目，执行 init 命令：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">csharp</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-csharp code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx prisma <span class="hljs-keyword">init</span></span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/29216dde7e8e40be94a8a27f85f0c4af~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1010&amp;h=624&amp;s=105602&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>生成了 .env 和 schema 文件：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0e97117aa3ef49aabf9227ec19601c79~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=484&amp;h=276&amp;s=27131&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后改下 .env 文件的数据库连接信息：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9260844466e7496fa11bdf18a5da4e14~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1026&amp;h=348&amp;s=134798&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">DATABASE_URL</span>=<span class="hljs-string">"mysql://root:guang@localhost:3306/prisma_test"</span></span>
+</code></pre>
+<p>改一下 datasource 的 provider 为 mysql，并且添加一个 model</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3627436dc9b44b1980c166c9aab0b952~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=820&amp;h=554&amp;s=75992&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">prisma</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-prisma code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">generator client {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  provider = "prisma-client-js"</span>
+<span class="code-block-extension-codeLine" data-line-num="3">}</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">datasource db {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  provider = "mysql"</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  url      = env("DATABASE_URL")</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">model Aaa {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  id    Int     @id @default(autoincrement())</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  email String  @unique</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  name  String?</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+</code></pre>
+<p>然后再添加一个 generator，生成 docs，并且修改下生成代码的位置：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aea5f82f5ced4488bd21ef081c19d1c5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=926&amp;h=744&amp;s=108104&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">generator docs {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">provider</span> = <span class="hljs-string">"node node_modules/prisma-docs-generator"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">output</span>   = <span class="hljs-string">"../generated/docs"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>安装用到的 generator 包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save-dev</span> prisma-docs-generator</span>
+</code></pre>
+<p>之后执行 migrate reset 重置下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">perl</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-perl code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx prisma migrate <span class="hljs-keyword">reset</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e525d0d9692940caac47a3a05eac11f7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1072&amp;h=622&amp;s=88219&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>之后用 migrate dev 创建新的迁移：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx prisma migrate dev <span class="hljs-attr">--name</span> aaa</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d18cf9ff25e54fe6817d96222111560b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=996&amp;h=524&amp;s=82026&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，生成了 client 代码、docs 文档，还有 sql 文件。</p>
+<p>数据库中也多了这个表：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e2258e881e16492fa0fdf673288e9ce4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1082&amp;h=576&amp;s=178048&amp;e=png&amp;b=eeebea" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们写下初始化数据的代码：</p>
+<p>首先安装 ts、ts-node 包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install typescript ts<span class="hljs-operator">-</span>node <span class="hljs-variable">@types</span><span class="hljs-operator">/</span>node <span class="hljs-comment">--save-dev</span></span>
+</code></pre>
+<p>创建 tsconfig.json</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">csharp</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-csharp code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx tsc --<span class="hljs-keyword">init</span></span>
+</code></pre>
+<p>把注释删掉，保留这些配置就行：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">"compilerOptions"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">"target"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"es2016"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">"module"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"commonjs"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">"types"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">"node"</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">"esModuleInterop"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">"forceConsistentCasingInFileNames"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">"strict"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">"skipLibCheck"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+</code></pre>
+<p>在 package.json 配置下 seed 命令：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">"prisma"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">"seed"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"npx ts-node prisma/seed.ts"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+</code></pre>
+<p>然后写下 prisma/seed.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">PrismaClient</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@prisma/client'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> prisma = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PrismaClient</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">log</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">emit</span>: <span class="hljs-string">'stdout'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-attr">level</span>: <span class="hljs-string">'query'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="10">});</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">createMany</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">data</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">                <span class="hljs-attr">name</span>: <span class="hljs-string">'aaa'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">                <span class="hljs-attr">email</span>: <span class="hljs-string">'aaa@xx.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">            },</span>
+<span class="code-block-extension-codeLine" data-line-num="19">            {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">                <span class="hljs-attr">name</span>: <span class="hljs-string">'bbb'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="21">                <span class="hljs-attr">email</span>: <span class="hljs-string">'bbb@xx.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">            },</span>
+<span class="code-block-extension-codeLine" data-line-num="23">            {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">                <span class="hljs-attr">name</span>: <span class="hljs-string">'ccc'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">                <span class="hljs-attr">email</span>: <span class="hljs-string">'ccc@xx.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">            },</span>
+<span class="code-block-extension-codeLine" data-line-num="27">            {</span>
+<span class="code-block-extension-codeLine" data-line-num="28">                <span class="hljs-attr">name</span>: <span class="hljs-string">'ddd'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="29">                <span class="hljs-attr">email</span>: <span class="hljs-string">'ddd@xx.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30">            },</span>
+<span class="code-block-extension-codeLine" data-line-num="31">            {</span>
+<span class="code-block-extension-codeLine" data-line-num="32">                <span class="hljs-attr">name</span>: <span class="hljs-string">'eee'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="33">                <span class="hljs-attr">email</span>: <span class="hljs-string">'eee@xx.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="34">            },</span>
+<span class="code-block-extension-codeLine" data-line-num="35">        ]</span>
+<span class="code-block-extension-codeLine" data-line-num="36">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="37">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'done'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="38">}</span>
+<span class="code-block-extension-codeLine" data-line-num="39"></span>
+<span class="code-block-extension-codeLine" data-line-num="40"><span class="hljs-title function_">main</span>();</span>
+</code></pre>
+<p>很容易看懂，就是插入了 5 条记录。</p>
+<p>执行 seed：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx prisma db seed</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/686017ea7d974af1a6099bd45090b1f2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1356&amp;h=276&amp;s=58495&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>打印了插入数据的 sql。</p>
+<p>去 mysql workbench 里看下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/69e797612cdd4212a1870bfcecaca825~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=970&amp;h=510&amp;s=160843&amp;e=png&amp;b=eeeae8" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>插入成功了。</p>
+<p>然后来写下 client 的 crud 代码。</p>
+<p>创建 src/index.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">PrismaClient</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@prisma/client'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> prisma = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PrismaClient</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">log</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">emit</span>: <span class="hljs-string">'stdout'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-attr">level</span>: <span class="hljs-string">'query'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="10">});</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    </span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16"><span class="hljs-title function_">main</span>();</span>
+</code></pre>
+<p>client 都有哪些方法呢？</p>
+<p>我们不是还用 docs generator 生成了文档么？看下那个就知道了。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx http-server ./generated/docs</span>
+</code></pre>
+<p>跑一个静态服务：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/155c61bbec674cb7b3b517a2c94d6263~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=760&amp;h=494&amp;s=84095&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A8080" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:8080" ref="nofollow noopener noreferrer">http://localhost:8080</a> 可以看到 Aaa 的字段和方法，一共 9 个方法：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/448cbf3c64ea4bbba5af4c24124e4df4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1518&amp;h=1112&amp;s=169522&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们依次试一下：</p>
+<h2 data-id="heading-0">findUnique</h2>
+<p>findUnique 是用来查找唯一的记录的，可以根据主键或者有唯一索引的列来查：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">PrismaClient</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@prisma/client'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> prisma = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PrismaClient</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">log</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">emit</span>: <span class="hljs-string">'stdout'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-attr">level</span>: <span class="hljs-string">'query'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="10">});</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test1</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">const</span> aaa = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">findUnique</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            <span class="hljs-attr">id</span>: <span class="hljs-number">1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(aaa);</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-keyword">const</span> bbb = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">findUnique</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">            <span class="hljs-attr">email</span>: <span class="hljs-string">'bbb@xx.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(bbb);</span>
+<span class="code-block-extension-codeLine" data-line-num="26">}</span>
+<span class="code-block-extension-codeLine" data-line-num="27"></span>
+<span class="code-block-extension-codeLine" data-line-num="28"><span class="hljs-title function_">test1</span>();</span>
+</code></pre>
+<p>所以，这里的 id、email 都可以：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/af97ee8cd6824c95a5d0499111c25b4b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=726&amp;h=220&amp;s=31608&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>跑一下试试：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx ts-node ./src/index.ts</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c17ddadffce045acb1d4f36d59812191~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1128&amp;h=222&amp;s=62804&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但是如果指定 name 就不行了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ecd8795097a44959ad84f2ffab871bb0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=562&amp;h=242&amp;s=27950&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>因为通过 name 来查并不能保证记录唯一。</p>
+<p>你还可以通过 select 指定返回的列：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test1</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> aaa = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">findUnique</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            <span class="hljs-attr">id</span>: <span class="hljs-number">1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(aaa);</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">const</span> bbb = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">findUnique</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">            <span class="hljs-attr">email</span>: <span class="hljs-string">'bbb@xx.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">select</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">            <span class="hljs-attr">id</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            <span class="hljs-attr">email</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(bbb);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">}</span>
+</code></pre>
+<p>比如我通过 select 指定返回 id、email：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7c1252b339db4a27a55025ddae309849~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=880&amp;h=218&amp;s=56218&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那结果里就只包含这两个字段。</p>
+<h2 data-id="heading-1">findUniqueOrThrow</h2>
+<p>findUniqueOrThrow 和 findUnique 的区别是它如果没找到对应的记录会抛异常，而 findUnique 会返回 null。</p>
+<p>先试下 findUnique：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">PrismaClient</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@prisma/client'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> prisma = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PrismaClient</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attr">log</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-attr">emit</span>: <span class="hljs-string">'stdout'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-attr">level</span>: <span class="hljs-string">'query'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="11">});</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test2</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">const</span> aaa = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">findUnique</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">            <span class="hljs-attr">id</span>: <span class="hljs-number">10</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(aaa);</span>
+<span class="code-block-extension-codeLine" data-line-num="21">}</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23"><span class="hljs-title function_">test2</span>();</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/87f289e0f283403e992e1c3feb48f517~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1190&amp;h=686&amp;s=105718&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再换成 findUniqueOrThrow 试试：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">PrismaClient</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@prisma/client'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> prisma = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PrismaClient</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">log</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">emit</span>: <span class="hljs-string">'stdout'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-attr">level</span>: <span class="hljs-string">'query'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="10">});</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test2</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">const</span> aaa = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">findUniqueOrThrow</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            <span class="hljs-attr">id</span>: <span class="hljs-number">10</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(aaa);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">}</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21"><span class="hljs-title function_">test2</span>();</span>
+</code></pre>
+<p>如果没找到会抛异常：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d9eec40cb4e445bebf8b878abc741d66~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1038&amp;h=748&amp;s=128181&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h2 data-id="heading-2">findMany</h2>
+<p>findMany 很明显是查找多条记录的。</p>
+<p>比如查找 email 包含 xx 的记录，按照 name 降序排列：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">PrismaClient</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@prisma/client'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> prisma = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PrismaClient</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">log</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">emit</span>: <span class="hljs-string">'stdout'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-attr">level</span>: <span class="hljs-string">'query'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="10">});</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test3</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">findMany</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            <span class="hljs-attr">email</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">                <span class="hljs-attr">contains</span>: <span class="hljs-string">'xx'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-attr">orderBy</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">            <span class="hljs-attr">name</span>: <span class="hljs-string">'desc'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="24">}</span>
+<span class="code-block-extension-codeLine" data-line-num="25"></span>
+<span class="code-block-extension-codeLine" data-line-num="26"><span class="hljs-title function_">test3</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="27"></span>
+</code></pre>
+<p>跑一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx ts-node ./src/index.ts</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9f77efa5cabd4110ac425ce293950368~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=880&amp;h=310&amp;s=60018&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再加个分页，取从第 2 条开始的 3 条。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test3</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">findMany</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            <span class="hljs-attr">email</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">                <span class="hljs-attr">contains</span>: <span class="hljs-string">'xx'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">orderBy</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-attr">name</span>: <span class="hljs-string">'desc'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attr">skip</span>: <span class="hljs-number">2</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">take</span>: <span class="hljs-number">3</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<p>下标是从 0 开始的，所以是这三条：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b7f029c71fc64398a24adcd2cfc3937c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=824&amp;h=272&amp;s=49555&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然，你可以再加上 select 指定返回的字段：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test3</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">findMany</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            <span class="hljs-attr">email</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">                <span class="hljs-attr">contains</span>: <span class="hljs-string">'xx'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">select</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-attr">id</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">            <span class="hljs-attr">email</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">orderBy</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">            <span class="hljs-attr">name</span>: <span class="hljs-string">'desc'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-attr">skip</span>: <span class="hljs-number">2</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">take</span>: <span class="hljs-number">3</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">}</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/619979abd71149e9a279a21ce941ccdd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=996&amp;h=246&amp;s=47141&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>你会发现熟练 sql 之后，这些 api 用起来都很自然，过一遍就会了。</p>
+<h2 data-id="heading-3">findFirst</h2>
+<p>findFirst 和 findMany 的唯一区别是，这个返回第一条记录。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span>  <span class="hljs-keyword">function</span> <span class="hljs-title function_">test4</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">findFirst</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            <span class="hljs-attr">email</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">                <span class="hljs-attr">contains</span>: <span class="hljs-string">'xx'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">select</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-attr">id</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">            <span class="hljs-attr">email</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">orderBy</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">            <span class="hljs-attr">name</span>: <span class="hljs-string">'desc'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-attr">skip</span>: <span class="hljs-number">2</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">take</span>: <span class="hljs-number">3</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">}</span>
+<span class="code-block-extension-codeLine" data-line-num="20"><span class="hljs-title function_">test4</span>();</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8a3d3aa449a440dfbc5946c0aafd6af2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=714&amp;h=146&amp;s=34628&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>此外，where 条件这里可以指定的更细致：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/239d3681eed74917b35e7d0cf38f3926~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=726&amp;h=650&amp;s=59985&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>contains 是包含，endsWith 是以什么结尾</p>
+<p>gt 是 greater than 大于，lte 是 less than or equal 大于等于</p>
+<p>这些过滤条件都很容易理解，就不展开了。</p>
+<p>此外，还有 findFirstOrThrow 方法，那个也是如果没找到，抛异常，参数和 FindFirst 一样。</p>
+<h2 data-id="heading-4">create</h2>
+<p>这个我们用过多次了，用来创建记录：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span>  <span class="hljs-keyword">function</span> <span class="hljs-title function_">test5</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">create</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">data</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            <span class="hljs-attr">name</span>: <span class="hljs-string">'kk'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">            <span class="hljs-attr">email</span>: <span class="hljs-string">'kk@xx.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">select</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">            <span class="hljs-attr">email</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+<span class="code-block-extension-codeLine" data-line-num="13"><span class="hljs-title function_">test5</span>();</span>
+</code></pre>
+<p>它同样也可以通过 select 指定插入之后再查询出来的字段。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c63f821b7a9845e385f3bb4b74c8ccb7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=706&amp;h=224&amp;s=53669&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>createMany 我们用过，这里就不测了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c94f7b2748f9498787cd63dd828c6025~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=688&amp;h=980&amp;s=92858&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h2 data-id="heading-5">update</h2>
+<p>update 明显是用来更新的。</p>
+<p>它可以指定 where 条件，指定 data，还可以指定 select 出的字段：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test6</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">update</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">where</span>: { <span class="hljs-attr">id</span>: <span class="hljs-number">3</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-attr">data</span>: { <span class="hljs-attr">email</span>: <span class="hljs-string">'3333@xx.com'</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-attr">select</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">            <span class="hljs-attr">id</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">            <span class="hljs-attr">email</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13"><span class="hljs-title function_">test6</span>();</span>
+</code></pre>
+<p>跑一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx ts-node ./src/index.ts</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b559edb67e0247a78566066a68a39d19~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=792&amp;h=302&amp;s=66957&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，打印了 3 条 sql：</p>
+<p>首先根据 where 条件查询出这条记录，然后 update，之后再 select 查询出更新后的记录。</p>
+<p>updateMany 自然是更新多条记录。</p>
+<p>比如你想更新所有邮箱包含 xx.com 的记录为 <a href="https://link.juejin.cn?target=mailto%3A666%40xx.com" target="_blank" title="mailto:666@xx.com" ref="nofollow noopener noreferrer">666@xx.com</a></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d5f1d297acf42f28f220bff549b3442~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=680&amp;h=490&amp;s=51454&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用 update 会报错，它只是用来更新单条记录的，需要指定 id 或者有唯一索引的列。</p>
+<p>这时候改成 udpateMany 就可以了。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test7</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">updateMany</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">where</span>: { </span>
+<span class="code-block-extension-codeLine" data-line-num="4">            <span class="hljs-attr">email</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">                <span class="hljs-attr">contains</span>: <span class="hljs-string">'xx.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">            } </span>
+<span class="code-block-extension-codeLine" data-line-num="7">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">data</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">'666'</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13"><span class="hljs-title function_">test7</span>();</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d2ae34da887644228b96e35065eed5b4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=766&amp;h=182&amp;s=35654&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 mysql workbench 里可以看到，确实改了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b450063af6f443cbbe3148db3cab91c0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=558&amp;h=362&amp;s=91564&amp;e=png&amp;b=fafafa" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h2 data-id="heading-6">upsert</h2>
+<p>upsert 是 update 和 insert 的意思。</p>
+<p>当传入的 id 有对应记录的时候，会更新，否则，会创建记录。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test8</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">upsert</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">where</span>: { <span class="hljs-attr">id</span>: <span class="hljs-number">11</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-attr">update</span>: { <span class="hljs-attr">email</span>: <span class="hljs-string">'yy@xx.com'</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-attr">create</span>: { </span>
+<span class="code-block-extension-codeLine" data-line-num="6">            <span class="hljs-attr">id</span>:  <span class="hljs-number">11</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">            <span class="hljs-attr">name</span>: <span class="hljs-string">'xxx'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">            <span class="hljs-attr">email</span>: <span class="hljs-string">'xxx@xx.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14"><span class="hljs-title function_">test8</span>();</span>
+</code></pre>
+<p>第一次跑执行的是 insert：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2f322a5842c748c6a325970c04f0163e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=884&amp;h=298&amp;s=67052&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2a1c34df17d94668988ed26cdf77c744~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=606&amp;h=376&amp;s=101801&amp;e=png&amp;b=f9f9f9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>第二次跑就是 update 了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/570a0212a0284695b4941bb4a4d298be~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=832&amp;h=306&amp;s=67081&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b69089861bf14b349c213a15fa6e3bca~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=542&amp;h=300&amp;s=76891&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h2 data-id="heading-7">delete</h2>
+<p>delete 就比较简单了，我们和 deleteMany 一起测试下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test9</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">delete</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">where</span>: { <span class="hljs-attr">id</span>: <span class="hljs-number">1</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">deleteMany</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">            <span class="hljs-attr">id</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">                <span class="hljs-attr">in</span>: [<span class="hljs-number">11</span>, <span class="hljs-number">2</span>]</span>
+<span class="code-block-extension-codeLine" data-line-num="10">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15"><span class="hljs-title function_">test9</span>();</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9f00108df717445488fe1cdc11245e0f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1310&amp;h=242&amp;s=72029&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到有两条 delete 语句。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a15026f6da7d4dabb5f9127292d03cee~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=736&amp;h=418&amp;s=103698&amp;e=gif&amp;f=17&amp;b=f8f8f8" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到 3 条记录都被删除了。</p>
+<h2 data-id="heading-8">count</h2>
+<p>count 其实和 findMany 参数一样，只不过这里不返回具体记录，而是返回记录的条数。</p>
+<p>比如 findMany 是这样的：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test10</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">findMany</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            <span class="hljs-attr">email</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">                <span class="hljs-attr">contains</span>: <span class="hljs-string">'xx'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">orderBy</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-attr">name</span>: <span class="hljs-string">'desc'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attr">skip</span>: <span class="hljs-number">2</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">take</span>: <span class="hljs-number">3</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+<span class="code-block-extension-codeLine" data-line-num="16"><span class="hljs-title function_">test10</span>();</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/57fb1afa9463410eb26ed5daa5b05406~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=730&amp;h=254&amp;s=42719&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把 findMany 改为 count 就是这样了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test10</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">count</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            <span class="hljs-attr">email</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">                <span class="hljs-attr">contains</span>: <span class="hljs-string">'xx'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">orderBy</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-attr">name</span>: <span class="hljs-string">'desc'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attr">skip</span>: <span class="hljs-number">2</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">take</span>: <span class="hljs-number">3</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+<span class="code-block-extension-codeLine" data-line-num="16"><span class="hljs-title function_">test10</span>();</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fa3e688b042c4f6ea6c5ef3bd8e12e5e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=720&amp;h=144&amp;s=27187&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h2 data-id="heading-9">aggregate</h2>
+<p>aggregate 是统计相关的。</p>
+<p>它除了 where、orderBy、skip、take 这些参数外，还可以指定 _count、_avg、_sum、_min、_max
+这些。</p>
+<p>不过我们现在的表里没有数字相关的列。</p>
+<p>改一下 model：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2661d3c4f5444433972546f4f499e7f4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=814&amp;h=510&amp;s=70599&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">kotlin</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-kotlin code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">model Aaa {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  id    <span class="hljs-built_in">Int</span>     <span class="hljs-meta">@id</span> <span class="hljs-meta">@default(autoincrement()</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  email String  <span class="hljs-meta">@unique</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  name  String?</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  age <span class="hljs-built_in">Int</span>       <span class="hljs-meta">@default(0)</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">}</span>
+</code></pre>
+<p>然后创建一个新的 migration：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx prisma migrate dev <span class="hljs-attr">--name</span> bbb</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc6ee6e6538f43b8b850f06d452b21c2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1134&amp;h=524&amp;s=87138&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>对应的 sql 如下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d282df2c9837454d825e4d8f6d6fc642~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1598&amp;h=372&amp;s=85466&amp;e=png&amp;b=1e1e1e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们用代码改一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test11</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">update</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            <span class="hljs-attr">id</span>: <span class="hljs-number">3</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">data</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">            <span class="hljs-attr">age</span>: <span class="hljs-number">3</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">update</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">            <span class="hljs-attr">id</span>: <span class="hljs-number">5</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-attr">data</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-attr">age</span>: <span class="hljs-number">5</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="19">}</span>
+<span class="code-block-extension-codeLine" data-line-num="20"><span class="hljs-title function_">test11</span>();</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/96087511c92d41aa86ef7457be55fb44~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1140&amp;h=522&amp;s=124326&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 mysql workbench 里刷新下，可以看到确实改了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f4ff325c8e714542a3e24cac64bde57e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=668&amp;h=302&amp;s=78342&amp;e=png&amp;b=f9f9f9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>接下来就可以测试 aggregate 方法了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test12</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">aggregate</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            <span class="hljs-attr">email</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">                <span class="hljs-attr">contains</span>: <span class="hljs-string">'xx.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">_count</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-attr">_all</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attr">_max</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">            <span class="hljs-attr">age</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">_min</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            <span class="hljs-attr">age</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-attr">_avg</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">            <span class="hljs-attr">age</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="22">}</span>
+<span class="code-block-extension-codeLine" data-line-num="23"><span class="hljs-title function_">test12</span>();</span>
+</code></pre>
+<p>跑一下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba51d2dc388d4765b132bdc9baacc2d6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=872&amp;h=272&amp;s=42847&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到返回的最大值、最小值、计数、平均值，都是对的。</p>
+<h2 data-id="heading-10">groupBy</h2>
+<p>最后还有个 groupBy 方法，大家有 sql 基础也很容易搞懂，这个就是分组的。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test13</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">aaa</span>.<span class="hljs-title function_">groupBy</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">by</span>: [<span class="hljs-string">'email'</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-attr">_count</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">          <span class="hljs-attr">_all</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">_sum</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">          <span class="hljs-attr">age</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">having</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">          <span class="hljs-attr">age</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">            <span class="hljs-attr">_avg</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">              <span class="hljs-attr">gt</span>: <span class="hljs-number">2</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">          },</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">}</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21"><span class="hljs-title function_">test13</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+</code></pre>
+<p>就是按照 email 分组，过滤出平均年龄大于 2 的分组，计算年龄总和返回。</p>
+<p>结果如下：
+<img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9859da852ff044d1bca8e1b2d44b7b12~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=994&amp;h=216&amp;s=48182&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>因为 age 大于 2 的就 2 条，然后算平均值、计数，就是上面的结果了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3cf5f033140f44cd8132804fa0044d04~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=702&amp;h=254&amp;s=61142&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，我们就把所有 Prisma Client 的 api 过了一遍。</p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fprisma-client-api" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/prisma-client-api" ref="nofollow noopener noreferrer">小册仓库</a></p>
+<h2 data-id="heading-11">总结</h2>
+<p>这节我们过了一遍 Prisma Client 的单个表 CRUD 的 api。</p>
+<p>分别包括 create、crateMany、update、updateMany、delete、deleteMany、findMany、findFirst、findFirstOrThrow、findUnique、findUniqueOrThrow。</p>
+<p>以及 count、aggregate、groupBy 这些统计相关的。</p>
+<p>其实有 sql 的基础的话，学习这些 api 很容易，过一遍就会了。</p></div>

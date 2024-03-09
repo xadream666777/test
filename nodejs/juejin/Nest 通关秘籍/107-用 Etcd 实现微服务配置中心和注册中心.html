@@ -1,0 +1,336 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>微服务架构的系统都会有配置中心和注册中心。</p>
+<p>为什么呢？</p>
+<p>比如说配置中心：</p>
+<p>系统中会有很多微服务，它们会有一些配置信息，比如环境变量、数据库连接信息等。</p>
+<p>这些配置信息散落在各个服务中，以配置文件的形式存在。</p>
+<p>这样你修改同样的配置需要去各个服务下改下配置文件，然后重启服务。</p>
+<p>就很麻烦。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aa6b5b10705a4be0a7f108b79847ac25~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果有一个服务专门用来集中管理配置信息呢？</p>
+<p>这样每个微服务都从这里拿配置，可以统一的修改，并且配置更改后也会通知各个微服务。</p>
+<p>这个集中管理配置信息的服务就叫配置中心。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6f6b92aa3e2648e3ba90bc7af6d7c9a5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再就是注册中心：</p>
+<p>微服务之间会相互依赖，共同完成业务逻辑的处理。</p>
+<p>如果某个微服务挂掉了，那所有依赖它的服务就都不能工作了。</p>
+<p>为了避免这种情况，我们会通过集群部署的方式，每种微服务部署若干个节点，并且还可能动态增加一些节点。</p>
+<p>那么问题来了：</p>
+<p>微服务 A 依赖了微服务 B，写代码的时候 B 只有 3 个节点，但跑起来以后，某个节点挂掉了，并且还新增了几个微服务 B 的节点。</p>
+<p>这时候微服务 A 怎么知道微服务 B 有哪些节点可用呢？</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/77fcd834120742ef941b28ca0e13f995~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>答案也是需要一个单独的服务来管理，这个服务就是注册中心：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3c180f988cb840288424905da566215b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>微服务在启动的时候，向注册中心注册，销毁的时候向注册中心注销，并且定时发心跳包来汇报自己的状态。</p>
+<p>在查找其他微服务的时候，去注册中心查一下这个服务的所有节点信息，然后再选一个来用，这个叫做服务发现。</p>
+<p>这样微服务就可以动态的增删节点而不影响其他微服务了。</p>
+<p>微服务架构的后端系统中，都会有这两种服务。</p>
+<p>下面是我网上找的几张微服务系统的架构图：</p>
+<p>这个：
+<img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/15609f623c0c44009df7d3284b7f9a7f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个：
+<img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f2b768386dd2418cb5f2151192e5a4c3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>或者这个：
+<img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f770edc3fd2141529e3577b6c688a6c1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，配置中心和注册中心是必备组件。</p>
+<p>但是，虽然这是两种服务，功能确实很类似，完全可以在一个服务里实现。</p>
+<p>可以做配置中心、注册中心的中间件还是挺多的，比如 nacos、apollo、etcd 等。</p>
+<p>今天我们来学下 etcd 实现注册中心和配置中心。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/941ab3dab7044dd18a5fe296914531f0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它其实是一个 key-value 的存储服务。</p>
+<p>k8s 就是用它来做的注册中心、配置中心：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4f1d1abce9f145b7bd2701338ac460e6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们通过 docker 把它跑起来。</p>
+<p>在 docker desktop 搜索 etcd 的镜像，点击 run:</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3948e16896f0403ba70b11c338488925~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dca10560779549cd872067dd5c82e3b5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>输入容器名，映射 2379 端口到容器内的 2379 端口，设置 ETCD_ROOT_PASSWORD 环境变量，也就是指定 root 的密码。</p>
+<p>然后就可以看到 etcd server 的 docker 镜像成功跑起来了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d1ad2cdd32684332b6c90a6d221f89f3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它带了一个 etcdctl 的命令行工具，可以作为客户端和 etcd server 交互。</p>
+<p>常用的命令有这么几个：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">vbnet</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-vbnet code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">etcdctl put <span class="hljs-keyword">key</span> value</span>
+<span class="code-block-extension-codeLine" data-line-num="2">etcdctl <span class="hljs-keyword">get</span> <span class="hljs-keyword">key</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">etcdctl del <span class="hljs-keyword">key</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">etcdctl watch <span class="hljs-keyword">key</span></span>
+</code></pre>
+<p>就是对 key value 的增删改查和 watch 变动，还是比较容易理解的。</p>
+<p>但是现在执行命令要加上 --user、--password 的参数才可以：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">etcdctl get <span class="hljs-attr">--user</span>=root <span class="hljs-attr">--password</span>=guang key</span>
+</code></pre>
+<p>如果不想每次都指定用户名密码，可以设置环境变量：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">export <span class="hljs-attr">ETCDCTL_USER</span>=root</span>
+<span class="code-block-extension-codeLine" data-line-num="2">export <span class="hljs-attr">ETCDCTL_PASSWORD</span>=guang</span>
+</code></pre>
+<p>这里的 password 就是启动容器的时候指定的那个环境变量：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bdc8e53306c64742b114c9a5e94d37d9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们设置几个 key：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">etcdctl put /services/a xxxx</span>
+<span class="code-block-extension-codeLine" data-line-num="2">etcdctl put /services/b yyyy</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aa05ba6afe5c4b07bb95887a12e2de7a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>之后可以 get 来查询他们的值：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">etcdctl get /services/a</span>
+<span class="code-block-extension-codeLine" data-line-num="2">etcdctl get /services/b</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/91b55706406044a39f3ea18a9aa63aa1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也可以通过 --prefix 查询指定前缀的 key 的值：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">etcdctl <span class="hljs-keyword">get</span> <span class="hljs-comment">--prefix /services </span></span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b429c8a9ace4b3893f01cb8d4f593ef~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>删除也是可以单个删和指定前缀批量删：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">etcdctl <span class="hljs-selector-tag">del</span> /servcies/<span class="hljs-selector-tag">a</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">etcdctl <span class="hljs-selector-tag">del</span> <span class="hljs-attr">--prefix</span> /services</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/753a2c8bc2bd43d2960f6c4cfada005d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样的 key-value 用来存储 服务名-链接信息，那就是注册中心，用来存储配置信息，那就是配置中心。</p>
+<p>我们在 node 里面连接下 etcd 服务试试看：</p>
+<p>创建个项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-built_in">mkdir</span> etcd-test</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-built_in">cd</span> etcd-test</span>
+<span class="code-block-extension-codeLine" data-line-num="3">npm init -y</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1b3cb7782d694b108d0de0c775ec5d96~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=874&amp;h=708&amp;s=83915&amp;e=png&amp;b=000000" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>安装 etcd 的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> etcd3</span>
+</code></pre>
+<p>创建 index.js</p>
+<p>使用 etcd 官方提供的 npm 包 etcd3:</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> { <span class="hljs-title class_">Etcd3</span> } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'etcd3'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> client = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Etcd3</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">hosts</span>: <span class="hljs-string">'http://localhost:2379'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">auth</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-attr">username</span>: <span class="hljs-string">'root'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">password</span>: <span class="hljs-string">'guang'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="8">});</span>
+<span class="code-block-extension-codeLine" data-line-num="9"> </span>
+<span class="code-block-extension-codeLine" data-line-num="10">(<span class="hljs-keyword">async</span> () =&gt; { </span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-keyword">const</span> services = <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">get</span>(<span class="hljs-string">'/services/a'</span>).<span class="hljs-title function_">string</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'service A:'</span>, services);</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-keyword">const</span> allServices = <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">getAll</span>().<span class="hljs-title function_">prefix</span>(<span class="hljs-string">'/services'</span>).<span class="hljs-title function_">keys</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'all services:'</span>, allServices);</span>
+<span class="code-block-extension-codeLine" data-line-num="16"> </span>
+<span class="code-block-extension-codeLine" data-line-num="17">  <span class="hljs-keyword">const</span> watcher = <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">watch</span>().<span class="hljs-title function_">key</span>(<span class="hljs-string">'/services/a'</span>).<span class="hljs-title function_">create</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="18">  watcher.<span class="hljs-title function_">on</span>(<span class="hljs-string">'put'</span>, <span class="hljs-function">(<span class="hljs-params">req</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'put'</span>, req.<span class="hljs-property">value</span>.<span class="hljs-title function_">toString</span>())</span>
+<span class="code-block-extension-codeLine" data-line-num="20">  })</span>
+<span class="code-block-extension-codeLine" data-line-num="21">  watcher.<span class="hljs-title function_">on</span>(<span class="hljs-string">'delete'</span>, <span class="hljs-function">(<span class="hljs-params">req</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'delete'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="23">  })</span>
+<span class="code-block-extension-codeLine" data-line-num="24">})();</span>
+</code></pre>
+<p>get、getAll、watch 这些 api 和 ectdctl 命令行差不多，很容易搞懂。</p>
+<p>get(xx) 是查询某个 key 的值。</p>
+<p>getAll().prefix(xx).keys() 是查询某个字符串开头的 key。</p>
+<p>watch().key(xx).create 则是创建某个 key 的监听器，监听他的 put 和 delete 事件。</p>
+<p>我们再 put 几个 key：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d316bf244a964ee2ba07db0cd3be564e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">etcdctl put /services/a xxx</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">etcdctl put /services/b yyy</span>
+</code></pre>
+<p>然后执行上面的 node 脚本：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4da4735375374a7292f3bfaf577227b6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>确实取到了 etcd server 中的值。</p>
+<p>然后在 etcdctl 里 put 修改下 /services/a 的值：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/93065110d73e41a5be6c24872ce4d5c5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">etcdctl put /services/a zzz</span>
+</code></pre>
+<p>在 node 脚本这里收到了通知：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/797ea9ce0a9344088876d94a3f5a3aaf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再 del 试下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/221cc28977014d5a990bf3875f1aeab1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">etcdctl <span class="hljs-selector-tag">del</span> /services/<span class="hljs-selector-tag">a</span></span>
+</code></pre>
+<p>也收到了通知：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/92759c06e45e465eb0fbbcb6674160d7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，在 node 里操作 etcd server 就跑通了。</p>
+<p>然后我们封装下配置中心和注册中心的工具函数：</p>
+<p>配置中心的实现比较简单，就是直接 put、get、del 对应的 key：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// 保存配置</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">saveConfig</span>(<span class="hljs-params">key, value</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">put</span>(key).<span class="hljs-title function_">value</span>(value);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-comment">// 读取配置</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">getConfig</span>(<span class="hljs-params">key</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">get</span>(key).<span class="hljs-title function_">string</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-comment">// 删除配置</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">deleteConfig</span>(<span class="hljs-params">key</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">delete</span>().<span class="hljs-title function_">key</span>(key);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+</code></pre>
+<p>使用起来也很简单；</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">(<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">await</span> <span class="hljs-title function_">saveConfig</span>(<span class="hljs-string">'config-key'</span>, <span class="hljs-string">'config-value'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">const</span> configValue = <span class="hljs-keyword">await</span> <span class="hljs-title function_">getConfig</span>(<span class="hljs-string">'config-key'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'Config value:'</span>, configValue);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">})();</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/211c869679104233b0332e188726c829~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>你可以在这里存各种数据库连接信息、环境变量等各种配置。</p>
+<p>然后是注册中心：</p>
+<p>服务注册：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// 服务注册</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">registerService</span>(<span class="hljs-params">serviceName, instanceId, metadata</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">const</span> key = <span class="hljs-string">`/services/<span class="hljs-subst">${serviceName}</span>/<span class="hljs-subst">${instanceId}</span>`</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">const</span> lease = client.<span class="hljs-title function_">lease</span>(<span class="hljs-number">10</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">await</span> lease.<span class="hljs-title function_">put</span>(key).<span class="hljs-title function_">value</span>(<span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(metadata));</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    lease.<span class="hljs-title function_">on</span>(<span class="hljs-string">'lost'</span>, <span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'租约过期，重新注册...'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-keyword">await</span> <span class="hljs-title function_">registerService</span>(serviceName, instanceId, metadata);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+</code></pre>
+<p>注册的时候我们按照 /services/服务名/实例id 的格式来指定 key。</p>
+<p>也就是一个微服务可以有多个实例。</p>
+<p>设置了租约 10s，这个就是过期时间的意思，然后过期会自动删除。</p>
+<p>我们可以监听 lost 事件，在过期后自动续租。</p>
+<p>当不再续租的时候，就代表这个服务挂掉了。</p>
+<p>然后是服务发现：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// 服务发现</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">discoverService</span>(<span class="hljs-params">serviceName</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">const</span> instances = <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">getAll</span>().<span class="hljs-title function_">prefix</span>(<span class="hljs-string">`/services/<span class="hljs-subst">${serviceName}</span>`</span>).<span class="hljs-title function_">strings</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(instances).<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(value));</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>服务发现就是查询 /services/服务名 下的所有实例，返回它的信息。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// 监听服务变更</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">watchService</span>(<span class="hljs-params">serviceName, callback</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">const</span> watcher = <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">watch</span>().<span class="hljs-title function_">prefix</span>(<span class="hljs-string">`/services/<span class="hljs-subst">${serviceName}</span>`</span>).<span class="hljs-title function_">create</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    watcher .<span class="hljs-title function_">on</span>(<span class="hljs-string">'put'</span>, <span class="hljs-keyword">async</span> event =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'新的服务节点添加:'</span>, event.<span class="hljs-property">key</span>.<span class="hljs-title function_">toString</span>());</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-title function_">callback</span>(<span class="hljs-keyword">await</span> <span class="hljs-title function_">discoverService</span>(serviceName));</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    }).<span class="hljs-title function_">on</span>(<span class="hljs-string">'delete'</span>, <span class="hljs-keyword">async</span> event =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'服务节点删除:'</span>, event.<span class="hljs-property">key</span>.<span class="hljs-title function_">toString</span>());</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-title function_">callback</span>(<span class="hljs-keyword">await</span> <span class="hljs-title function_">discoverService</span>(serviceName));</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<p>通过 watch 监听 /services/服务名下所有实例的变动，包括添加节点、删除节点等，返回现在的可用节点。</p>
+<p>我们来测试下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">(<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> serviceName = <span class="hljs-string">'my_service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    </span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">await</span> <span class="hljs-title function_">registerService</span>(serviceName, <span class="hljs-string">'instance_1'</span>, { <span class="hljs-attr">host</span>: <span class="hljs-string">'localhost'</span>, <span class="hljs-attr">port</span>:<span class="hljs-number">3000</span> });</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">await</span> <span class="hljs-title function_">registerService</span>(serviceName, <span class="hljs-string">'instance_2'</span>, { <span class="hljs-attr">host</span>: <span class="hljs-string">'localhost'</span>, <span class="hljs-attr">port</span>:<span class="hljs-number">3002</span> });</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> instances = <span class="hljs-keyword">await</span> <span class="hljs-title function_">discoverService</span>(serviceName);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'所有服务节点:'</span>, instances);</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-title function_">watchService</span>(serviceName, <span class="hljs-function"><span class="hljs-params">updatedInstances</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'服务节点有变动:'</span>, updatedInstances);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="13">})();</span>
+</code></pre>
+<p>跑起来确实能获得服务的所有节点信息：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7fb8d55626864779954044b428567303~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当在 etcdctl 里 del 一个服务节点的时候，这里也能收到通知：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b40e451ddd9647bcb64a099e8a860c9c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">etcdctl del /services/my_service/instance_2</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/106f53cf1a134802a417406ac3c789e9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，我们就实现了服务注册、服务发现功能。</p>
+<p>有的同学可能问了：redis 不也是 key-value 存储的么？为什么不用 redis 做配置中心和注册中心？</p>
+<p>因为 redis 没法监听不存在的 key 的变化，而 etcd 可以，而配置信息很多都是动态添加的。</p>
+<p>当然，还有很多别的原因，毕竟 redis 只是为了缓存设计的，不是专门的配置中心、注册中心的中间件。</p>
+<p>专业的事情还是交给专业的中间件来干。</p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fetcd-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/etcd-test" ref="nofollow noopener noreferrer">小册仓库</a></p>
+<p>也在这里贴一份：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> { <span class="hljs-title class_">Etcd3</span> } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'etcd3'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> client = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Etcd3</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">hosts</span>: <span class="hljs-string">'http://localhost:2379'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">auth</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-attr">username</span>: <span class="hljs-string">'root'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">password</span>: <span class="hljs-string">'guang'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="8">});</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-comment">// 保存配置</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">saveConfig</span>(<span class="hljs-params">key, value</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">put</span>(key).<span class="hljs-title function_">value</span>(value);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15"><span class="hljs-comment">// 读取配置</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">getConfig</span>(<span class="hljs-params">key</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">get</span>(key).<span class="hljs-title function_">string</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="18">}</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20"><span class="hljs-comment">// 删除配置</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">deleteConfig</span>(<span class="hljs-params">key</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">delete</span>().<span class="hljs-title function_">key</span>(key);</span>
+<span class="code-block-extension-codeLine" data-line-num="23">}</span>
+<span class="code-block-extension-codeLine" data-line-num="24">   </span>
+<span class="code-block-extension-codeLine" data-line-num="25"><span class="hljs-comment">// 服务注册</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">registerService</span>(<span class="hljs-params">serviceName, instanceId, metadata</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="27">    <span class="hljs-keyword">const</span> key = <span class="hljs-string">`/services/<span class="hljs-subst">${serviceName}</span>/<span class="hljs-subst">${instanceId}</span>`</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-keyword">const</span> lease = client.<span class="hljs-title function_">lease</span>(<span class="hljs-number">10</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-keyword">await</span> lease.<span class="hljs-title function_">put</span>(key).<span class="hljs-title function_">value</span>(<span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(metadata));</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    lease.<span class="hljs-title function_">on</span>(<span class="hljs-string">'lost'</span>, <span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="31">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'租约过期，重新注册...'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="32">        <span class="hljs-keyword">await</span> <span class="hljs-title function_">registerService</span>(serviceName, instanceId, metadata);</span>
+<span class="code-block-extension-codeLine" data-line-num="33">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="34">}</span>
+<span class="code-block-extension-codeLine" data-line-num="35"></span>
+<span class="code-block-extension-codeLine" data-line-num="36"><span class="hljs-comment">// 服务发现</span></span>
+<span class="code-block-extension-codeLine" data-line-num="37"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">discoverService</span>(<span class="hljs-params">serviceName</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="38">    <span class="hljs-keyword">const</span> instances = <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">getAll</span>().<span class="hljs-title function_">prefix</span>(<span class="hljs-string">`/services/<span class="hljs-subst">${serviceName}</span>`</span>).<span class="hljs-title function_">strings</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="39">    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(instances).<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(value));</span>
+<span class="code-block-extension-codeLine" data-line-num="40">}</span>
+<span class="code-block-extension-codeLine" data-line-num="41"></span>
+<span class="code-block-extension-codeLine" data-line-num="42"><span class="hljs-comment">// 监听服务变更</span></span>
+<span class="code-block-extension-codeLine" data-line-num="43"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">watchService</span>(<span class="hljs-params">serviceName, callback</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="44">    <span class="hljs-keyword">const</span> watcher = <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">watch</span>().<span class="hljs-title function_">prefix</span>(<span class="hljs-string">`/services/<span class="hljs-subst">${serviceName}</span>`</span>).<span class="hljs-title function_">create</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="45">    watcher.<span class="hljs-title function_">on</span>(<span class="hljs-string">'put'</span>, <span class="hljs-keyword">async</span> event =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="46">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'新的服务节点添加:'</span>, event.<span class="hljs-property">key</span>.<span class="hljs-title function_">toString</span>());</span>
+<span class="code-block-extension-codeLine" data-line-num="47">        <span class="hljs-title function_">callback</span>(<span class="hljs-keyword">await</span> <span class="hljs-title function_">discoverService</span>(serviceName));</span>
+<span class="code-block-extension-codeLine" data-line-num="48">    }).<span class="hljs-title function_">on</span>(<span class="hljs-string">'delete'</span>, <span class="hljs-keyword">async</span> event =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="49">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'服务节点删除:'</span>, event.<span class="hljs-property">key</span>.<span class="hljs-title function_">toString</span>());</span>
+<span class="code-block-extension-codeLine" data-line-num="50">        <span class="hljs-title function_">callback</span>(<span class="hljs-keyword">await</span> <span class="hljs-title function_">discoverService</span>(serviceName));</span>
+<span class="code-block-extension-codeLine" data-line-num="51">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="52">}</span>
+<span class="code-block-extension-codeLine" data-line-num="53"></span>
+<span class="code-block-extension-codeLine" data-line-num="54"><span class="hljs-comment">// (async function main() {</span></span>
+<span class="code-block-extension-codeLine" data-line-num="55"><span class="hljs-comment">//     await saveConfig('config-key', 'config-value');</span></span>
+<span class="code-block-extension-codeLine" data-line-num="56"><span class="hljs-comment">//     const configValue = await getConfig('config-key');</span></span>
+<span class="code-block-extension-codeLine" data-line-num="57"><span class="hljs-comment">//     console.log('Config value:', configValue);</span></span>
+<span class="code-block-extension-codeLine" data-line-num="58"><span class="hljs-comment">// })();</span></span>
+<span class="code-block-extension-codeLine" data-line-num="59"></span>
+<span class="code-block-extension-codeLine" data-line-num="60">(<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="61">    <span class="hljs-keyword">const</span> serviceName = <span class="hljs-string">'my_service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="62">    </span>
+<span class="code-block-extension-codeLine" data-line-num="63">    <span class="hljs-keyword">await</span> <span class="hljs-title function_">registerService</span>(serviceName, <span class="hljs-string">'instance_1'</span>, { <span class="hljs-attr">host</span>: <span class="hljs-string">'localhost'</span>, <span class="hljs-attr">port</span>:<span class="hljs-number">3000</span> });</span>
+<span class="code-block-extension-codeLine" data-line-num="64">    <span class="hljs-keyword">await</span> <span class="hljs-title function_">registerService</span>(serviceName, <span class="hljs-string">'instance_2'</span>, { <span class="hljs-attr">host</span>: <span class="hljs-string">'localhost'</span>, <span class="hljs-attr">port</span>:<span class="hljs-number">3002</span> });</span>
+<span class="code-block-extension-codeLine" data-line-num="65"></span>
+<span class="code-block-extension-codeLine" data-line-num="66">    <span class="hljs-keyword">const</span> instances = <span class="hljs-keyword">await</span> <span class="hljs-title function_">discoverService</span>(serviceName);</span>
+<span class="code-block-extension-codeLine" data-line-num="67">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'所有服务节点:'</span>, instances);</span>
+<span class="code-block-extension-codeLine" data-line-num="68"></span>
+<span class="code-block-extension-codeLine" data-line-num="69">    <span class="hljs-title function_">watchService</span>(serviceName, <span class="hljs-function"><span class="hljs-params">updatedInstances</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="70">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'服务节点有变动:'</span>, updatedInstances);</span>
+<span class="code-block-extension-codeLine" data-line-num="71">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="72">})();</span>
+</code></pre>
+<h2 data-id="heading-0">总结</h2>
+<p>微服务架构的系统中少不了配置中心和注册中心。</p>
+<p>不同服务的配置需要统一管理，并且在更新后通知所有的服务，所以需要配置中心。</p>
+<p>微服务的节点可能动态的增加或者删除，依赖他的服务在调用之前需要知道有哪些实例可用，所以需要注册中心。</p>
+<p>服务启动的时候注册到注册中心，并定时续租期，调用别的服务的时候，可以查一下有哪些服务实例可用，也就是服务注册、服务发现功能。</p>
+<p>注册中心和配置中心可以用 etcd 来做，它就是一个专业做这件事的中间件，k8s 就是用的它来做的配置和服务注册中心。</p>
+<p>我们用 docker 跑了 etcd server，它内置了命令行工具 etcdctl 可以用来和 server 交互。</p>
+<p>常用的命令有 put、get、del、watch 等。</p>
+<p>在 node 里可以通过 etcd3 这个包来操作 etcd server。</p>
+<p>稍微封装一下就可以实现配置管理和服务注册、发现的功能。</p>
+<p>在微服务架构的后端系统中，配置中心、注册中心是必不可少的组件，不管是 java、go 还是 Node.js。</p></div>

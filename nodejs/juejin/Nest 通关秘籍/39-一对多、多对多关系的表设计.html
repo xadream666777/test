@@ -1,0 +1,236 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>上节我们学了一对一，这节继续来学习一对多和多对多。</p>
+<p>一对多关系在生活中随处可见：</p>
+<p>一个作者可以写多篇文章，而每篇文章只属于一个作者。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/652efb6bbd7d4af1945b0fe912bd2d91~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>一个订单有多个商品，而商品只属于一个订单。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/37e82479d7ae4e7c88c4df4cf040c2d5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>一个部门有多个员工，员工只属于一个部门。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f79387f8934e468ca0406b7aca4ebfb6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>多对多的关系也是随处可见：</p>
+<p>一篇文章可以有多个标签，一个标签可以多篇文章都有。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/81b2e6cef1fc4480b98a760bd61ad21a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>一个学生可以选修多门课程，一门课程可以被多个学生选修。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a409a01fd32a431c9b378f4ebc7a12f6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>一个用户可以有多个角色，一个角色可能多个用户都有。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a70416ef1fbb49c393791a640417a217~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那在数据库里如何建模这种关系呢？</p>
+<p>我们分别来看一下：</p>
+<p>一对多的关系，比如一个部门有多个员工。</p>
+<p>我们会有一个部门表和一个员工表：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d9f5d802c0ba43edb12f9f42b2b1a164~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在员工表添加外键 department_id 来表明这种多对一关系：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/64756ca65ed24454a697dd63ad464665~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>其实和一对一关系的数据表设计是一样的。</p>
+<p>我们添加这两个表。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cb781961d67349df83a62d1ea9d537fd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>分别指定 id 是 INT，约束为 primary key、not null、 auto increment 。</p>
+<p>name 是 VARCHAR(45)，约束为 not null。</p>
+<p>点击 apply。</p>
+<p>建表 sql 如下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d800b3a5b52e4cd08021bb382ff7f046~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>同样的方式创建 employee 表：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c81a5a5fa9d444eb9879cc253ce96182~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>添加 id、name、department_id 这 3 列。</p>
+<p>然后添加一个外键约束，department_id 列引用 department 的 id 列。</p>
+<p>设置级联删除和更新为 SET NULL。</p>
+<p>因为部门没了员工不一定也没了，可能还会分配到别的部门。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/11d37ef48b084490829dd6b95661f2a7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击 apply 就创建成功了。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cbcaab19008040de896a2b34ae6a6224~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>sql 的最后这段，就是创建了一个外键约束，department_id 引用了 department 表的 id，设置级联删除和更新方式为 SET NULL。</p>
+<p>我们往部门表插入几条数据：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `department` (`id`, `name`) </span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">VALUES</span> </span>
+<span class="code-block-extension-codeLine" data-line-num="3">        (<span class="hljs-number">1</span>, <span class="hljs-string">'人事部'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        (<span class="hljs-number">2</span>, <span class="hljs-string">'财务部'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        (<span class="hljs-number">3</span>, <span class="hljs-string">'市场部'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        (<span class="hljs-number">4</span>, <span class="hljs-string">'技术部'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        (<span class="hljs-number">5</span>, <span class="hljs-string">'销售部'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        (<span class="hljs-number">6</span>, <span class="hljs-string">'客服部'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        (<span class="hljs-number">7</span>, <span class="hljs-string">'采购部'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        (<span class="hljs-number">8</span>, <span class="hljs-string">'行政部'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        (<span class="hljs-number">9</span>, <span class="hljs-string">'品控部'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        (<span class="hljs-number">10</span>, <span class="hljs-string">'研发部'</span>);</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/160dc8d459a94f399d806fc20b11b43f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>查询下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2fc0b543e81744379997379aff4be053~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>插入成功了。</p>
+<p>再往员工表里插入几条数据：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `employee` (`id`, `name`, `department_id`)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">VALUES</span> </span>
+<span class="code-block-extension-codeLine" data-line-num="3">        (<span class="hljs-number">1</span>, <span class="hljs-string">'张三'</span>, <span class="hljs-number">1</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        (<span class="hljs-number">2</span>, <span class="hljs-string">'李四'</span>, <span class="hljs-number">2</span>), </span>
+<span class="code-block-extension-codeLine" data-line-num="5">        (<span class="hljs-number">3</span>, <span class="hljs-string">'王五'</span>, <span class="hljs-number">3</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        (<span class="hljs-number">4</span>, <span class="hljs-string">'赵六'</span>, <span class="hljs-number">4</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        (<span class="hljs-number">5</span>, <span class="hljs-string">'钱七'</span>, <span class="hljs-number">5</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        (<span class="hljs-number">6</span>, <span class="hljs-string">'孙八'</span>, <span class="hljs-number">5</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        (<span class="hljs-number">7</span>, <span class="hljs-string">'周九'</span>, <span class="hljs-number">5</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        (<span class="hljs-number">8</span>, <span class="hljs-string">'吴十'</span>, <span class="hljs-number">8</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        (<span class="hljs-number">9</span>, <span class="hljs-string">'郑十一'</span>, <span class="hljs-number">9</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        (<span class="hljs-number">10</span>, <span class="hljs-string">'王十二'</span>, <span class="hljs-number">10</span>);</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eb0f9cdf5da544c6be870a1567f2810b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>查询下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b747f3ce1a3d43f3932cec8252f4c9b8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>同样插入成功了。</p>
+<p>我们通过 JOIN ON 关联查询下 id 为 5 的部门的所有员工：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> department</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">join</span> employee <span class="hljs-keyword">on</span> department.id <span class="hljs-operator">=</span> employee.department_id</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">where</span> department.id <span class="hljs-operator">=</span> <span class="hljs-number">5</span></span>
+</code></pre>
+<p>可以看到，正确查找出了销售部的 3 个员工：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/08df65c6051e47d09a61c0e7da966d0a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>JOIN ON 默认是 INNER JOIN。</p>
+<p>我们再来试试 LEFT JOIN 和 RIGHT JOIN：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> department</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">left</span> <span class="hljs-keyword">join</span> employee <span class="hljs-keyword">on</span> department.id <span class="hljs-operator">=</span> employee.department_id</span>
+</code></pre>
+<p>from 后的是左表，可以看到两个还没有员工的部门也显示在了结果里：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a24843da482240e18cdadd6eebde39b5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后是 RIGHT JOIN：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> department</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">right</span> <span class="hljs-keyword">join</span> employee <span class="hljs-keyword">on</span> department.id <span class="hljs-operator">=</span> employee.department_id</span>
+</code></pre>
+<p>因为所有的员工都是有部门的，所以和 inner join 结果一样：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a840b3551493482eb34c1a1adc6040ec~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后把 id 为 5 的部门删掉：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/11531d9ed451400899f99b1b7c495492~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击 apply。</p>
+<p>再查看下员工表，可以看到销售部下的 3 个员工的部门被设置为 null 了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d4779de3dd6346e3ad5919064df95aff~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是 set null 的级联删除处理。</p>
+<p>一对多是不是还挺简单的？</p>
+<p>确实，它和一对一没啥本质的区别。</p>
+<p>接下来我们来看多对多。</p>
+<p>比如文章和标签：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/81b2e6cef1fc4480b98a760bd61ad21a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>之前一对多关系是通过在多的一方添加外键来引用一的一方的 id。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/64756ca65ed24454a697dd63ad464665~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但是现在是多对多了，每一方都是多的一方。这时候是不是双方都要添加外键呢？</p>
+<p>一般我们是这样设计：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1d79e2c5f5ec48a8952acbfb8803f986~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>文章一个表、标签一个表，这两个表都不保存外键，然后添加一个中间表来保存双方的外键。</p>
+<p>这样文章和标签的关联关系就都被保存到了这个中间表里。</p>
+<p>我们试一下：</p>
+<p>这次我们就直接通过 sql 建表了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `article` (</span>
+<span class="code-block-extension-codeLine" data-line-num="2"> `id` <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,</span>
+<span class="code-block-extension-codeLine" data-line-num="3"> `title` <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4"> `content` TEXT <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5"> <span class="hljs-keyword">PRIMARY</span> KEY (`id`)</span>
+<span class="code-block-extension-codeLine" data-line-num="6">) CHARSET<span class="hljs-operator">=</span>utf8mb4;</span>
+</code></pre>
+<p>这里的 TEXT 是长文本类型，可以存储 65535 长度的字符串。</p>
+<p>执行这个建表 sql：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/22b23ebf6220425cb8eb7be14c176f01~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>查询下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f9cc1e45c079457eb7c4a5f9ec8554e8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>插入几条数据：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `article` (`title`, `content`)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">VALUES</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">            (<span class="hljs-string">'文章1'</span>, <span class="hljs-string">'这是文章1的内容。'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            (<span class="hljs-string">'文章2'</span>, <span class="hljs-string">'这是文章2的内容。'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="5">            (<span class="hljs-string">'文章3'</span>, <span class="hljs-string">'这是文章3的内容。'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="6">            (<span class="hljs-string">'文章4'</span>, <span class="hljs-string">'这是文章4的内容。'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="7">            (<span class="hljs-string">'文章5'</span>, <span class="hljs-string">'这是文章5的内容。'</span>);</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2b69641eec4e4028aed5c1f585d5ebe2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再查询下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6b7cee2d3ec6468f9a26c9f2a221ba56~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后创建标签表：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `tag` (</span>
+<span class="code-block-extension-codeLine" data-line-num="2"> `id` <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,</span>
+<span class="code-block-extension-codeLine" data-line-num="3"> `name` <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4"> <span class="hljs-keyword">PRIMARY</span> KEY (`id`)</span>
+<span class="code-block-extension-codeLine" data-line-num="5">);</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f51bd0fb499a4bd6b740baf668e9618e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>插入几条数据：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `tag` (`name`)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">VALUES</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">            (<span class="hljs-string">'标签1'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            (<span class="hljs-string">'标签2'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="5">            (<span class="hljs-string">'标签3'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="6">            (<span class="hljs-string">'标签4'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="7">            (<span class="hljs-string">'标签5'</span>);</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1415d1e4d20541588967e5beb89fe42d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后查询下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bc0895d5da88408abae571f7cbb5deef~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，建表和插入数据都成功了。</p>
+<p>然后创建中间表：</p>
+<p>中间表还是通过可视化的方式创建吧：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bb5af2a291d1476a9d815b39908dc5f8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击创建表，添加 article_id、tag_id 这俩列，设置为 NOT NULL。</p>
+<p>注意，这里同时指定这两列为 primary key，也就是复合主键。</p>
+<p>添加 article_id 和 tag_id 的外键引用：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/81aeca81fd1d44cc80178450616839bb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9e1d10b9202a4764b680db4d98078322~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><strong>中间表的级联方式要设置为 CASCADE，这个是固定的。</strong></p>
+<p>因为它就是用来保存关系的，如果关联的记录都没了，这个关系也就没存在的意义了。</p>
+<p>点击 apply，可以看到生成的 sql：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/20a4b0321e3d46bf834e7640c07e902f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>primary key (article_id, tag_id) 是指定复合主键。</p>
+<p>后面分别是添加两个外键约束。</p>
+<p>建表 sql 能看懂即可，不需要手写。</p>
+<p>然后插入几条数据：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `article_tag` (`article_id`, `tag_id`)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">VALUES</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    (<span class="hljs-number">1</span>,<span class="hljs-number">1</span>), (<span class="hljs-number">1</span>,<span class="hljs-number">2</span>), (<span class="hljs-number">1</span>,<span class="hljs-number">3</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    (<span class="hljs-number">2</span>,<span class="hljs-number">2</span>), (<span class="hljs-number">2</span>,<span class="hljs-number">3</span>), (<span class="hljs-number">2</span>,<span class="hljs-number">4</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    (<span class="hljs-number">3</span>,<span class="hljs-number">3</span>), (<span class="hljs-number">3</span>,<span class="hljs-number">4</span>), (<span class="hljs-number">3</span>,<span class="hljs-number">5</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    (<span class="hljs-number">4</span>,<span class="hljs-number">4</span>), (<span class="hljs-number">4</span>,<span class="hljs-number">5</span>), (<span class="hljs-number">4</span>,<span class="hljs-number">1</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    (<span class="hljs-number">5</span>,<span class="hljs-number">5</span>), (<span class="hljs-number">5</span>,<span class="hljs-number">1</span>), (<span class="hljs-number">5</span>,<span class="hljs-number">2</span>);</span>
+</code></pre>
+<p>点击左上角按钮，新建一条 sql：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d69206f94ff465c96e407f1544e0b51~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>输入 sql 后点击执行。</p>
+<p>然后就可以看到插入的数据了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e02887aed3c5417d8e02521eeed104ff~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那现在有了 article、tag、article_tag 3 个表了，怎么关联查询呢？</p>
+<p>JOIN 3 个表呀！</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> article a </span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">JOIN</span> article_tag <span class="hljs-keyword">at</span> <span class="hljs-keyword">ON</span> a.id <span class="hljs-operator">=</span> at.article_id</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">JOIN</span> tag t <span class="hljs-keyword">ON</span> t.id <span class="hljs-operator">=</span> at.tag_id</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">WHERE</span> a.id <span class="hljs-operator">=</span> <span class="hljs-number">1</span></span>
+</code></pre>
+<p>这样查询出的就是 id 为 1 的 article 的所有标签：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b8f66b2740d4ea7b004e0e73cb45cd5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然，一般我们会指定返回的列：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">SELECT</span> t.name <span class="hljs-keyword">AS</span> 标签名, a.title <span class="hljs-keyword">AS</span> 文章标题</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">FROM</span> article a </span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">JOIN</span> article_tag <span class="hljs-keyword">at</span> <span class="hljs-keyword">ON</span> a.id <span class="hljs-operator">=</span> at.article_id</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">JOIN</span> tag t <span class="hljs-keyword">ON</span> t.id <span class="hljs-operator">=</span> at.tag_id</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">WHERE</span> a.id <span class="hljs-operator">=</span> <span class="hljs-number">1</span></span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/352ba7df50d249c08ce9154938f82ff2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>此外，我们把文章1 删除试试：</p>
+<p>选中这条 sql 执行：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">delete</span> <span class="hljs-keyword">from</span> article <span class="hljs-keyword">where</span> id <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/65a24abf73374414a5c469b1b775f30f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再执行下面的查询：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8fd4ce5aba3d4949a6d8800f06e8df8a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到关系也被级联删除了，这就是 CASCADE 的作用。</p>
+<p>当然，删除的只是关系，并不影响 id=1 的标签：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/49ef9619df3d440da167f387d08b43be~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是多对多数据的表设计、关联查询和级联方式。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>现实生活中有很多的一对多、多对多关系。</p>
+<p>我们创建了部门、员工表，并在员工表添加了引用部门 id 的外键 department_id 来保存这种一堆多关系。</p>
+<p>并且设置了级联方式为 set null。</p>
+<p>创建了文章表、标签表、文章标签表来保存多堆多关系，多对多不需要在双方保存彼此的外键，只要在中间表里维护这种关系即可。</p>
+<p>中间表的外键级联方式一定为 CASCADE，因为数据没了关系就没必要还留着了。</p>
+<p>此外，多对多的 join 需要连接 3 个表来查询。</p>
+<p>一对多、多对多是非常常见的表之间的关系，要好好掌握它们的外键设置、关联查询、级联方式。</p></div>

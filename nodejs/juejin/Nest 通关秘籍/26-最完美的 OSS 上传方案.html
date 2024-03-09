@@ -1,0 +1,291 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>文件上传是常见需求，一般我们不会把文件直接上传到应用服务器，因为单台服务器存储空间是有限的，不好扩展。</p>
+<p>我们会用单独的 OSS （Object Storage Service）对象存储服务来上传下载文件。</p>
+<p>比如一般会买阿里云的 OSS 服务。</p>
+<p>我们本地文件存储是目录-文件的组织方式：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c42affeadb6d4d7885ba4223fe8b6b49~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=954&amp;h=656&amp;s=50009&amp;e=png&amp;b=fefdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而 OSS 服务的存储结构是这样的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/883911af24c14b3ca1ca330c965c7f9a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1060&amp;h=508&amp;s=37017&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>一个桶里放一些文件。</p>
+<p>阿里云 OSS 的控制台也提到了对象存储没有目录层级结构：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1f74c4bc490e4bf684ba8eaac8cc1bf6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1718&amp;h=616&amp;s=115001&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但下面明明是支持目录的呀：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/524c8d5b0e73481bb65bf5f6107ba273~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1556&amp;h=626&amp;s=109683&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这其实只是模拟实现的。</p>
+<p>Object 会存储 id、文件内容、元数据三部分信息：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/20e190a20da341198e36f7e45060d1b1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=742&amp;h=356&amp;s=19427&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>阿里云 OSS 只是用元信息部分模拟实现了目录。</p>
+<p>就像打了个 tag 一样，并不是说文件存储在这个 tag 下，只是你可以用这个 tag 来检索文件。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d5c7eb8c524c431faef737ff8da4547a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1130&amp;h=214&amp;s=54679&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>除了对象存储 OSS，阿里云也提供了文件存储和块存储的方式：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/379e9dde7dcf42a5821fc0e1a56bb0df~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1954&amp;h=972&amp;s=141741&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>块存储就是把整块磁盘给你用，你需要自己格式化，存储容量有限。</p>
+<p>文件存储就是有目录层次结构，你可以上传下载文件，存储容量有限。</p>
+<p>对象存储就是 key-value 存储，分布式的方式实现的，存储容量无限。</p>
+<p>这些简单了解就行，绝大多数情况下，我们都是用 OSS 对象存储。</p>
+<p>我们买个<a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.aliyun.com%2Fproduct%2Foss" target="_blank" rel="nofollow noopener noreferrer" title="https://www.aliyun.com/product/oss" ref="nofollow noopener noreferrer">阿里云的 OSS 服务</a>来试试看：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ed1886a29f4f4b73b79dce222248c8e3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2136&amp;h=1376&amp;s=268874&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我买了 40G 的 OSS 国内通用资源包，花了 5 块钱。</p>
+<p>然后我们创建个 Bucket（桶）：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/01cbf6715b734310b31d6a0c46541f48~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1676&amp;h=1336&amp;s=283874&amp;e=png&amp;b=fefcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在北京创建了一个 Bucket，文件就会存储在那里的服务器上。</p>
+<p>设置公共读，也就是这些文件大家都可以直接访问。</p>
+<p>不然私有的方式，你访问每个文件都要带上一些身份信息：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/af5578d3c2b54a4dad990925895bbd75~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1252&amp;h=756&amp;s=210593&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>有的同学说，不是静态文件要在全国各地都能访问到么？存在北京的服务器会不会访问速度慢？</p>
+<p>这是 CDN 的活：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3ab0dead050e4bf6a95649cb1fbe9f28~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1222&amp;h=1152&amp;s=332121&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>接入 CDN 后，访问该域名会走到云服务的 DNS，然后返回一台最近的缓存服务器的地址，这台服务器会从源站拿文件来缓存，之后就不再访问源站。</p>
+<p>这里的源站就可以是 OSS 服务。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/771a695efc8e4eec9cd4b7dcf94fd77c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=508&amp;h=353&amp;s=41323&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>创建 Bucket 之后，我们上传个文件试试：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c4b60227dcaf43b4af792c1a57c3a1b5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1790&amp;h=1120&amp;s=2063115&amp;e=gif&amp;f=57&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>上传完之后在文件列表就可以看到这个文件了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3c238bdc367a4e7da769111eb8da549b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1838&amp;h=1006&amp;s=991862&amp;e=png&amp;b=8c8c8c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点开可以看到文件详情，用这个 URL 就可以访问：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b1847f935bb84d88bb5c0e972d0d8317~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1430&amp;h=886&amp;s=1013545&amp;e=png&amp;b=d2ddf0" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然，生产环境下我们不会直接用 OSS 的 URL 访问，而是会开启 CDN，用网站域名访问，最终回源到 OSS 服务：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/14f0a1f4a50b4e3aa42b8430e14724f8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1560&amp;h=502&amp;s=107054&amp;e=png&amp;b=fafafa" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/69d6c8bf283d49edb00484603c3af90b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1564&amp;h=386&amp;s=130373&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在控制台里上传很简单，那如果想在代码里上传呢？</p>
+<p>官方文档里有示例代码，我们试试看：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3c11b37e8e564a79a5201e278d934531~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1844&amp;h=1418&amp;s=446776&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-built_in">mkdir</span> oss-test</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-built_in">cd</span> oss-test</span>
+<span class="code-block-extension-codeLine" data-line-num="3">npm init -y</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ed8f43e33e044abba31b1d41eca7cdeb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=836&amp;h=632&amp;s=114551&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>安装用到的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install ali-oss</span>
+</code></pre>
+<p>写下代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">OSS</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">'ali-oss'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> client = <span class="hljs-keyword">new</span> <span class="hljs-title function_">OSS</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">region</span>: <span class="hljs-string">'oss-cn-beijing'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">bucket</span>: <span class="hljs-string">'guang-333'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">accessKeyId</span>: <span class="hljs-string">''</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">accessKeySecret</span>: <span class="hljs-string">''</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">});</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">put</span> () {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-keyword">try</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">put</span>(<span class="hljs-string">'cat.png'</span>, <span class="hljs-string">'./mao.png'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(result);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  } <span class="hljs-keyword">catch</span> (e) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19"><span class="hljs-title function_">put</span>();</span>
+</code></pre>
+<p>region 在概览里可以看到：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6e4a6ba711944197982eb2b59f7bd1bd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1684&amp;h=954&amp;s=225030&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里的 accessKeyId 和 acessKeySecret 是什么呢？</p>
+<p>本来我们身份认证都是通过用户名密码：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6a7d6a85fd1b41bebe0e89c6a97d2cea~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=742&amp;h=284&amp;s=17801&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但这样不够安全，所以我们创建了 accessKey 用来代表身份，用它来做身份认证，就算泄漏了，也不影响别的：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/83d2b960c3464d3bbadc964c269773cd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=798&amp;h=514&amp;s=33672&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们创建个 accesKey：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c2dfa90ffc41454f93a47ff06529f370~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=626&amp;h=796&amp;s=64559&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fa9d11035ea3457ea12b499c38524878~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1534&amp;h=546&amp;s=122069&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>创建完成后，拿到 accesKeyId 和 accessKeySecret 后运行代码：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/46888772fc6a4cdd80281d51a1e687b4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1094&amp;h=830&amp;s=154401&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里的 mao.png 是这样的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4f74bb88195a476ab386719f243b9f8b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1018&amp;h=710&amp;s=379430&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在控制台可以看到上传成功了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/63cb0a38082d42c7ab1547700c7c7e79~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2018&amp;h=1134&amp;s=536715&amp;e=png&amp;b=8b8a8a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是 OSS 用 api 上传文件的用法。</p>
+<p>只是我们刚刚用的 accessKey 不够安全。</p>
+<p>打开 accessKey 管理页面的时候就提示了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7be95451e63343ffa32be751c673048d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1018&amp;h=382&amp;s=97125&amp;e=png&amp;b=fef4ef" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>让我们不要直接用 accessKey，而是创建一个子用户再创建 accessKey。</p>
+<p>那我们就创建个子用户：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a8cd8632816e44fd902810a432999eb5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1338&amp;h=634&amp;s=124468&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7fd4a9e8f3364f2ea9a0df89b94e807d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=970&amp;h=664&amp;s=71789&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后用这个 accessKey 的 id 和 secret 就好了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3904e4e4a73f4a25a6dfc72157c3f2b6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1928&amp;h=738&amp;s=135573&amp;e=png&amp;b=fffaf9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但你直接换上它还不行：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/69a7a7dc3fe249beadd65d83f41b08a8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1342&amp;h=1276&amp;s=271590&amp;e=png&amp;b=1c1c1c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>会提示你 403，没有权限。</p>
+<p>需要你授权下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6de63b48653b489c87e11e3c302912a8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=628&amp;h=784&amp;s=66326&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>新增一个授权：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/26b94c98a61f4555b15f6d605f24892e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1130&amp;h=798&amp;s=102716&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把 OSS 的管理和读取权限给这个子用户：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b35e139980c148dba0c33b5893e0c17c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1656&amp;h=1352&amp;s=552424&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/30acc180379f43b1bae31bd4d2af210b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1094&amp;h=1060&amp;s=198897&amp;e=png&amp;b=1b1b1b" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候就上传成功了。</p>
+<p>回过头来看下，不得不说阿里云在安全这一块设计的就很巧妙。</p>
+<p>如果我们直接用用户名密码验证呢：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e45fb9b6fd394448a7643ad7e2223551~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=766&amp;h=214&amp;s=16602&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那万一泄漏了不就完蛋了么？</p>
+<p>但是如果创建个 accessKey 用它来做身份认证：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9e52b9bfec8543378e3714044608f002~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=872&amp;h=542&amp;s=35006&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>就算泄漏了我也可以禁用啊：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5d77ecadb1e14bd881fbec0e32c1ac00~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1770&amp;h=416&amp;s=74111&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再进一步，直接用这个 accessKey 它是有所有权限的。</p>
+<p>我们先创建个 RAM 子用户，再分配给他某些权限，这样就算泄漏了，是不是能做的事情就更少了？</p>
+<p>当然就更安全。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc0239504615408d9d0f1fcbb272b168~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1178&amp;h=542&amp;s=49523&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>所以说，阿里云这套 accessKey 和 RAM 子用户的身份认证方式，还是很不错的。</p>
+<p>再说回 OSS，一般的文件直接上传就行，涉及到大文件就要分片上传了。</p>
+<p>分片上传实现原理是前端常见面试题了，大家都能答上来，上节我们刚实现过。</p>
+<p>就是把文件用 slice 方法分成一个个小的片，然后全部上传完之后请求一个接口合并分片。</p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fhelp.aliyun.com%2Fzh%2Foss%2Fuser-guide%2Fmultipart-upload" target="_blank" rel="nofollow noopener noreferrer" title="https://help.aliyun.com/zh/oss/user-guide/multipart-upload" ref="nofollow noopener noreferrer">阿里云的大文件分片上传</a>也是这样实现的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/896de2622dbf4b5a8f110388f91fee51~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2028&amp;h=1046&amp;s=285258&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>具体怎么用直接看文档就好了，这里我们就不试了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2cf86dfa4a904cfb9268562d6c5069a0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1682&amp;h=1120&amp;s=284602&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>有了 OSS 服务之后，我们上传文件还需要经过应用服务器么？</p>
+<p>可以经过也可以不经过。</p>
+<p>如果经过应用服务器，那就要客户端上传文件之后，我们在服务里接受文件，上传 OSS：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b363bfe995714131b0f25dea6ad18822~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1302&amp;h=302&amp;s=29501&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样当然是可以的，还能保护 accessKey 不被人窃取。</p>
+<p>只是会浪费应用服务器的流量。</p>
+<p>那如果不经过呢？</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d4a4d64a83884b6c8670c4ed09ccd716~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=842&amp;h=514&amp;s=38047&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在客户端用 accessKey 把文件传到 OSS，之后把 URL 传给应用服务器就好了。</p>
+<p>这样减少了应用服务器的流量消耗，但是增加了 accessKey 暴露的风险。</p>
+<p>各有各的坏处。</p>
+<p>那有没有啥两全其美的办法呢？</p>
+<p>有。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a4b44d3c76ae4c1ca38230fd09f5770e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1778&amp;h=936&amp;s=296704&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fhelp.aliyun.com%2Fzh%2Foss%2Fuser-guide%2Fauthorized-third-party-upload" target="_blank" rel="nofollow noopener noreferrer" title="https://help.aliyun.com/zh/oss/user-guide/authorized-third-party-upload" ref="nofollow noopener noreferrer">阿里云的文档</a>里也提到了这个问题。</p>
+<p>它给出的解决方案就是生成一个临时的签名来用。</p>
+<p>代码是这样的：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">OSS</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">'ali-oss'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> config = {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">region</span>: <span class="hljs-string">'oss-cn-beijing'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">bucket</span>: <span class="hljs-string">'guang-333'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">accessKeyId</span>: <span class="hljs-string">'LTAI5tDemEBPwQkTx65jZCdy'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">accessKeySecret</span>: <span class="hljs-string">'I0vHYOoqIC78lH7A5c5XB1H7Pev7bp'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">const</span> client = <span class="hljs-keyword">new</span> <span class="hljs-title function_">OSS</span>(config);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    </span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">const</span> date = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    </span>
+<span class="code-block-extension-codeLine" data-line-num="16">    date.<span class="hljs-title function_">setDate</span>(date.<span class="hljs-title function_">getDate</span>() + <span class="hljs-number">1</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    </span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-keyword">const</span> res = client.<span class="hljs-title function_">calculatePostSignature</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-attr">expiration</span>: date.<span class="hljs-title function_">toISOString</span>(),</span>
+<span class="code-block-extension-codeLine" data-line-num="20">        <span class="hljs-attr">conditions</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="21">            [<span class="hljs-string">"content-length-range"</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1048576000</span>], <span class="hljs-comment">//设置上传文件的大小限制。      </span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">        ]</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    </span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    </span>
+<span class="code-block-extension-codeLine" data-line-num="27">    <span class="hljs-keyword">const</span> location = <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">getBucketLocation</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    </span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-keyword">const</span> host = <span class="hljs-string">`http://<span class="hljs-subst">${config.bucket}</span>.<span class="hljs-subst">${location.location}</span>.aliyuncs.com`</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="30"></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(host);</span>
+<span class="code-block-extension-codeLine" data-line-num="32">}</span>
+<span class="code-block-extension-codeLine" data-line-num="33"></span>
+<span class="code-block-extension-codeLine" data-line-num="34"><span class="hljs-title function_">main</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="35"></span>
+</code></pre>
+<p>上传 OSS 的地址，用的临时 signature 和 policy 都有了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c18ffbe373b74b1da1f08eb0e333efc3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1232&amp;h=252&amp;s=64402&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这些代码不用记，文档里都有：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/74c442a1f2de4861b78fe59fea1c77c3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1774&amp;h=1150&amp;s=360253&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样就能在网页里用这些来上传文件到 OSS 了：</p>
+<p>创建个 index.html</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Document<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/axios@1.6.5/dist/axios.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"fileInput"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"file"</span>/&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    </span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-keyword">const</span> fileInput = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">'fileInput'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">getOSSInfo</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-keyword">await</span> <span class="hljs-string">'请求应用服务器拿到临时凭证'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">            <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">                <span class="hljs-title class_">OSSAccessKeyId</span>: <span class="hljs-string">'LTAI5tDemEBPwQkTx65jZCdy'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">                <span class="hljs-title class_">Signature</span>: <span class="hljs-string">'NfXgq/qLIR2/v87j/XC9sjrASOA='</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="20">                <span class="hljs-attr">policy</span>: <span class="hljs-string">'eyJleHBpcmF0aW9uIjoiMjAyNC0wMS0yMFQwMzoyNjowOC4xMDZaIiwiY29uZGl0aW9ucyI6W1siY29udGVudC1sZW5ndGgtcmFuZ2UiLDAsMTA0ODU3NjAwMF1dfQ=='</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="21">                <span class="hljs-attr">host</span>: <span class="hljs-string">'http://guang-333.oss-cn-beijing.aliyuncs.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">        fileInput.<span class="hljs-property">onchange</span> = <span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="26">            <span class="hljs-keyword">const</span> file = fileInput.<span class="hljs-property">files</span>[<span class="hljs-number">0</span>];</span>
+<span class="code-block-extension-codeLine" data-line-num="27"></span>
+<span class="code-block-extension-codeLine" data-line-num="28">            <span class="hljs-keyword">const</span> ossInfo = <span class="hljs-keyword">await</span> <span class="hljs-title function_">getOSSInfo</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="29"></span>
+<span class="code-block-extension-codeLine" data-line-num="30"></span>
+<span class="code-block-extension-codeLine" data-line-num="31">            <span class="hljs-keyword">const</span> formdata = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FormData</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="32"> </span>
+<span class="code-block-extension-codeLine" data-line-num="33">            formdata.<span class="hljs-title function_">append</span>(<span class="hljs-string">'key'</span>, file.<span class="hljs-property">name</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="34">            formdata.<span class="hljs-title function_">append</span>(<span class="hljs-string">'OSSAccessKeyId'</span>, ossInfo.<span class="hljs-property">OSSAccessKeyId</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="35">            formdata.<span class="hljs-title function_">append</span>(<span class="hljs-string">'policy'</span>, ossInfo.<span class="hljs-property">policy</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="36">            formdata.<span class="hljs-title function_">append</span>(<span class="hljs-string">'signature'</span>, ossInfo.<span class="hljs-property">Signature</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="37">            formdata.<span class="hljs-title function_">append</span>(<span class="hljs-string">'success_action_status'</span>, <span class="hljs-string">'200'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="38">            formdata.<span class="hljs-title function_">append</span>(<span class="hljs-string">'file'</span>, file)</span>
+<span class="code-block-extension-codeLine" data-line-num="39"></span>
+<span class="code-block-extension-codeLine" data-line-num="40">            <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">post</span>(ossInfo.<span class="hljs-property">host</span>, formdata);</span>
+<span class="code-block-extension-codeLine" data-line-num="41">            <span class="hljs-keyword">if</span>(res.<span class="hljs-property">status</span> === <span class="hljs-number">200</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="42">                </span>
+<span class="code-block-extension-codeLine" data-line-num="43">                <span class="hljs-keyword">const</span> img = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">'img'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="44">                img.<span class="hljs-property">src</span> = ossInfo.<span class="hljs-property">host</span> + <span class="hljs-string">'/'</span> + file.<span class="hljs-property">name</span></span>
+<span class="code-block-extension-codeLine" data-line-num="45">                <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">append</span>(img);</span>
+<span class="code-block-extension-codeLine" data-line-num="46"></span>
+<span class="code-block-extension-codeLine" data-line-num="47">                <span class="hljs-title function_">alert</span>(<span class="hljs-string">'上传成功'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="48">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="49">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="50">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="51"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="52"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>这里 getOSSInfo 应该是请求服务端的接口，拿到刚才我们控制台输出的那些东西。</p>
+<p>这里就简化下，直接写死在代码里了。</p>
+<p>引入 axios，用这些信息来上传文件。</p>
+<p>跑个静态服务器：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">vbscript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-vbscript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx http-<span class="hljs-built_in">server</span> .</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/df383c8936814fcf93f8fa388534d143~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=710&amp;h=582&amp;s=93425&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候你上传文件的时候会提示跨域错误：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f4c1a25c88c0455ca25463753fd737ec~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1562&amp;h=884&amp;s=159518&amp;e=png&amp;b=fefcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们在控制台开启下跨域：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d3b099abe3794369bafd9a412f8afc26~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1942&amp;h=1340&amp;s=273036&amp;e=png&amp;b=8b8b8b" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再试下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7b0fa91fc6654687b2bd80c841f50477~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1790&amp;h=1120&amp;s=1037999&amp;e=gif&amp;f=40&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>上传成功了！</p>
+<p>控制台文件列表也可以看到这个文件：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/663aaf15d52046ca9f1b438a254d43ad~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1878&amp;h=1094&amp;s=352599&amp;e=png&amp;b=f8f6f6" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是完美的 OSS 上传方案。</p>
+<p>服务端用 RAM 子用户的 accessKey 来生成临时签名，然后返回给客户端，客户端用这个来直传文件到 OSS。</p>
+<p>因为临时的签名过期时间很短，我们设置的是一天，所以暴露的风险也不大。</p>
+<p>这样服务端就根本没有接受文件的压力，只要等客户端上传完之后，带上 URL 就好了。</p>
+<p>案例代码上传了<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Foss-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/oss-test" ref="nofollow noopener noreferrer">小册仓库</a></p>
+<h2 data-id="heading-0">总结</h2>
+<p>上传文件一般不会直接存在服务器目录下，这样不好扩展，一般我们会用阿里云的 OSS，它会自己做弹性扩展，所以存储空间是无限的。</p>
+<p>OSS 对象存储是在一个 bucket 桶下，存放多个文件。</p>
+<p>它是用 key-value 存储的，没有目录的概念，阿里云 OSS 的目录只是用元信息来模拟实现的。</p>
+<p>我们在测试了在控制台的文件上传，也测试过了 node 里用 ali-oss 包来上传、在网页里直传 OSS 这三种上传方式。</p>
+<p>不管在哪里上传，都需要 acessKeyId 和 acessKeySecret。</p>
+<p>这个是阿里云的安全策略，因为直接用用户名密码，一旦泄漏就很麻烦，而 acessKey 泄漏了也可以禁用。而且建议用 RAM 子用户的方式生成 accessKey，这样可以最小化权限，进一步减少泄漏的风险。</p>
+<p>客户端直传 OSS 的方式不需要消耗服务器的资源，但是会有泄漏 acessKey 的风险，所以一般都是用服务端生成临时的签名等信息，然后用这些信息来上传。</p>
+<p>这种方案就是最完美的 OSS 上传方案了。</p>
+<p>掌握了这些，就完全足够应对工作中的 OSS 使用了。</p></div>

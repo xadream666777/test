@@ -1,0 +1,185 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>提到推送数据，大家可能会首先想到 WebSocket。</p>
+<p>确实，WebSocket 能双向通信，自然也能做服务器到浏览器的消息推送。</p>
+<p>但如果只是单向推送消息的话，HTTP 就有这种功能，它就是 Server Sent Event。</p>
+<p>WebSocket 的通信过程是这样的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d77dfe73e74d4fac89f8747266c01cd1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1260&amp;h=810&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>首先通过 http 切换协议，服务端返回 101 的状态码后，就代表协议切换成功。</p>
+<p>之后就是 WebSocket 格式数据的通信了，一方可以随时向另一方推送消息。</p>
+<p>而 HTTP 的 Server Sent Event 是这样的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8d99ee4d7ad0471db06cb16280001d77~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1294&amp;h=832&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>服务端返回的 Content-Type 是 text/event-stream，这是一个流，可以多次返回内容。</p>
+<p>Sever Sent Event 就是通过这种消息来随时推送数据。</p>
+<p>可能你是第一次听说 SSE，但你肯定用过基于它的应用。</p>
+<p>比如你用的 CICD 平台，它的日志是实时打印的。</p>
+<p>那它是如何实时传输构建日志的呢？</p>
+<p>明显需要一段一段的传输，这种一般就是用 SSE 来推送数据。</p>
+<p>再比如说 ChatGPT，它回答一个问题不是一次性给你全部的，而是一部分一部分的加载回答。</p>
+<p>这也是基于 SSE。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/008f737072b3484ea1362a14139c49f6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2156&amp;h=1232&amp;e=gif&amp;f=45&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5dea4c6489fa45e0905ddc5d16551daa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=894&amp;h=598&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>知道了什么是 SSE 以及它的应用，我们来自己实现一下吧：</p>
+<p>创建 nest 项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> sse-test</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adde2c230c76422495a89e8d98d11ab6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=804&amp;h=686&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把它跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ca328c8232d04975bc43366c6fae6d14~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1900&amp;h=452&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000" ref="nofollow noopener noreferrer">http://localhost:3000</a> 可以看到 hello world，代表服务器跑成功了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/53b674db7798413193a4c69560368a95~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=604&amp;h=186&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 AppController 添加一个 stream 接口：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/34eabde3dd8f48aaa2448dd0d5ebef6b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1162&amp;h=1122&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里不是通过  @Get、@Post 等装饰器标识，而是通过 @Sse 标识这是一个 event stream 类型的接口。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Sse</span>(<span class="hljs-string">'stream'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-title function_">stream</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Observable</span>(<span class="hljs-function">(<span class="hljs-params">observer</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">      observer.<span class="hljs-title function_">next</span>({ <span class="hljs-attr">data</span>: { <span class="hljs-attr">msg</span>: <span class="hljs-string">'aaa'</span>} });</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        observer.<span class="hljs-title function_">next</span>({ <span class="hljs-attr">data</span>: { <span class="hljs-attr">msg</span>: <span class="hljs-string">'bbb'</span>} });</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      }, <span class="hljs-number">2000</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        observer.<span class="hljs-title function_">next</span>({ <span class="hljs-attr">data</span>: { <span class="hljs-attr">msg</span>: <span class="hljs-string">'ccc'</span>} });</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      }, <span class="hljs-number">5000</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+</code></pre>
+<p>返回的是一个 Observable 对象，然后内部用 observer.next 返回消息。</p>
+<p>可以返回任意的 json 数据。</p>
+<p>我们先返回了一个 aaa、过了 2s 返回了 bbb，过了 5s 返回了 ccc。</p>
+<p>然后写个前端页面：</p>
+<p>创建一个 react 项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx create-react-app <span class="hljs-attr">--template</span>=typescript sse-test-frontend</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8e01a275e8994ecc9da577af5aa80db7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1092&amp;h=244&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 App.tsx 里写如下代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { useEffect } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">const</span> eventSource = <span class="hljs-keyword">new</span> <span class="hljs-title class_">EventSource</span>(<span class="hljs-string">'http://localhost:3000/stream'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    eventSource.<span class="hljs-property">onmessage</span> = <span class="hljs-function">(<span class="hljs-params">{ data }</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'New message'</span>, <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(data));</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    };</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  }, []);</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-keyword">return</span> (</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>hello<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">  );</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">App</span>;</span>
+</code></pre>
+<p>这个 EventSource 是浏览器原生 api，就是用来获取 sse 接口的响应的，它会把每次消息传入 onmessage 的回调函数。</p>
+<p>我们在 nest 服务开启跨域支持：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/66d522b6a18944f09ebb9a6755588199~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1062&amp;h=504&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后把 react 项目 index.tsx 里这几行代码删掉，它会导致额外的渲染：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b495ad20d295425888b3759d2238d929~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=846&amp;h=456&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>执行 npm run start</p>
+<p>因为 3000 端口被占用了，它会跑在 3001：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c25c8cf6f05241bf8a02f695e022f442~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=966&amp;h=434&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ce8133bed60e490dba2fba6c99943358~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=986&amp;h=842&amp;e=gif&amp;f=37&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>看到一段段的响应了没？</p>
+<p>这就是 Server Sent Event。</p>
+<p>在 devtools 里可以看到，响应的 Content-Type 是 text/event-stream：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/caacaaed946a4ca9b744ccfb7564d629~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1442&amp;h=622&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 EventStream 里可以看到每一次收到的消息：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/42356050a93842ce81ea68d16d9b79f7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1224&amp;h=336&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，服务端就可以随时向网页推送消息了。</p>
+<p>那它兼容性怎么样呢？</p>
+<p>可以在 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FEventSource%23%25E6%25B5%258F%25E8%25A7%2588%25E5%2599%25A8%25E5%2585%25BC%25E5%25AE%25B9%25E6%2580%25A7" target="_blank" rel="nofollow noopener noreferrer" title="https://developer.mozilla.org/zh-CN/docs/Web/API/EventSource#%E6%B5%8F%E8%A7%88%E5%99%A8%E5%85%BC%E5%AE%B9%E6%80%A7" ref="nofollow noopener noreferrer">MDN</a> 看到：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/738fa0f21305432bbec7f5e9d51d5064~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1462&amp;h=538&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>除了 ie、edge 外，其他浏览器都没任何兼容问题。</p>
+<p>基本是可以放心用的。</p>
+<p>那用在哪呢？</p>
+<p>一些只需要服务端推送的场景就特别适合 Server Sent Event。</p>
+<p>比如这个站内信：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cc91875b11784430af4e49df01b4e990~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1390&amp;h=1088&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这种推送用 WebSocket 就没必要了，可以用 SSE 来做。</p>
+<p>那连接断了怎么办呢？</p>
+<p>不用担心，浏览器会自动重连。</p>
+<p>这点和 WebSocket 不同，WebSocket 如果断开之后是需要手动重连的，而 SSE 不用。</p>
+<p>再比如说日志的实时推送。</p>
+<p>我们来测试下：</p>
+<p>tail -f 命令可以实时看到文件的最新内容：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/981b74e7c9474732867d32ad8b9f5992~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1284&amp;h=1180&amp;e=gif&amp;f=46&amp;b=1b1b1b" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们通过 child_process 模块的 exec 来执行这个命令，然后监听它的 stdout 输出：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> { exec } = <span class="hljs-built_in">require</span>(<span class="hljs-string">"child_process"</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> childProcess = <span class="hljs-title function_">exec</span>(<span class="hljs-string">'tail -f ./log'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">childProcess.<span class="hljs-property">stdout</span>.<span class="hljs-title function_">on</span>(<span class="hljs-string">'data'</span>, <span class="hljs-function">(<span class="hljs-params">msg</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(msg);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">});</span>
+</code></pre>
+<p>用 node 执行它：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/89d57f5c4c8a43b6a0020c07cc8df196~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1040&amp;h=1018&amp;e=gif&amp;f=31&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后添加一个 sse 的接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Sse</span>(<span class="hljs-string">'stream2'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-title function_">stream2</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> childProcess = <span class="hljs-title function_">exec</span>(<span class="hljs-string">'tail -f ./log'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Observable</span>(<span class="hljs-function">(<span class="hljs-params">observer</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  childProcess.<span class="hljs-property">stdout</span>.<span class="hljs-title function_">on</span>(<span class="hljs-string">'data'</span>, <span class="hljs-function">(<span class="hljs-params">msg</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    observer.<span class="hljs-title function_">next</span>({ <span class="hljs-attr">data</span>: { <span class="hljs-attr">msg</span>: msg.<span class="hljs-title function_">toString</span>() }});</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  })</span>
+<span class="code-block-extension-codeLine" data-line-num="9">});</span>
+</code></pre>
+<p>监听到新的数据之后，把它返回给浏览器。</p>
+<p>浏览器连接这个新接口：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/23ba4a4421ce4324956053feb043be08~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1470&amp;h=720&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>测试下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6c46cf62c6194fc28f614337bcbe6b81~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1752&amp;h=934&amp;e=gif&amp;f=38&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，浏览器收到了实时的日志。</p>
+<p>很多构建日志都是通过 SSE 的方式实时推送的。</p>
+<p>日志之类的只是文本，那如果是二进制数据呢？</p>
+<p>二进制数据在 node 里是通过 Buffer 存储的。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> { readFileSync } = <span class="hljs-built_in">require</span>(<span class="hljs-string">"fs"</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> buffer = <span class="hljs-title function_">readFileSync</span>(<span class="hljs-string">'./package.json'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(buffer);</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e01065105a604bc38582258f51db45b6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1208&amp;h=176&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而 Buffer 有个 toJSON 方法：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e87134d7364b4b2f9a84f850bf0eae84~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1120&amp;h=1048&amp;e=png&amp;b=1b1b1b" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样不就可以通过 sse 的接口返回了么？</p>
+<p>试一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Sse</span>(<span class="hljs-string">'stream3'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-title function_">stream3</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Observable</span>(<span class="hljs-function">(<span class="hljs-params">observer</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-keyword">const</span> json = <span class="hljs-title function_">readFileSync</span>(<span class="hljs-string">'./package.json'</span>).<span class="hljs-title function_">toJSON</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        observer.<span class="hljs-title function_">next</span>({ <span class="hljs-attr">data</span>: { <span class="hljs-attr">msg</span>: json }});</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ace2ca2874ec4161ac09ca557a5f6d96~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1454&amp;h=758&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3dd21acf5d4a42a4b16b1e9142f72add~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1058&amp;h=1404&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>确实可以。</p>
+<p>也就是说，基于 sse，除了可以推送文本外，还可以推送任意二进制数据。</p>
+<p>案例代码上传了小册仓库：</p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fsse-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/sse-test" ref="nofollow noopener noreferrer">后端代码</a></p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fsse-test-frontend" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/sse-test-frontend" ref="nofollow noopener noreferrer">前端代码</a></p>
+<h2 data-id="heading-0">总结</h2>
+<p>服务端实时推送数据，除了用 WebSocket 外，还可以用 HTTP 的 Server Sent Event。</p>
+<p>只要 http 返回 Content-Type 为 text/event-stream 的 header，就可以通过 stream 的方式多次返回消息了。</p>
+<p>它传输的是 json 格式的内容，可以用来传输文本或者二进制内容。</p>
+<p>我们通过 Nest 实现了 sse 的接口，用 @Sse 装饰器标识方法，然后返回 Observe 对象就可以了。内部可以通过 observer.next 随时返回数据。</p>
+<p>前端使用 EventSource 的 onmessage 来接收消息。</p>
+<p>这个 api 的兼容性很好，除了 ie 外可以放心的用。</p>
+<p>它的应用场景有很多，比如站内信、构建日志实时展示、chatgpt 的消息返回等。</p>
+<p>再遇到需要消息推送的场景，不要直接 WebSocket 了，也许 Server Sent Event 更合适呢？</p></div>

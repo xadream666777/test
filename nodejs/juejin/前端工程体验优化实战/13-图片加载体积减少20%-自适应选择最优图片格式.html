@@ -1,0 +1,328 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>根据<a href="https://link.juejin.cn?target=https%3A%2F%2Fhttparchive.org%2Freports%2Fpage-weight%23bytesImg" target="_blank" rel="nofollow noopener noreferrer" title="https://httparchive.org/reports/page-weight#bytesImg" ref="nofollow noopener noreferrer">HTTPArchive</a>网站十几年来的<a href="https://link.juejin.cn?target=https%3A%2F%2Fhttparchive.org%2Freports%2Fpage-weight%23bytesImg" target="_blank" rel="nofollow noopener noreferrer" title="https://httparchive.org/reports/page-weight#bytesImg" ref="nofollow noopener noreferrer">对海量网页的统计</a>，网页中加载的图片类资源，体积中位数是1009 KB，请求数量中位数是21个。分别是页面总加载体积2419 KB的41.7% ，和总请求数量72个的29.5%。</p>
+<p>可见图片是前端应用绝对的核心内容。</p>
+<p>但是长久以来，前端应用的图片类资源面临着许多<strong>痛点</strong>，主要有：</p>
+<ul>
+<li>图片体积较大，加载耗时较长。</li>
+<li>CDN流量开销较高：图片类资源数量多、体积大，是CDN费用的主要成本。</li>
+</ul>
+<p>前端应用中图片类资源的加载也直接影响着用户体验，图片是首次内容绘制（FCP）和最大内容绘制 (LCP)指标的测量要素，所以从图片类资源入手优化用户体验，对前端应用不可或缺。</p>
+<h2 data-id="heading-0">1. 图片格式对比</h2>
+<p>浏览器平台支持众多图片格式，分别有不同的特性，我们先通过对比了解一下各种格式：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>格式</th><th>简介和特性</th><th>体积示例<br>（基于后文图片CDN计算）</th><th>发明年份</th><th>浏览器兼容性</th></tr></thead><tbody><tr><td><code>jpg</code></td><td>-   最常见、应用最广泛的图片格式 <br>-   体积一般，通常小于 png, gif 等格式</td><td>158 KB（100%）</td><td>1992</td><td>几乎所有浏览器都支持</td></tr><tr><td><code>png</code></td><td>-   带有透明通道，支持图片部分透明<br>-   体积较大</td><td>819 KB（518%）</td><td>1996</td><td>几乎所有浏览器都支持</td></tr><tr><td><code>gif</code></td><td>-   支持自动播放的动态图片<br>-   体积较大</td><td>423 KB（267%）</td><td>1989</td><td>几乎所有浏览器都支持</td></tr><tr><td><code>svg</code></td><td>-   矢量图，任意缩放不影响清晰度<br>-   本质是一种标记语言，可以由浏览器解析渲染<br>-   体积视内容而定</td><td>--</td><td>2001</td><td>Chrome 4 （2010年1月发布）以上版本支持<br>参考资料：<a href="https://link.juejin.cn?target=https%3A%2F%2Fcaniuse.com%2Fsvg" target="_blank" rel="nofollow noopener noreferrer" title="https://caniuse.com/svg" ref="nofollow noopener noreferrer">caniuse.com/svg</a></td></tr><tr><td><code>webp</code></td><td>-   支持动态图片<br>-   压缩率较高：支持有损压缩，无损压缩<br>-   专注于Web平台的表现<br>-   体积较小</td><td>136 KB（86%）</td><td>2010</td><td>Chrome 32 （2014年1月发布）以上版本支持<br>参考资料：<a href="https://link.juejin.cn?target=https%3A%2F%2Fcaniuse.com%2Fwebp" target="_blank" rel="nofollow noopener noreferrer" title="https://caniuse.com/webp" ref="nofollow noopener noreferrer">caniuse.com/webp</a></td></tr><tr><td><code>avif</code></td><td>-   支持动态图片<br>-   压缩率较高<br>-   体积较小</td><td>96 KB （60%）</td><td>2019</td><td>Chrome 85（2020年8月发布）以上版本支持<br>参考资料：<a href="https://link.juejin.cn?target=https%3A%2F%2Fcaniuse.com%2Favif" target="_blank" rel="nofollow noopener noreferrer" title="https://caniuse.com/avif" ref="nofollow noopener noreferrer">caniuse.com/avif</a></td></tr></tbody></table>
+<p>通过上述表格对比不难看出，图片类格式明显分为2大类：</p>
+<ul>
+<li><strong>传统</strong>图片格式：发明于二十年前的<code>jpg、png、gif、svg</code>等</li>
+<li><strong>现代</strong>图片格式：近十年来发明的<code>webp、avif</code>等</li>
+</ul>
+<p>这两类图片从功能上看：</p>
+<ul>
+<li><strong>体积</strong>：传统格式显著大于现代图片格式。相较于<code>jpg</code>格式，<code>webp</code>格式的图片一般能减少10%左右的体积，<code>avif</code>格式更是能减少40%以上的文件体积。</li>
+<li><strong>特性</strong>：现代格式都能覆盖传统格式的动态图片、无损压缩等功能和特性，传统格式特性较为单一，现代格式支持动态图片、无损压缩等特性更多。</li>
+<li><strong>浏览器兼容性</strong>：兼容现代格式的浏览器占比相对略少。</li>
+</ul>
+<p>如果能使用<code>webp，avif</code>等现代格式，对解决前端应用图片类资源体积较大，加载耗时较长、CDN开销较高的痛点会有明显优化。</p>
+<p>但是浏览器兼容性又让我们无法放开手脚，不敢大胆采用现代格式。</p>
+<p>所以有什么两全其美的解决方案吗？</p>
+<h2 data-id="heading-1">2. 自适应选择最优图片格式方案：<code>&lt;picture&gt;</code>元素</h2>
+<p>性能和兼容性不可兼得的痛点，Web标准的制定者也早有共识，所以针对性地推出了<code>&lt;picture&gt;</code>元素致力于解决这一痛点。</p>
+<p><code>&lt;picture&gt;</code>元素允许同时引入多个图片格式的子元素，并根据浏览器的兼容性，按先后顺序、自适应加载其中1个格式的图片，实现所有用户根据自身兼容性，获取到最优图片格式。</p>
+<p>请看代码示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-tag">&lt;<span class="hljs-name">picture</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"image/avif"</span> <span class="hljs-attr">srcset</span>=<span class="hljs-string">"https://cdn.com/image.avif"</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"image/webp"</span> <span class="hljs-attr">srcset</span>=<span class="hljs-string">"https://cdn.com/image.webp"</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://cdn.com/image.jpg"</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">"Example"</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-tag">&lt;/<span class="hljs-name">picture</span>&gt;</span></span>
+</code></pre>
+<blockquote>
+<p>《<code>&lt;picture&gt;</code>元素示例》在线运行DEMO：<a href="https://link.juejin.cn?target=https%3A%2F%2Fjsbin.com%2Fxabenap%2Fedit%3Fhtml%2Coutput" target="_blank" rel="nofollow noopener noreferrer" title="https://jsbin.com/xabenap/edit?html,output" ref="nofollow noopener noreferrer">jsbin.com/xabenap/edi…</a></p>
+</blockquote>
+<p>在上述例子中，<code>&lt;picture&gt;</code>元素中包含了2个<code>&lt;source&gt;</code>元素和1个<code>&lt;img&gt;</code>元素。</p>
+<p>每个<code>&lt;source&gt;</code>元素都包含一个<code>srcset</code>属性，2处<code>srcset</code>属性分别引用了<code>avif, webp</code>格式的图片URL，<code>type</code>属性则是格式对应的<a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FHTTP%2FBasics_of_HTTP%2FMIME_types%23image_types" target="_blank" rel="nofollow noopener noreferrer" title="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#image_types" ref="nofollow noopener noreferrer">MIME类型</a>。</p>
+<p>但是这段HTML只会触发<code>avif</code>一个图片资源的下载。</p>
+<p>这是因为，对于<code>&lt;picture&gt;</code>元素，浏览器会按照<strong>从上到下的顺序</strong>检查<code>&lt;source&gt;</code>元素，<strong>加载第一个浏览器兼容格式</strong>的图片，并<strong>忽略</strong>后续的<code>&lt;source&gt;</code>元素和<code>img</code>元素。</p>
+<p>例如，如果浏览器对各种图片格式都支持，那么上述例子就只会加载排序最靠上的<code>avif</code>格式图片，不会加载后续的<code>webp</code>和<code>jpg</code>2种格式的图片。</p>
+<p>如果浏览器对所有<code>&lt;source&gt;</code>声明的图片格式都不支持，它将降级到加载的<code>&lt;img&gt;</code>元素<code>src</code>属性对应的<code>jpg</code>格式图片，作为兜底方案。</p>
+<blockquote>
+<p><code>&lt;picture&gt;</code><strong>必须</strong>声明一个<code>img</code>子元素，否则如果只有<code>source</code>元素，浏览器不会加载<code>source</code>的<code>src</code>属性对应的图片资源。</p>
+</blockquote>
+<p>也就是说，即使用户的浏览器既不支持解析<code>avif, webp</code>格式的图片，甚至不兼容<code>&lt;picture&gt;</code>元素，浏览器也会<strong>自动降级</strong>到使用<code>&lt;img&gt;</code>元素，确保始终有正确的图片加载。</p>
+<p>因此，建议对<code>&lt;picture&gt;</code>元素中的<code>&lt;img&gt;</code>元素使用<code>jpg</code>或<code>png</code>等兼容性较广泛的图片格式作为<code>src</code>属性值。</p>
+<blockquote>
+<p>注：<code>&lt;picture&gt;</code>元素的兼容性：</p>
+<ul>
+<li>Chrome 38+（2014年发布，晚于支持<code>webp，avif</code>格式的版本）</li>
+<li>Edge 13+（2015年发布）</li>
+<li>Safari 9.1+（2016年发布）</li>
+<li>IE不支持，会降级为加载<code>&lt;img&gt;</code>元素</li>
+</ul>
+<p>参考资料：<a href="https://link.juejin.cn?target=https%3A%2F%2Fcaniuse.com%2F%3Fsearch%3Dpicture" target="_blank" rel="nofollow noopener noreferrer" title="https://caniuse.com/?search=picture" ref="nofollow noopener noreferrer">caniuse.com/?search=pic…</a></p>
+</blockquote>
+<p><code>&lt;picture&gt;</code>元素经过业界大量实践检验，证明可用于生产环境。</p>
+<p>例如，Bilibili视频网站，PC版首页的轮播图、封面图都大量使用了<code>&lt;picture&gt;</code>元素：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/46e322ff75fd49108c2f9ff32428fc19~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1916&amp;h=983&amp;s=941075&amp;e=png&amp;b=232427" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用上<code>&lt;picture&gt;</code>元素，终于能实现我们图片性能和兼容性两者兼得的需求了，可随之而来的难点是，如何方便高效地生成各种格式的图片，供<code>&lt;picture&gt;</code>元素使用呢？</p>
+<h2 data-id="heading-2">3. 图片优化神器——图片CDN</h2>
+<p>工欲善其事必先利其器，图片CDN就是搭配<code>&lt;picture&gt;</code>元素的神器。</p>
+<p>图片CDN是CDN的拓展功能，专用于处理图片类型的各种资源。各大云服务供应商都有提供图片CDN服务，除基础的资源存储外，还附带了多种能力，例如：</p>
+<ul>
+<li>格式转换、体积压缩</li>
+<li>尺寸缩放</li>
+<li>添加水印</li>
+</ul>
+<p>这些能力使用起来非常方便，一般只需要修改图片的URL参数，即可实现自动对图片应用相关处理。</p>
+<p>以腾讯云CDN的图片处理能力为例，他支持的能力和用法如下：</p>
+<ol>
+<li>缩放图片：</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>图片类型</th><th>体积</th><th>URL链接</th></tr></thead><tbody><tr><td>原图</td><td>158 KB</td><td><a href="https://link.juejin.cn?target=http%3A%2F%2Fexamples-1251000004.cos.ap-shanghai.myqcloud.com%2Fsample.jpeg%3FimageMogr2%2Fformat%2Fpng" target="_blank" rel="nofollow noopener noreferrer" title="http://examples-1251000004.cos.ap-shanghai.myqcloud.com/sample.jpeg?imageMogr2/format/png" ref="nofollow noopener noreferrer">sample.jpeg</a></td></tr><tr><td>宽高缩放为原图50%</td><td>46.2 KB</td><td><a href="https://link.juejin.cn?target=http%3A%2F%2Fexamples-1251000004.cos.ap-shanghai.myqcloud.com%2Fsample.jpeg%3FimageMogr2%2Fthumbnail%2F!50p" target="_blank" rel="nofollow noopener noreferrer" title="http://examples-1251000004.cos.ap-shanghai.myqcloud.com/sample.jpeg?imageMogr2/thumbnail/!50p" ref="nofollow noopener noreferrer">sample.jpeg?imageMogr2/thumbnail/!…</a></td></tr><tr><td>宽高缩放为指定50*50像素</td><td>1.8 KB</td><td><a href="https://link.juejin.cn?target=https%3A%2F%2Fexamples-1251000004.cos.ap-shanghai.myqcloud.com%2Fsample.jpeg%3FimageMogr2%2Fthumbnail%2F50x50%253E!" target="_blank" rel="nofollow noopener noreferrer" title="https://examples-1251000004.cos.ap-shanghai.myqcloud.com/sample.jpeg?imageMogr2/thumbnail/50x50%3E!" ref="nofollow noopener noreferrer">sample.jpeg?imageMogr2/thumbnail/5…</a></td></tr></tbody></table>
+<ol start="2">
+<li>图片格式转换：</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>图片类型</th><th>体积</th><th>URL链接</th></tr></thead><tbody><tr><td><code>.jpeg</code>（原图）</td><td>158 KB</td><td><a href="https://link.juejin.cn?target=https%3A%2F%2Fexamples-1251000004.cos.ap-shanghai.myqcloud.com%2Fsample.jpeg" target="_blank" rel="nofollow noopener noreferrer" title="https://examples-1251000004.cos.ap-shanghai.myqcloud.com/sample.jpeg" ref="nofollow noopener noreferrer">sample.jpeg</a></td></tr><tr><td><code>.png</code></td><td>819 KB</td><td><a href="https://link.juejin.cn?target=https%3A%2F%2Fexamples-1251000004.cos.ap-shanghai.myqcloud.com%2Fsample.jpeg%3FimageMogr2%2Fformat%2Fpng" target="_blank" rel="nofollow noopener noreferrer" title="https://examples-1251000004.cos.ap-shanghai.myqcloud.com/sample.jpeg?imageMogr2/format/png" ref="nofollow noopener noreferrer">sample.jpeg?imageMogr2/format/png</a></td></tr><tr><td><code>.webp</code></td><td>136 KB</td><td><a href="https://link.juejin.cn?target=https%3A%2F%2Fexamples-1251000004.cos.ap-shanghai.myqcloud.com%2Fsample.jpeg%3FimageMogr2%2Fformat%2Fwebp" target="_blank" rel="nofollow noopener noreferrer" title="https://examples-1251000004.cos.ap-shanghai.myqcloud.com/sample.jpeg?imageMogr2/format/webp" ref="nofollow noopener noreferrer">sample.jpeg?imageMogr2/format/webp</a></td></tr><tr><td><code>.avif</code></td><td>96 KB</td><td><a href="https://link.juejin.cn?target=https%3A%2F%2Fexamples-1251000004.cos.ap-shanghai.myqcloud.com%2Fsample.jpeg%3FimageMogr2%2Fformat%2Favif" target="_blank" rel="nofollow noopener noreferrer" title="https://examples-1251000004.cos.ap-shanghai.myqcloud.com/sample.jpeg?imageMogr2/format/avif" ref="nofollow noopener noreferrer">sample.jpeg?imageMogr2/format/avif</a></td></tr></tbody></table>
+<p>除此之外，还有添加盲水印，高斯模糊，获取图片主色调等众多实用功能，还可以进一步<a href="https://link.juejin.cn?target=https%3A%2F%2Fcloud.tencent.com%2Fdocument%2Fproduct%2F460%2F15293" target="_blank" rel="nofollow noopener noreferrer" title="https://cloud.tencent.com/document/product/460/15293" ref="nofollow noopener noreferrer">串联使用多种处理方式</a>。</p>
+<blockquote>
+<p>注：各大云服务厂商的图片CDN文档：</p>
+<ul>
+<li>阿里云：<a href="https://link.juejin.cn?target=https%3A%2F%2Fhelp.aliyun.com%2Fdocument_detail%2F193596.html" target="_blank" rel="nofollow noopener noreferrer" title="https://help.aliyun.com/document_detail/193596.html" ref="nofollow noopener noreferrer">help.aliyun.com/document_de…</a></li>
+<li>腾讯云：<a href="https://link.juejin.cn?target=https%3A%2F%2Fcloud.tencent.com%2Fdocument%2Fproduct%2F460%2F47501" target="_blank" rel="nofollow noopener noreferrer" title="https://cloud.tencent.com/document/product/460/47501" ref="nofollow noopener noreferrer">图片格式转换文档</a></li>
+<li>百度云：<a href="https://link.juejin.cn?target=https%3A%2F%2Fcloud.baidu.com%2Fdoc%2FBOS%2Fs%2Fikbitmk26" target="_blank" rel="nofollow noopener noreferrer" title="https://cloud.baidu.com/doc/BOS/s/ikbitmk26" ref="nofollow noopener noreferrer">cloud.baidu.com/doc/BOS/s/i…</a></li>
+<li>AWS：<a href="https://link.juejin.cn?target=https%3A%2F%2Faws.amazon.com%2Fcn%2Fblogs%2Fnetworking-and-content-delivery%2Fresizing-images-with-amazon-cloudfront-lambdaedge-aws-cdn-blog%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://aws.amazon.com/cn/blogs/networking-and-content-delivery/resizing-images-with-amazon-cloudfront-lambdaedge-aws-cdn-blog/" ref="nofollow noopener noreferrer">AWS 图片处理文档</a></li>
+</ul>
+</blockquote>
+<p>使用这些图片CDN，不仅可以让我们方便地使用<code>&lt;picture&gt;</code>元素，还有助于提高日常工作中的开发效率和开发体验，进而让用户获得更好的体验。</p>
+<p>例如：</p>
+<ol>
+<li>
+<p>利用<strong>格式转换</strong>能力，搭配上文中介绍的<code>&lt;picture&gt;</code>元素，实现优先选择加载<code>avif，webp</code>等现代格式图片，减小图片体积、加快加载速度，节省CDN流量。</p>
+</li>
+<li>
+<p>利用<strong>尺寸裁剪</strong>能力，优化用户头像的加载，在加载头像缩略图时，用50px<em>50px的小尺寸小图；在用户点击放大看大图时，再加载200</em>200px的大图，从而节省流量。</p>
+</li>
+<li>
+<p>利用<strong>获取图片主色调</strong>能力，为图片添加未加载完成时的背景色，避免页面中出现大片空白，为用户带来更好的浏览体验。</p>
+</li>
+</ol>
+<h3 data-id="heading-3">图片CDN辅助函数</h3>
+<p>为了便于在前端项目中调用图片CDN的处理能力，我们还可以添加一套辅助函数，例如：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// 预置一批可选格式值，例如缩放到75%，50%，25%</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> <span class="hljs-title class_">ImgFormatOptions</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">scaleTo75Percent</span>: <span class="hljs-string">'!75p'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">scaleTo50Percent</span>: <span class="hljs-string">'!50p'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">scaleTo25Percent</span>: <span class="hljs-string">'!25p'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">}</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">function</span> <span class="hljs-title function_">getImgURL</span>(<span class="hljs-params">name, options</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">if</span> (!name) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-comment">// 图片参数例子：?imageMogr2/thumbnail/!50p</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">let</span> url = <span class="hljs-string">`http://examples-1251000004.cos.ap-shanghai.myqcloud.com/<span class="hljs-subst">${name}</span>`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">if</span> (!options) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-keyword">return</span> url</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    </span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-comment">// 如果参数组合复杂，可以改为使用 URLSearchParams API</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-comment">// const searchParams = new URLSearchParams()</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-comment">// searchParams.set(option.key, option.value)</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-comment">//  return `${url}${searchParams.toString()}`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    </span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-keyword">let</span> params = <span class="hljs-string">`?imageMogr2/`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-keyword">if</span> (options.<span class="hljs-property">format</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="25">        params+=<span class="hljs-string">`format/<span class="hljs-subst">${options.format}</span>`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (options.<span class="hljs-property">thumbnail</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="27">        params+=<span class="hljs-string">`thumbnail/<span class="hljs-subst">${options.thumbnail}</span>`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-comment">// else if  ......</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30"></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${url}</span><span class="hljs-subst">${params}</span>`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">}</span>
+</code></pre>
+<p>基于这套辅助函数，我们就可以在前端的代码逻辑中，方便地使用图片CDN的各项能力，请看代码示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// 1. 格式转换</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-title function_">getImgURL</span>(<span class="hljs-string">'sample.jpeg'</span>, {<span class="hljs-attr">format</span>: <span class="hljs-string">'avif'</span>}) </span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-comment">// http://example.myqcloud.com/sample.jpeg?imageMogr2/format/avif</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-comment">// 2. 裁剪缩略图</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-title function_">getImgURL</span>(<span class="hljs-string">'sample.jpeg'</span>, {<span class="hljs-attr">thumbnail</span>: <span class="hljs-title class_">ImgFormatOptions</span>.<span class="hljs-property">scaleTo50Percent</span>}) </span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-comment">// http://example.myqcloud.com/sample.jpeg?imageMogr2/thumbnail/!50p</span></span>
+</code></pre>
+<p>还可以进一步和前端组件结合使用，封装出加载最优图片格式的<code>&lt;PictureImage&gt;</code>组件，React组件示例代码如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">ALL_IMAGE_FORMAT</span> = [<span class="hljs-string">'avif'</span>, <span class="hljs-string">'webp'</span>]; <span class="hljs-comment">// 按顺序，优先加载靠前的格式</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">PictureImage</span>(<span class="hljs-params">{ src, alt }</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-keyword">return</span> (</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">picture</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">      {ALL_IMAGE_FORMAT.map((format) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        return (</span>
+<span class="code-block-extension-codeLine" data-line-num="8">          <span class="hljs-tag">&lt;<span class="hljs-name">source</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-attr">srcSet</span>=<span class="hljs-string">{getImgURL(src,</span> { <span class="hljs-attr">format</span> })}</span>
+<span class="code-block-extension-codeLine" data-line-num="10">            <span class="hljs-attr">type</span>=<span class="hljs-string">{</span>`<span class="hljs-attr">image</span>/${<span class="hljs-attr">format</span>}`}</span>
+<span class="code-block-extension-codeLine" data-line-num="11">          /&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        );</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      })}</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">{alt}</span> <span class="hljs-attr">src</span>=<span class="hljs-string">{src}</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-tag">&lt;/<span class="hljs-name">picture</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">  );</span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+</code></pre>
+<h2 data-id="heading-4">4. 验证量化和评估</h2>
+
+<h3 data-id="heading-5">1. 验证</h3>
+
+<h4 data-id="heading-6">1. 使用辅助工具验证图片格式</h4>
+<p>在图片CDN开启前，我们可以先在本地用图片格式转化工具，找一些前端应用中的图片，验证格式转换后的体积变化、视觉变化。</p>
+<p>例如：</p>
+<ul>
+<li>使用在线的格式转化工具：<a href="https://link.juejin.cn?target=https%3A%2F%2Fconvertio.co%2Fzh%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://convertio.co/zh/" ref="nofollow noopener noreferrer">convertio.co/zh/</a></li>
+<li>使用本地安装的 ffmpeg 转化图片格式：</li>
+</ul>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">shell</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-shell code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ffmpeg -i input.jpg -c:v libaom-av1 output.avif</span>
+</code></pre>
+<h4 data-id="heading-7">2. 确认图片CDN开关、收费及限制条件</h4>
+<p>图片CDN一般是需要独立开启的CDN服务，使用前记得检查，是否已经对指定的CDN域名开启了图片处理功能。</p>
+<p>此外，部分CDN供应商，对特殊的图片处理（例如盲水印）有专门的计费规则，使用前一定确认一下，避免被意外扣费：</p>
+<ul>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Fcloud.tencent.com%2Fdocument%2Fproduct%2F460%2F73221%23%3A~%3Atext%3D1%25E4%25B8%2587%25E6%25AC%25A1%25E3%2580%2582-%2C%25E6%259C%2588%25E8%25B4%25B9%25E7%2594%25A8%25E8%25AE%25A1%25E7%25AE%2597%2C-%25E8%25B4%25B9%25E7%2594%25A8%25E7%25BB%2584%25E6%2588%2590" target="_blank" rel="nofollow noopener noreferrer" title="https://cloud.tencent.com/document/product/460/73221#:~:text=1%E4%B8%87%E6%AC%A1%E3%80%82-,%E6%9C%88%E8%B4%B9%E7%94%A8%E8%AE%A1%E7%AE%97,-%E8%B4%B9%E7%94%A8%E7%BB%84%E6%88%90" ref="nofollow noopener noreferrer">腾讯云图片CDN计费规则</a></li>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Fcloud.baidu.com%2Fdoc%2FBOS%2Fs%2FMldh5wo0m%23%25E8%25AE%25A1%25E8%25B4%25B9%25E6%2596%25B9%25E5%25BC%258F" target="_blank" rel="nofollow noopener noreferrer" title="https://cloud.baidu.com/doc/BOS/s/Mldh5wo0m#%E8%AE%A1%E8%B4%B9%E6%96%B9%E5%BC%8F" ref="nofollow noopener noreferrer">百度云图像处理计费规则</a></li>
+</ul>
+<p>最后，图片CDN的处理能力一般都对原图片的尺寸、体积有最大限制，超过这一限制，就不会生效，使用前也应该加以注意，兼容这些边界情况。</p>
+<h3 data-id="heading-8">2. 量化</h3>
+
+<h4 data-id="heading-9">1. 图片类资源加载总体积指标</h4>
+<p>我们可以继续复用第5节中介绍的《加载资源总体积指标》，基于Performance API的<code>transferSize</code>或<code>encodedBodySize</code>属性和<code>initiatorType</code>获取图片类资源的体积，并在Grafana中修改查询语句为<code>sum(ResourceSize{type="Image"})</code>，过滤出图片类资源的体积，做出如下可视化图表：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c44eda3151e540c1bbe1d75470c51847~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=955&amp;h=348&amp;s=40474&amp;e=png&amp;b=181b1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果，页面和图片数量较多，导致上报数据过多，推荐使用第3节介绍的<strong>采样率</strong>，在保证量化准确性的基础上，减少上报数据量，节省用户网络流量，降低服务器负担。</p>
+<h4 data-id="heading-10">2. CDN流量开销</h4>
+<p>图片体积相关的优化对CDN的流量开销也会有显著影响，因为图片往往是CDN中占比最大的资源，通过我们的优化体积变化后，预期也会直观的反应在CDN的流量费用上。</p>
+<p>我们可以通过CDN供应商的管理后台，查询CDN账单，对比图片格式优化前后的CDN流量费用，用来量化图片优化的效果。</p>
+<h4 data-id="heading-11">3. FCP和LCP指标</h4>
+<p>图片是FCP指标测量的首次渲染内容和LCP指标测量的最大元素的<strong>候选项</strong>，所以对图片体积相关的优化，也应该使用FCP和LCP作为量化指标。</p>
+<p>在生产环境中，更推荐使用我们在第2节介绍的<strong>堆叠百分比评分图</strong>，稳定、准确地量化这2项指标，避免极端值导致的异常波动。</p>
+<h3 data-id="heading-12">3. 评估</h3>
+<p>通过我们上述介绍的<strong>自适应选择最优图片格式优化</strong>，预期能让前端应用加载的图片类资源体积显著减少，优化后大多数用户从加载jpg，改为加载<code>webp</code>或<code>avif</code>格式的图片，加载的图片体积预计能减少20%至40%。让图片类资源加载总体积指标在优化后，平均值、最大值、最小值都有显著下降。</p>
+<p>同时，CDN流量花费预期也会因为图片体积减少，而有所下降，为我们带来真金白银的优化收益。</p>
+<p>此外，如果图片类资源是FCP和LCP指标的测量目标，FCP和LCP的<strong>堆叠百分比评分图</strong>中，评分为优的占比，预期也会在优化后显著增加，例如下图 LCP评分百分比在11-12图片格式优化上线后，评分为优的占比，有显著的增长，如下图表现：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cff941de98fb4d87bad721c8fc4a4ec9~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=949&amp;h=258&amp;s=37249&amp;e=png&amp;b=191c20" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<h1 data-id="heading-13">小结</h1>
+<p>这一节中，我们首先了解了各种图片格式的特性和体积表现。</p>
+<p>随后，为了解决图片类资源长期以来体积大、加载慢、耗费流量的痛点，学习了用<code>&lt;picture&gt;</code>元素实现<strong>自适应选择最优图片格式方案</strong>。</p>
+<p>以及在开发实践中，使用辅助函数、配套组件方便高效地使用图片CDN的经验。</p></div>

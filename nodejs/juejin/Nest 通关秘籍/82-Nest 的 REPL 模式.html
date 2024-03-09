@@ -1,0 +1,134 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>我们写过很多 Module、Service、Controller，但这些都要服务跑起来之后在浏览器里访问对应的 url，通过 get 或者 post 的方式传参来测试。</p>
+<p>这个还是挺麻烦的，能不能像 node 的 repl 那样，直接在控制台测试呢？</p>
+<p>repl 是 read-eval-paint-loop，也就是这个：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/777cf2c0ab8b4f648dc795a37f320162~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=566&amp;h=482&amp;s=51437&amp;e=png&amp;b=000000" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Nest 能不能这样来测试呢？</p>
+<p>可以的，Nest 支持 repl 模式。</p>
+<p>我们创建个 Nest 项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> repl-test</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/137a3efc322e4e26ba648fb4a617f2f9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=840&amp;h=642&amp;s=141942&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后创建两个模块：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6754d51a50bb4e16866d1c4483ba3c2b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=926&amp;h=1016&amp;s=239764&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/086be719b6654c86a246a2858423b588~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1704&amp;h=994&amp;s=451390&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c09659fd4f4649f59ad5f9ba34369c4c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=600&amp;h=182&amp;s=19289&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c0d3997c6ede4de5a952612758bd4505~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=604&amp;h=204&amp;s=19983&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们前面都是这么测试接口的。</p>
+<p>其实还可以用 repl 模式。</p>
+<p>在 src 下创建个 repl.ts，写入如下内容：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { repl } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/core'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.module'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">bootstrap</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-keyword">await</span> <span class="hljs-title function_">repl</span>(<span class="hljs-title class_">AppModule</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">}</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-title function_">bootstrap</span>();</span>
+</code></pre>
+<p>然后把服务停掉，通过这种方式跑：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run <span class="hljs-keyword">start</span>:dev <span class="hljs-comment">-- --entryFile repl</span></span>
+</code></pre>
+<p>这里的 --entryFile 是指定入口文件是 repl.ts</p>
+<p>前面带了个 -- 是指后面的参数不是传给 npm run start:dev 的，要原封不动保留。</p>
+<p>也就是会传给 nest start</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2b21e78e1a14452c80196ae20c545812~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=690&amp;h=114&amp;s=25838&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然，你直接执行 nest start 也可以：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest start <span class="hljs-attr">--watch</span> <span class="hljs-attr">--entryFile</span> repl</span>
+</code></pre>
+<p>跑起来后，执行 debug()，会打印所有的 module 和 module 下的 controllers 和 providers。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2b15e5eb0e5b474db29720e3211d9a9d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=588&amp;h=794&amp;s=87297&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而且，你可以 get() 来取对应的 providers 或者 controllers 调用：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ebfcd94265ab490a8d31e3ebf6b542f5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1062&amp;h=698&amp;s=116051&amp;e=png&amp;b=1c1c1c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>get、post 方法都可以调用。</p>
+<p>有的同学说，你这个 post 方法没有参数啊。</p>
+<p>那我们加一些：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cdf7f5845e854489b829e8186aac5695~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=690&amp;h=286&amp;s=36309&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后添加 ValidationPipe：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/01be04999b794519b5e3fdf793c37b82~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1046&amp;h=612&amp;s=127403&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>安装校验相关的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-keyword">class</span>-validator <span class="hljs-keyword">class</span>-transformer</span>
+</code></pre>
+<p>在 dto 添加约束：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">IsEmail</span>, <span class="hljs-title class_">IsNotEmpty</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"class-validator"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CreateAaaDto</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @<span class="hljs-title class_">IsNotEmpty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">aaa</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @<span class="hljs-title class_">IsEmail</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">bbb</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+</code></pre>
+<p>我们先正常跑下服务：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p>然后 postman 里测试下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c14f46a195014e37b9c954d504fbfb5c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=788&amp;h=838&amp;s=83951&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，ValidationPipe 生效了。</p>
+<p>那 repl 里是不是一样呢？</p>
+<p>我们再跑下 repl 模式：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run <span class="hljs-keyword">start</span>:dev <span class="hljs-comment">-- --entryFile repl</span></span>
+</code></pre>
+<p>可以看到，并没有触发 pipe：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bfd8ec0cd0ff4570b7a77d1794988bcd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1098&amp;h=804&amp;s=167939&amp;e=png&amp;b=1b1b1b" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也就是说，它只是单纯的传参调用这个函数，不会解析装饰器。</p>
+<p>所以测试 controller 的话，repl 的方式是有一些限制的。</p>
+<p>但是测试 service 很不错：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/637e0aaca9bd4ffca0ea475da193c2bc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=644&amp;h=214&amp;s=26237&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>比如测试某个项目的 UserService 的 login 方法：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c56f9d0f87ac40a5978c5f47ecd902fa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1534&amp;h=1422&amp;s=336812&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>就很方便。</p>
+<p>大概知道 repl 模式是做啥的之后，我们过一下常用的 api：</p>
+<p>debug() 可以查看全部的 module 或者某个 module 下的 cotrollers、providers：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/47567c24da6341bb93687460679247a5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=466&amp;h=644&amp;s=62438&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a8bf9ec2ffbd40a8a1b9b97fc276aa44~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=426&amp;h=296&amp;s=28159&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>methods() 可以查看某个 controller 或者 provider 的方法：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/843e3284b7444bff885c5a825cf853a0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=530&amp;h=338&amp;s=27089&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>get() 或者 $() 可以拿到某个 controller 或者 provider 调用它的方法：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7e4482f8468f4657aa76e08100e363d1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=800&amp;h=288&amp;s=40856&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>常用的 api 就这些。</p>
+<p>此外，按住上下键可以在历史命令中导航：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/981e59361f9e45b0b425cdedcf8e0bd3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1234&amp;h=718&amp;s=96689&amp;e=gif&amp;f=26&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但有个问题。</p>
+<p>当你重新跑之后，这些命令历史就消失了，再按上下键也没有历史。</p>
+<p>可以改一下 repl.ts：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { repl } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/core'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.module'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">bootstrap</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> replServer = <span class="hljs-keyword">await</span> <span class="hljs-title function_">repl</span>(<span class="hljs-title class_">AppModule</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    replServer.<span class="hljs-title function_">setupHistory</span>(<span class="hljs-string">".nestjs_repl_history"</span>, <span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-keyword">if</span> (err) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(err);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-title function_">bootstrap</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+</code></pre>
+<p>再跑的时候也是有历史的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d9ffa40680b4004a7f84bba633b0524~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1572&amp;h=764&amp;s=319655&amp;e=gif&amp;f=42&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>其实就是 nest 会把历史命令写入文件里，下一次跑就可以用它恢复历史了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7adf2d8d4d024957b788c25fd46cf2af~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=482&amp;h=272&amp;s=27250&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>你还可以把这个命令配到 npm scripts 里：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e8da4ff55b144c98b61c6a4ab7af0873~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=924&amp;h=114&amp;s=25935&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后直接 npm run repl:dev 来跑。</p>
+<p>案例代码上传了<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Frepl-login" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/repl-login" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们学了 nest 的 repl 模式。</p>
+<p>repl 模式下可以直接调用 controller 或者 provider 的方法，但是它们并不会触发 pipe、interceptor 等，只是传参测试函数。</p>
+<p>可以使用 debug() 拿到 module、controller、provider 的信息，methods() 拿到方法，然后 get() 或者 $() 拿到 controller、provider 然后调用。</p>
+<p>repl 模式对于测试 service 或者 contoller 的功能还是很有用的。</p></div>

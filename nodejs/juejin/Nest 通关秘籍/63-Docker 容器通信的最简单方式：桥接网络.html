@@ -1,0 +1,154 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>上节我们讲 Docker Compose 的时候，涉及到多个 docker 容器的通信，我们是通过指定宿主机 ip 和端口的方式。</p>
+<p>因为 mysql、redis 的 Docker 容器都映射到了宿主机的端口，那 nest 的容器就可以通过宿主机来实现和其他容器的通信。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0ec74df386ed40b288a6dfad49189207~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Docker 的实现原理那节我们讲过，Docker 通过 Namespace 的机制实现了容器的隔离，其中就包括 Network Namespace。</p>
+<p>因为每个容器都有独立的 Network Namespace，所以不能直接通过端口访问其他容器的服务。</p>
+<p>那如果这个 Network Namespace 不只包括一个 Docker 容器呢？？</p>
+<p>可以创建一个 Network Namespace，然后设置到多个 Docker 容器，这样这些容器就在一个 Namespace 下了，不就可以直接访问对应端口了？</p>
+<p>Docker 确实支持这种方式，叫做桥接网络。</p>
+<p>通过 docker network 来创建：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">lua</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-lua code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker network <span class="hljs-built_in">create</span> common-network</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a6b0581641e5434bb7d39f52bad1dcab~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后把之前的 3 个容器停掉、删除，我们重新跑：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker stop mysql-container redis-container nest-container</span>
+<span class="code-block-extension-codeLine" data-line-num="2">docker rm mysql-container redis-container nest-container</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/83ed97967b064613a7580c3bfa4776b8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这次跑的时候要指定 --network：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker run -d --network common-network -v /Users/guang/mysql-data:/var/lib/mysql --name mysql-container mysql</span>
+</code></pre>
+<p>通过 --network 指定桥接网络为我们刚创建的 common-network。</p>
+<p>不需要指定和宿主机的端口映射。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/76daaa4894f54a5babcc1c9eb0024716~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p>然后跑 redis 容器：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker run -d --network common-network -v /Users/guang/aaa:/data --name redis-container redis</span>
+</code></pre>
+<p>同样也不需要指定和宿主机的端口映射，只需要指定挂载的数据卷就行：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f6a084dc7a1f451c94ef591530a1b1eb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后 nest 的部分我们要改下代码：</p>
+<p>修改 AppModule 的代码，改成用容器名来访问：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bfd1c28f8d8f467398fdaae85387dab0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后 docker build：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">erlang</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-erlang code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker build -t mmm .</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dfa5e880fcb7409194a0f7cefee04c5e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>之后 docker run：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker run -d <span class="hljs-attr">--network</span> common-network -<span class="hljs-selector-tag">p</span> <span class="hljs-number">3000</span>:<span class="hljs-number">3000</span> --name nest-container mmm</span>
+</code></pre>
+<p>nest 容器是要指定和宿主机的端口映射的，因为宿主机要访问这个端口的网页。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/72e7c09eae574150910c0e1091f8cb00~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后 docker logs 看下日志：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker logs nest-container</span>
+</code></pre>
+<p>可以看到打印了 sql 语句，说明 mysql 连接成功了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/da2df480dfd543eb8e082d1e196c3c82~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000" ref="nofollow noopener noreferrer">http://localhost:3000</a></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9793e4d7c6fd4643b3daab58a2419b31~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再看下日志：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker logs nest-container</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25f6c35c4f5a440da7eff023b5859651~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>打印了 redis 的 key 说明 redis 服务也连接成功了。</p>
+<p>这就是桥接网络。</p>
+<p>之前我们是通过宿主机 ip 来互相访问的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a0bde70cdfc84cc0bb5c34b315e720a6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在可以通过容器名直接互相访问了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/abe510871bfe463e91d5bcf0c62bd10f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>原理前面讲过，就是 Namespace。</p>
+<p>本来是 3 个独立的 Network Namespace：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dfd1e150584e474abded84fc4d723f36~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>桥接之后就这样了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5399801f540f4ec685bbe4826f1ecb4d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Namespace 下包含多个子 Namespace，互相能通过容器名访问。</p>
+<p>比起端口映射到宿主机，再访问宿主机 ip 的方式，简便太多了。</p>
+<p>那在 Docker Compose 里怎么使用这种方式呢？</p>
+<p>之前我们是这样写的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/34ef19cd837f4ea384455edb1d5be88e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在改成这样：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">yml</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-yml code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">version:</span> <span class="hljs-string">'3.8'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-attr">services:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">nest-app:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">build:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-attr">context:</span> <span class="hljs-string">./</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">dockerfile:</span> <span class="hljs-string">./Dockerfile</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">depends_on:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-bullet">-</span> <span class="hljs-string">mysql-container</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-bullet">-</span> <span class="hljs-string">redis-container</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">ports:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-bullet">-</span> <span class="hljs-string">'3000:3000'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">networks:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-bullet">-</span> <span class="hljs-string">common-network</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-attr">mysql-container:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">image:</span> <span class="hljs-string">mysql</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">volumes:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-bullet">-</span> <span class="hljs-string">/Users/guang/mysql-data:/var/lib/mysql</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-attr">environment:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-attr">MYSQL_DATABASE:</span> <span class="hljs-string">aaa</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-attr">MYSQL_ROOT_PASSWORD:</span> <span class="hljs-string">guang</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-attr">networks:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-bullet">-</span> <span class="hljs-string">common-network</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">  <span class="hljs-attr">redis-container:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-attr">image:</span> <span class="hljs-string">redis</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-attr">volumes:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">      <span class="hljs-bullet">-</span> <span class="hljs-string">/Users/guang/aaa:/data</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">    <span class="hljs-attr">networks:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">      <span class="hljs-bullet">-</span> <span class="hljs-string">common-network</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29"><span class="hljs-attr">networks:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30">  <span class="hljs-attr">common-network:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-attr">driver:</span> <span class="hljs-string">bridge</span></span>
+</code></pre>
+<p>version 是指定 docker-compose.yml 的版本，因为不同版本配置不同。</p>
+<p>把 mysql-container、redis-container 的 ports 映射去掉，指定桥接网络为 common-network。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/595343b3d0d8486c89956efacebcc0bc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=834&amp;h=1092&amp;s=139769&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后下面通过 networks 指定创建的 common-network 桥接网络，网络驱动程序指定为 bridge。</p>
+<p>其实我们一直用的网络驱动程序都是 bridge，它的含义是容器的网络和宿主机网络是隔离开的，但是可以做端口映射。比如 -p 3000:3000、-p 3306:3306 这样。</p>
+<p>然后执行：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker-compose down <span class="hljs-attr">--rmi</span> <span class="hljs-attribute">all</span></span>
+</code></pre>
+<p>就会删除 3 个容器和它们的镜像：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4e414c34add64f10a3409775e9028143~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>之后再</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker-compose up</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/047d3b091aff45d0bf09ae7e01a1ed06~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，会先 build dockerfile 产生镜像，然后把 3 个镜像跑起来。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2d8b98c4077f44f0ad7886d184d11a27~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>看到打印的 sql 说明 mysql 服务连接成功了。</p>
+<p>（这个过程可能因为 mysql 容器没跑起来而连接失败几次，等一会就好了）</p>
+<p>浏览器访问下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b7e105654dd489aa5b3cecc915d1b4e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也拿到了 redis 的 key，说明 redis 服务跑成功了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1018ec77ff224a438bcb09f6d7744b58~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是在 docker-compose 里使用桥接网络的方式。</p>
+<p>不过，其实不指定 networks 也可以，docker-compose 会创建个默认的。</p>
+<p>先把容器、镜像删掉：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker-compose down <span class="hljs-attr">--rmi</span> <span class="hljs-attribute">all</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/809e549f3c4c45bfa53b8f5b39402348~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把 networks 部分注释掉，重新跑：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eef9726f71e347be8cb8ae6cd94a10f4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=738&amp;h=1094&amp;s=135173&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>你会发现它创建了一个默认的 network：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eb214c9e8ab24a01ba79eac6f4b09148~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>mysql 和 redis 的访问都是正常的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/263868b2d76b4c5ba842a82dc140e0b9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>所以，不手动指定 networks，也是可以用桥接网络的。</p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fdocker-compose-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/docker-compose-test" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>上节我们是把 mysql、redis 的端口映射到宿主机，然后 nest 的容器里通过宿主机 ip 访问这两个服务的。</p>
+<p>但其实有更方便的方式，就是桥接网络。</p>
+<p>通过 docker network create 创建一个桥接网络，然后 docker run 的时候指定 --network，这样 3 个容器就可以通过容器名互相访问了。</p>
+<p>在 docker-compose.yml 配置下 networks 创建桥接网络，然后添加到不同的 service 上即可。</p>
+<p>或者不配置 networks，docker-compose 会生成一个默认的。</p>
+<p>实现原理就是对 Network Namespace 的处理，本来是 3个独立的 Namespace，当指定了 network 桥接网络，就可以在 Namespace 下访问别的 Namespace 了。</p>
+<p>多个容器之间的通信方式，用桥接网络是最简便的。</p></div>

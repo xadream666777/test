@@ -1,0 +1,436 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>生活中我们经常遇到需要短链的场景。</p>
+<p>比如一段很长的 url：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b211ab9d9194da4b27229d748887f37~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1860&amp;h=728&amp;s=121533&amp;e=png&amp;b=fefefd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>分享出去很不方便。</p>
+<p>这时候就可以通过短链服务把它缩短：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4c8ee9fe6b45486abfc51ec56cc316f0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=472&amp;h=206&amp;s=24455&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击短链会跳转到原链接：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7a54d225d10244a7ba595587615c332c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1434&amp;h=1186&amp;s=348521&amp;e=gif&amp;f=32&amp;b=fdfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这种在短信里很常见：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6ebede01abb6454c9d8dd8e86d0a3f4c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=614&amp;h=518&amp;s=93209&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>因为短信是按照字数收费的，太长不但阅读体验不好，费用也高。</p>
+<p>所以都会生成短链之后再加到短信里。</p>
+<p>那短链是怎么实现的呢？</p>
+<p>很容易想到的思路是这样的：</p>
+<p>用 0、1、2、3、4、5 的递增 id 标识每个 url，把映射关系存到数据库里。</p>
+<p>这样访问短链的时候从数据库中查出对应的长链接，返回 302 重定向即可。</p>
+<p>比如刚才的短链服务就是通过 302 把短链重定向到长链：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0f4c1a9fe2264f188cd15a7e2446a284~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1250&amp;h=684&amp;s=166016&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里也可以用 301。</p>
+<p>301 是永久重定向，就是重定向一次之后，下次浏览器就不会再访问短链，会直接访问长链接。</p>
+<p>302 是临时重定向，下次访问短链依然会先访问短链服务，返回 302 后再重定向到长链。</p>
+<p>这两种都可以，301 的话，短链服务压力小，不过 302 每次都会先访问短链服务，这样可以记录链接的访问次数等数据。</p>
+<p>比如刚才我们用的短链服务，就会记录这个链接的访问记录：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5cc20b10406b4b8d80dea639ae26f41a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1614&amp;h=996&amp;s=250165&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>还可以做一些分析：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b130d898281c433ea842c998ac33d6d4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1612&amp;h=1260&amp;s=145072&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>所以访问记录也挺有价值的。</p>
+<p>一般短链服务都是用 302 来重定向。</p>
+<p>每个 url 的 id 我们会用 Base64 或者 Base62 编码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> data = <span class="hljs-string">'123456'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> buff = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(data);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> base64data = buff.<span class="hljs-title function_">toString</span>(<span class="hljs-string">'base64'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(base64data);</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ad074557e15149ad83efe154589dd3fe~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=772&amp;h=410&amp;s=67101&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>base64 就是 26 个大写字母、26 个小写字母、10 个数字、2 个特殊字符，一共 64 个字符。</p>
+<p>而 base62 则是去掉了两个特殊字符，一共 62 个字符。</p>
+<p>做短链的话，我们用 base62 比较多。</p>
+<p>安装用到的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install base62</span>
+</code></pre>
+<p>测试下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> base62 = <span class="hljs-built_in">require</span>(<span class="hljs-string">"base62/lib/ascii"</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"> </span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> res = base62.<span class="hljs-title function_">encode</span>(<span class="hljs-number">123456</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/65197cdf1fe24f0f9874888b1ae37743~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=750&amp;h=404&amp;s=58088&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>按照这个思路，我们就能实现一个短链服务。</p>
+<p>在 mysql 里创建压缩码和长链接的对应关系的表，用 mysql 的自增 id 然后进行 base62 之后作为压缩码。</p>
+<p>访问短链的时候，根据压缩码查询这个表，找到长链接，通过 302 重定向到这个链接，并且记录短链访问记录。</p>
+<p>这样是可以的，但有个问题：</p>
+<p>用自增 id 作为压缩码，那别人很容易拿到上一个、下一个压缩码，从而拿到别的短链，万一这个短链是用来兑奖之类的呢？</p>
+<p>这样就会有安全问题。</p>
+<p>所以自增 id 的方案不太好。</p>
+<p>那如果我们对 url 做 hash 呢？</p>
+<p>也就是这样：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> crypto = <span class="hljs-built_in">require</span>(<span class="hljs-string">'crypto'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">function</span> <span class="hljs-title function_">md5</span>(<span class="hljs-params">str</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-keyword">const</span> hash = crypto.<span class="hljs-title function_">createHash</span>(<span class="hljs-string">'md5'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  hash.<span class="hljs-title function_">update</span>(str);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">return</span> hash.<span class="hljs-title function_">digest</span>(<span class="hljs-string">'hex'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-title function_">md5</span>(<span class="hljs-string">'111222'</span>))</span>
+</code></pre>
+<p>这样太长了，有 32 位呢：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e8d55e7164974d728ad423980824c54d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=782&amp;h=594&amp;s=83106&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>倒是可以每 4 位取一个数字，然后组成一个 8 位的压缩码。</p>
+<p>但是，这样是有碰撞的可能的。</p>
+<p>也就是两个不同的 url 生成的压缩码一样。</p>
+<p>所以，hash 的方案也不行。</p>
+<p>还有一种方案，就是通过随机数的方式生成压缩码。</p>
+<p>比如这样：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> base62 = <span class="hljs-built_in">require</span>(<span class="hljs-string">"base62/lib/ascii"</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">function</span> <span class="hljs-title function_">generateRandomStr</span>(<span class="hljs-params">len</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">let</span> str = <span class="hljs-string">''</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; len; i++) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-keyword">const</span> num = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">62</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        str += base62.<span class="hljs-title function_">encode</span>(num);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">return</span> str;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-title function_">generateRandomStr</span>(<span class="hljs-number">6</span>));</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0e97d5a2f11e4f85b77423947f902612~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1014&amp;h=764&amp;s=108967&amp;e=png&amp;b=1e1e1e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>随机生成 0-61 的数字，然后转成字符。</p>
+<p>62 的 6 次方，范围有 580 亿，足够用了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b7d111efa99543fd8ee622b60b7d9fc7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=282&amp;h=76&amp;s=11475&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然，随机数也是有碰撞的可能的，这个可以在生成之后查下表，看下是否有重复的，有的话就再重新生成。</p>
+<p>不过每次生成都查表的话性能会不好，那有啥优化的方案呢？</p>
+<p>我们可以提前生成一批压缩码，用的时候直接取！</p>
+<p>可以用个定时任务来跑，每天凌晨 4 点生成一批。</p>
+<p>这样，生成压缩码的方案就完美了。</p>
+<p>小结下：</p>
+<p><strong>用递增 id + base62 作为压缩码，可以保证唯一，但是容易被人拿到其它短码，不安全。</strong></p>
+<p><strong>用 url 做 hash 之后取一部分然后 base62 做为压缩码，有碰撞的可能，不唯一。</strong></p>
+<p><strong>随机生成字符串再查表检测是否重复，可以保证唯一且不连续，但是性能不好。用提前批量生成的方式可以解决。</strong></p>
+<p>有的同学可能提到 uuid、雪花 id 之类的，那些都太长了，不适合用来做压缩码：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4841cfd7b0f445f2a84a91168b981736~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1114&amp;h=484&amp;s=58331&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>思路理清了，我们来写下代码。</p>
+<p>创建个 nest 项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install -g @nestjs/cli</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">nest <span class="hljs-keyword">new</span> <span class="hljs-type">short</span>-url</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7318eaabf8d24b2fac6e3ab73604e9b7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=816&amp;h=676&amp;s=151088&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>先进入项目，把它跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0596b21b198d409391310a3556b316bf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1560&amp;h=384&amp;s=120650&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器看到 hello world，代表 nest 服务跑成功了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f7516bcdad3b4c92aa4a869023d406ff~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=542&amp;h=192&amp;s=16437&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们用 docker 把 mysql 跑起来：</p>
+<p>从 docker 官网下载 docker desktop，这个是 docker 的桌面端：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8d7da48155df448698ae5fc57072fe0b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2380&amp;h=1336&amp;s=459767&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>跑起来后，搜索 mysql 镜像（这步需要科学上网），点击 run：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/659eaef5c4b8445a8c7224981515c1fa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2368&amp;h=1460&amp;s=326395&amp;e=png&amp;b=7a7a7b" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>输入容器名、端口映射、以及挂载的数据卷，还要指定一个环境变量：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/33961dc3a8cd4d9c805c2ff096a1caf9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1332&amp;h=1428&amp;s=187941&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>端口映射就是把宿主机的 3306 端口映射到容器里的 3306 端口，这样就可以在宿主机访问了。</p>
+<p>数据卷挂载就是把宿主机的某个目录映射到容器里的 /var/lib/mysql 目录，这样数据是保存在本地的，不会丢失。</p>
+<p>而 MYSQL_ROOT_PASSWORD 的密码则是 mysql 连接时候的密码。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d7db618f4e4b4ca3b0b44752450d4322~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2232&amp;h=1326&amp;s=496885&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>跑起来后，我们用 GUI 客户端连上，这里我们用的是 mysql workbench，这是 mysql 官方提供的免费客户端：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e1311f9991e248de8a9cdd92c9b72a15~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=270&amp;h=270&amp;s=40789&amp;e=png&amp;b=9b5801" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>连接上之后，点击创建 database：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7cfd92779aee4f71b99725a18b93a535~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1518&amp;h=1160&amp;s=348762&amp;e=png&amp;b=e7e5e5" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>指定名字、字符集为 utf8mb4，然后点击右下角的 apply。</p>
+<p>创建成功之后在左侧就可以看到这个 database 了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9a200f9e98604ddc9658937629ac1e11~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=436&amp;h=260&amp;s=35737&amp;e=png&amp;b=e8e4e1" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然，现在还没有表。</p>
+<p>我们在 Nest 里用 TypeORM 连接 mysql。</p>
+<p>安装用到的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> <span class="hljs-keyword">@nestjs</span>/typeorm typeorm mysql2</span>
+</code></pre>
+<p>mysql2 是数据库驱动，typeorm 是我们用的 orm 框架，而 @nestjs/tyeporm 是 nest 集成 typeorm 用的。</p>
+<p>在 AppModule 里引入 TypeORM，指定数据库连接配置：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee1a89260b3442a3a68ed58c8130d1ac~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=946&amp;h=1040&amp;s=190094&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-title class_">TypeOrmModule</span>.<span class="hljs-title function_">forRoot</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">type</span>: <span class="hljs-string">"mysql"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">host</span>: <span class="hljs-string">"localhost"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">port</span>: <span class="hljs-number">3306</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attr">username</span>: <span class="hljs-string">"root"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">password</span>: <span class="hljs-string">"guang"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">database</span>: <span class="hljs-string">"short-url"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-attr">synchronize</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-attr">logging</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-attr">entities</span>: [<span class="hljs-title class_">UniqueCode</span>, <span class="hljs-title class_">ShortLongMap</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-attr">poolSize</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-attr">connectorPackage</span>: <span class="hljs-string">'mysql2'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-attr">extra</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-attr">authPlugin</span>: <span class="hljs-string">'sha256_password'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="16">}),</span>
+</code></pre>
+<p>然后创建个 entity：</p>
+<p>src/entities/UniqueCode.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UniqueCode</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    </span>
+<span class="code-block-extension-codeLine" data-line-num="6">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">length</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'压缩码'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">code</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'状态, 0 未使用、1 已使用'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-attr">status</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">}</span>
+</code></pre>
+<p>在 AppModule 引入：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0183c2033b7c4d4397f3307b78bb3c08~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=920&amp;h=878&amp;s=146919&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>保存之后，TypeORM会自动建表:</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9817210634084bfb80e846ea41f918df~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1612&amp;h=544&amp;s=211591&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e5eaef96c96e46eb9be7923d33d0acc7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1442&amp;h=880&amp;s=267100&amp;e=png&amp;b=f2f0ef" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>表创建好了，接下来插入一些数据：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g service unique-<span class="hljs-selector-tag">code</span> <span class="hljs-attr">--flat</span> <span class="hljs-attr">--no-spec</span></span>
+</code></pre>
+<p>生成 service 类，--flat 是不生成目录 --no-spec 是不生成测试代码：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/35ab3bc3701e4e5b97a94e0d50e734d0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=748&amp;h=108&amp;s=28990&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cb3e81ed1fe54146850a53fa5e18ef6e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1306&amp;h=548&amp;s=104348&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后创建 src/utils.ts 来放生成随机压缩码的代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span>  base62 <span class="hljs-keyword">from</span> <span class="hljs-string">"base62/lib/ascii"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">generateRandomStr</span>(<span class="hljs-params">len: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">let</span> str = <span class="hljs-string">''</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; len; i++) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-keyword">const</span> num = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">62</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        str += base62.<span class="hljs-title function_">encode</span>(num);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">return</span> str;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+</code></pre>
+<p>安装用到的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install base62</span>
+</code></pre>
+<p>然后在 UniqueCodeService 添加下插入压缩码的方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">InjectEntityManager</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/typeorm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">EntityManager</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'typeorm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { generateRandomStr } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">UniqueCode</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./entities/UniqueCode'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UniqueCodeService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    @<span class="hljs-title class_">InjectEntityManager</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    private <span class="hljs-attr">entityManager</span>: <span class="hljs-title class_">EntityManager</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12"> </span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">generateCode</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-keyword">let</span> str = <span class="hljs-title function_">generateRandomStr</span>(<span class="hljs-number">6</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-keyword">const</span> uniqueCode = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOneBy</span>(<span class="hljs-title class_">UniqueCode</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">            <span class="hljs-attr">code</span>: str</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">        <span class="hljs-keyword">if</span>(!uniqueCode) {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">            <span class="hljs-keyword">const</span> code = <span class="hljs-keyword">new</span> <span class="hljs-title class_">UniqueCode</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="22">            code.<span class="hljs-property">code</span> = str;</span>
+<span class="code-block-extension-codeLine" data-line-num="23">            code.<span class="hljs-property">status</span> = <span class="hljs-number">0</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">            <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">insert</span>(<span class="hljs-title class_">UniqueCode</span>, code);</span>
+<span class="code-block-extension-codeLine" data-line-num="26">        } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="27">            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">generateCode</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="28">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="30">}</span>
+</code></pre>
+<p>就是生成随机的长度为 6 的字符串，查下数据库，如果没查到，就插入数据，否则重新生成。</p>
+<p>我们用定时任务的方式来跑：</p>
+<p>安装用到的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install --save @nestjs/schedule</span>
+</code></pre>
+<p>在 AppModule 注册下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9cfc7780489a435aae708fe76b93e641~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=940&amp;h=414&amp;s=90143&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 service 方法上声明，每 5s 执行一次：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/71e1bb13a4fc455a90d30b09a39d1cb1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1158&amp;h=938&amp;s=180151&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Cron</span>(<span class="hljs-title class_">CronExpression</span>.<span class="hljs-property">EVERY_5_SECONDS</span>)</span>
+</code></pre>
+<p>然后就可以看到一直在打印 insert 语句：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/da207a4a676a4005af78881ff76c3732~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1618&amp;h=914&amp;s=301288&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>数据库中也可以看到插入的未使用的压缩码：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1b6a242a31f940c1bde4533b045a59c0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1392&amp;h=1096&amp;s=445337&amp;e=png&amp;b=efedec" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然，一个个这么插入可太费劲了。</p>
+<p>我们一般是在凌晨 4 点左右批量插入一堆，比如一次性插入 10000 个。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/875589c996c64ab48385ee5d68bb1806~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1084&amp;h=546&amp;s=94044&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Cron</span>(<span class="hljs-title class_">CronExpression</span>.<span class="hljs-property">EVERY_DAY_AT_4AM</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">batchGenerateCode</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i&lt; <span class="hljs-number">10000</span>; i++) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">generateCode</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="6">}</span>
+</code></pre>
+<p>这里我们是每次 insert 一个，你也可以每次 insert 10 个 20 个这种。</p>
+<p>批量插入性能会好，因为执行的 sql 语句少。这里我们就先不优化了。</p>
+<p>压缩码有了，接下来生成 url 和压缩码的对应关系就好了。</p>
+<p>同样需要创建 entity：</p>
+<p>src/entities/ShortLongMap.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">CreateDateColumn</span>, <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ShortLongMap</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    </span>
+<span class="code-block-extension-codeLine" data-line-num="6">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">length</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'压缩码'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">shortUrl</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">length</span>: <span class="hljs-number">200</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'原始 url'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-attr">longUrl</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    @<span class="hljs-title class_">CreateDateColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-attr">createTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="23">}</span>
+</code></pre>
+<p>在 entities 引入：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4a920928075b4de5aded211e597d48a0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1038&amp;h=978&amp;s=196034&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>同样会自动建表：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4198170d0a3e42f199f728d57eb5da43~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1668&amp;h=580&amp;s=191393&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/671860b8ec504dccbb4493ddb596623a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1126&amp;h=748&amp;s=248818&amp;e=png&amp;b=eae7e6" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>生成短链就是往这个表里添加记录。</p>
+<p>我们加一个生成短链的 service：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g service <span class="hljs-type">short</span>-<span class="hljs-type">long</span>-map --flat --no-spec</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9ae4fab0939440dfafeb794a91a32ced~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=812&amp;h=102&amp;s=27748&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>实现生成短链的方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">UniqueCodeService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./unique-code.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">InjectEntityManager</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/typeorm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">EntityManager</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'typeorm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ShortLongMap</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./entities/ShortLongMap'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">UniqueCode</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./entities/UniqueCode'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ShortLongMapService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    @<span class="hljs-title class_">InjectEntityManager</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    private <span class="hljs-attr">entityManager</span>: <span class="hljs-title class_">EntityManager</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    @<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">UniqueCodeService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    private <span class="hljs-attr">uniqueCodeService</span>: <span class="hljs-title class_">UniqueCodeService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">generate</span>(<span class="hljs-params">longUrl: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-keyword">let</span> uniqueCode = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOneBy</span>(<span class="hljs-title class_">UniqueCode</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">            <span class="hljs-attr">status</span>: <span class="hljs-number">0</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">        })</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-keyword">if</span>(!uniqueCode) {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">            uniqueCode = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">uniqueCodeService</span>.<span class="hljs-title function_">generateCode</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">        <span class="hljs-keyword">const</span> map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ShortLongMap</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="26">        map.<span class="hljs-property">shortUrl</span> = uniqueCode.<span class="hljs-property">code</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="27">        map.<span class="hljs-property">longUrl</span> = longUrl;</span>
+<span class="code-block-extension-codeLine" data-line-num="28">  </span>
+<span class="code-block-extension-codeLine" data-line-num="29">        <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">insert</span>(<span class="hljs-title class_">ShortLongMap</span>, map);</span>
+<span class="code-block-extension-codeLine" data-line-num="30">        <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">update</span>(<span class="hljs-title class_">UniqueCode</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="31">            <span class="hljs-attr">id</span>: uniqueCode.<span class="hljs-property">id</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">        }, {</span>
+<span class="code-block-extension-codeLine" data-line-num="33">            <span class="hljs-attr">status</span>: <span class="hljs-number">1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="34">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="35">        <span class="hljs-keyword">return</span> uniqueCode.<span class="hljs-property">code</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="36">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="37"></span>
+<span class="code-block-extension-codeLine" data-line-num="38">}</span>
+</code></pre>
+<p>这里就是先从 unique-code 表里取一个压缩码来用，如果没有可用压缩码，那就生成一个。</p>
+<p>然后在 short-long-map 表里插入这条新的短链映射，并且把用到的压缩码状态改为 1。</p>
+<p>我们在 AppController 里添加一个接口：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/88737ff560954cfe8c4801404b0b160f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1118&amp;h=826&amp;s=182772&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ShortLongMapService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./short-long-map.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Controller</span>, <span class="hljs-title class_">Get</span>, <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Query</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Controller</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">private readonly appService: AppService</span>) {}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  @<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">ShortLongMapService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  private <span class="hljs-attr">shortLongMapService</span>: <span class="hljs-title class_">ShortLongMapService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  @<span class="hljs-title class_">Get</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-title function_">getHello</span>(): string {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">appService</span>.<span class="hljs-title function_">getHello</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">  @<span class="hljs-title class_">Get</span>(<span class="hljs-string">'short-url'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="18">  <span class="hljs-keyword">async</span> <span class="hljs-title function_">generateShortUrl</span>(<span class="hljs-params">@Query(<span class="hljs-string">'url'</span>) longUrl</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">shortLongMapService</span>.<span class="hljs-title function_">generate</span>(longUrl);</span>
+<span class="code-block-extension-codeLine" data-line-num="20">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="21">}</span>
+</code></pre>
+<p>在浏览器里测试下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1a795016948b4ce5ac2fdaec9b0bed09~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1040&amp;h=174&amp;s=25149&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，打印了 4 条 sql：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a2907562f1b34d5eac682666c9fc961d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1426&amp;h=326&amp;s=135238&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>首先 select 查出一个压缩码来，然后 insert 插入压缩码和 url 的映射，之后再把它 select 出来返回。</p>
+<p>最后 update 更新压缩码状态。</p>
+<p>看 sql 来说，是符合我们的预期的。</p>
+<p>然后看下数据：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7ccf2ff4102a46de9c8c85206bba2d4d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1082&amp;h=536&amp;s=138164&amp;e=png&amp;b=f9f9f9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3e6bb96e45d64327852089d80aef6e7e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=902&amp;h=500&amp;s=130541&amp;e=png&amp;b=f7f6f6" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也是对的。</p>
+<p>那剩下的事情就很简单了，只要加一个重定向就好：</p>
+<p>首先在 service 里添加根据压缩码查询 longUrl 的方法：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ae97470f965e429b9f63b3edec11add5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1210&amp;h=820&amp;s=168798&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">getLongUrl</span>(<span class="hljs-params">code: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> map = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOneBy</span>(<span class="hljs-title class_">ShortLongMap</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">shortUrl</span>: code</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">if</span>(!map) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">return</span> map.<span class="hljs-property">longUrl</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+</code></pre>
+<p>然后在 AppController 里添加一个重定向的接口：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/151d37cb5113428b8263395cd58505bd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1158&amp;h=834&amp;s=164197&amp;e=png&amp;b=202020" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">':code'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">@<span class="hljs-title class_">Redirect</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">async</span> <span class="hljs-title function_">jump</span>(<span class="hljs-params">@Param(<span class="hljs-string">'code'</span>) code</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">const</span> longUrl = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">shortLongMapService</span>.<span class="hljs-title function_">getLongUrl</span>(code);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">if</span>(!longUrl) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'短链不存在'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">url</span>: longUrl,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-attr">statusCode</span>: <span class="hljs-number">302</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    }  </span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b4b745c87af14532b2e22f4104ad60b5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=604&amp;h=312&amp;s=32840&amp;e=png&amp;b=ffffff" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4c7ea3fb7f214727bc86cd095e57252e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1678&amp;h=978&amp;s=142119&amp;e=gif&amp;f=27&amp;b=fefefe" alt="2023-12-01 14.32.03.gif" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，我们的短链服务就完成了。</p>
+<p>其他的非核心功能，比如记录每次访问记录，做一些分析：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/39233680e07d4b9faf8e782a6cb2dc41~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1614&amp;h=996&amp;s=232597&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/67fbebff65a94dd89612e8b89bafeb7a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1612&amp;h=1260&amp;s=135792&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这些比较简单，就不实现了。</p>
+<p>案例代码上传了 github： <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fshort-url" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/short-url" ref="nofollow noopener noreferrer">github.com/QuarkGluonP…</a></p>
+<h2 data-id="heading-0">总结</h2>
+<p>我们经常用短链服务把长的 url 缩短，在短信里的链接一般都是这种。</p>
+<p>我们用 Nest 自己实现了一个。</p>
+<p>核心是压缩码的生成，我们分析了自增 id + base62，这样容易被人拿到其它短链，不安全。hash + base62 会有冲突的可能，所以最终用的是自己生成随机数 + base62 的方案。</p>
+<p>当然，这个随机字符串最好是提前生成，比如用定时任务在低峰期批量生成一堆，之后直接用就好了。</p>
+<p>短链的重定向使用 302 临时重定向，这样可以记录短链访问记录，做一些分析。</p>
+<p>市面上的短链服务，基本都是这样实现的。</p></div>

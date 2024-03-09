@@ -1,0 +1,553 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>实时的双向数据通信，我们一般会用 WebSocket 来做。</p>
+<p>HTTP 的协议格式我们很清楚，就是 header、body 这些。</p>
+<p>那 WebSocket 的协议格式是什么样的呢？</p>
+<p>这节我们就用 Node 来实现下 WebSocket 协议的解析。</p>
+<p>WebSocket 严格来说和 HTTP 没什么关系，是另外一种协议格式。但是需要一次从 HTTP 到 WebSocket 的切换过程。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/66a631eacea541b8a21077f3a70a7d30~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>切换过程详细来说是这样的：</p>
+<p>请求的时候带上这几个 header：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">makefile</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-makefile code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-section">Connection: Upgrade</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-section">Upgrade: websocket</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-section">Sec-WebSocket-Key: Ia3dQjfWrAug/6qm7mTZOg==</span></span>
+</code></pre>
+<p>前两个很容易理解，就是升级到 websocket 协议的意思。</p>
+<p>第三个 header 是保证安全用的一个 key。</p>
+<p>服务端返回这样的 header：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">makefile</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-makefile code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">HTTP/1.1 101 Switching Protocols</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-section">Connection: Upgrade</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-section">Upgrade: websocket</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-section">Sec-WebSocket-Accept: JkE58n3uIigYDMvC+KsBbGZsp1A=</span></span>
+</code></pre>
+<p>和请求 header 类似，Sec-WebSocket-Accept 是对请求带过来的 Sec-WebSocket-Key 处理之后的结果。</p>
+<p>加入这个 header 的校验是为了确定对方一定是有 WebSocket 能力的，不然万一建立了连接对方却一直没消息，那不就白等了么。</p>
+<p>那 Sec-WebSocket-Key 经过什么处理能得到 Sec-WebSocket-Accept 呢？</p>
+<p>我用 node 实现了一下，是这样的：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> crypto = <span class="hljs-built_in">require</span>(<span class="hljs-string">'crypto'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">function</span> <span class="hljs-title function_">hashKey</span>(<span class="hljs-params">key</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-keyword">const</span> sha1 = crypto.<span class="hljs-title function_">createHash</span>(<span class="hljs-string">'sha1'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  sha1.<span class="hljs-title function_">update</span>(key + <span class="hljs-string">'258EAFA5-E914-47DA-95CA-C5AB0DC85B11'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">return</span> sha1.<span class="hljs-title function_">digest</span>(<span class="hljs-string">'base64'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+</code></pre>
+<p>也就是用客户端传过来的 key，加上一个固定的字符串，经过 sha1 加密之后，转成 base64 的结果。</p>
+<p>这个字符串 258EAFA5-E914-47DA-95CA-C5AB0DC85B11 是固定的，不信你搜搜看：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ae1d0158cd7846baa748766f500df6ac~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>随便找个有 websocket 的网站，比如知乎就有：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/216b4bd530414a98be20d24b48004e9c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>过滤出 ws 类型的请求，看看这几个 header，是不是就是前面说的那些。</p>
+<p>这个 Sec-WebSocket-Key 是 wk60yiym2FEwCAMVZE3FgQ==</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/59c04c72059d4065af018e6fa569db42~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而响应的 Sec-WebSocket-Accept 是 XRfPnS+8xl11QWZherej/dkHPHM=</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/def6d4065c6a43fa9324a066df751c29~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们算算看：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2f23d5f2866e4050bc868b8fd7f48fb0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>是不是一毛一样！</p>
+<p>这就是 websocket 升级协议时候的 Sec-WebSocket-Key 对应的 Sec-WebSocket-Accept 的计算过程。</p>
+<p>这一步之后就换到 websocket 的协议了，那是一个全新的协议：</p>
+<p>勾选 message 这一栏可以看到传输的消息，可以是文本、可以是二进制：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/619acacb8a394458a7d75fc7385891e8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>全新的协议？那具体是什么样的协议呢？</p>
+<p>这样的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f72a5f75c1964af38036e2afef51a35c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>大家习惯的 http 协议是 key:value 的 header 带个 body 的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5062b7f961ab42ed9f3766ad4a8b6a3a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它是文本协议，每个 header 都是容易理解的字符。</p>
+<p>这样好懂是好懂，但是传输占的空间太大了。</p>
+<p>而 websocket 是二进制协议，一个字节可以用来存储很多信息：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/671ce2ce334b4d68b4fdd781e132de37~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>比如协议的第一个字节，就存储了 FIN（结束标志）、opcode（内容类型是 binary 还是 text） 等信息。</p>
+<p>第二个字节存储了 mask（是否有加密），payload（数据长度）。</p>
+<p>仅仅两个字节，存储了多少信息呀！</p>
+<p>这就是二进制协议比文本协议好的地方。</p>
+<p>我们看到的 weboscket 的 message 的收发，其实底层都是拼成这样的格式。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b136cc1654b42b4a9c1481666c01303~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>只是浏览器帮我们解析了这种格式的协议数据。</p>
+<p>这就是 weboscket 的全部流程了。</p>
+<p>其实还是挺清晰的，一个切换协议的过程，然后是二进制的 weboscket 协议的收发。</p>
+<p>那我们就用 Node.js 自己实现一个 websocket 服务器吧！</p>
+<p>新建个项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">perl</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-perl code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">mkdir</span> <span class="hljs-keyword">my</span>-websocket</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">cd <span class="hljs-keyword">my</span>-websocket</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">npm init -<span class="hljs-keyword">y</span></span>
+</code></pre>
+<p>在 src/ws.js 定义个 MyWebSocket 的 class：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> { <span class="hljs-title class_">EventEmitter</span> } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'events'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> http = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyWebsocket</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">EventEmitter</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">options</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-variable language_">super</span>(options);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">const</span> server = http.<span class="hljs-title function_">createServer</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    server.<span class="hljs-title function_">listen</span>(options.<span class="hljs-property">port</span> || <span class="hljs-number">8080</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    server.<span class="hljs-title function_">on</span>(<span class="hljs-string">'upgrade'</span>, <span class="hljs-function">(<span class="hljs-params">req, socket</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      </span>
+<span class="code-block-extension-codeLine" data-line-num="13">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<p>继承 EventEmitter 是为了可以用 emit 发送一些事件，外界可以通过 on 监听这个事件来处理。</p>
+<p>我们在构造函数里创建了一个 http 服务，当 ungrade 事件发生，也就是收到了 Connection: upgrade 的 header 的时候，返回切换协议的 header。</p>
+<p>返回的 header 前面已经见过了，就是要对 sec-websocket-key 做下处理。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bf421f86affa47a6832bff77dbc3bbb7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1174&amp;h=1116&amp;s=184085&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">server.<span class="hljs-title function_">on</span>(<span class="hljs-string">'upgrade'</span>, <span class="hljs-function">(<span class="hljs-params">req, socket</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-variable language_">this</span>.<span class="hljs-property">socket</span> = socket;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  socket.<span class="hljs-title function_">setKeepAlive</span>(<span class="hljs-literal">true</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-keyword">const</span> resHeaders = [</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-string">'HTTP/1.1 101 Switching Protocols'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-string">'Upgrade: websocket'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-string">'Connection: Upgrade'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-string">'Sec-WebSocket-Accept: '</span> + <span class="hljs-title function_">hashKey</span>(req.<span class="hljs-property">headers</span>[<span class="hljs-string">'sec-websocket-key'</span>]),</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-string">''</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-string">''</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  ].<span class="hljs-title function_">join</span>(<span class="hljs-string">'\r\n'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  socket.<span class="hljs-title function_">write</span>(resHeaders);</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">  socket.<span class="hljs-title function_">on</span>(<span class="hljs-string">'data'</span>, <span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(data)</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="18">  socket.<span class="hljs-title function_">on</span>(<span class="hljs-string">'close'</span>, <span class="hljs-function">(<span class="hljs-params">error</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">'close'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="20">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="21">});</span>
+</code></pre>
+<p>我们拿到 socket，返回上面的 header，其中 key 做的处理就是前面聊过的算法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">function</span> <span class="hljs-title function_">hashKey</span>(<span class="hljs-params">key</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-keyword">const</span> sha1 = crypto.<span class="hljs-title function_">createHash</span>(<span class="hljs-string">'sha1'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  sha1.<span class="hljs-title function_">update</span>(key + <span class="hljs-string">'258EAFA5-E914-47DA-95CA-C5AB0DC85B11'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-keyword">return</span> sha1.<span class="hljs-title function_">digest</span>(<span class="hljs-string">'base64'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>就这么简单，就已经完成协议切换了。</p>
+<p>不信我们试试看。</p>
+<p>新建 src/index.js，引入我们实现的 ws 服务器，跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> <span class="hljs-title class_">MyWebSocket</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./ws'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> ws = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MyWebSocket</span>({ <span class="hljs-attr">port</span>: <span class="hljs-number">8080</span> });</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">ws.<span class="hljs-title function_">on</span>(<span class="hljs-string">'data'</span>, <span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'receive data:'</span> + data);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">});</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">ws.<span class="hljs-title function_">on</span>(<span class="hljs-string">'close'</span>, <span class="hljs-function">(<span class="hljs-params">code, reason</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'close:'</span>, code, reason);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">});</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c35e2304a71b479aba9852ba955eedd0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后新建这样一个 index.html：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">HTML</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-keyword">const</span> ws = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WebSocket</span>(<span class="hljs-string">"ws://localhost:8080"</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">        ws.<span class="hljs-property">onopen</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">            ws.<span class="hljs-title function_">send</span>(<span class="hljs-string">"发送数据"</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">                ws.<span class="hljs-title function_">send</span>(<span class="hljs-string">"发送数据2"</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">            }, <span class="hljs-number">3000</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        };</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">        ws.<span class="hljs-property">onmessage</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">evt</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(evt)</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        };</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">        ws.<span class="hljs-property">onclose</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        };</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>用浏览器的 WebSocket api 建立连接，发送消息。</p>
+<p>起个静态服务:</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">vbscript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-vbscript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx http-<span class="hljs-built_in">server</span> . </span>
+</code></pre>
+<p>然后浏览器访问这个 html：</p>
+<p>这时打开 devtools 你就会发现协议切换成功了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9c4a9f221d6641e89449111a4657e6cd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这 3 个 header 还有 101 状态码都是我们返回的。</p>
+<p>message 里也可以看到发送的消息：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/058fd50aafec4eb18f9d0ada62efc07d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再去服务端看看，也收到了这个消息：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e9d356cfd40341a1a59fc7119b0ea509~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>只不过是 Buffer 的，也就是二进制的。</p>
+<p>接下来只要按照协议格式解析这个 Buffer，并且生成响应格式的协议数据 Buffer 返回就可以收发 websocket 数据了。</p>
+<p>这一部分还是比较麻烦的，我们一点点来看。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2fb528c7bc8a41cda747ebe9de2d66f9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们需要第一个字节的后四位，也就是 opcode。</p>
+<p>这样写：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/34e4c466a7e14b8c8d57ed744f672d0d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=696&amp;h=134&amp;s=29918&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> byte1 = bufferData.<span class="hljs-title function_">readUInt8</span>(<span class="hljs-number">0</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">let</span> opcode = byte1 &amp; <span class="hljs-number">0x0f</span>; </span>
+</code></pre>
+<p>读取 8 位无符号整数的内容，也就是一个字节的内容。参数是偏移的字节，这里是 0。</p>
+<p>通过位运算取出后四位，这就是 opcode 了。</p>
+<p>然后再处理第二个字节：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/229e839639814184ab2d4d928f8bdd6b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>第一位是 mask 标志位，后 7 位是 payload 长度。</p>
+<p>可以这样取：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/197fb1f48fd84da3b984666c8280d092~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=870&amp;h=444&amp;s=83058&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> byte2 = bufferData.<span class="hljs-title function_">readUInt8</span>(<span class="hljs-number">1</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> str2 = byte2.<span class="hljs-title function_">toString</span>(<span class="hljs-number">2</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">MASK</span> = str2[<span class="hljs-number">0</span>];</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">let</span> payloadLength = <span class="hljs-built_in">parseInt</span>(str2.<span class="hljs-title function_">substring</span>(<span class="hljs-number">1</span>), <span class="hljs-number">2</span>);</span>
+</code></pre>
+<p>还是用 buffer.readUInt8 读取一个字节的内容。</p>
+<p>先转成二进制字符串，这时第一位就是 mask，然后再截取后 7 位的子串，parseInt 成数字，这就是 payload 长度了。</p>
+<p>这样前两个字节的协议内容就解析完了。</p>
+<p>有同学可能问了，后面咋还有俩 payload 长度呢？</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f06445633ac34228810660211b20e417~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这是因为数据不一定有多长，可能需要 16 位存长度，可能需要 32 位。</p>
+<p>于是 websocket 协议就规定了如果那个 7 位的内容不超过 125，那它就是 payload 长度。</p>
+<p>如果 7 位的内容是 126，那就不用它了，用后面的 16 位的内容作为 payload 长度。</p>
+<p>如果 7 位的内容是 127，也不用它了，用后面那个 64 位的内容作为 payload 长度。</p>
+<p>其实还是容易理解的，就是 3 个 if else。</p>
+<p>用代码写出来就是这样的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f795a70851b141e3a790f95fb610c92d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=844&amp;h=682&amp;s=133340&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">let</span> payloadLength = <span class="hljs-built_in">parseInt</span>(str2.<span class="hljs-title function_">substring</span>(<span class="hljs-number">1</span>), <span class="hljs-number">2</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">let</span> curByteIndex = <span class="hljs-number">2</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">if</span> (payloadLength === <span class="hljs-number">126</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  payloadLength = bufferData.<span class="hljs-title function_">readUInt16BE</span>(<span class="hljs-number">2</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  curByteIndex += <span class="hljs-number">2</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (payloadLength === <span class="hljs-number">127</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  payloadLength = bufferData.<span class="hljs-title function_">readBigUInt64BE</span>(<span class="hljs-number">2</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  curByteIndex += <span class="hljs-number">8</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<p>这里的 curByteIndex 是存储当前处理到第几个字节的。</p>
+<p>如果是 126，那就从第 3 个字节开始，读取 2 个字节也就是 16 位的长度，用 buffer.readUInt16BE 方法。</p>
+<p>如果是 127，那就从第 3 个字节开始，读取 8 个字节也就是 64 位的长度，用 buffer.readBigUInt64BE 方法。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c3826c3ca5a54ed7877bbbf35d572d79~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样就拿到了 payload 的长度，然后再用这个长度去截取内容就好了。</p>
+<p>但在读取数据之前，还有个 mask 要处理，这个是用来给内容解密的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/27395e22f9a64d4e84c1df5831c29af7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>读 4 个字节，就是 mask key。</p>
+<p>再后面的就可以根据 payload 长度读出来。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a7658325b7184ca29052ab1683c31b37~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1274&amp;h=1002&amp;s=211039&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">let</span> realData = <span class="hljs-literal">null</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">MASK</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-keyword">const</span> maskKey = bufferData.<span class="hljs-title function_">slice</span>(curByteIndex, curByteIndex + <span class="hljs-number">4</span>);  </span>
+<span class="code-block-extension-codeLine" data-line-num="5">  curByteIndex += <span class="hljs-number">4</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">const</span> payloadData = bufferData.<span class="hljs-title function_">slice</span>(curByteIndex, curByteIndex + payloadLength);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  realData = <span class="hljs-title function_">handleMask</span>(maskKey, payloadData);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">} <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  realData = bufferData.<span class="hljs-title function_">slice</span>(curByteIndex, curByteIndex + payloadLength);;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+</code></pre>
+<p>然后用 mask key 来解密数据。</p>
+<p>这个算法也是固定的，用每个字节的 mask key 和数据的每一位做按位异或就好了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">function</span> <span class="hljs-title function_">handleMask</span>(<span class="hljs-params">maskBytes, data</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-keyword">const</span> payload = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">alloc</span>(data.<span class="hljs-property">length</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; data.<span class="hljs-property">length</span>; i++) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    payload[i] = maskBytes[i % <span class="hljs-number">4</span>] ^ data[i];</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">return</span> payload;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+</code></pre>
+<p>这样，我们就拿到了最终的数据！</p>
+<p>但是传给处理程序之前，还要根据类型来处理下，因为内容分几种类型，也就是 opcode 有几种值：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">OPCODES</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">CONTINUE</span>: <span class="hljs-number">0</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">TEXT</span>: <span class="hljs-number">1</span>, <span class="hljs-comment">// 文本</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">BINARY</span>: <span class="hljs-number">2</span>, <span class="hljs-comment">// 二进制</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attr">CLOSE</span>: <span class="hljs-number">8</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">PING</span>: <span class="hljs-number">9</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">PONG</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">};</span>
+</code></pre>
+<p>我们只处理文本和二进制就好了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/771a6c91a0ca4c06b538affb5fd2a4cf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=942&amp;h=964&amp;s=127832&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-title function_">handleRealData</span>(<span class="hljs-params">opcode, realDataBuffer</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">switch</span> (opcode) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">OPCODES</span>.<span class="hljs-property">TEXT</span>:</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">'data'</span>, realDataBuffer.<span class="hljs-title function_">toString</span>(<span class="hljs-string">'utf8'</span>));</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-keyword">break</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">OPCODES</span>.<span class="hljs-property">BINARY</span>:</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">'data'</span>, realDataBuffer);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-keyword">break</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">default</span>:</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">'close'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-keyword">break</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+</code></pre>
+<p>文本就转成 utf-8 的字符串，二进制数据就直接用 buffer 的数据。</p>
+<p>这样，处理程序里就能拿到解析后的数据。</p>
+<p>我们来试一下：</p>
+<p>之前我们已经能拿到 weboscket 协议内容的 buffer 了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/986ae0fe1860438089a8c4077b11086c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而现在我们能正确解析出其中的数据：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1b8c4d7d06e548e19f2a270c0911ae6e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>至此，我们 websocket 协议的解析成功了！</p>
+<p>这样的协议格式的数据叫做 frame，也就是帧：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7c0858debd3d456f9280491f8bd0183b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>解析可以了，接下来我们再实现数据的发送。</p>
+<p>发送也是构造一样的 frame 格式。</p>
+<p>定义这样一个 send 方法：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8a52f2e34f444b3f8be01a90fb04146e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1050&amp;h=900&amp;s=175121&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-title function_">send</span>(<span class="hljs-params">data</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">let</span> opcode;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">let</span> buffer;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">isBuffer</span>(data)) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      opcode = <span class="hljs-variable constant_">OPCODES</span>.<span class="hljs-property">BINARY</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      buffer = data;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> data === <span class="hljs-string">'string'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      opcode = <span class="hljs-variable constant_">OPCODES</span>.<span class="hljs-property">TEXT</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      buffer = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(data, <span class="hljs-string">'utf8'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">'暂不支持发送的数据类型'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">doSend</span>(opcode, buffer);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16"><span class="hljs-title function_">doSend</span>(<span class="hljs-params">opcode, bufferDatafer</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">   <span class="hljs-variable language_">this</span>.<span class="hljs-property">socket</span>.<span class="hljs-title function_">write</span>(<span class="hljs-title function_">encodeMessage</span>(opcode, bufferDatafer));</span>
+<span class="code-block-extension-codeLine" data-line-num="18">}</span>
+</code></pre>
+<p>根据发送的是文本还是二进制数据来对内容作处理。</p>
+<p>然后构造 websocket 的 frame：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8204b6730fea4c80afd363dd0b31fc45~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1142&amp;h=994&amp;s=177010&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">function</span> <span class="hljs-title function_">encodeMessage</span>(<span class="hljs-params">opcode, payload</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-comment">//payload.length &lt; 126</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-keyword">let</span> bufferData = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">alloc</span>(payload.<span class="hljs-property">length</span> + <span class="hljs-number">2</span> + <span class="hljs-number">0</span>);;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  </span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-keyword">let</span> byte1 = <span class="hljs-built_in">parseInt</span>(<span class="hljs-string">'10000000'</span>, <span class="hljs-number">2</span>) | opcode; <span class="hljs-comment">// 设置 FIN 为 1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">let</span> byte2 = payload.<span class="hljs-property">length</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  bufferData.<span class="hljs-title function_">writeUInt8</span>(byte1, <span class="hljs-number">0</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  bufferData.<span class="hljs-title function_">writeUInt8</span>(byte2, <span class="hljs-number">1</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">  payload.<span class="hljs-title function_">copy</span>(bufferData, <span class="hljs-number">2</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  </span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-keyword">return</span> bufferData;</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+</code></pre>
+<p>我们只处理数据长度小于 125 的情况。</p>
+<p>第一个字节是 opcode，我们把第一位置 1 ，通过按位或的方式。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/321a0f569d23446c858afad9347232df~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>服务端给客户端回消息不需要 mask，所以第二个字节就是 payload 长度。</p>
+<p>分别把这前两个字节的数据写到 buffer 里，指定不同的 offset：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">bufferData.<span class="hljs-title function_">writeUInt8</span>(byte1, <span class="hljs-number">0</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2">bufferData.<span class="hljs-title function_">writeUInt8</span>(byte2, <span class="hljs-number">1</span>);</span>
+</code></pre>
+<p>之后把 payload 数据放在后面：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"> payload.<span class="hljs-title function_">copy</span>(bufferData, <span class="hljs-number">2</span>);</span>
+</code></pre>
+<p>这样一个 websocket 的 frame 就构造完了。</p>
+<p>我们试一下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0803bb0e24034191973a497395c1ff56~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>收到客户端消息后，每两秒回一个消息。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cac293a1bb7f47cca0fe4743dbcc9160~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>收发消息都成功了！</p>
+<p>就这样，我们自己实现了一个 websocket 服务器，实现了 websocket 协议的解析和生成！</p>
+<p>完整代码如下：</p>
+<p>MyWebSocket:</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">//ws.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> { <span class="hljs-title class_">EventEmitter</span> } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'events'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> http = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> crypto = <span class="hljs-built_in">require</span>(<span class="hljs-string">'crypto'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">function</span> <span class="hljs-title function_">hashKey</span>(<span class="hljs-params">key</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-keyword">const</span> sha1 = crypto.<span class="hljs-title function_">createHash</span>(<span class="hljs-string">'sha1'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  sha1.<span class="hljs-title function_">update</span>(key + <span class="hljs-string">'258EAFA5-E914-47DA-95CA-C5AB0DC85B11'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-keyword">return</span> sha1.<span class="hljs-title function_">digest</span>(<span class="hljs-string">'base64'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-keyword">function</span> <span class="hljs-title function_">handleMask</span>(<span class="hljs-params">maskBytes, data</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-keyword">const</span> payload = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">alloc</span>(data.<span class="hljs-property">length</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; data.<span class="hljs-property">length</span>; i++) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    payload[i] = maskBytes[i % <span class="hljs-number">4</span>] ^ data[i];</span>
+<span class="code-block-extension-codeLine" data-line-num="16">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  <span class="hljs-keyword">return</span> payload;</span>
+<span class="code-block-extension-codeLine" data-line-num="18">}</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">OPCODES</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">  <span class="hljs-attr">CONTINUE</span>: <span class="hljs-number">0</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="22">  <span class="hljs-attr">TEXT</span>: <span class="hljs-number">1</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="23">  <span class="hljs-attr">BINARY</span>: <span class="hljs-number">2</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="24">  <span class="hljs-attr">CLOSE</span>: <span class="hljs-number">8</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">  <span class="hljs-attr">PING</span>: <span class="hljs-number">9</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="26">  <span class="hljs-attr">PONG</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="27">};</span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29"><span class="hljs-keyword">function</span> <span class="hljs-title function_">encodeMessage</span>(<span class="hljs-params">opcode, payload</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="30">  <span class="hljs-comment">//payload.length &lt; 126</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">  <span class="hljs-keyword">let</span> bufferData = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">alloc</span>(payload.<span class="hljs-property">length</span> + <span class="hljs-number">2</span> + <span class="hljs-number">0</span>);;</span>
+<span class="code-block-extension-codeLine" data-line-num="32">  </span>
+<span class="code-block-extension-codeLine" data-line-num="33">  <span class="hljs-keyword">let</span> byte1 = <span class="hljs-built_in">parseInt</span>(<span class="hljs-string">'10000000'</span>, <span class="hljs-number">2</span>) | opcode; <span class="hljs-comment">// 设置 FIN 为 1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="34">  <span class="hljs-keyword">let</span> byte2 = payload.<span class="hljs-property">length</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="35"></span>
+<span class="code-block-extension-codeLine" data-line-num="36">  bufferData.<span class="hljs-title function_">writeUInt8</span>(byte1, <span class="hljs-number">0</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="37">  bufferData.<span class="hljs-title function_">writeUInt8</span>(byte2, <span class="hljs-number">1</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="38"></span>
+<span class="code-block-extension-codeLine" data-line-num="39">  payload.<span class="hljs-title function_">copy</span>(bufferData, <span class="hljs-number">2</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="40">  </span>
+<span class="code-block-extension-codeLine" data-line-num="41">  <span class="hljs-keyword">return</span> bufferData;</span>
+<span class="code-block-extension-codeLine" data-line-num="42">}</span>
+<span class="code-block-extension-codeLine" data-line-num="43"></span>
+<span class="code-block-extension-codeLine" data-line-num="44"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyWebsocket</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">EventEmitter</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="45">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">options</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="46">    <span class="hljs-variable language_">super</span>(options);</span>
+<span class="code-block-extension-codeLine" data-line-num="47"></span>
+<span class="code-block-extension-codeLine" data-line-num="48">    <span class="hljs-keyword">const</span> server = http.<span class="hljs-title function_">createServer</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="49">    server.<span class="hljs-title function_">listen</span>(options.<span class="hljs-property">port</span> || <span class="hljs-number">8080</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="50"></span>
+<span class="code-block-extension-codeLine" data-line-num="51">    server.<span class="hljs-title function_">on</span>(<span class="hljs-string">'upgrade'</span>, <span class="hljs-function">(<span class="hljs-params">req, socket</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="52">      <span class="hljs-variable language_">this</span>.<span class="hljs-property">socket</span> = socket;</span>
+<span class="code-block-extension-codeLine" data-line-num="53">      socket.<span class="hljs-title function_">setKeepAlive</span>(<span class="hljs-literal">true</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="54"></span>
+<span class="code-block-extension-codeLine" data-line-num="55">      <span class="hljs-keyword">const</span> resHeaders = [</span>
+<span class="code-block-extension-codeLine" data-line-num="56">        <span class="hljs-string">'HTTP/1.1 101 Switching Protocols'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="57">        <span class="hljs-string">'Upgrade: websocket'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="58">        <span class="hljs-string">'Connection: Upgrade'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="59">        <span class="hljs-string">'Sec-WebSocket-Accept: '</span> + <span class="hljs-title function_">hashKey</span>(req.<span class="hljs-property">headers</span>[<span class="hljs-string">'sec-websocket-key'</span>]),</span>
+<span class="code-block-extension-codeLine" data-line-num="60">        <span class="hljs-string">''</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="61">        <span class="hljs-string">''</span></span>
+<span class="code-block-extension-codeLine" data-line-num="62">      ].<span class="hljs-title function_">join</span>(<span class="hljs-string">'\r\n'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="63">      socket.<span class="hljs-title function_">write</span>(resHeaders);</span>
+<span class="code-block-extension-codeLine" data-line-num="64"></span>
+<span class="code-block-extension-codeLine" data-line-num="65">      socket.<span class="hljs-title function_">on</span>(<span class="hljs-string">'data'</span>, <span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="66">        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processData</span>(data);</span>
+<span class="code-block-extension-codeLine" data-line-num="67">        <span class="hljs-comment">// console.log(data);</span></span>
+<span class="code-block-extension-codeLine" data-line-num="68">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="69">      socket.<span class="hljs-title function_">on</span>(<span class="hljs-string">'close'</span>, <span class="hljs-function">(<span class="hljs-params">error</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="70">          <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">'close'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="71">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="72">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="73">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="74"></span>
+<span class="code-block-extension-codeLine" data-line-num="75">  <span class="hljs-title function_">handleRealData</span>(<span class="hljs-params">opcode, realDataBuffer</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="76">    <span class="hljs-keyword">switch</span> (opcode) {</span>
+<span class="code-block-extension-codeLine" data-line-num="77">      <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">OPCODES</span>.<span class="hljs-property">TEXT</span>:</span>
+<span class="code-block-extension-codeLine" data-line-num="78">        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">'data'</span>, realDataBuffer.<span class="hljs-title function_">toString</span>(<span class="hljs-string">'utf8'</span>));</span>
+<span class="code-block-extension-codeLine" data-line-num="79">        <span class="hljs-keyword">break</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="80">      <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">OPCODES</span>.<span class="hljs-property">BINARY</span>:</span>
+<span class="code-block-extension-codeLine" data-line-num="81">        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">'data'</span>, realDataBuffer);</span>
+<span class="code-block-extension-codeLine" data-line-num="82">        <span class="hljs-keyword">break</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="83">      <span class="hljs-attr">default</span>:</span>
+<span class="code-block-extension-codeLine" data-line-num="84">        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">'close'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="85">        <span class="hljs-keyword">break</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="86">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="87">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="88"></span>
+<span class="code-block-extension-codeLine" data-line-num="89">  <span class="hljs-title function_">processData</span>(<span class="hljs-params">bufferData</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="90">    <span class="hljs-keyword">const</span> byte1 = bufferData.<span class="hljs-title function_">readUInt8</span>(<span class="hljs-number">0</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="91">    <span class="hljs-keyword">let</span> opcode = byte1 &amp; <span class="hljs-number">0x0f</span>; </span>
+<span class="code-block-extension-codeLine" data-line-num="92">    </span>
+<span class="code-block-extension-codeLine" data-line-num="93">    <span class="hljs-keyword">const</span> byte2 = bufferData.<span class="hljs-title function_">readUInt8</span>(<span class="hljs-number">1</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="94">    <span class="hljs-keyword">const</span> str2 = byte2.<span class="hljs-title function_">toString</span>(<span class="hljs-number">2</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="95">    <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">MASK</span> = str2[<span class="hljs-number">0</span>];</span>
+<span class="code-block-extension-codeLine" data-line-num="96"></span>
+<span class="code-block-extension-codeLine" data-line-num="97">    <span class="hljs-keyword">let</span> curByteIndex = <span class="hljs-number">2</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="98">    </span>
+<span class="code-block-extension-codeLine" data-line-num="99">    <span class="hljs-keyword">let</span> payloadLength = <span class="hljs-built_in">parseInt</span>(str2.<span class="hljs-title function_">substring</span>(<span class="hljs-number">1</span>), <span class="hljs-number">2</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="100">    <span class="hljs-keyword">if</span> (payloadLength === <span class="hljs-number">126</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="101">      payloadLength = bufferData.<span class="hljs-title function_">readUInt16BE</span>(<span class="hljs-number">2</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="102">      curByteIndex += <span class="hljs-number">2</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="103">    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (payloadLength === <span class="hljs-number">127</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="104">      payloadLength = bufferData.<span class="hljs-title function_">readBigUInt64BE</span>(<span class="hljs-number">2</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="105">      curByteIndex += <span class="hljs-number">8</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="106">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="107"></span>
+<span class="code-block-extension-codeLine" data-line-num="108">    <span class="hljs-keyword">let</span> realData = <span class="hljs-literal">null</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="109">    </span>
+<span class="code-block-extension-codeLine" data-line-num="110">    <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">MASK</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="111">      <span class="hljs-keyword">const</span> maskKey = bufferData.<span class="hljs-title function_">slice</span>(curByteIndex, curByteIndex + <span class="hljs-number">4</span>);  </span>
+<span class="code-block-extension-codeLine" data-line-num="112">      curByteIndex += <span class="hljs-number">4</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="113">      <span class="hljs-keyword">const</span> payloadData = bufferData.<span class="hljs-title function_">slice</span>(curByteIndex, curByteIndex + payloadLength);</span>
+<span class="code-block-extension-codeLine" data-line-num="114">      realData = <span class="hljs-title function_">handleMask</span>(maskKey, payloadData);</span>
+<span class="code-block-extension-codeLine" data-line-num="115">    } </span>
+<span class="code-block-extension-codeLine" data-line-num="116">    </span>
+<span class="code-block-extension-codeLine" data-line-num="117">    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handleRealData</span>(opcode, realData);</span>
+<span class="code-block-extension-codeLine" data-line-num="118">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="119"></span>
+<span class="code-block-extension-codeLine" data-line-num="120">  <span class="hljs-title function_">send</span>(<span class="hljs-params">data</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="121">    <span class="hljs-keyword">let</span> opcode;</span>
+<span class="code-block-extension-codeLine" data-line-num="122">    <span class="hljs-keyword">let</span> buffer;</span>
+<span class="code-block-extension-codeLine" data-line-num="123">    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">isBuffer</span>(data)) {</span>
+<span class="code-block-extension-codeLine" data-line-num="124">      opcode = <span class="hljs-variable constant_">OPCODES</span>.<span class="hljs-property">BINARY</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="125">      buffer = data;</span>
+<span class="code-block-extension-codeLine" data-line-num="126">    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> data === <span class="hljs-string">'string'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="127">      opcode = <span class="hljs-variable constant_">OPCODES</span>.<span class="hljs-property">TEXT</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="128">      buffer = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(data, <span class="hljs-string">'utf8'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="129">    } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="130">      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">'暂不支持发送的数据类型'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="131">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="132">    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">doSend</span>(opcode, buffer);</span>
+<span class="code-block-extension-codeLine" data-line-num="133">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="134"></span>
+<span class="code-block-extension-codeLine" data-line-num="135">  <span class="hljs-title function_">doSend</span>(<span class="hljs-params">opcode, bufferDatafer</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="136">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">socket</span>.<span class="hljs-title function_">write</span>(<span class="hljs-title function_">encodeMessage</span>(opcode, bufferDatafer));</span>
+<span class="code-block-extension-codeLine" data-line-num="137">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="138">}</span>
+<span class="code-block-extension-codeLine" data-line-num="139"></span>
+<span class="code-block-extension-codeLine" data-line-num="140"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = <span class="hljs-title class_">MyWebsocket</span>;</span>
+</code></pre>
+<p>Index：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> <span class="hljs-title class_">MyWebSocket</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./ws'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> ws = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MyWebSocket</span>({ <span class="hljs-attr">port</span>: <span class="hljs-number">8080</span> });</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">ws.<span class="hljs-title function_">on</span>(<span class="hljs-string">'data'</span>, <span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'receive data:'</span> + data);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-built_in">setInterval</span>(<span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    ws.<span class="hljs-title function_">send</span>(data + <span class="hljs-string">' '</span> + <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>());</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  }, <span class="hljs-number">2000</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="9">});</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">ws.<span class="hljs-title function_">on</span>(<span class="hljs-string">'close'</span>, <span class="hljs-function">(<span class="hljs-params">code, reason</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'close:'</span>, code, reason);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">});</span>
+</code></pre>
+<p>html:</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">HTML</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-keyword">const</span> ws = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WebSocket</span>(<span class="hljs-string">"ws://localhost:8080"</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">        ws.<span class="hljs-property">onopen</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">            ws.<span class="hljs-title function_">send</span>(<span class="hljs-string">"发送数据"</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">                ws.<span class="hljs-title function_">send</span>(<span class="hljs-string">"发送数据2"</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">            }, <span class="hljs-number">3000</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        };</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">        ws.<span class="hljs-property">onmessage</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">evt</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(evt)</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        };</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">        ws.<span class="hljs-property">onclose</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        };</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fmy-websocket" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/my-websocket" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>实时性较高的需求，我们会用 websocket 实现，比如即时通讯、游戏等场景。</p>
+<p>websocket 和 http 没什么关系，但从 http 到 websocket 需要一次切换的过程。</p>
+<p>这个切换过程除了要带 upgrade 的 header 外，还要带 sec-websocket-key，服务端根据这个 key 算出结果，通过 sec-websocket-accept 返回。响应是 101 Switching Protocols 的状态码。</p>
+<p>这个计算过程比较固定，就是 key + 固定的字符串 通过 sha1 加密后再 base64 的结果。</p>
+<p>加这个机制是为了确保对方一定是 websocket 服务器，而不是随意返回了个 101 状态码。</p>
+<p>之后就是 websocket 协议了，这是个二进制协议，我们根据格式完成了 websocket 帧的解析和生成。</p>
+<p>这样就是一个完整的 websocket 协议的实现了。</p>
+<p>我们自己手写了一个 websocket 服务，有没有感觉对 websocket 的理解更深了呢？</p></div>

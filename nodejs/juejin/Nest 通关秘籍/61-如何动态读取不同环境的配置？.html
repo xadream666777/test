@@ -1,0 +1,290 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>连接数据库的时候，我们指定了用户名、密码：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b052d2f7f4754d469d33c441422e1ef1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>应用启动的时候，我们指定了端口：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8e4f0d2af1bd4d7981a262b758b2be59~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而这些其实都是可以变的，在代码里写死显然不太好。</p>
+<p>能不能抽取出来放到配置文件里呢？</p>
+<p>自然是可以的。</p>
+<p>node 里最常用的是 .env 格式的配置文件，它有一个专门的 npm 包 dotenv。</p>
+<p>我们创建个项目来试一下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c10a9997ff0d46c9ba5744a89e30ae1b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image">
+进入这个目录，安装 dotenv：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install dotenv</span>
+</code></pre>
+<p>然后添加一个 .env 配置文件：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">aaa</span>=<span class="hljs-number">1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-attr">bbb</span>=<span class="hljs-number">2</span></span>
+</code></pre>
+<p>在 index.js 里通过 dotenv 来加载：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-built_in">require</span>(<span class="hljs-string">'dotenv'</span>).<span class="hljs-title function_">config</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">path</span>: <span class="hljs-string">'./.env'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">})</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(process.<span class="hljs-property">env</span>) </span>
+</code></pre>
+<p>node 执行下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">node index.js</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7a089073eaee49cbbcff21394cc014a0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>他打印的环境变量里就包含了配置文件里的。</p>
+<p>那如果我还有个生产环境的配置文件呢？</p>
+<p>比如 .production.env</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">aaa</span>=<span class="hljs-number">111</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-attr">bbb</span>=<span class="hljs-number">222</span></span>
+</code></pre>
+<p>我们可以通过 NODE_ENVIRONMENT 环境变量来切换：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-built_in">require</span>(<span class="hljs-string">'dotenv'</span>).<span class="hljs-title function_">config</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">path</span>: process.<span class="hljs-property">env</span>.<span class="hljs-property">NODE_ENVIRONMENT</span> === <span class="hljs-string">'production'</span> ? <span class="hljs-string">'.production.env'</span> : <span class="hljs-string">'.env'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">})</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'aaa'</span>, process.<span class="hljs-property">env</span>.<span class="hljs-property">aaa</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'bbb'</span>, process.<span class="hljs-property">env</span>.<span class="hljs-property">bbb</span>)</span>
+</code></pre>
+<p>生产环境设置 NODE_ENVIRONMENT 为 production，就可以切换到对应的配置了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bc43c399056047d7a8c062ab18de6628~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果你手动置顶了环境变量，那以手动指定的优先：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/77fba677fe10478e807fe3b589d3ff54~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>此外，如果你想用 yaml 格式的配置文件也可以。</p>
+<p>安装 js-yaml 包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install js-yaml</span>
+</code></pre>
+<p>然后添加一个 hello.yaml 配置文件：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">yaml</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-yaml code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">application:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">host:</span> <span class="hljs-string">'localhost'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">port:</span> <span class="hljs-number">8080</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-attr">db:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">   <span class="hljs-attr">mysql:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">url:</span> <span class="hljs-string">'localhost'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">port:</span> <span class="hljs-number">3306</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">database:</span> <span class="hljs-string">'aaa'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">password:</span> <span class="hljs-string">'guang'</span></span>
+</code></pre>
+<p>然后在 index2.js 里用一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> yaml = <span class="hljs-built_in">require</span>(<span class="hljs-string">'js-yaml'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> config = fs.<span class="hljs-title function_">readFileSync</span>(<span class="hljs-string">'./hello.yaml'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(yaml.<span class="hljs-title function_">load</span>(config));</span>
+</code></pre>
+<p>跑一下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/95d15a010cee4b1b868c59dc4c6af405~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，用对象的方式把 yaml 的配置给返回了。</p>
+<p><strong>yaml 的格式更适合有层次关系的配置，而 .env 更适合简单的配置。</strong></p>
+<p>同样，也可以通过 NODE_ENVIRMENT 环境变量来切换生产、开发的配置文件。</p>
+<p>node 里的配置一般就用这两种方式。</p>
+<p>那在 Nest 里怎么用呢？</p>
+<p>其实上面的这两种配置方式，自己封装也不麻烦，封装个动态模块就好。</p>
+<p>不过 Nest 提供了现成的封装：@nestjs/config</p>
+<p>我们创建个 nest 项目来试下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> nest-config-test -p npm</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b50004bd4ad44a24aa22b1654f12e6a5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>安装 @nestjs/config 包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> <span class="hljs-keyword">@nestjs</span>/config</span>
+</code></pre>
+<p>这个包同样是动态模块的方式，他有 forRoot 和 forFeature 两个方法。</p>
+<p>我们在根目录加一个配置文件 .env：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">aaa</span>=<span class="hljs-number">1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-attr">bbb</span>=<span class="hljs-number">2</span></span>
+</code></pre>
+<p>然后在 AppModule 里面引入：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2a154e71c6054642906944a2f5bf7c9e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 AppController 里注入 ConfigService 来读取配置：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Controller</span>, <span class="hljs-title class_">Get</span>, <span class="hljs-title class_">Inject</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ConfigService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/config'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Controller</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">private readonly appService: AppService</span>) {}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  @<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">ConfigService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  private <span class="hljs-attr">configService</span>: <span class="hljs-title class_">ConfigService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  @<span class="hljs-title class_">Get</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-title function_">getHello</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-attr">aaa</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">configService</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">'aaa'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-attr">bbb</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">configService</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">'bbb'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="18">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="19">}</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+</code></pre>
+<p>把 Nest 服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p>浏览器访问下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/246bae916869459a953101f87c02c5ec~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，nest 读取到了 .env 里的配置。</p>
+<p>如果有多个配置文件，比如还有个 .aaa.env：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ini</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ini code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">aaa</span>=<span class="hljs-number">3</span></span>
+</code></pre>
+<p>在 AppModule 里面这样指定：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ConfigModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/config'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppController</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.controller'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> path <span class="hljs-keyword">from</span> <span class="hljs-string">'path'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-attr">imports</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-title class_">ConfigModule</span>.<span class="hljs-title function_">forRoot</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-attr">envFilePath</span>: [path.<span class="hljs-title function_">join</span>(process.<span class="hljs-title function_">cwd</span>(), <span class="hljs-string">'.aaa.env'</span>), path.<span class="hljs-title function_">join</span>(process.<span class="hljs-title function_">cwd</span>(), <span class="hljs-string">'.env'</span>)]</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-attr">controllers</span>: [<span class="hljs-title class_">AppController</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-attr">providers</span>: [<span class="hljs-title class_">AppService</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="15">})</span>
+<span class="code-block-extension-codeLine" data-line-num="16"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppModule</span> {}</span>
+</code></pre>
+<p>前面的配置会覆盖后面的配置。</p>
+<p>重新跑一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p>浏览器访问下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/46e104548f364a93ad4b8078393558b7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到 aaa 是 .aaa.env 里的，bbb 是 .env 里的。</p>
+<p>那如果我嫌 .env 里配置不够灵活，想在 ts 文件里配置呢？</p>
+<p>@nestjs/config 也是支持的。</p>
+<p>我们写一个 config.ts：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> dbPort = <span class="hljs-keyword">await</span> <span class="hljs-number">3306</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-attr">port</span>: <span class="hljs-built_in">parseInt</span>(process.<span class="hljs-property">env</span>.<span class="hljs-property">PORT</span>, <span class="hljs-number">10</span>) || <span class="hljs-number">3000</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">db</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">          <span class="hljs-attr">host</span>: <span class="hljs-string">'localhost'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">          <span class="hljs-attr">port</span>: dbPort</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<p>这里可以写异步逻辑。</p>
+<p>然后引入下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2dcfd2a328214392934247f30509b69a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 Controller 里取出来：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b19b558b240a47848fcec84d74629fef~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/992a52ef531a4d788756055c86d57d92~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，你可以动态加载配置。</p>
+<p>后面将讲微服务的时候，会讲到配置中心，比如 nacos、etcd 这种中间件，到时候配置就是动态获取的。</p>
+<p>而且这个配置文件里，你完全可以自己实现 yaml 文件的加载。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install js-yaml</span>
+</code></pre>
+<p>添加一个配置文件 aaa.yaml</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">yaml</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-yaml code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">application:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">host:</span> <span class="hljs-string">'localhost'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">port:</span> <span class="hljs-number">8080</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-attr">aaa:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">   <span class="hljs-attr">bbb:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">ccc:</span> <span class="hljs-string">'ccc'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">port:</span> <span class="hljs-number">3306</span></span>
+</code></pre>
+<p>然后在 config2.ts 里加载下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { readFile } <span class="hljs-keyword">from</span> <span class="hljs-string">'fs/promises'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> yaml <span class="hljs-keyword">from</span> <span class="hljs-string">'js-yaml'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { join } <span class="hljs-keyword">from</span> <span class="hljs-string">'path'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> configFilePath = <span class="hljs-title function_">join</span>(process.<span class="hljs-title function_">cwd</span>(), <span class="hljs-string">'aaa.yaml'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">const</span> config = <span class="hljs-keyword">await</span> <span class="hljs-title function_">readFile</span>(configFilePath, {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">encoding</span>: <span class="hljs-string">'utf-8'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">return</span> yaml.<span class="hljs-title function_">load</span>(config);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">};</span>
+</code></pre>
+<p>在 AppModule 引入：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/89fee1b48cab4765b577dc25ebbda2b9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>同样，前面覆盖后面的。</p>
+<p>改下 Controller：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/062c1afd220143b081308142547ef6be~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a2dce07081404764b3f2cc619729158a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样就正确读取了 yaml 配置。</p>
+<p>同理，其他格式的配置也可以这样来自己解析。</p>
+<p>此外，@nestjs/config 还提供了 forFeature 方法来返回动态模块。</p>
+<p>如果别的模块也需要用到 config 咋办呢？</p>
+<p>我们新建一个模块：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g resource bbb <span class="hljs-attr">--no-spec</span></span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3ddde61b734548789b0ee9ca2f2c9494~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 BbbModule 里注入下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b0511ebef3004c269086d1becabe14ff~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>跑起来你会发现报错了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a766120890474820a122b4e5122dfe74~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个模块找不到 ConfigModule。</p>
+<p>这时候把 ConfigModule.forRoot 注册为全局模块就好了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4834cef339cd421ebcaf599bd44d6325~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样就可以在 BbbModule 读取到配置了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ef25346ebe7349f595c36950598e1049~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>此外，你还可以通过 ConfigModule.forFeautrue 来注册局部配置：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">BbbService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./bbb.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">BbbController</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./bbb.controller'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ConfigModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/config'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">imports</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-title class_">ConfigModule</span>.<span class="hljs-title function_">forFeature</span>(<span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">ddd</span>: <span class="hljs-number">222</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-attr">controllers</span>: [<span class="hljs-title class_">BbbController</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  <span class="hljs-attr">providers</span>: [<span class="hljs-title class_">BbbService</span>]</span>
+<span class="code-block-extension-codeLine" data-line-num="16">})</span>
+<span class="code-block-extension-codeLine" data-line-num="17"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BbbModule</span> {}</span>
+</code></pre>
+<p>BbbController 里读取下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-title function_">findAll</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">      <span class="hljs-attr">ccc</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">configService</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">'aaa.bbb.ccc'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-attr">ddd</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">configService</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">'ddd'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+</code></pre>
+<p>可以看到，Nest 读取到了这个局部注册的配置。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/af24598541f8481c8165f33e58ba3822~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里是再次验证了<strong>动态模块的 forRoot 用于在 AppModule 里注册，一般指定为全局模块，forFeature 用于局部配置，在不同模块里 imports，而 register 用于一次性的配置。</strong></p>
+<p>比如 JwtModule.register、TypeOrmModule.ForRoot、TypeOrmModule.forFeature。</p>
+<p>对动态模块不太理解的同学建议回过头去看看第 15 节。</p>
+<p>最后我们简单看一下 @nestjs/config 的源码：</p>
+<p>先是 forFeature：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/455632aacf7c484f873bf79c289fcc06~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>动态返回模块定义，也就是 providers、exports 这些。</p>
+<p>用 useFactory 动态创建了 provider，merge 了局部配置和全局配置。</p>
+<p>然后是 forRoot：</p>
+<p>它就是根据 options 读取 env 配置，然后用 useFactory 创建 ConfigService 的 provider：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bd1558aa3da047a9a98d2812709968e5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>之后动态返回模块定义：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ed008a877f534f5f805a28eb153e6c30~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>还是动态模块那些知识。</p>
+<p>案例代码：</p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fconfig-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/config-test" ref="nofollow noopener noreferrer">Node 读取 env、yaml 配置文件</a></p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fnest-config-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/nest-config-test" ref="nofollow noopener noreferrer">Nest 通过 Config 模块读取配置文件</a></p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们学习了配置文件的使用方式，基于 dotenv、js-yaml 可以读取 .env 和 yaml 的配置文件。</p>
+<p>我们可以通过 NODE_ENVIRONMENT 来切换不同路径的配置文件，实现开发、生产环境的配置切换。</p>
+<p>Nest 提供了 @nestjs/config 包来封装，使用 ConfigModule.forRoot 可以读取 .env 配置文件，然后注入 ConfigService 来取配置。</p>
+<p>还可以通过 ConfigModule.forFeature 来注册局部配置。</p>
+<p>它的原理也很简单，就是通过 useFactory 动态产生 provider，然后在 forRoot、forFeature 里动态返回模块定义。</p>
+<p>学习了 ConfigModule 之后，我们就可以把数据库连接信息、应用启动端口等抽离到配置文件了。</p></div>

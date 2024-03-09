@@ -1,0 +1,350 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>用户管理模块我们实现了注册、登录鉴权、信息修改接口，还剩下两个接口：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c29fc9fbb5f44ba880884daac9bc4eae~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这节来实现下。</p>
+<p>在那之前先考虑个问题：</p>
+<p>成功的响应是这样的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6a403f4f303943c08267d4b667013202~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但是失败的响应是这样：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/977a5d130c37442ea9354f55e8b54f41~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>并不统一。</p>
+<p>如何让响应统一成 {code、message、data} 的格式呢？</p>
+<p>这里就需要自定义 Exception Filter 了。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1d717b3f94ec4a4894c3efc72feb9831~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 Guard、handler、interceptor 等处理逻辑里 throw http 异常，都会被 ExceptionFilter 处理成相应的响应。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3714fcd616094d378a67299a3785fd42~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e575d999150948a8ae81a67e59a1452d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果想修改异常响应的格式，就要自定义了。</p>
+<p>我们新建个 exception filter：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g <span class="hljs-attribute">filter</span> unlogin <span class="hljs-attr">--flat</span></span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d60d7355149842248850c0f7315d8134~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>@Catch 的参数可以指定具体 catch 的异常类型：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ArgumentsHost</span>, <span class="hljs-title class_">Catch</span>, <span class="hljs-title class_">ExceptionFilter</span>, <span class="hljs-title class_">HttpStatus</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Response</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UnLoginException</span>{</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attr">message</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">message?</span>){</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span> = message;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">@<span class="hljs-title class_">Catch</span>(<span class="hljs-title class_">UnLoginException</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="13"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UnloginFilter</span> implements <span class="hljs-title class_">ExceptionFilter</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-keyword">catch</span>(<span class="hljs-attr">exception</span>: <span class="hljs-title class_">UnLoginException</span>, <span class="hljs-attr">host</span>: <span class="hljs-title class_">ArgumentsHost</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">const</span> response = host.<span class="hljs-title function_">switchToHttp</span>().<span class="hljs-property">getResponse</span>&lt;<span class="hljs-title class_">Response</span>&gt;();</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    response.<span class="hljs-title function_">json</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-attr">code</span>: <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">UNAUTHORIZED</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-attr">message</span>: <span class="hljs-string">'fail'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-attr">data</span>: exception.<span class="hljs-property">message</span> || <span class="hljs-string">'用户未登录'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    }).<span class="hljs-title function_">end</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="22">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="23">}</span>
+</code></pre>
+<p>我们自定义了 UnLoginException 的异常，在 @Catch 指定捕获这个异常，返回对应的响应。</p>
+<p>在 main.ts 引入下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9ecf325a1f004d14a977ec01f0f393d1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后把 LoginGuard 里的异常改成 UnLoginException</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/10f23f6d370644cd8120b3829a9f79f5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>测试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6b3d6e825cea407da29ecb9839f8feaf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在当你不带 token 访问 /aaa 的时候，返回的就是自己定义的格式了。</p>
+<p>搜索下之前代码里抛的异常：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b8083cfa2b1438da8b7a60b6f80e55a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>还有不少。</p>
+<p>难道有多少种 exception 就定义多少种异常类和 exception filter 么？</p>
+<p>没必要，直接修改下对 HttpException 的处理逻辑就好了。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g <span class="hljs-attribute">filter</span> custom-exception <span class="hljs-attr">--flat</span></span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/655690d2f52342cb949ec52a4cefc185~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ArgumentsHost</span>, <span class="hljs-title class_">Catch</span>, <span class="hljs-title class_">ExceptionFilter</span>, <span class="hljs-title class_">HttpException</span>, <span class="hljs-title class_">HttpStatus</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Response</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Catch</span>(<span class="hljs-title class_">HttpException</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CustomExceptionFilter</span> implements <span class="hljs-title class_">ExceptionFilter</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">catch</span>(<span class="hljs-attr">exception</span>: <span class="hljs-title class_">HttpException</span>, <span class="hljs-attr">host</span>: <span class="hljs-title class_">ArgumentsHost</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> response = host.<span class="hljs-title function_">switchToHttp</span>().<span class="hljs-property">getResponse</span>&lt;<span class="hljs-title class_">Response</span>&gt;();</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    response.<span class="hljs-property">statusCode</span> = exception.<span class="hljs-title function_">getStatus</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    response.<span class="hljs-title function_">json</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">code</span>: exception.<span class="hljs-title function_">getStatus</span>(),</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-attr">message</span>: <span class="hljs-string">'fail'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-attr">data</span>: exception.<span class="hljs-property">message</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    }).<span class="hljs-title function_">end</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="16">}</span>
+</code></pre>
+<p>直接 @Catch 指定 HttpException，修改返回的响应格式。</p>
+<p>然后在 main.ts 里启用：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c5b5781a21e742a8b09789ffd9c43ca3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，所有的代码都不用修改，返回的响应就已经变了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/59e937253ef94a76b343a4e4f17b3703~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1aea21c7b9d244fd96069b2c4f81b2a6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>所以，如果你只是想修改默认的响应格式，直接定义个 catch HttpException 的 filter 就好了。</p>
+<p>但这样其实还有个问题：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6b21b538ba5c498db1c787784957df54~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=806&amp;h=816&amp;s=73953&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>对于 ValidationPipe 报的错，返回的信息不准。</p>
+<p>我们可以打个断点看看具体的错误信息：</p>
+<p>创建 .vscode/launch.json 文件：</p>
+<p>输入调试配置：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">{</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-string">"name"</span>: <span class="hljs-string">"Launch via NPM"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-string">"request"</span>: <span class="hljs-string">"launch"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-string">"runtimeArgs"</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-string">"run-script"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-string">"start:dev"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    ],</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-string">"console"</span>: <span class="hljs-string">"integratedTerminal"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-string">"runtimeExecutable"</span>: <span class="hljs-string">"npm"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-string">"skipFiles"</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-string">"&lt;node_internals&gt;/**"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    ],</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-string">"type"</span>: <span class="hljs-string">"node"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+</code></pre>
+<p>然后在 exception filter 打个断点，点击调试启动：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/80bce23dbebb4118bfce50b3c58cb55d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1674&amp;h=808&amp;s=248671&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 postman 里再次请求这个接口，代码会在断点处断住：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1c241f28fb9c4a2ba20a2513bae58fda~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1642&amp;h=888&amp;s=305911&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，这时候 message 并不是具体的错误，具体的错误在 response.message 里：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b996b6d56d0c485da8857c79425485f6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1316&amp;h=638&amp;s=211009&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>所以我们可以这样改：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/65309602f7494642966e2f3f217ece45~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1152&amp;h=676&amp;s=168225&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ArgumentsHost</span>, <span class="hljs-title class_">Catch</span>, <span class="hljs-title class_">ExceptionFilter</span>, <span class="hljs-title class_">HttpException</span>, <span class="hljs-title class_">HttpStatus</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Response</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Catch</span>(<span class="hljs-title class_">HttpException</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CustomExceptionFilter</span> implements <span class="hljs-title class_">ExceptionFilter</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">catch</span>(<span class="hljs-attr">exception</span>: <span class="hljs-title class_">HttpException</span>, <span class="hljs-attr">host</span>: <span class="hljs-title class_">ArgumentsHost</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> response = host.<span class="hljs-title function_">switchToHttp</span>().<span class="hljs-property">getResponse</span>&lt;<span class="hljs-title class_">Response</span>&gt;();</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    response.<span class="hljs-property">statusCode</span> = exception.<span class="hljs-title function_">getStatus</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">const</span> res = exception.<span class="hljs-title function_">getResponse</span>() <span class="hljs-keyword">as</span> { <span class="hljs-attr">message</span>: string[] };</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    </span>
+<span class="code-block-extension-codeLine" data-line-num="12">    response.<span class="hljs-title function_">json</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-attr">code</span>: exception.<span class="hljs-title function_">getStatus</span>(),</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-attr">message</span>: <span class="hljs-string">'fail'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-attr">data</span>: res?.<span class="hljs-property">message</span>?.<span class="hljs-property">join</span> ? res?.<span class="hljs-property">message</span>?.<span class="hljs-title function_">join</span>(<span class="hljs-string">','</span>) : exception.<span class="hljs-property">message</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    }).<span class="hljs-title function_">end</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="18">}</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+</code></pre>
+<p>就是如果有 response.message 就优先用那个，否则就取 exception.message。</p>
+<p>再试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dd43c3dd18834db4b601b8a5e297f2a5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=910&amp;h=768&amp;s=81793&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，错误显示就对了。</p>
+<p>然后我们实现冻结用户的接口，冻结的用户不能预定会议室。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/771d852f50324bb9b9bb0e1605fdec5e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个接口非常简单，就是修改一个字段：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f948a99531c84bd7b49d48b91b54b218~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'freeze'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">freeze</span>(<span class="hljs-params">@Query(<span class="hljs-string">'id'</span>) userId: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>.<span class="hljs-title function_">freezeUserById</span>(userId);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>定义 get 接口，然后从 query 取 id 参数。</p>
+<p>其实这个接口也需要登录，而且只有管理员有调用它的权限，这个我们后面再统一处理。</p>
+<p>在 UserService 定义这个 freezeUserById 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">freezeUserById</span>(<span class="hljs-params">id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userRepository</span>.<span class="hljs-title function_">findOneBy</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        id</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    user.<span class="hljs-property">isFrozen</span> = <span class="hljs-literal">true</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userRepository</span>.<span class="hljs-title function_">save</span>(user);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/58286ebb98d9411781aa5b69bd57012c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/06ccdfe4350d468fb998b5162640b331~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>确实冻结了。</p>
+<p>然后实现 /user/list 用户列表接口。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'list'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">list</span>(<span class="hljs-params">@Query(<span class="hljs-string">'pageNo'</span>, ParseIntPipe) pageNo: number, @Query(<span class="hljs-string">'pageSize'</span>, ParseIntPipe) pageSize: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>.<span class="hljs-title function_">findUsersByPage</span>(pageNo, pageSize);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>这个接口支持分页查询，传入 pageNo、pageSize，返回对应页的数据。</p>
+<p>我们在 UserService 里实现下：</p>
+<p>还记得如何用 sql 实现分页查询么？</p>
+<p>目前 users 表有 4 条数据，我们先查询全部的：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> users</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/02a5362b32c546048dba2b8cc49d6ed5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后每 2 条记录一页</p>
+<p>查询第一页：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> users limit <span class="hljs-number">0</span>,<span class="hljs-number">2</span></span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e0aeddefe7e64f00af8c44a734d78e99~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>查询第二页：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> users limit <span class="hljs-number">2</span>,<span class="hljs-number">2</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f9ef5acae2de4098bd11d96d34c53a78~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也就是说，只要计算出当前页码跳过多少条记录，取多少条记录就好了。</p>
+<p>也就是这样：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findUsersByPage</span>(<span class="hljs-params">pageNo: number, pageSize: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> skipCount = (pageNo - <span class="hljs-number">1</span>) * pageSize;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">const</span> [users, totalCount] = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userRepository</span>.<span class="hljs-title function_">findAndCount</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-attr">skip</span>: skipCount,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">take</span>: pageSize</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        users,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        totalCount</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+</code></pre>
+<p>当前页码减一乘以 pageSize，就是要跳过的记录数，然后再取 pageSize 条。</p>
+<p>我们这次用的是 findAndCount 的 api，它还会查询总记录数。</p>
+<p>测试下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/166d7bca4f5a4c9b8fa8e2db1857add3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没传 pageNo 的时候会返回 400 的错误。</p>
+<p>这个报错信息不够友好，我们改一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'list'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">list</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Query</span>(<span class="hljs-string">'pageNo'</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">ParseIntPipe</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-title function_">exceptionFactory</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'pageNo 应该传数字'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  } </span>
+<span class="code-block-extension-codeLine" data-line-num="7">})) <span class="hljs-attr">pageNo</span>: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">@<span class="hljs-title class_">Query</span>(<span class="hljs-string">'pageSize'</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">ParseIntPipe</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-title function_">exceptionFactory</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'pageSize 应该传数字'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  } </span>
+<span class="code-block-extension-codeLine" data-line-num="12">})) <span class="hljs-attr">pageSize</span>: number</span>
+<span class="code-block-extension-codeLine" data-line-num="13">) {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>.<span class="hljs-title function_">findUsersByPage</span>(pageNo, pageSize);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1484c3c7f33b41b5b43ab3edb7693799~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a15afc208a3947cd97a4e521e67abb45~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在的提示信息就友好多了。</p>
+<p>我们重构下代码：</p>
+<p>把这段代码抽离到 src/utils.ts 里：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">generateParseIntPipe</span>(<span class="hljs-params">name</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ParseIntPipe</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-title function_">exceptionFactory</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(name + <span class="hljs-string">' 应该传数字'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      } </span>
+<span class="code-block-extension-codeLine" data-line-num="6">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+</code></pre>
+<p>那 controller 的代码就可以简化成这样了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'list'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">list</span>(<span class="hljs-params"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    @Query(<span class="hljs-string">'pageNo'</span>, generateParseIntPipe(<span class="hljs-string">'pageNo'</span>)) pageNo: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @Query(<span class="hljs-string">'pageSize'</span>, generateParseIntPipe(<span class="hljs-string">'pageSize'</span>)) pageSize: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>.<span class="hljs-title function_">findUsersByPage</span>(pageNo, pageSize);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+</code></pre>
+<p>那如果没有传 pageNo 和 pageSize 的时候要设置个默认值呢？</p>
+<p>可以使用 DefaultValuePipe：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a28ef1855f03451db9ccdb1a12d72347~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没有传 pageNo 的时候设置为 1，没有传 pageSize 的时候设置为 2。</p>
+<p>测试下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1e7a49cc5e914214acb7e2f6b7d5a6a2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在传入 pageNo 和 pageSize 就可以查询出对应的数据，还有总条数：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/37b3d00e3058437ca6b0e3b127b1d871~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>服务端打印了两条 sql：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/45c63b6ee2834fdeb9df50a00efba663~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>一条是分页查询，指定了 limit 2 offset 2，这个和 limit 2, 2 是一样的</p>
+<p>一条是 count 统计，统计了用户的总条数。</p>
+<p>这里返回的信息同样也需要做一些修改。</p>
+<p>我们指定下 select 的字段：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findUsersByPage</span>(<span class="hljs-params">pageNo: number, pageSize: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> skipCount = (pageNo - <span class="hljs-number">1</span>) * pageSize;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">const</span> [users, totalCount] = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userRepository</span>.<span class="hljs-title function_">findAndCount</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-attr">select</span>: [<span class="hljs-string">'id'</span>, <span class="hljs-string">'username'</span>, <span class="hljs-string">'nickName'</span>, <span class="hljs-string">'email'</span>, <span class="hljs-string">'phoneNumber'</span>, <span class="hljs-string">'isFrozen'</span>, <span class="hljs-string">'headPic'</span>, <span class="hljs-string">'createTime'</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">skip</span>: skipCount,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">take</span>: pageSize</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        users,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        totalCount</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+</code></pre>
+<p>这样返回的数据就只包含 select 的字段了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e345a7f045614351a1abb54d325e80b7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然，如果你需要对返回的数据再做一些变换，这时候可以封装个 vo 对象。</p>
+<p>用户列表的需求除了分页外，还需要支持根据 username、nickName、email 的搜索：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/771d852f50324bb9b9bb0e1605fdec5e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>添加几个参数：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'list'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">list</span>(<span class="hljs-params"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    @Query(<span class="hljs-string">'pageNo'</span>, <span class="hljs-keyword">new</span> DefaultValuePipe(<span class="hljs-number">1</span>), generateParseIntPipe(<span class="hljs-string">'pageNo'</span>)) pageNo: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @Query(<span class="hljs-string">'pageSize'</span>, <span class="hljs-keyword">new</span> DefaultValuePipe(<span class="hljs-number">2</span>), generateParseIntPipe(<span class="hljs-string">'pageSize'</span>)) pageSize: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @Query(<span class="hljs-string">'username'</span>) username: string,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    @Query(<span class="hljs-string">'nickName'</span>) nickName: string,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @Query(<span class="hljs-string">'email'</span>) email: string</span>
+<span class="code-block-extension-codeLine" data-line-num="8">) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>.<span class="hljs-title function_">findUsers</span>(username, nickName, email, pageNo, pageSize);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+</code></pre>
+<p>在 UserService 添加 findUsers 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findUsers</span>(<span class="hljs-params">username: string, nickName: string, email: string, pageNo: number, pageSize: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> skipCount = (pageNo - <span class="hljs-number">1</span>) * pageSize;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">const</span> <span class="hljs-attr">condition</span>: <span class="hljs-title class_">Record</span>&lt;string, any&gt; = {};</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">if</span>(username) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        condition.<span class="hljs-property">username</span> = <span class="hljs-title class_">Like</span>(<span class="hljs-string">`%<span class="hljs-subst">${username}</span>%`</span>);   </span>
+<span class="code-block-extension-codeLine" data-line-num="8">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">if</span>(nickName) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        condition.<span class="hljs-property">nickName</span> = <span class="hljs-title class_">Like</span>(<span class="hljs-string">`%<span class="hljs-subst">${nickName}</span>%`</span>); </span>
+<span class="code-block-extension-codeLine" data-line-num="11">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">if</span>(email) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        condition.<span class="hljs-property">email</span> = <span class="hljs-title class_">Like</span>(<span class="hljs-string">`%<span class="hljs-subst">${email}</span>%`</span>); </span>
+<span class="code-block-extension-codeLine" data-line-num="14">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-keyword">const</span> [users, totalCount] = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userRepository</span>.<span class="hljs-title function_">findAndCount</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-attr">select</span>: [<span class="hljs-string">'id'</span>, <span class="hljs-string">'username'</span>, <span class="hljs-string">'nickName'</span>, <span class="hljs-string">'email'</span>, <span class="hljs-string">'phoneNumber'</span>, <span class="hljs-string">'isFrozen'</span>, <span class="hljs-string">'headPic'</span>, <span class="hljs-string">'createTime'</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-attr">skip</span>: skipCount,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-attr">take</span>: pageSize,</span>
+<span class="code-block-extension-codeLine" data-line-num="20">        <span class="hljs-attr">where</span>: condition</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        users,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">        totalCount</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="27">}</span>
+</code></pre>
+<p>和之前的区别就是多了个 where 条件。</p>
+<p>根据 username、nickName、email 搜索的时候，使用模糊查询。</p>
+<p>测试下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/472118f2b46244e897eaa703b5260c5c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当我传 nickName 包含“里”的时候，服务端查询到数据只有一条。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/645e9612eac44e40861b4dd21bba6a5b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>传入 nickName 包含 “光” 的时候，返回两条数据。</p>
+<p>这样，搜索就完成了。</p>
+<p>代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fmeeting_room_booking_system_backend" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/meeting_room_booking_system_backend" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们实现了冻结用户和用户列表接口。</p>
+<p>我们通过自定义 exception filter，catch 了 HTTPException，返回了自定义格式的响应，统一了响应格式。</p>
+<p>冻结用户接口比较简单，就是修改 users 表的一个字段。</p>
+<p>用户列表支持了分页查询和模糊搜索：</p>
+<p>分页查询就是根据 (pageNo -1) * pageSize 计算出从哪里开始，然后取 pageSize 条。</p>
+<p>模糊搜索就是通过 like 来匹配。</p>
+<p>此外，ParseIntPipe 我们自定义了错误格式，还使用了 DefaultValuePipe 设置了默认值。</p>
+<p>至此，用户模块的所有接口都写完了，下节我们用 swagger 来生成接口文档。</p></div>

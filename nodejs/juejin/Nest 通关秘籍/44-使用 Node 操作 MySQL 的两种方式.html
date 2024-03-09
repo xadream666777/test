@@ -1,0 +1,240 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>前面我们学习了 MySQL 的数据库、表、增删改查等，目的还是在 Node 应用里操作它。</p>
+<p>这节我们就来学习下用 mysql2 和 typeorm 两种方式来操作 MysSQL 数据库。</p>
+<p>先来看下 mysql2:</p>
+<p>它是用的最多的连接 mysql 的 npm 包，是 mysql 包的升级版，有更多特性。</p>
+<p>我们创建个目录，然后进入这个目录执行 npm init -y 创建 package.json。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/198e7a1ef31743f49799bbb42392d07c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后安装 mysql2</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> mysql2 </span>
+</code></pre>
+<p>添加这样一个 index.js：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> mysql = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mysql2'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> connection = mysql.<span class="hljs-title function_">createConnection</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">host</span>: <span class="hljs-string">'localhost'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attr">port</span>: <span class="hljs-number">3306</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">user</span>: <span class="hljs-string">'root'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">password</span>: <span class="hljs-string">'guang'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-attr">database</span>: <span class="hljs-string">'practice'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">});</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">connection.<span class="hljs-title function_">query</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-string">'SELECT * FROM customers'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-keyword">function</span>(<span class="hljs-params">err, results, fields</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(results);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(fields.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">name</span>)); </span>
+<span class="code-block-extension-codeLine" data-line-num="16">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">);</span>
+</code></pre>
+<p>连接 mysql server，指定用户名、密码、要操作的数据库（这里要改成你自己的 mysql 连接密码）。</p>
+<p>然后通过 query 方法跑一个查询 sql。</p>
+<p>results 是结果，fields 是一些元信息，比如字段名这些。</p>
+<p>node 执行下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/39575fc93dfe4e468daa39de47aebc69~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>和我们在 mysql workbench 里执行效果一样。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/64a85415cb7f4e9cafdc2882c6ee8b0b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>查询也可以指定占位符：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">connection.<span class="hljs-title function_">query</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-string">'SELECT * FROM customers WHERE name LIKE ?'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    [<span class="hljs-string">'李%'</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">function</span>(<span class="hljs-params">err, results, fields</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(results);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(fields.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">name</span>)); </span>
+<span class="code-block-extension-codeLine" data-line-num="7">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="8">);</span>
+</code></pre>
+<p>我们查询了姓李的顾客有哪些：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/740183baff8a4df69d2fe245232a0fa8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然，增删改也是可以的。</p>
+<p>比如我们插入一条数据：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">connection.execute(<span class="hljs-string">'INSERT INTO customers (name) VALUES (?)'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    [<span class="hljs-string">'光'</span>], (err, results, fields) <span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    console.<span class="hljs-built_in">log</span>(err);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">});</span>
+</code></pre>
+<p>在 mysql workbench 里可以看到，确实插入了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d479b595b70c4d5ca013db16e8d4a5ba~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再来试下修改。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">connection.<span class="hljs-title function_">execute</span>(<span class="hljs-string">'UPDATE customers SET name="guang" where name="光"'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">});</span>
+</code></pre>
+<p>把刚才插入的记录改个名字。</p>
+<p>node 跑一下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/81ca6a47da704829bdebe38a158f156d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点下刷新，可以看到确实修改了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/398da9cf22184817ba22c8e743c0160a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再试试删除：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">connection.<span class="hljs-title function_">execute</span>(<span class="hljs-string">'DELETE  FROM customers where name=?'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    [<span class="hljs-string">'guang'</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    });</span>
+</code></pre>
+<p>执行后数据库中这条记录也删除了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5cfa8bd7e0c94e46839a112260091478~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是用 mysql2 做增删改查的方式。</p>
+<p>是不是还挺简单的，就和我们在 mysql workbench 里写 sql 差不多。</p>
+<p>当然，这些 api 也都有 promise 版本。</p>
+<p>这样写：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">const mysql <span class="hljs-operator">=</span> require(<span class="hljs-string">'mysql2/promise'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">(async <span class="hljs-keyword">function</span>() {</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    const connection <span class="hljs-operator">=</span> await mysql.createConnection({</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        host: <span class="hljs-string">'localhost'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        port: <span class="hljs-number">3306</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-keyword">user</span>: <span class="hljs-string">'root'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        password: <span class="hljs-string">'guang'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        database: <span class="hljs-string">'practice'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    const [results, fields] <span class="hljs-operator">=</span> await connection.query(<span class="hljs-string">'SELECT * FROM customers'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    console.<span class="hljs-built_in">log</span>(results);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    console.<span class="hljs-built_in">log</span>(fields.map(item <span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> item.name)); </span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">})();</span>
+</code></pre>
+<p>结果一样：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3f05d163e3e9433b9b67090975adf221~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这是最基本的使用：需要操作数据库的时候，建立连接，用完之后释放连接。</p>
+<p>但这样性能并不高。</p>
+<p>因为数据库的连接建立还是很耗时的，而且一个连接也不够用。</p>
+<p>我们一般都是用连接池来管理：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1958a1babf864c7abca8166dec40e97a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>连接池中放着好几个 mysql 的连接对象，用的时候取出来执行 sql，用完之后放回去，不需要断开连接。</p>
+<p>mysql2 自然也封装了连接池的功能。</p>
+<p>这样用：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> mysql = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mysql2/promise'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">(<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">const</span> pool = mysql.<span class="hljs-title function_">createPool</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-attr">host</span>: <span class="hljs-string">'localhost'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">user</span>: <span class="hljs-string">'root'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">password</span>: <span class="hljs-string">'guang'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">database</span>: <span class="hljs-string">'practice'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">waitForConnections</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">connectionLimit</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attr">maxIdle</span>: <span class="hljs-number">10</span>, </span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">idleTimeout</span>: <span class="hljs-number">60000</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">queueLimit</span>: <span class="hljs-number">0</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">enableKeepAlive</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-attr">keepAliveInitialDelay</span>: <span class="hljs-number">0</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-keyword">const</span> [results] = <span class="hljs-keyword">await</span> pool.<span class="hljs-title function_">query</span>(<span class="hljs-string">'select * from customers'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(results);</span>
+<span class="code-block-extension-codeLine" data-line-num="20">})();</span>
+</code></pre>
+<p>只要把 createConnection 换成 createPool 就好了。query 或者 execute 的时候会自动从 pool 中取 connection 来用，用完会放回去。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/518eb14a89ca416e933318ca978260ac~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>或者你也可以手动取：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> connection = <span class="hljs-keyword">await</span> pool.<span class="hljs-title function_">getConnection</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> [results] = <span class="hljs-keyword">await</span> connection.<span class="hljs-title function_">query</span>(<span class="hljs-string">'select * from orders'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(results);</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9afd05d94fbd4154acb805fa9656d17c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>回过头来再看看这些 option：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f83ffc6c8dc646ac9f7180deb0895a7b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>connectionLimit 是指定最多有多少个连接，比如 10 个，那就是只能同时用 10个，再多需要排队等。</p>
+<p>maxIdle 是指定最多有多少个空闲的，超过这个数量的空闲连接会被释放。</p>
+<p>waitForConnections 是指如果现在没有可用连接了，那就等待，设置为 false 就是直接返回报错。</p>
+<p>idleTimeout 是指空闲的连接多久会断开。</p>
+<p>queueLimit 是可以排队的请求数量，超过这个数量就直接返回报错说没有连接了。设置为 0 就是排队没有上限。</p>
+<p>enableKeepAlive、keepAliveInitialDelay 是保持心跳用的，用默认的就好。</p>
+<p>这就是 mysql2 的用法，是不是还会挺简单的？</p>
+<p>只要建立个连接或者连接池，就可以在 node 里执行 sql 了。</p>
+<p>但是我们一般不会直接这样执行 sql，而是会用 ORM 框架。</p>
+<p><strong>ORM 是 Object Relational Mapping，对象关系映射。也就是说把关系型数据库的表映射成面向对象的 class，表的字段映射成对象的属性映射，表与表的关联映射成属性的关联。</strong></p>
+<p>其实这个想法也很自然，比如我们前面执行的这些 sql：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e253cffe2fdb440d8a515e403510a9c4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3f0d16b99b824b03945d76d9616cd147~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>返回的不就是 js 对象么。</p>
+<p>那不如直接操作这个对象，让 ORM 框架自动执行 sql 去同步数据库。</p>
+<p>TypeORM 就是一个流行的 ORM 框架。</p>
+<p>我们来试一下：</p>
+<p>新建一个项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">kotlin</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-kotlin code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx <span class="hljs-symbol">typeorm@</span>latest <span class="hljs-keyword">init</span> --name typeorm-mysql-test --database mysql</span>
+</code></pre>
+<p>通过 typeorm 的 init 命令创建一个项目， --name 指定项目名，--database 指定连接的数据库。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9338fc5a7f5643e28e63a4cc49bd5ab3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>修改下 data-source.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> <span class="hljs-string">"reflect-metadata"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">DataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title class_">AppDataSource</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DataSource</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">type</span>: <span class="hljs-string">"mysql"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">host</span>: <span class="hljs-string">"localhost"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">port</span>: <span class="hljs-number">3306</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">username</span>: <span class="hljs-string">"root"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">password</span>: <span class="hljs-string">"guang"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">database</span>: <span class="hljs-string">"practice"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">synchronize</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">entities</span>: [<span class="hljs-title class_">User</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-attr">migrations</span>: [],</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">subscribers</span>: [],</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">connectorPackage</span>: <span class="hljs-string">'mysql2'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-attr">extra</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-attr">authPlugin</span>: <span class="hljs-string">'sha256_password'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="20">})</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/20311814f7a94017b919efc47163af3b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用户名密码，要操作的数据库，这些很容易理解。</p>
+<p>指定用 mysql2 包来连接，就是我们前面测试的那个。</p>
+<p>然后添加一个验证的插件，sha256_password，这个是切换密码的加密方式的，新版本 mysql 改成这种密码加密方式了。</p>
+<p>还要手动安装下 mysql2 这个驱动包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> mysql2</span>
+</code></pre>
+<p>然后执行 npm run start。</p>
+<p>这时候你会发现 practice 数据库多了个表：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36e165fdaf9a4494b8a65cc0a5a5628f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>打开看一下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1a3338303dfd49e69a58ddc7820979fe~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它还有一条数据。</p>
+<p>而且控制台也打印了查询出来的这条数据：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/436b9fb2421c4e7cac7c86bc7f1118ce~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>怎么做到的呢？</p>
+<p>我们看下代码，有这样一个 entity，通过装饰器声明了主键列和其他的列：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/16240ef5954c4a389d9eba0f6510121d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 index.ts 里创建了一个 User 的对象，调用 save 方法保存这个对象，通过 find 方法查询这个对象：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aea70c6020d54037b1083209fdc1b647~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后数据库里就创建好了表、插入了数据，并且还把它查了出来。</p>
+<p>这就是 ORM。</p>
+<p>有没有感觉很神奇，它是怎么实现的呢？</p>
+<p>我们看下它打印的 sql 就懂了。</p>
+<p>加一个 logging 为 true 的选项：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e8e7c12c0bf54c90b5f960e1b8979a2d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后去数据库把那个 user 表删掉。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/40d1f18fa78c4cbebb0d0780f8355375~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再重新 npm run start：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c94579eec20a4efbb943f8f678d391c2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>看到它打印的 CREATE TABLE、INSERT INTO、SELECT 的 sql 语句了么？</p>
+<p>这就是 ORM 的实现原理。</p>
+<p>它会根据你在 class 的属性上加的装饰器来生成建表 sql。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/13fa6a00c32f4fdf8e1c521da38a8d24~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后 save 这个 class 的对象，就会执行 insert into 来插入数据。</p>
+<p>find 方法会执行 select 来查询数据。</p>
+<p>这样，对表的增删改查就变成了对对象的操作。</p>
+<p>此外，可以看到每个涉及到修改的 sql 都包了一层事务，这样出了错可以回滚：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d975d42524a74d629e64b9f354c88b36~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Ftypeorm-mysql-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/typeorm-mysql-test" ref="nofollow noopener noreferrer">typeorm 案例代码</a> 和 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fmysql2-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/mysql2-test" ref="nofollow noopener noreferrer">mysql2 案例代码</a> 都在小册仓库。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>我们学习了 Node 里操作数据库的两种方式：</p>
+<p>一种是直接用 mysql2 连接数据库，发送 sql 来执行。</p>
+<p>一种是用 ORM 库，比如 typeorm，它是基于 class 和 class 上的装饰器来声明和表的映射关系的，然后对表的增删改查就变成了对象的操作以及 save、find 等方法的调用。它会自动生成对应的 sql。</p>
+<p>主流的方案还是 ORM 的方案，下节我们继续深入学习 typeorm。</p></div>

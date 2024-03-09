@@ -1,0 +1,178 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>最好的代码，就是没有代码。</p>
+<p>同样的，体验最好的网页，就是没有内容的网页。</p>
+<p>这段话乍一听似乎脱离实际，没有内容的网页根本没有加载的必要。但仔细分析，却道出了前端体验优化的核心：<strong>精简页面内容</strong>。</p>
+<p>再多优化，都比不上从根源上精简页面的内容，减少加载的资源。所以本节我们将一起学习能从根本上为前端工程精简加载资源体积和资源数量的解决方案：<strong>懒加载各类资源</strong>。</p>
+<p>在第6节，我们已经学习了《使用动态引用语法<code>import()</code>实现代码模块懒加载》的方案，这一节我们则主要关注<strong>资源懒加载</strong>。</p>
+<p><strong>资源懒加载</strong>一般应用于需要加载外部资源的元素，例如<code>&lt;img&gt;, &lt;video&gt;, &lt;iframe&gt;, &lt;picture&gt;</code>等，当懒加载目标元素在视口（ViewPort）<strong>外</strong>时，<strong>不加载</strong>对应资源。目标元素<strong>接近或进入</strong>视口时，<strong>才</strong>触发加载资源。</p>
+<p>从而减少页面加载资源的数量，精简加载资源体积，优化用户体验。</p>
+<h2 data-id="heading-0">1. 3类资源懒加载实现方案</h2>
+<p>下面我们将以<code>&lt;img&gt;</code>元素为例，来一一学习的3类懒加载解决方案的核心原理及具体实现，它们分别是：</p>
+<ul>
+<li>
+<p>监听滚动事件方案</p>
+</li>
+<li>
+<p>浏览器 Intersection Observer API方案</p>
+</li>
+<li>
+<p>浏览器原生懒加载方案</p>
+</li>
+</ul>
+<h3 data-id="heading-1">1. 监听滚动事件方案</h3>
+<p>第一种实现方案是通过监听浏览器页面滚动事件（<code>scroll</code>），动态计算视口内元素位置，从而判断懒加载目标元素，触发资源加载。</p>
+<p>以图片元素懒加载为例，我们需要监听页面滚动事件，并计算出每张图片与视口顶部的相对距离。如果图片在视口内，就加载该图片，否则就不加载。</p>
+<p>请看代码示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// 1. 获取所有需要懒加载的图片元素</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> lazyloadImages = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">'[data-lazyload]'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-comment">// 2. 监听页面滚动事件</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-variable language_">window</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">'scroll'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  lazyloadImages.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">img</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">if</span> (img.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">'data-loaded'</span>)) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-comment">// 3.  获取图片与视口顶部的相对距离</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">const</span> topPos = img.<span class="hljs-title function_">getBoundingClientRect</span>().<span class="hljs-property">top</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-comment">// 4. 与 视口高度（window.innerHeight）对比，判断是否在视口内</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">if</span> (topPos &lt; <span class="hljs-variable language_">window</span>.<span class="hljs-property">innerHeight</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-comment">// 5. 如果图片在当前视口内，就加载该图片</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">      img.<span class="hljs-property">src</span> = img.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">'data-src'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      img.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">'data-loaded'</span>, <span class="hljs-literal">true</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="18">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="19">});</span>
+</code></pre>
+<p>对应的HTML代码是：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">data-lazyload</span> <span class="hljs-attr">data-src</span>=<span class="hljs-string">"/example-image.jpg"</span> /&gt;</span></span>
+</code></pre>
+<p>在上述代码中，我们首先获取所有需要懒加载的图片元素，通过<code>querySelectorAll</code> 获取带有指定的<strong>懒加载标记属性</strong><code>data-lazyload</code>的元素引用，这些图片初始化时没有设置<code>src</code>值，而真正的懒加载目标图片URL则保存在 <code>data-src</code> 属性中，这样就能实现初始化时暂不加载图片，由代码逻辑控制图片何时加载。</p>
+<p>然后，我们监听页面滚动事件<code>window.addEventListener('scroll')</code>，在滚动事件的回调中，遍历所有需要懒加载的图片元素<code>lazyloadImages.forEach</code>。</p>
+<p>对于每个图片元素，我们首先检查其 <code>data-loaded</code> 属性是否为 <code>true</code>，如果是，则说明该图片已经加载过了，我们就跳过该元素。</p>
+<p>否则，我们通过<code>getBoundingClientRect()</code>方法获取该图片距离视口（viewport）顶部的位置，并通过和当前视口高度（<code>window.innerHeight</code>）对比，判断该图片当前是否在视口内，即图片与视口顶部的距离，是否小于当前视口的高度。</p>
+<p>最后，如果图片在视口内，就将该图片的 <code>src</code> 属性设置为 <code>data-src</code> 属性的值，从而触发图片资源加载，并将 <code>data-loaded</code> 属性设置为 <code>true</code>，表示该图片已经加载过了。</p>
+<p>这样我们就实现了对图片类资源的懒加载，初始化时暂不加载图片资源，减少加载资源数量和体积，提高初始化时渲染性能，当图片进入浏览器视口时，再真正触发加载。</p>
+<p>实际应用时，我们应该对这一方案做更多细节上的优化，如：</p>
+<ul>
+<li>设置图片默认的宽高，以避免懒加载完成后，页面高度变化，被判断为意外布局变化，影响CLS评分。</li>
+<li>添加图片未加载占位符和加载中动画，改善用户等待加载时的视觉和体验。</li>
+<li>计算位置、判断目标元素是否出现在视口时，还要考虑水平方向上的页面滚动位置，计算<code>getBoundingClientRect()</code>返回的<code>top, bottom, left, right</code>4个方向相对视口位置。</li>
+<li>对<code>scroll</code>事件添加节流优化，降低触发回调函数的频率，避免影响页面渲染的FPS。</li>
+</ul>
+<p>依赖<code>scroll</code>事件，容易对页面渲染性能产生负面影响，这也是监听滚动事件方案的主要<strong>痛点</strong>。</p>
+<p>过低的<code>scroll</code>事件回调触发频率，会导致懒加载触发不灵敏。</p>
+<p>而过高的<code>scroll</code>事件回调触发频率，又会因为大量计算，导致JS执行耗时太长，阻塞UI绘制，产生页面卡顿。</p>
+<p>为了解决这些痛点，浏览器平台的 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FAPI%2FIntersection_Observer_API" target="_blank" rel="nofollow noopener noreferrer" title="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" ref="nofollow noopener noreferrer">Intersection Observer API</a>应运而生。</p>
+<h3 data-id="heading-2">2. <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FAPI%2FIntersection_Observer_API" target="_blank" rel="nofollow noopener noreferrer" title="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" ref="nofollow noopener noreferrer">Intersection Observer API</a> 监听元素距视口位置方案</h3>
+<p>第二类懒加载方案是使用 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FAPI%2FIntersection_Observer_API" target="_blank" rel="nofollow noopener noreferrer" title="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" ref="nofollow noopener noreferrer">Intersection Observer API</a>，该API可用于<strong>监听</strong>元素距离视口（Viewport）位置，当元素进入视口时，触发指定回调函数，从而实现懒加载、无限滚动等功能，</p>
+<p>使用该API可以省略编写代码计算元素相对位置的逻辑，解决<strong>JS监听滚动事件实现懒加载方案</strong>需要频繁计算元素位置的痛点，有助于提高懒加载的性能表现和用户体验。</p>
+<p>请看代码示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// 创建 IntersectionObserver 实例</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> observer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">IntersectionObserver</span>(<span class="hljs-function"><span class="hljs-params">entries</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-comment">// 遍历所有观察的元素</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  entries.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">entry</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-comment">// 如果该元素进入了视口，就加载该元素的图片</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">if</span> (entry.<span class="hljs-property">isIntersecting</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-keyword">const</span> img = entry.<span class="hljs-property">target</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      img.<span class="hljs-property">src</span> = img.<span class="hljs-property">dataset</span>.<span class="hljs-property">src</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      observer.<span class="hljs-title function_">unobserve</span>(img);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="12">});</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14"><span class="hljs-keyword">const</span> lazyImages = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">'img.lazy'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16"><span class="hljs-comment">// 开始监听所有需要懒加载的图片元素</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">lazyImages.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">img</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">  observer.<span class="hljs-title function_">observe</span>(img);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">});</span>
+</code></pre>
+<p>在上述代码中，我们首先创建了一个<code>IntersectionObserver</code>实例<code>observer</code>，该实例可用于<strong>监视多个元素</strong>是否进入视口。</p>
+<p>然后，我们获取所有需要懒加载的图片元素，并分别调用 <code>observe()</code> 方法，开始监视每个图片元素。</p>
+<p>当某一个图片元素进入了视口时，创建实例时传入的第一个参数——回调函数就会被触发。</p>
+<p>进入视口的每一个图片元素，会生成一条<strong>重叠记录数据（IntersectionObserverEntry&nbsp;）</strong> ，成为回调函数第一个参数<code>entries</code>中的一个元素。</p>
+<p><strong>重叠记录数据（IntersectionObserverEntry&nbsp;）</strong> 主要包含以下数据：</p>
+<ul>
+<li><code>target</code>：对象值，监视目标元素的引用</li>
+<li><code>isIntersecting</code>：布尔值，表示目标元素是否和视口重叠，即是否进入了视口。</li>
+</ul>
+<p>重叠记录数据示例 <strong>：</strong></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    boundingClientRect<span class="hljs-punctuation">:</span> DOMRectReadOnly <span class="hljs-punctuation">{</span>x<span class="hljs-punctuation">:</span> <span class="hljs-number">107.1875</span><span class="hljs-punctuation">,</span> y<span class="hljs-punctuation">:</span> <span class="hljs-number">-172.8125</span><span class="hljs-punctuation">,</span> width<span class="hljs-punctuation">:</span> <span class="hljs-number">300.015625</span><span class="hljs-punctuation">,</span> height<span class="hljs-punctuation">:</span> <span class="hljs-number">500</span><span class="hljs-punctuation">,</span> top<span class="hljs-punctuation">:</span> <span class="hljs-number">-172.8125</span><span class="hljs-punctuation">,</span> …<span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    intersectionRatio<span class="hljs-punctuation">:</span> <span class="hljs-number">0.4854249954223633</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    intersectionRect<span class="hljs-punctuation">:</span> DOMRectReadOnly <span class="hljs-punctuation">{</span>x<span class="hljs-punctuation">:</span> <span class="hljs-number">107.1875</span><span class="hljs-punctuation">,</span> y<span class="hljs-punctuation">:</span> <span class="hljs-number">84.46875</span><span class="hljs-punctuation">,</span> width<span class="hljs-punctuation">:</span> <span class="hljs-number">300.015625</span><span class="hljs-punctuation">,</span> height<span class="hljs-punctuation">:</span> <span class="hljs-number">242.71875</span><span class="hljs-punctuation">,</span> top<span class="hljs-punctuation">:</span> <span class="hljs-number">84.46875</span><span class="hljs-punctuation">,</span> …<span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    isIntersecting<span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    isVisible<span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    rootBounds<span class="hljs-punctuation">:</span> DOMRectReadOnly <span class="hljs-punctuation">{</span>x<span class="hljs-punctuation">:</span> <span class="hljs-number">8</span><span class="hljs-punctuation">,</span> y<span class="hljs-punctuation">:</span> <span class="hljs-number">84.46875</span><span class="hljs-punctuation">,</span> width<span class="hljs-punctuation">:</span> <span class="hljs-number">483.203125</span><span class="hljs-punctuation">,</span> height<span class="hljs-punctuation">:</span> <span class="hljs-number">583.21875</span><span class="hljs-punctuation">,</span> top<span class="hljs-punctuation">:</span> <span class="hljs-number">84.46875</span><span class="hljs-punctuation">,</span> …<span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    target<span class="hljs-punctuation">:</span> div.box</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    time<span class="hljs-punctuation">:</span> <span class="hljs-number">839005.1999998093</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<p>在回调函数中，我们可以遍历所有<strong>重叠记录数据</strong>，如果某一条<strong>重叠记录数据</strong>的 <code>isIntersecting</code> 属性为 <code>true</code>，就表示这条记录对应的元素进入了视口，可以通过<code>target</code>属性获取元素引用。</p>
+<p>我们就可以将该元素的<code>src</code>属性设置为 <code>data-src</code> 属性的值，触发<code>src</code>对应图片资源加载，实现懒加载的逻辑。</p>
+<p>最后，因为这个元素已经触发过了加载，我们还可以使用<code>unobserve()</code>方法停止观察该元素，避免重复触发回调函数，同时节省内存资源。</p>
+<blockquote>
+<p>拓展知识：<code>IntersectionObserver</code>，不仅可以监视<strong>元素</strong>和<strong>视口</strong>的重叠关系，还可以在初始化实例时，传入第二个参数<code>options</code>：</p>
+<ul>
+<li>
+<p>指定<code>root</code>，值为监视目标元素<strong>父元素</strong>的引用，从而监视任意父子元素的重叠关系。但前提是父元素必须是可以滚动的，例如设置了CSS样式：<code>overflow: scroll;</code></p>
+</li>
+<li>
+<p>指定<code>threshold</code>，传入[0, 1.0]区间内的数据，指定重叠判定的比例。</p>
+<ul>
+<li>值为0表示子元素有1个像素，出现在父元素视口内，就触发回调。</li>
+<li>值为1表示子元素全部出现在父元素视口内，才触发回调。</li>
+</ul>
+</li>
+</ul>
+<p>通过这些细节选项，可以进一步实现无限滚动、判断元素是否可见等复杂逻辑。</p>
+</blockquote>
+<blockquote>
+<p>注：Intersection Observer API 兼容性情况如下：</p>
+<ul>
+<li>Chrome 版本 51+ 支持（发布于2016年）</li>
+<li>Edge 版本 15+ 支持（发布于2017年）</li>
+<li>Safari 版本 12.1+ 支持（发布于2019年）</li>
+</ul>
+<p>Intersection Observer兼容性详细数据：<a href="https://link.juejin.cn?target=https%3A%2F%2Fcaniuse.com%2Fintersectionobserver" target="_blank" rel="nofollow noopener noreferrer" title="https://caniuse.com/intersectionobserver" ref="nofollow noopener noreferrer">caniuse.com/intersectio…</a></p>
+</blockquote>
+<p>通过上述介绍，相信大家也有所体会，<a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FAPI%2FIntersection_Observer_API" target="_blank" rel="nofollow noopener noreferrer" title="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" ref="nofollow noopener noreferrer">Intersection Observer API</a>虽然功能强大，但仍然有一定的学习和使用成本。</p>
+<p>为了解决成本较高的痛点，使用成本几乎为0的<strong>浏览器原生懒加载方案</strong>近年来顺势而生。</p>
+<h3 data-id="heading-3">3. 14个字符实现懒加载：浏览器原生<code>loading="lazy"</code>属性</h3>
+<p>第三种懒加载方案是使用浏览器原生<code>loading="lazy"</code>属性，这个属性目前可以用于<code>&lt;img&gt;</code>和<code>&lt;iframe&gt;</code>2类元素。</p>
+<p>只要元素添加了<code>lazyload</code>属性，浏览器就会为我们处理各种细节，实现懒加载效果，无需任何额外代码逻辑，使用成本非常低，开发体验极佳！</p>
+<p>请看代码示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">loading</span>=<span class="hljs-string">"lazy"</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"example.jpg"</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">"Example Image"</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">iframe</span> <span class="hljs-attr">loading</span>=<span class="hljs-string">"lazy"</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://github.com/JuniorTour"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">iframe</span>&gt;</span></span>
+</code></pre>
+<p>上述代码示例中，和没有懒加载的<code>&lt;img&gt;</code>、<code>&lt;iframe&gt;</code>相比，唯一的区别就是多了<code>loading="lazy"</code>属性，其余的<code>src</code>、<code>alt</code>等属性没有任何改变，也不需要新增额外代码逻辑，就能实现目标元素在视口外不加载资源，进入视口时才触发加载资源的懒加载效果。</p>
+<p>上面我们介绍的2种方案，都需要配套上百行JS代码逻辑，才能实现懒加载，但<code>loading="lazy"</code>属性完全不需要额外代码逻辑，对比之下，美好的像是一场梦。</p>
+<p>可惜美梦终有醒来的时候，<code>loading="lazy"</code>属性的缺点也非常显著，主要体现在以下2方面：</p>
+<h4 data-id="heading-4">1. 浏览器兼容性一般</h4>
+<p><code>loading="lazy"</code>属性浏览器兼容性如下：</p>
+<ul>
+<li>Chrome 77 +（2019年发布）</li>
+<li>Edge 79 +（2020年发布）</li>
+<li>Safari 15.4 +（2022年发布）</li>
+<li>Chrome for Android 119+ （2023年发布）</li>
+</ul>
+<blockquote>
+<p>兼容性详细数据：<a href="https://link.juejin.cn?target=https%3A%2F%2Fcaniuse.com%2Floading-lazy-attr" target="_blank" rel="nofollow noopener noreferrer" title="https://caniuse.com/loading-lazy-attr" ref="nofollow noopener noreferrer">caniuse.com/loading-laz…</a></p>
+</blockquote>
+<p>可以看出，这一属性目前只能在近3年推出的浏览器上使用，在移动端更是到了2023年才得以被支持。在生产环境全面使用<code>loading="lazy"</code>属性，目前还只能覆盖部分用户。</p>
+<h4 data-id="heading-5">2. 支持的元素太少</h4>
+<p>此外，<code>loading="lazy"</code>属性目前只能应用在<code>&lt;img&gt;</code>、<code>&lt;iframe&gt;</code>2类元素上，其他需要加载资源的元素，例如：<code>&lt;video&gt;</code>、<code>&lt;picture&gt;</code>、CSS <code>background-image</code>原生懒加载属性都还没有支持。</p>
+<p>即使各大浏览器平台现在开始实现对更多元素懒加载的支持，考虑到用户使用浏览器版本更新滞后的现实情况，想要全面应用到生产环境，也还是免不了要再等待数年。</p>
+<p>那么，在2024年我们想要在生产环境全面应用<strong>资源懒加载优化</strong>，应该如何选择呢？</p>
+<p>一个可行的方案是，基于各类懒加载实现方案，封装一套工具库。</p>
+<p>笔者已经基于工作经验，封装了一套<strong>通用懒加载库</strong>，致力于解决资源懒加载<strong>兼容性</strong>和<strong>使用成本高</strong>这2大痛点，下面我们就一起学习一下这个懒加载库的实现原理和使用方式。</p></div>

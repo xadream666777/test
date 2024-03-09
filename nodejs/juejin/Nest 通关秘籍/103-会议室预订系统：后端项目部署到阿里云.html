@@ -1,0 +1,209 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>项目写完了，本地跑没啥问题，我们最终是要把它部署到服务器上，跑起来。</p>
+<p>我们会用到 mysql、redis、nginx，它们是这样的关系：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fe3aa0c61f374ccaa7f0d99750fc82e5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1260&amp;h=552&amp;s=42643&amp;e=png&amp;b=fffefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>前端代码由 nginx 托管，处理静态请求。</p>
+<p>并且后端服务也会经过 nginx 做反向代理，这样可以做多个 Nest 服务的负载均衡。</p>
+<p>Nginx、Mysql、Redis、Nest 服务等都是通过 docker 来跑。</p>
+<p>当然，不用一个个的跑，可以通过 Docker Compose 把它们组合成一个整体，一起跑。</p>
+<p>开发完之后，本地把代码 push 到 github、gitlab 等代码仓库。</p>
+<p>之后服务器上把代码 pull 下来，然后用 docker compose 跑就行。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6f000e3d6eb7419390b031e7dfbcadf1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1282&amp;h=726&amp;s=66116&amp;e=png&amp;b=fffefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>有了 docker，根本不用考虑 mysql、redis、node 等在 linux 下怎么装，直接跑 docker 镜像就行。</p>
+<p>是不是再次感受到了 docker 的好处？</p>
+<p>此外，还有一点要注意，线上不能开启 typeorm 的 synchronize，这样代码一改就同步修改了表结构，容易导致数据丢失。</p>
+<p>线上会用 migration 迁移来做。</p>
+<p>详细的 migration 介绍看<a href="https://juejin.cn/book/7226988578700525605/section/7336184436872085531" target="_blank" title="https://juejin.cn/book/7226988578700525605/section/7336184436872085531">这节</a>。</p>
+<p>我们一步步来做，首先，在本地用 docker compose 跑一下:</p>
+<p>在后端项目的根目录添加 docker-compose.yml 文件：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">yml</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-yml code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">version:</span> <span class="hljs-string">'3.8'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-attr">services:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">nest-app:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">build:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-attr">context:</span> <span class="hljs-string">./</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">dockerfile:</span> <span class="hljs-string">./Dockerfile</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">depends_on:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-bullet">-</span> <span class="hljs-string">mysql-container</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-bullet">-</span> <span class="hljs-string">redis-container</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">ports:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-bullet">-</span> <span class="hljs-number">3005</span><span class="hljs-string">:3005</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">networks:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-bullet">-</span> <span class="hljs-string">common-network</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-attr">mysql-container:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">image:</span> <span class="hljs-string">mysql</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">volumes:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-bullet">-</span> <span class="hljs-string">/Users/guang/mysql-data:/var/lib/mysql</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-attr">environment:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-attr">MYSQL_DATABASE:</span> <span class="hljs-string">meeting_room_booking_system</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-attr">MYSQL_ROOT_PASSWORD:</span> <span class="hljs-string">guang</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-attr">networks:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-bullet">-</span> <span class="hljs-string">common-network</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">  <span class="hljs-attr">redis-container:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-attr">image:</span> <span class="hljs-string">redis</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-attr">volumes:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">      <span class="hljs-bullet">-</span> <span class="hljs-string">/Users/guang/redis-data:/data</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">    <span class="hljs-attr">networks:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">      <span class="hljs-bullet">-</span> <span class="hljs-string">common-network</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29"><span class="hljs-attr">networks:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30">  <span class="hljs-attr">common-network:</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-attr">driver:</span> <span class="hljs-string">bridge</span></span>
+</code></pre>
+<p>有 3 个 docker 容器，nest-app、mysql-container、redis-container</p>
+<p>nest-app 是通过 Dockerfile 构建出来的，暴露 3005 端口。</p>
+<p>nest-app 依赖 redis-container 和 mysql-container</p>
+<p>redis-container 指定挂载的 volume 数据卷，以及 MYSQL_DATABASE（自动创建的 database） 和 MYSQL_ROOT_PASSWORD（root 用户密码） 的环境变量</p>
+<p>mysql-container 指定挂载的 volume 数据卷</p>
+<p>然后这是三个容器放到同一个桥接网络里。</p>
+<p>在根目录添加 Dockerfile：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">docker</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-docker code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">FROM node:18.0-alpine3.14 as build-stage</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">WORKDIR /app</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">COPY package.json .</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">RUN npm config set registry https://registry.npmmirror.com/</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">RUN npm install</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">COPY . .</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">RUN npm run build</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15"># production stage</span>
+<span class="code-block-extension-codeLine" data-line-num="16">FROM node:18.0-alpine3.14 as production-stage</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">COPY --from=build-stage /app/dist /app</span>
+<span class="code-block-extension-codeLine" data-line-num="19">COPY --from=build-stage /app/package.json /app/package.json</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">WORKDIR /app</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23">RUN npm config set registry https://registry.npmmirror.com/</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">RUN npm install --production</span>
+<span class="code-block-extension-codeLine" data-line-num="26"></span>
+<span class="code-block-extension-codeLine" data-line-num="27">EXPOSE 3005</span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29">CMD ["node", "/app/main.js"]</span>
+</code></pre>
+<p>Nest 如何写 Dockerfile <a href="https://juejin.cn/book/7226988578700525605/section/7236247409871814714" target="_blank" title="https://juejin.cn/book/7226988578700525605/section/7236247409871814714">前面</a>也讲过。</p>
+<p>就是用多阶段构建，第一个镜像先复制 package.json，然后安装依赖。</p>
+<p>之后执行 npm run build 生成 dist 目录。</p>
+<p>接下来第二个镜像复制第一个镜像的 dist 目录和 package.json，然后执行  npm install 并且用 node 跑起来。</p>
+<p>改下 .env 文件：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ac5e45d0698c4c4fa875e3f1daaaaf82~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=898&amp;h=968&amp;s=167617&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把 localhost 改为 redis-container 和 mysql-container。</p>
+<p>还要改一个地方：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ae1e38d5fd2f4d53aa30507d641d3118~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=912&amp;h=844&amp;s=146482&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>加载配置文件的目录要改成拼接 __dirname 和 .env 的路径。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-title class_">ConfigModule</span>.<span class="hljs-title function_">forRoot</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">isGlobal</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">envFilePath</span>: path.<span class="hljs-title function_">join</span>(__dirname, <span class="hljs-string">'.env'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}),</span>
+</code></pre>
+<p>因为 build 出来的代码没有 src 目录，是直接放在 dist 下的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e83d5c264db24c80bf53002843c71a9c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=472&amp;h=766&amp;s=69916&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>加一下 .dockerignore，也就是不会被复制到容器内的文件</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">ignore</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-ignore code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">node_modules/</span>
+<span class="code-block-extension-codeLine" data-line-num="2">.vscode/</span>
+<span class="code-block-extension-codeLine" data-line-num="3">.git/</span>
+</code></pre>
+<p>接下来把它跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker compose up</span>
+</code></pre>
+<p>它会首先根据 Dockerfile 生成 nest-app 的镜像：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e31ab5319ee243cbbd2ddd7fe9d0b86b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1292&amp;h=588&amp;s=144301&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后分别跑 mysql-container 和 redis-container 容器：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/383d1f3ed26c44ae9cb09f3b152302eb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1664&amp;h=810&amp;s=320500&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>最后可以看到 nest-app 也跑起来了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/06405d52491744fdb36f96fd75c65339~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1700&amp;h=878&amp;s=398265&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>访问下接口：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/24df2ea25df04a888e7a217764b0fadb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=680&amp;h=324&amp;s=33329&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c1879e54c72049c68ab1ac091ef2f6ee~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1122&amp;h=1012&amp;s=141972&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，接口也是没问题的。</p>
+<p>如果你改了 Dockerfile 或者 docker-compose.yml 想重新跑的话，需要先把之前的镜像和容器删掉再跑：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker-compose down <span class="hljs-attr">--rmi</span> <span class="hljs-attribute">all</span></span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1acfc6d3c6f9489486a71ef28a7dbf75~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1376&amp;h=274&amp;s=80009&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>接下来把本地代码 push 到 gitlab 或者 github：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a2d0a7ac80e4a05806d7f54c133d3b2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1648&amp;h=488&amp;s=140440&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在服务器上把它拉下来跑下 docker compose up 就行了。</p>
+<p>我们买个服务器：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5bfd9524b6584e9e930b1fd144979915~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1700&amp;h=794&amp;s=790536&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5ce783f7dfdc4399b16efe446e60408c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2098&amp;h=1248&amp;s=259234&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/58b39e04ada347caa3cc1f520a41bfba~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2162&amp;h=858&amp;s=156740&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我选的是 1 核、1G 的买了一周，大家可以根据自己的需要买。</p>
+<p>注意要勾选公网 ipv4 地址，不然访问不了公网。</p>
+<p>之后进入控制台就可以看到这台服务器了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/22358f10142542e6b251b89205552e7e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2298&amp;h=792&amp;s=191408&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击远程连接：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5b9dafecb31a4a848f70ebcac6af1d23~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1480&amp;h=960&amp;s=205326&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点立即登录。</p>
+<p>我们用 ssh 密钥的方式登录，这里需要一个密钥文件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ce5b3659cb96422eb888a39c5b9a3cfe~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1868&amp;h=1180&amp;s=230897&amp;e=png&amp;b=333333" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在这里创建：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0d5f5c552bbe4ce79ebc3598bdd5e196~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2008&amp;h=1030&amp;s=190407&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>创建完会自动下载密钥文件：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e8b2734a2081432db9660e4cd8fb99bc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=612&amp;h=248&amp;s=26054&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后点击绑定密钥对，也就是用这个密钥来登录的服务器：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8fe54fb3206f4143855c2ab5b0ae32b2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2240&amp;h=1044&amp;s=217121&amp;e=png&amp;b=fefafa" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这一步会重启服务器。</p>
+<p>然后再次远程连接，就可以用这个密钥文件来登录了:</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ed6a8b042737473c9000caf9c232163e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1872&amp;h=1192&amp;s=2334830&amp;e=gif&amp;f=48&amp;b=2a2a2a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们需要安装 git 和 docker，用 git 下载代码，然后用 docker compose 来跑代码。</p>
+<p>安装 git：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">yum install git -y</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/df714fa30eb94418a6df4c4816e6fd71~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1468&amp;h=1076&amp;s=305578&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cbd0e48ddcad43da93c00d43d8ecf67b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=668&amp;h=132&amp;s=30296&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把 github 的代码下下来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">git <span class="hljs-built_in">clone</span> 你自己的git仓库</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0d69ef2e1c264972b439e5301e4b111c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1552&amp;h=316&amp;s=129403&amp;e=png&amp;b=1e1e1e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>进入项目目录，跑下 docker compose 就行：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/74e559eee59e47899a64601c65743ce1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1142&amp;h=328&amp;s=126010&amp;e=png&amp;b=1e1e1e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>和我们本地跑一样。</p>
+<p>我们安装下 docker：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e4224141942048e88d1634528300844c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2590&amp;h=698&amp;s=342039&amp;e=png&amp;b=1e1e1e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c37257d8e8bb4f7c811d9bcdf93532e5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2416&amp;h=1230&amp;s=299825&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>怎么安装直接看<a href="https://link.juejin.cn?target=https%3A%2F%2Fhelp.aliyun.com%2Fzh%2Fecs%2Fuse-cases%2Fdeploy-and-use-docker-on-alibaba-cloud-linux-2-instances" target="_blank" rel="nofollow noopener noreferrer" title="https://help.aliyun.com/zh/ecs/use-cases/deploy-and-use-docker-on-alibaba-cloud-linux-2-instances" ref="nofollow noopener noreferrer">阿里云的文档</a>就行。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1b70cec7e87049fd8080cdd3baf045f5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1334&amp;h=170&amp;s=51853&amp;e=png&amp;b=1e1e1e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>docker 安装好了，设置下开机启动，也是复制文档的命令就行：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ffcf6b83e4794250b045f2f01a14c566~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1806&amp;h=994&amp;s=440130&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f9d595720bbc420fb373fcc4b46d1da4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1880&amp;h=658&amp;s=415105&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后安装 docker compose，同样是直接复制：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/11ca9f018b434f96a44bf8d77f2ff86f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1852&amp;h=854&amp;s=162100&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/22373952a3774c70a4a34fbcf79b1325~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1482&amp;h=464&amp;s=311827&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>docker compose 安装好了，就把服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker-compose up</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a1f07127d1164798ac9f145dea870ea8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1686&amp;h=1168&amp;s=474119&amp;e=png&amp;b=1e1e1e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>会先 pull mysql 和 redis 的镜像，然后 build nest 的镜像。</p>
+<p>之后就把服务跑起来了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36d84091c7f54b83a8bf0741d151d0f8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2306&amp;h=1218&amp;s=1326175&amp;e=png&amp;b=1e1e1e" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>过程中可以看到，会自动创建一系列的 table：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9f0b84e6595d45f086b2245421fd8ec7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2098&amp;h=976&amp;s=819593&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>因为我们现在还没关掉 synchronize。</p>
+<p>因为我们服务跑在 3005 端口，需要在安全组添加一下这个端口：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0d95ea9897ce4e5db0a7cc5c85a071be~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2166&amp;h=1038&amp;s=189656&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a620e94d576e47c691d95d4af7507788~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2380&amp;h=880&amp;s=181867&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后就可以用公网 ip 访问了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4a55fe2e53e24b4a8915df102fc306fa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1864&amp;h=1216&amp;s=250031&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b432875abd474bf28681d98370a4a80e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=866&amp;h=340&amp;s=39432&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0e3f9b20997f417a849ebe110e9ba6bb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=752&amp;h=720&amp;s=76118&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然现在的初始化数据还没加，并且创建表也不是用的 migration，用 synchronize 不够安全，这些我们下节再继续搞。</p>
+<p>代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fmeeting_room_booking_system_backend" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/meeting_room_booking_system_backend" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们完成了阿里云的部署。</p>
+<p>写了 docker-compose.yml 和 Nest 应用的 Dockerfile，在本地用 docker compose 跑没问题。</p>
+<p>然后服务器上也是用同样的方式跑。</p>
+<p>买了一台阿里云服务器，安装 git 来下载项目代码，然后安装 docker compose 把服务跑起来就行了。</p>
+<p>部署成功之后，我们的服务就可以在世界各地访问了。</p></div>

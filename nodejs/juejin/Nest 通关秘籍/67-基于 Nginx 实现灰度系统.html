@@ -1,0 +1,155 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>软件开发一般不会上来就是最终版本，而是会一个版本一个版本的迭代。</p>
+<p>新版本上线前都会经过测试，但就算这样，也不能保证上线了不出问题。</p>
+<p>所以，在公司里上线新版本代码一般都是通过灰度系统。</p>
+<p>灰度系统可以把流量划分成多份，一份走新版本代码，一份走老版本代码。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/154bff9a93964729acd72bae62f45815~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而且灰度系统支持设置流量的比例，比如可以把走新版本代码的流程设置为 5%，没啥问题再放到 10%，50%，最后放到 100% 全量。</p>
+<p>这样可以把出现问题的影响降到最低。</p>
+<p>不然一上来就全量，万一出了线上问题，那就是大事故。</p>
+<p>而且灰度系统不止这一个用途，比如产品不确定某些改动是不是有效的，就要做 AB 实验，也就是要把流量分成两份，一份走 A 版本代码，一份走 B 版本代码。</p>
+<p>那这样的灰度系统是怎么实现的呢？</p>
+<p>其实很多都是用 nginx 实现的。</p>
+<p>nginx 是一个反向代理的服务，用户请求发给它，由它转发给具体的应用服务器。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25711183998b4a2eb83c2dea3a4f7bc3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这一层也叫做网关层。</p>
+<p>由它负责转发请求给应用服务器，那自然就可以在这里控制流量的分配，哪些流量走版本 A，哪些流量走版本 B。</p>
+<p>下面我们实现一下：</p>
+<p>首先，我们准备两个版本的代码。</p>
+<p>这里创建个 nest 项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx nest <span class="hljs-keyword">new</span> gray_test -p npm</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f933806c509342429029254e8c6f3306~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把 nest 服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba1716bdc4494df29fe98f96b18367e6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a7a43ccf04054d4b8e5e7cd05f0566bc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>看到 hello world 代表 nest 服务跑起来了。</p>
+<p>然后改下 AppService：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bd346e44d1c4b989c41e2425bd4df0e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>修改下端口：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9f9ac916173f42f387da9660558a6998~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再 npm run start：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5009cf2f6f1346b9821eb4a3a8a40bb5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cfda351df43e48808cbbfa4819ecd72a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在我们就有了两个版本的 nest 代码。</p>
+<p>接下来的问题是，如何用 nginx 实现灰度，让一部分请求走一个版本的代码，一部分请求走另一个版本呢？</p>
+<p>我们先跑一个 nginx 服务。</p>
+<p>docker desktop 搜索 nginx 镜像（这步需要科学上网），点击 run：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/04a6b34f238d42769ad08be17208d8b5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>设置容器名为 gray1，端口映射宿主机的 82 到容器内的 80</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bf7d1989898d4ff5851dbb4acf95f004~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A82" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:82" ref="nofollow noopener noreferrer">http://localhost:82</a> 就可以看到 nginx 页面了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/faa73d7cac0241ad87d09f13c8f69b0b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们要修改下配置文件，把它复制出来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker <span class="hljs-built_in">cp</span> gray1:/etc/nginx/conf.d ~/nginx-config</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2127066afc3847e69839c76dccef6cc3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后编辑下这个 default.conf</p>
+<p>添加这么一行配置：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">nginx</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-nginx code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">location ^~ /api {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    rewrite ^/api/(.*)$ /$1 break;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    proxy_pass http://192.168.1.6:3001;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>这行就是加了一个路由，把 /api/ 开头的请求转发给 <a href="https://link.juejin.cn?target=http%3A%2F%2F%25E5%25AE%25BF%25E4%25B8%25BB%25E6%259C%25BAIP%3A3001" target="_blank" rel="nofollow noopener noreferrer" title="http://%E5%AE%BF%E4%B8%BB%E6%9C%BAIP:3001" ref="nofollow noopener noreferrer">http://宿主机IP:3001</a> 这个服务。</p>
+<p>用 rewrite 把 url 重写了，比如 /api/xxx 变成了 /xxx。</p>
+<p>然后我们重新跑个 nginx 容器：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/baf3385d954d4943b22118a0b6765408~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>容器名为 gray2，端口映射 83 到容器内的 80。</p>
+<p>指定数据卷，挂载本地的 ～/nginx-config 目录到容器内的 /etc/nginx/conf.d 目录。</p>
+<p>点击 run。</p>
+<p>然后看下 files 部分：</p>
+<p>可以看到容器内的 /etc/nginx/conf.d 目录标识为了 mounted。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f4e8a654512d4199b752b814cf08f207~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点开看看：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c4ebe971f86e45adafe0b581dc42b49a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是本地的那个文件。</p>
+<p>我们在本地改一下试试：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a526cd70a12e4d5b98ae37e7bd572339~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>容器内也同样修改了。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/101c1100d4af4d30bdd89a17c22f4392~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在容器内修改这个文件，本地同样也会修改。</p>
+<p>也就是说挂载数据卷之后，容器内的这个目录就是本地目录，是同一份。</p>
+<p>然后我们访问下 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A83%2Fapi%2F" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:83/api/" ref="nofollow noopener noreferrer">http://localhost:83/api/</a> 看看：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dcb299ea5ec74bf4a456489d02173389~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>nest 服务访问成功了。</p>
+<p>现在我们不是直接访问 nest 服务了，而是经历了一层 nginx 反向代理或者说网关层。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/629d676511b249fb86b480515cc1c30e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>自然，我们可以在这一层实现流量控制的功能。</p>
+<p>前面我们讲负载均衡的时候，是这么配的：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f828c9da88a64fbb847d18f76a82857e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>默认会轮询把请求发给 upstream 下的 server。</p>
+<p>现在需要有多组 upstream：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">nginx</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-nginx code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">upstream version1.0_server {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    server 192.168.1.6:3000;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">}</span>
+<span class="code-block-extension-codeLine" data-line-num="4"> </span>
+<span class="code-block-extension-codeLine" data-line-num="5">upstream version2.0_server {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    server 192.168.1.6:3001;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">upstream default {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    server 192.168.1.6:3000;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<p>有版本 1.0 的、版本 2.0 的，默认的 server 列表。</p>
+<p>然后需要根据某个条件来区分转发给哪个服务。</p>
+<p>我们这里根据 cookie 来区分：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">nginx</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-nginx code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">set $group "default";</span>
+<span class="code-block-extension-codeLine" data-line-num="2">if ($http_cookie ~* "version=1.0"){</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    set $group version1.0_server;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">if ($http_cookie ~* "version=2.0"){</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    set $group version2.0_server;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">location ^~ /api {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    rewrite ^/api/(.*)$ /$1 break;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    proxy_pass http://$group;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+</code></pre>
+<p>如果包含 version=1.0 的 cookie，那就走 version1.0_server 的服务，有 version=2.0 的 cookie 就走 version2.0_server 的服务，否则，走默认的。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a874705639364c33ad5c51098213ed76~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样就实现了流量的划分，也就是灰度的功能。</p>
+<p>然后我们重新跑下容器：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b36075bd46a74c8887b0c085dc9ec56e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候，你访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A83%2Fapi%2F" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:83/api/" ref="nofollow noopener noreferrer">http://localhost:83/api/</a> 走到的就是默认的版本。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c342eceabaac41c58adfb504c26ae1dc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后带上 version=2.0 的 cookie，走到的就是另一个版本的代码：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/212db4023f22441597742a814425832a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，我们就实现了灰度的功能。</p>
+<p>但现在还有一个问题：</p>
+<p>什么时候设置的这个 cookie 呢？</p>
+<p>比如我想实现 80% 的流量走版本 1.0，20% 的流量走版本 2.0</p>
+<p>其实公司内部一般都有灰度配置系统，可以配置不同的版本的比例，然后流量经过这个系统之后，就会返回 Set-Cookie 的 header，里面按照比例来分别设置不同的 cookie。</p>
+<p>比如随机数载 0 到 0.2 之间，就设置 version=2.0 的 cookie，否则，设置 version=1.0 的 cookie。</p>
+<p>这也叫做流量染色。</p>
+<p>完整的灰度流程是这样的：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60249ce21c284c928086815fec6801e9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>第一次请求的时候，会按照设定的比例随机对流量染色，也就是设置不同 cookie。</p>
+<p>再次访问的时候会根据 cookie 来走到不同版本的代码。</p>
+<p>其中，后端代码会根据 cookie 标识来请求不同的服务（或者同一个服务走不同的 if else），前端代码可以根据 cookie 判断走哪段逻辑。</p>
+<p>这就实现了灰度功能，可以用来做 5% 10% 50% 100% 这样逐步上线的灰度上线机制。</p>
+<p>也可以用来做产品的 AB 实验。</p>
+<p>公司里都会用这样的灰度系统。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>新版本代码的上线基本都会用灰度系统，可以逐步放量的方式来保证上线过程不会出大问题，也可以用来做产品 AB 实验。</p>
+<p>我们可以用 nginx 实现这样的功能。</p>
+<p>nginx 有反向代理的功能，可以转发请求到应用服务器，也叫做网关层。</p>
+<p>我们可以在这一层根据 cookie 里的 version 字段来决定转发请求到哪个服务。</p>
+<p>在这之前，还需要按照比例来给流量染色，也就是返回不同的 cookie。</p>
+<p>不管灰度系统做的有多复杂，底层也就是流量染色、根据标记转发流量这两部分，我们完全可以自己实现一个。</p></div>

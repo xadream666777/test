@@ -1,0 +1,320 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>Excel 是常用的办公软件，我们会用它来做数据的整理。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5d93156a170f4c23a75cbce3f40014ba~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1020&amp;h=536&amp;s=63426&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>后台管理系统一般都会支持从 Excel 导入数据，或者导出数据到 Excel 文件：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c36b870e0ce24a9e86fae6f06bb63876~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1378&amp;h=640&amp;s=119707&amp;e=png&amp;b=d6d6d6" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那这种功能是如何实现的呢？</p>
+<p>在 Node 和浏览器里，如何解析、生成 Excel 文件呢？</p>
+<p>一般我们会用 <a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fexceljs" target="_blank" rel="nofollow noopener noreferrer" title="https://www.npmjs.com/package/exceljs" ref="nofollow noopener noreferrer">exceljs</a> 这个包来做。</p>
+<p>在 npm 官网可以看到，这个包每周有 30w+ 的下载量，用的还是很多的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6e4a95a769c4423bb83ae6102e9efe23~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=694&amp;h=514&amp;s=43873&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们具体写代码试试：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-built_in">mkdir</span> exceljs-test</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-built_in">cd</span> exceljs-test</span>
+<span class="code-block-extension-codeLine" data-line-num="3">npm init -y</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4c18b7a56c1b4208a686bcedc5da71ae~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=820&amp;h=666&amp;s=86286&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>安装 exceljs：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> exceljs</span>
+</code></pre>
+<p>把刚才这个 excel 文件复制过来：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5d93156a170f4c23a75cbce3f40014ba~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1020&amp;h=536&amp;s=63426&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b591b0ae6914488aa20cb9ef8135ab83~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=410&amp;h=244&amp;s=24754&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们在代码里读取出来看看：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> { <span class="hljs-title class_">Workbook</span> } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'exceljs'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>){</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">const</span> workbook = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Workbook</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">const</span> workbook2 = <span class="hljs-keyword">await</span> workbook.<span class="hljs-property">xlsx</span>.<span class="hljs-title function_">readFile</span>(<span class="hljs-string">'./data.xlsx'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    workbook2.<span class="hljs-title function_">eachSheet</span>(<span class="hljs-function">(<span class="hljs-params">sheet, index1</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'工作表'</span> + index1);</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">        sheet.<span class="hljs-title function_">eachRow</span>(<span class="hljs-function">(<span class="hljs-params">row, index2</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">            <span class="hljs-keyword">const</span> rowData = [];</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    </span>
+<span class="code-block-extension-codeLine" data-line-num="14">            row.<span class="hljs-title function_">eachCell</span>(<span class="hljs-function">(<span class="hljs-params">cell, index3</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">                rowData.<span class="hljs-title function_">push</span>(cell.<span class="hljs-property">value</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'行'</span> + index2, rowData);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        })</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="21">}</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23"><span class="hljs-title function_">main</span>();</span>
+</code></pre>
+<p>工作表就是这个东西：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cb7c74166adc4b50ba7af7a6db9b2fa2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1160&amp;h=894&amp;s=285150&amp;e=gif&amp;f=42&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>每个工作表下都是独立的表格。</p>
+<p>也就是 workbook（工作簿） &gt; worksheet（工作表） &gt; row（行） &gt; cell（列）这样的层级关系。</p>
+<p>每一层都可以遍历：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2a8e52d5819d4f6ca1cefaab0b32e173~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1020&amp;h=818&amp;s=127582&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>所以我们遍历 sheet、row、cell 这几层，就能拿到所有的数据。</p>
+<p>跑下看看：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/28013f43c3ce4ae89200190d697944f9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=822&amp;h=204&amp;s=44099&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>确实都拿到了。</p>
+<p>这样就是数据导入，我们从 excel 文件里解析出数据，然后存入数据库。</p>
+<p>exceljs 还提供了简便的方法，可以直接调用 worksheet 的 getSheetValues 来拿到表格数据，不用自己遍历：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1bb978d8799d4752ab3832eb744818ce~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1030&amp;h=970&amp;s=183332&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>解析 excel 文件还是很简单的。</p>
+<p>导入数据的时候，按照格式从中解析数据然后存入数据库就行。</p>
+<p>有同学可能会说，那如果 excel 的格式不符合要求呢？</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0cb4f54f3eaf4ad78b3604395a42759a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=970&amp;h=578&amp;s=94262&amp;e=png&amp;b=eeeeee" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>一般我们都会提供一个 excel 模版，用这个模版来填数据，然后再导入。</p>
+<p>excel 解析我们会了，再来看下 excel 的生成：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> { <span class="hljs-title class_">Workbook</span> } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'exceljs'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>){</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">const</span> workbook = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Workbook</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">const</span> worksheet = workbook.<span class="hljs-title function_">addWorksheet</span>(<span class="hljs-string">'guang111'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    worksheet.<span class="hljs-property">columns</span> = [</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        { <span class="hljs-attr">header</span>: <span class="hljs-string">'ID'</span>, <span class="hljs-attr">key</span>: <span class="hljs-string">'id'</span>, <span class="hljs-attr">width</span>: <span class="hljs-number">20</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        { <span class="hljs-attr">header</span>: <span class="hljs-string">'姓名'</span>, <span class="hljs-attr">key</span>: <span class="hljs-string">'name'</span>, <span class="hljs-attr">width</span>: <span class="hljs-number">30</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        { <span class="hljs-attr">header</span>: <span class="hljs-string">'出生日期'</span>, <span class="hljs-attr">key</span>: <span class="hljs-string">'birthday'</span>, <span class="hljs-attr">width</span>: <span class="hljs-number">30</span>},</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        { <span class="hljs-attr">header</span>: <span class="hljs-string">'手机号'</span>, <span class="hljs-attr">key</span>: <span class="hljs-string">'phone'</span>, <span class="hljs-attr">width</span>: <span class="hljs-number">50</span> }</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    ];</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">const</span> data = [</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        { <span class="hljs-attr">id</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">'光光'</span>, <span class="hljs-attr">birthday</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-string">'1994-07-07'</span>), <span class="hljs-attr">phone</span>: <span class="hljs-string">'13255555555'</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        { <span class="hljs-attr">id</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">'东东'</span>, <span class="hljs-attr">birthday</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-string">'1994-04-14'</span>), <span class="hljs-attr">phone</span>: <span class="hljs-string">'13222222222'</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        { <span class="hljs-attr">id</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">'小刚'</span>, <span class="hljs-attr">birthday</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-string">'1995-08-08'</span>), <span class="hljs-attr">phone</span>: <span class="hljs-string">'13211111111'</span> }</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    ]</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    worksheet.<span class="hljs-title function_">addRows</span>(data);</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    workbook.<span class="hljs-property">xlsx</span>.<span class="hljs-title function_">writeFile</span>(<span class="hljs-string">'./data2.xlsx'</span>);    </span>
+<span class="code-block-extension-codeLine" data-line-num="23">}</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25"><span class="hljs-title function_">main</span>();</span>
+</code></pre>
+<p>相当简单，也是按照层次结构，先 addWorkSheet、然后 addRows，之后写入文件。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5e2e9d654fbf476a9bcbf843929e9385~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1704&amp;h=976&amp;s=107669&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到 worksheet 的名字，还有每行的数据都是对的。</p>
+<p>右边手机号那一列最宽，因为我们设置了 width 是 50。</p>
+<p>excel 是可以设置格式的，比如字体、背景色等，在代码里同样可以。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/95ef121dde384041b6283b594c581d58~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1012&amp;h=1038&amp;s=175284&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>就是遍历 row、cell，根据行数设置 style 就好了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">worksheet.<span class="hljs-title function_">eachRow</span>(<span class="hljs-function">(<span class="hljs-params">row, rowIndex</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    row.<span class="hljs-title function_">eachCell</span>(<span class="hljs-function"><span class="hljs-params">cell</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-keyword">if</span>(rowIndex === <span class="hljs-number">1</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            cell.<span class="hljs-property">style</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">                <span class="hljs-attr">font</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">                    <span class="hljs-attr">size</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">                    <span class="hljs-attr">bold</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">                    <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'ffffff'</span> }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">                },</span>
+<span class="code-block-extension-codeLine" data-line-num="10">                <span class="hljs-attr">alignment</span>: { <span class="hljs-attr">vertical</span>: <span class="hljs-string">'middle'</span>, <span class="hljs-attr">horizontal</span>: <span class="hljs-string">'center'</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="11">                <span class="hljs-attr">fill</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">                    <span class="hljs-attr">type</span>: <span class="hljs-string">'pattern'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">                    <span class="hljs-attr">pattern</span>: <span class="hljs-string">'solid'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">                    <span class="hljs-attr">fgColor</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'000000'</span> }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">                },</span>
+<span class="code-block-extension-codeLine" data-line-num="16">                <span class="hljs-attr">border</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">                    <span class="hljs-attr">top</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } },</span>
+<span class="code-block-extension-codeLine" data-line-num="18">                    <span class="hljs-attr">left</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } },</span>
+<span class="code-block-extension-codeLine" data-line-num="19">                    <span class="hljs-attr">bottom</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } },</span>
+<span class="code-block-extension-codeLine" data-line-num="20">                    <span class="hljs-attr">right</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } }</span>
+<span class="code-block-extension-codeLine" data-line-num="21">                }</span>
+<span class="code-block-extension-codeLine" data-line-num="22">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">            cell.<span class="hljs-property">style</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="25">                <span class="hljs-attr">font</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="26">                    <span class="hljs-attr">size</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="27">                    <span class="hljs-attr">bold</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="28">                },</span>
+<span class="code-block-extension-codeLine" data-line-num="29">                <span class="hljs-attr">alignment</span>: { <span class="hljs-attr">vertical</span>: <span class="hljs-string">'middle'</span>, <span class="hljs-attr">horizontal</span>: <span class="hljs-string">'left'</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="30">                <span class="hljs-attr">border</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="31">                    <span class="hljs-attr">top</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } },</span>
+<span class="code-block-extension-codeLine" data-line-num="32">                    <span class="hljs-attr">left</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } },</span>
+<span class="code-block-extension-codeLine" data-line-num="33">                    <span class="hljs-attr">bottom</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } },</span>
+<span class="code-block-extension-codeLine" data-line-num="34">                    <span class="hljs-attr">right</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } }</span>
+<span class="code-block-extension-codeLine" data-line-num="35">                }</span>
+<span class="code-block-extension-codeLine" data-line-num="36">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="37">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="38">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="39">})</span>
+</code></pre>
+<p>style 可以设置 font、fill、border、alignment 这些。</p>
+<p>跑下看看：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3233def7c38d4047b0ea9eb90c555aa9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1732&amp;h=506&amp;s=78554&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，就完成了数据的导出。</p>
+<p>而且，exceljs 这个库可以直接在浏览器里用。</p>
+<p>我们试试：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5d20a3d223934f0296f629780100f8a8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1292&amp;h=1148&amp;s=235094&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>创建 index.html，引入 exceljs 包。</p>
+<p>添加一个 file 类型的 input，onchange 的时候解析其中的内容，解析逻辑和之前一样，只是从 readFile 换成 load。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Document<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/exceljs@4.4.0/dist/exceljs.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"fileInput"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"file"</span>/&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-keyword">const</span> fileInput = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">'fileInput'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        fileInput.<span class="hljs-property">onchange</span> = <span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">            <span class="hljs-keyword">const</span> file = fileInput.<span class="hljs-property">files</span>[<span class="hljs-number">0</span>];</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-keyword">const</span> { <span class="hljs-title class_">Workbook</span> } = <span class="hljs-title class_">ExcelJS</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">            <span class="hljs-keyword">const</span> workbook = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Workbook</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">            <span class="hljs-keyword">const</span> workbook2 = <span class="hljs-keyword">await</span> workbook.<span class="hljs-property">xlsx</span>.<span class="hljs-title function_">load</span>(file);</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">            workbook2.<span class="hljs-title function_">eachSheet</span>(<span class="hljs-function">(<span class="hljs-params">sheet, index1</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'工作表'</span> + index1);</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">                <span class="hljs-keyword">const</span> value = sheet.<span class="hljs-title function_">getSheetValues</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="26"></span>
+<span class="code-block-extension-codeLine" data-line-num="27">                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(value);</span>
+<span class="code-block-extension-codeLine" data-line-num="28">            })</span>
+<span class="code-block-extension-codeLine" data-line-num="29">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>起个静态服务：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">vbscript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-vbscript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx http-<span class="hljs-built_in">server</span> .</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e316343d7ec743b4b661840d79f62f80~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=594&amp;h=546&amp;s=83162&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ffb5b97548c14580b1e626946525853c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1146&amp;h=834&amp;s=115567&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，同样解析出了 excel 的内容。</p>
+<p>然后再试试生成 excel：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e726e420d33844ee9b87f0e273d0f03f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1224&amp;h=1002&amp;s=211065&amp;e=png&amp;b=202020" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p>前面的逻辑一样，只是把 writeFile 换成了 writeBuffer。</p>
+<p>这里我创建了一个 10M 的 ArrayBuffer 来写入数据，之后再读取。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Document<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/exceljs@4.4.0/dist/exceljs.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-keyword">const</span> { <span class="hljs-title class_">Workbook</span> } = <span class="hljs-title class_">ExcelJS</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>){</span>
+<span class="code-block-extension-codeLine" data-line-num="14">            <span class="hljs-keyword">const</span> workbook = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Workbook</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-keyword">const</span> worksheet = workbook.<span class="hljs-title function_">addWorksheet</span>(<span class="hljs-string">'guang111'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">            worksheet.<span class="hljs-property">columns</span> = [</span>
+<span class="code-block-extension-codeLine" data-line-num="19">                { <span class="hljs-attr">header</span>: <span class="hljs-string">'ID'</span>, <span class="hljs-attr">key</span>: <span class="hljs-string">'id'</span>, <span class="hljs-attr">width</span>: <span class="hljs-number">20</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="20">                { <span class="hljs-attr">header</span>: <span class="hljs-string">'姓名'</span>, <span class="hljs-attr">key</span>: <span class="hljs-string">'name'</span>, <span class="hljs-attr">width</span>: <span class="hljs-number">30</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="21">                { <span class="hljs-attr">header</span>: <span class="hljs-string">'出生日期'</span>, <span class="hljs-attr">key</span>: <span class="hljs-string">'birthday'</span>, <span class="hljs-attr">width</span>: <span class="hljs-number">30</span>},</span>
+<span class="code-block-extension-codeLine" data-line-num="22">                { <span class="hljs-attr">header</span>: <span class="hljs-string">'手机号'</span>, <span class="hljs-attr">key</span>: <span class="hljs-string">'phone'</span>, <span class="hljs-attr">width</span>: <span class="hljs-number">50</span> }</span>
+<span class="code-block-extension-codeLine" data-line-num="23">            ];</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">            <span class="hljs-keyword">const</span> data = [</span>
+<span class="code-block-extension-codeLine" data-line-num="26">                { <span class="hljs-attr">id</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">'光光'</span>, <span class="hljs-attr">birthday</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-string">'1994-07-07'</span>), <span class="hljs-attr">phone</span>: <span class="hljs-string">'13255555555'</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="27">                { <span class="hljs-attr">id</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">'东东'</span>, <span class="hljs-attr">birthday</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-string">'1994-04-14'</span>), <span class="hljs-attr">phone</span>: <span class="hljs-string">'13222222222'</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="28">                { <span class="hljs-attr">id</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">'小刚'</span>, <span class="hljs-attr">birthday</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-string">'1995-08-08'</span>), <span class="hljs-attr">phone</span>: <span class="hljs-string">'13211111111'</span> }</span>
+<span class="code-block-extension-codeLine" data-line-num="29">            ]</span>
+<span class="code-block-extension-codeLine" data-line-num="30">            worksheet.<span class="hljs-title function_">addRows</span>(data);</span>
+<span class="code-block-extension-codeLine" data-line-num="31"></span>
+<span class="code-block-extension-codeLine" data-line-num="32">            worksheet.<span class="hljs-title function_">eachRow</span>(<span class="hljs-function">(<span class="hljs-params">row, rowIndex</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="33">                row.<span class="hljs-title function_">eachCell</span>(<span class="hljs-function"><span class="hljs-params">cell</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="34">                    <span class="hljs-keyword">if</span>(rowIndex === <span class="hljs-number">1</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="35">                        cell.<span class="hljs-property">style</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="36">                            <span class="hljs-attr">font</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="37">                                <span class="hljs-attr">size</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="38">                                <span class="hljs-attr">bold</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="39">                                <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'ffffff'</span> }</span>
+<span class="code-block-extension-codeLine" data-line-num="40">                            },</span>
+<span class="code-block-extension-codeLine" data-line-num="41">                            <span class="hljs-attr">alignment</span>: { <span class="hljs-attr">vertical</span>: <span class="hljs-string">'middle'</span>, <span class="hljs-attr">horizontal</span>: <span class="hljs-string">'center'</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="42">                            <span class="hljs-attr">fill</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="43">                                <span class="hljs-attr">type</span>: <span class="hljs-string">'pattern'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="44">                                <span class="hljs-attr">pattern</span>: <span class="hljs-string">'solid'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="45">                                <span class="hljs-attr">fgColor</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'000000'</span> }</span>
+<span class="code-block-extension-codeLine" data-line-num="46">                            },</span>
+<span class="code-block-extension-codeLine" data-line-num="47">                            <span class="hljs-attr">border</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="48">                                <span class="hljs-attr">top</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } },</span>
+<span class="code-block-extension-codeLine" data-line-num="49">                                <span class="hljs-attr">left</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } },</span>
+<span class="code-block-extension-codeLine" data-line-num="50">                                <span class="hljs-attr">bottom</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } },</span>
+<span class="code-block-extension-codeLine" data-line-num="51">                                <span class="hljs-attr">right</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } }</span>
+<span class="code-block-extension-codeLine" data-line-num="52">                            }</span>
+<span class="code-block-extension-codeLine" data-line-num="53">                        }</span>
+<span class="code-block-extension-codeLine" data-line-num="54">                    } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="55">                        cell.<span class="hljs-property">style</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="56">                            <span class="hljs-attr">font</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="57">                                <span class="hljs-attr">size</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="58">                                <span class="hljs-attr">bold</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="59">                            },</span>
+<span class="code-block-extension-codeLine" data-line-num="60">                            <span class="hljs-attr">alignment</span>: { <span class="hljs-attr">vertical</span>: <span class="hljs-string">'middle'</span>, <span class="hljs-attr">horizontal</span>: <span class="hljs-string">'left'</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="61">                            <span class="hljs-attr">border</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="62">                                <span class="hljs-attr">top</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } },</span>
+<span class="code-block-extension-codeLine" data-line-num="63">                                <span class="hljs-attr">left</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } },</span>
+<span class="code-block-extension-codeLine" data-line-num="64">                                <span class="hljs-attr">bottom</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } },</span>
+<span class="code-block-extension-codeLine" data-line-num="65">                                <span class="hljs-attr">right</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'dashed'</span>, <span class="hljs-attr">color</span>: { <span class="hljs-attr">argb</span>: <span class="hljs-string">'0000ff'</span> } }</span>
+<span class="code-block-extension-codeLine" data-line-num="66">                            }</span>
+<span class="code-block-extension-codeLine" data-line-num="67">                        }</span>
+<span class="code-block-extension-codeLine" data-line-num="68">                    }</span>
+<span class="code-block-extension-codeLine" data-line-num="69">                })</span>
+<span class="code-block-extension-codeLine" data-line-num="70">            })</span>
+<span class="code-block-extension-codeLine" data-line-num="71"></span>
+<span class="code-block-extension-codeLine" data-line-num="72">            <span class="hljs-keyword">const</span> arraybuffer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayBuffer</span>(<span class="hljs-number">10</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="73">            <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> workbook.<span class="hljs-property">xlsx</span>.<span class="hljs-title function_">writeBuffer</span>(arraybuffer);</span>
+<span class="code-block-extension-codeLine" data-line-num="74"></span>
+<span class="code-block-extension-codeLine" data-line-num="75">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res.<span class="hljs-property">buffer</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="76">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="77"></span>
+<span class="code-block-extension-codeLine" data-line-num="78">        <span class="hljs-title function_">main</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="79">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="80"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="81"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>跑下试试：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/348ad82e55ee4618b12c071c7d7300ea~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=924&amp;h=1080&amp;s=104568&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，确实有数据了。</p>
+<p>那有了 arraybuffer 的数据，如何触发下载呢？</p>
+<p>创建一个 a 标签，设置 download 属性，然后触发点击就可以了。</p>
+<p>也就是这样：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/435f792813204ef992932295b04a40b5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=984&amp;h=848&amp;s=155108&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">function</span> <span class="hljs-title function_">download</span>(<span class="hljs-params">arrayBuffer</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> link = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">'a'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">const</span> blob = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Blob</span>([arrayBuffer]);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> url = <span class="hljs-variable constant_">URL</span>.<span class="hljs-title function_">createObjectURL</span>(blob);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    link.<span class="hljs-property">href</span> = url;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    link.<span class="hljs-property">download</span> = <span class="hljs-string">'guang.xlsx'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">appendChild</span>(link);</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    link.<span class="hljs-title function_">click</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    link.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">'click'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        link.<span class="hljs-title function_">remove</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<p>跑一下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d10353e0521545a2820abd644bb73f45~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=930&amp;h=292&amp;s=57738&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，生成了 excel 并且触发了下载。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9090e02d4ca847d5a4a80928b6f516a2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1722&amp;h=364&amp;s=52811&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>打开文件，可以看到和 node 里生成的一样。</p>
+<p>案例代码上传了 github：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fexceljs-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/exceljs-test" ref="nofollow noopener noreferrer">github.com/QuarkGluonP…</a></p>
+<h2 data-id="heading-0">总结</h2>
+<p>Excel 的导入导出是后台管理系统的常见功能，我们一般用 exceljs 来实现。</p>
+<p>excel 文件分为 workbook、worksheet、row、cell 这 4 层，解析和生成都是按照这个层次结构来。</p>
+<p>解析就是 readFile 之后，遍历 worksheet、row，拿到 cell 中的数据 。</p>
+<p>生成就是 addWorkSheet、addRow 添加数据，然后 writeFile 来写入文件。</p>
+<p>如果是在浏览器里，就把 readFile 换成 load，把 writeFile 换成 writeBuffer 就好了。</p>
+<p>浏览器里生成 excel 之后，可以通过 a 标签触发下载，设置 download 属性之后，触发点击就好了。</p>
+<p>这样，我们就分别在 node 和浏览器里完成了 excel 的解析和生成。</p></div>

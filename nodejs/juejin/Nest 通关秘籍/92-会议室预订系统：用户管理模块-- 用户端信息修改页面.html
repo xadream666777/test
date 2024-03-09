@@ -1,0 +1,892 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>用户相关的页面还剩下两个，这节我们来写一下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0b7366af920b41c890686f5a10c21d7b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/403f30e8cf80493c8af4ab50054aba3c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>首先是修改密码的页面，把注册页面的表单拿过来改改就行：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Button</span>, <span class="hljs-title class_">Form</span>, <span class="hljs-title class_">Input</span>, message } <span class="hljs-keyword">from</span> <span class="hljs-string">'antd'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { useForm } <span class="hljs-keyword">from</span> <span class="hljs-string">'antd/es/form/Form'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> <span class="hljs-string">'./update_password.css'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { useCallback } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Link</span>, useNavigate } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-router-dom'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">export</span> interface <span class="hljs-title class_">UpdatePassword</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">email</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">captcha</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">password</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">confirmPassword</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14"><span class="hljs-keyword">const</span> layout1 = {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">labelCol</span>: { <span class="hljs-attr">span</span>: <span class="hljs-number">6</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">wrapperCol</span>: { <span class="hljs-attr">span</span>: <span class="hljs-number">18</span> }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19"><span class="hljs-keyword">const</span> layout2 = {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-attr">labelCol</span>: { <span class="hljs-attr">span</span>: <span class="hljs-number">0</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-attr">wrapperCol</span>: { <span class="hljs-attr">span</span>: <span class="hljs-number">24</span> }</span>
+<span class="code-block-extension-codeLine" data-line-num="22">}</span>
+<span class="code-block-extension-codeLine" data-line-num="23"></span>
+<span class="code-block-extension-codeLine" data-line-num="24"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">UpdatePassword</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-keyword">const</span> [form] = <span class="hljs-title function_">useForm</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    <span class="hljs-keyword">const</span> navigate = <span class="hljs-title function_">useNavigate</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="27"></span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-keyword">const</span> onFinish = <span class="hljs-title function_">useCallback</span>(<span class="hljs-keyword">async</span> (<span class="hljs-attr">values</span>: <span class="hljs-title class_">UpdatePassword</span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="29">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(values);</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    }, []);</span>
+<span class="code-block-extension-codeLine" data-line-num="31"></span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-keyword">const</span> sendCaptcha = <span class="hljs-title function_">useCallback</span>(<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="33">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'send captcha'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="34">    }, []);</span>
+<span class="code-block-extension-codeLine" data-line-num="35">    </span>
+<span class="code-block-extension-codeLine" data-line-num="36"></span>
+<span class="code-block-extension-codeLine" data-line-num="37">    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"updatePassword-container"</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="38">        <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>会议室预订系统<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="39">        <span class="hljs-tag">&lt;<span class="hljs-name">Form</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="40">            <span class="hljs-attr">form</span>=<span class="hljs-string">{form}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="41">            {<span class="hljs-attr">...layout1</span>}</span>
+<span class="code-block-extension-codeLine" data-line-num="42">            <span class="hljs-attr">onFinish</span>=<span class="hljs-string">{onFinish}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="43">            <span class="hljs-attr">colon</span>=<span class="hljs-string">{false}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="44">            <span class="hljs-attr">autoComplete</span>=<span class="hljs-string">"off"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="45">        &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="46">            <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="47">                <span class="hljs-attr">label</span>=<span class="hljs-string">"邮箱"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="48">                <span class="hljs-attr">name</span>=<span class="hljs-string">"email"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="49">                <span class="hljs-attr">rules</span>=<span class="hljs-string">{[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="50">                    { <span class="hljs-attr">required:</span> <span class="hljs-attr">true</span>, <span class="hljs-attr">message:</span> '请输入邮箱!' },</span>
+<span class="code-block-extension-codeLine" data-line-num="51">                    { <span class="hljs-attr">type:</span> "<span class="hljs-attr">email</span>", <span class="hljs-attr">message:</span> '请输入合法邮箱地址!'}</span>
+<span class="code-block-extension-codeLine" data-line-num="52">                ]}</span>
+<span class="code-block-extension-codeLine" data-line-num="53">            &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="54">                <span class="hljs-tag">&lt;<span class="hljs-name">Input</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="55">            <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="56"></span>
+<span class="code-block-extension-codeLine" data-line-num="57">            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'captcha-wrapper'</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="58">                <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="59">                    <span class="hljs-attr">label</span>=<span class="hljs-string">"验证码"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="60">                    <span class="hljs-attr">name</span>=<span class="hljs-string">"captcha"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="61">                    <span class="hljs-attr">rules</span>=<span class="hljs-string">{[{</span> <span class="hljs-attr">required:</span> <span class="hljs-attr">true</span>, <span class="hljs-attr">message:</span> '请输入验证码!' }]}</span>
+<span class="code-block-extension-codeLine" data-line-num="62">                &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="63">                    <span class="hljs-tag">&lt;<span class="hljs-name">Input</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="64">                <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="65">                <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"primary"</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{sendCaptcha}</span>&gt;</span>发送验证码<span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="66">            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="67"></span>
+<span class="code-block-extension-codeLine" data-line-num="68">            <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="69">                <span class="hljs-attr">label</span>=<span class="hljs-string">"密码"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="70">                <span class="hljs-attr">name</span>=<span class="hljs-string">"password"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="71">                <span class="hljs-attr">rules</span>=<span class="hljs-string">{[{</span> <span class="hljs-attr">required:</span> <span class="hljs-attr">true</span>, <span class="hljs-attr">message:</span> '请输入密码!' }]}</span>
+<span class="code-block-extension-codeLine" data-line-num="72">            &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="73">                <span class="hljs-tag">&lt;<span class="hljs-name">Input.Password</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="74">            <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="75"></span>
+<span class="code-block-extension-codeLine" data-line-num="76">            <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="77">                <span class="hljs-attr">label</span>=<span class="hljs-string">"确认密码"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="78">                <span class="hljs-attr">name</span>=<span class="hljs-string">"confirmPassword"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="79">                <span class="hljs-attr">rules</span>=<span class="hljs-string">{[{</span> <span class="hljs-attr">required:</span> <span class="hljs-attr">true</span>, <span class="hljs-attr">message:</span> '请输入确认密码!' }]}</span>
+<span class="code-block-extension-codeLine" data-line-num="80">            &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="81">                <span class="hljs-tag">&lt;<span class="hljs-name">Input.Password</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="82">            <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="83"></span>
+<span class="code-block-extension-codeLine" data-line-num="84">            <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="85">                {<span class="hljs-attr">...layout1</span>}</span>
+<span class="code-block-extension-codeLine" data-line-num="86">                <span class="hljs-attr">label</span>=<span class="hljs-string">" "</span></span>
+<span class="code-block-extension-codeLine" data-line-num="87">            &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="88">                <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'btn'</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"primary"</span> <span class="hljs-attr">htmlType</span>=<span class="hljs-string">"submit"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="89">                    修改</span>
+<span class="code-block-extension-codeLine" data-line-num="90">                <span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="91">            <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="92">        <span class="hljs-tag">&lt;/<span class="hljs-name">Form</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="93">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>   </span>
+<span class="code-block-extension-codeLine" data-line-num="94">}</span>
+</code></pre>
+<p>css 部分如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-selector-id">#updatePassword-container</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attribute">width</span>: <span class="hljs-number">400px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attribute">margin</span>: <span class="hljs-number">100px</span> auto <span class="hljs-number">0</span> auto;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attribute">text-align</span>: center;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-selector-id">#updatePassword-container</span> <span class="hljs-selector-class">.btn</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-selector-id">#updatePassword-container</span> <span class="hljs-selector-class">.captcha-wrapper</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attribute">display</span>: flex;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attribute">justify-content</span>: flex-end;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+</code></pre>
+<p>跑起来是这样的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a6ea926323a3413aa75eb2b72b58f132~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再调用下后端接口。</p>
+<p>这时我发现一个问题：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/22ee033ec679475aa76cf020c9dc5676~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>之前写的 update_password 接口需要登录，然后用 @UserInfo 从 reqeust.user 取 userId。</p>
+<p>但其实这个页面是从这里点进来的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9ff34ad6d0ca45f19ad70a44c59fb32a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候并没有登录，只是通过邮箱验证身份，然后修改密码。</p>
+<p>但是邮箱我们并没有添加唯一约束，只有 username 是在注册的时候做了唯一检查：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/713f2f53de354df39ca53076c970e85b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>所以需要通过 username 来找到修改密码的用户。</p>
+<p>可以改成前端传 username，然后后端验证过邮箱验证码之后，再根据 username 查询摇改密码的用户。</p>
+<p>此外，我们在 User 的 entity 这里给 username 添加唯一约束：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0dbdf294100148f1bc98a82f6b3868f3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后可以看到 typeorm 确实给 username 添加了唯一索引：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c87e80604df24a84abe2e011e578cbd5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 mysql workbench 里也可以看到：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/df88120f70d04b98bd9c64ba767ea2b7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后修改下 update_password 接口：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ca189ebeadf0487dbff03a672a81a792~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把 @RequireLogin、@ApiBearAuth 还有 @UsrInfo 去掉。</p>
+<p>修改 UpdatePasswordDto，添加 username 属性：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/989f7fec54114abc88a4a388a2da7c10~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">IsNotEmpty</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">message</span>: <span class="hljs-string">'用户名不能为空'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">})</span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-attr">username</span>: string;</span>
+</code></pre>
+<p>然后改下 UserService 的 updatePassword 方法：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/10b19058e7e14a37b54d070fc5ed2f5a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>改成根据 username 查询用户，并且还要验证下邮箱是否正确。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> foundUser = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userRepository</span>.<span class="hljs-title function_">findOneBy</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">username</span>: passwordDto.<span class="hljs-property">username</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">});</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">if</span>(foundUser.<span class="hljs-property">email</span> !== passwordDto.<span class="hljs-property">email</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HttpException</span>(<span class="hljs-string">'邮箱不正确'</span>, <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">BAD_REQUEST</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+</code></pre>
+<p>还有，发送验证码接口的 @RequireLogin 和 @ApiBearerAuth 也要去掉：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/af5877cc929f4f7abdbce26dae113357~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>测试下：</p>
+<p>请求 /user/update_password/captcha 接口发送验证码：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e64810bb9cf84aa99d9b78f7aae3c880~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b46b5454c2b9490f80c9084d83f54dba~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后请求 /user/update_password 接口：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ad21d242955b4f6ea9b029874c483b66~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>提示修改密码成功。</p>
+<p>我们在页面登录下试试：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9352ea8151d6400c9755f8cce24d8ee9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用最新密码登录，提示登录成功。</p>
+<p>postman 里跑通流程之后，我们在页面里加一下。</p>
+<p>在更改密码页面加上 username 表单项：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b12a83a8aa6a4080841fd93368330911~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">&lt;<span class="hljs-title class_">Form</span>.<span class="hljs-property">Item</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    label=<span class="hljs-string">"用户名"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    name=<span class="hljs-string">"username"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    rules={[</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        { <span class="hljs-attr">required</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">message</span>: <span class="hljs-string">'请输入用户名!'</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    ]}</span>
+<span class="code-block-extension-codeLine" data-line-num="7">&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Input</span> /&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">&lt;/<span class="hljs-title class_">Form</span>.<span class="hljs-property">Item</span>&gt;</span>
+</code></pre>
+<p>类型中也加上 username：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/189d1d1ae9d748cb895e5a5ce5f92dc8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 interfaces.ts 添加这两个接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">updatePasswordCaptcha</span>(<span class="hljs-params">email: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> axiosInstance.<span class="hljs-title function_">get</span>(<span class="hljs-string">'/user/update_password/captcha'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">params</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            <span class="hljs-attr">address</span>: email</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">updatePassword</span>(<span class="hljs-params">data: UpdatePassword</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> axiosInstance.<span class="hljs-title function_">post</span>(<span class="hljs-string">'/user/update_password'</span>, data);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<p>更改密码页面里调用下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> sendCaptcha = <span class="hljs-title function_">useCallback</span>(<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> address = form.<span class="hljs-title function_">getFieldValue</span>(<span class="hljs-string">'email'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">if</span>(!address) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-keyword">return</span> message.<span class="hljs-title function_">error</span>(<span class="hljs-string">'请输入邮箱地址'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> <span class="hljs-title function_">updatePasswordCaptcha</span>(address);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">if</span>(res.<span class="hljs-property">status</span> === <span class="hljs-number">201</span> || res.<span class="hljs-property">status</span> === <span class="hljs-number">200</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        message.<span class="hljs-title function_">success</span>(res.<span class="hljs-property">data</span>.<span class="hljs-property">data</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        message.<span class="hljs-title function_">error</span>(<span class="hljs-string">'系统繁忙，请稍后再试'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}, []);</span>
+</code></pre>
+<p>发送验证码接口的调用逻辑和注册时一模一样。</p>
+<p>更改密码接口的调用逻辑也和注册差不多：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> onFinish = <span class="hljs-title function_">useCallback</span>(<span class="hljs-keyword">async</span> (<span class="hljs-attr">values</span>: <span class="hljs-title class_">UpdatePassword</span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">if</span>(values.<span class="hljs-property">password</span> !== values.<span class="hljs-property">confirmPassword</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-keyword">return</span> message.<span class="hljs-title function_">error</span>(<span class="hljs-string">'两次密码不一致'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> <span class="hljs-title function_">updatePassword</span>(values);</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> { <span class="hljs-attr">message</span>: msg, data} = res.<span class="hljs-property">data</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">if</span>(res.<span class="hljs-property">status</span> === <span class="hljs-number">201</span> || res.<span class="hljs-property">status</span> === <span class="hljs-number">200</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        message.<span class="hljs-title function_">success</span>(<span class="hljs-string">'密码修改成功'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">            <span class="hljs-title function_">navigate</span>(<span class="hljs-string">'/login'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        }, <span class="hljs-number">1500</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        message.<span class="hljs-title function_">error</span>(data || <span class="hljs-string">'系统繁忙，请稍后再试'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">}, []);</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dbc7f42bc91e4a34b2c41ec71f9f2973~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>填入邮箱，点击发送验证码。</p>
+<p>提示发送成功。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b27af2af83e343c4ba0f25fb0e19d385~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>邮箱里也收到了这个验证码。</p>
+<p>然后填入新密码，点击修改密码按钮：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/880d11d06e68489895f6c3ef48f0dc45~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>提示修改成功，然后会跳到登录页面：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2709c92a2b034af2b2e7b9c4e90d5c87~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在登录页面用新密码登录，提示登录成功。</p>
+<p>这样，修改密码功能的前后端就都完成了。</p>
+<p>然后还有一个更改个人信息的页面。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/403f30e8cf80493c8af4ab50054aba3c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个页面有所不同。</p>
+<p>前面几个功能都是未登录时的，而这个修改个人信息的功能需要登录之后才能用。</p>
+<p>而且界面上方是有公共的导航栏的。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/763f8c79fb924e6c884af3342b767665~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>所以这个页面要声明一个 /index 的路由作为父级路由，然后 /index/update_info 作为子路由。</p>
+<p>添加一个 index/index.tsx 页面</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">UserOutlined</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"@ant-design/icons"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Outlet</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"react-router-dom"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> <span class="hljs-string">'./index.css'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">Index</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"index-container"</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"header"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">            <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>会议室预定系统<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-tag">&lt;<span class="hljs-name">UserOutlined</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"icon"</span>/&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"body"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">            <span class="hljs-tag">&lt;<span class="hljs-name">Outlet</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">Outlet</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<p>这里用到了 antd 的 icon 组件，需要安装用到的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-variable">@ant</span><span class="hljs-operator">-</span>design<span class="hljs-operator">/</span>icons <span class="hljs-comment">--save</span></span>
+</code></pre>
+<p>css 如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-selector-id">#index-container</span>{</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attribute">height</span>: <span class="hljs-number">100vh</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attribute">display</span>: flex;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attribute">flex-direction</span>: column;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-selector-id">#index-container</span> <span class="hljs-selector-class">.header</span>{</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attribute">height</span>: <span class="hljs-number">80px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attribute">border-bottom</span>: <span class="hljs-number">1px</span> solid <span class="hljs-number">#aaa</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attribute">line-height</span>: <span class="hljs-number">80px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attribute">display</span>: flex;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attribute">justify-content</span>: space-between;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attribute">padding</span>: <span class="hljs-number">0</span> <span class="hljs-number">20px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+<span class="code-block-extension-codeLine" data-line-num="14"><span class="hljs-selector-id">#index-container</span> <span class="hljs-selector-tag">h1</span>{</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">}</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18"><span class="hljs-selector-id">#index-container</span> <span class="hljs-selector-class">.icon</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">40px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-attribute">margin-top</span>: <span class="hljs-number">20px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="21">}</span>
+<span class="code-block-extension-codeLine" data-line-num="22"><span class="hljs-selector-id">#index-container</span> <span class="hljs-selector-class">.body</span>{</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-attribute">flex</span>: <span class="hljs-number">1</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="24">}</span>
+</code></pre>
+<p>整体是竖直的 flex 布局，高度 100vh，上面 80px 下面 flex:1</p>
+<p>然后 header 部分是 水平的 flex 布局。</p>
+<p>把它添加到 /index 的路由，并且添加两个子路由：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/182471b6be46400db2ac1ce06fd68220~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">{</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">path</span>: <span class="hljs-string">"/"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">element</span>: <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Index</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">Index</span>&gt;</span></span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">errorElement</span>: <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">ErrorPage</span> /&gt;</span></span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">children</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">path</span>: <span class="hljs-string">'aaa'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">element</span>: <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>aaa<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attr">path</span>: <span class="hljs-string">'bbb'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">element</span>: <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>bbb<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    ]</span>
+<span class="code-block-extension-codeLine" data-line-num="15">},</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/35f97b403326489eb77ecefa4e74b034~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b08fa7fd7cc04e0f92d0a48a29f1b27b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25b65315e3b34accb9d3b09e60b6090c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没啥问题。</p>
+<p>然后在下面添加 update_info 路由，并实现 page/update_info/UpdateInfo 组件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/61e2294846df4f7da6ec2a3d721e153b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Button</span>, <span class="hljs-title class_">Form</span>, <span class="hljs-title class_">Input</span>, message } <span class="hljs-keyword">from</span> <span class="hljs-string">'antd'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { useForm } <span class="hljs-keyword">from</span> <span class="hljs-string">'antd/es/form/Form'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { useCallback } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> <span class="hljs-string">'./update_info.css'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">import</span> { useNavigate } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-router-dom'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">export</span> interface <span class="hljs-title class_">UserInfo</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">headPic</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">nickName</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">email</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">captcha</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14"><span class="hljs-keyword">const</span> layout1 = {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">labelCol</span>: { <span class="hljs-attr">span</span>: <span class="hljs-number">6</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">wrapperCol</span>: { <span class="hljs-attr">span</span>: <span class="hljs-number">18</span> }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">UpdateInfo</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-keyword">const</span> [form] = <span class="hljs-title function_">useForm</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-keyword">const</span> navigate = <span class="hljs-title function_">useNavigate</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-keyword">const</span> onFinish = <span class="hljs-title function_">useCallback</span>(<span class="hljs-keyword">async</span> (<span class="hljs-attr">values</span>: <span class="hljs-title class_">UserInfo</span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        </span>
+<span class="code-block-extension-codeLine" data-line-num="25">    }, []);</span>
+<span class="code-block-extension-codeLine" data-line-num="26"></span>
+<span class="code-block-extension-codeLine" data-line-num="27">    <span class="hljs-keyword">const</span> sendCaptcha = <span class="hljs-title function_">useCallback</span>(<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    }, []);</span>
+<span class="code-block-extension-codeLine" data-line-num="29"></span>
+<span class="code-block-extension-codeLine" data-line-num="30">    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"updateInfo-container"</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">        <span class="hljs-tag">&lt;<span class="hljs-name">Form</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">            <span class="hljs-attr">form</span>=<span class="hljs-string">{form}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="33">            {<span class="hljs-attr">...layout1</span>}</span>
+<span class="code-block-extension-codeLine" data-line-num="34">            <span class="hljs-attr">onFinish</span>=<span class="hljs-string">{onFinish}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="35">            <span class="hljs-attr">colon</span>=<span class="hljs-string">{false}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="36">            <span class="hljs-attr">autoComplete</span>=<span class="hljs-string">"off"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="37">        &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="38">            <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="39">                <span class="hljs-attr">label</span>=<span class="hljs-string">"头像"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="40">                <span class="hljs-attr">name</span>=<span class="hljs-string">"headPic"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="41">                <span class="hljs-attr">rules</span>=<span class="hljs-string">{[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="42">                    { <span class="hljs-attr">required:</span> <span class="hljs-attr">true</span>, <span class="hljs-attr">message:</span> '请输入头像!' },</span>
+<span class="code-block-extension-codeLine" data-line-num="43">                ]}</span>
+<span class="code-block-extension-codeLine" data-line-num="44">            &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="45">                <span class="hljs-tag">&lt;<span class="hljs-name">Input</span>/&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="46">            <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="47"></span>
+<span class="code-block-extension-codeLine" data-line-num="48">            <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="49">                <span class="hljs-attr">label</span>=<span class="hljs-string">"昵称"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="50">                <span class="hljs-attr">name</span>=<span class="hljs-string">"nickName"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="51">                <span class="hljs-attr">rules</span>=<span class="hljs-string">{[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="52">                    { <span class="hljs-attr">required:</span> <span class="hljs-attr">true</span>, <span class="hljs-attr">message:</span> '请输入昵称!' },</span>
+<span class="code-block-extension-codeLine" data-line-num="53">                ]}</span>
+<span class="code-block-extension-codeLine" data-line-num="54">            &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="55">                <span class="hljs-tag">&lt;<span class="hljs-name">Input</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="56">            <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="57"></span>
+<span class="code-block-extension-codeLine" data-line-num="58">            <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="59">                <span class="hljs-attr">label</span>=<span class="hljs-string">"邮箱"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="60">                <span class="hljs-attr">name</span>=<span class="hljs-string">"email"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="61">                <span class="hljs-attr">rules</span>=<span class="hljs-string">{[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="62">                    { <span class="hljs-attr">required:</span> <span class="hljs-attr">true</span>, <span class="hljs-attr">message:</span> '请输入邮箱!' },</span>
+<span class="code-block-extension-codeLine" data-line-num="63">                    { <span class="hljs-attr">type:</span> "<span class="hljs-attr">email</span>", <span class="hljs-attr">message:</span> '请输入合法邮箱地址!'}</span>
+<span class="code-block-extension-codeLine" data-line-num="64">                ]}</span>
+<span class="code-block-extension-codeLine" data-line-num="65">            &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="66">                <span class="hljs-tag">&lt;<span class="hljs-name">Input</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="67">            <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="68"></span>
+<span class="code-block-extension-codeLine" data-line-num="69">            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'captcha-wrapper'</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="70">                <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="71">                    <span class="hljs-attr">label</span>=<span class="hljs-string">"验证码"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="72">                    <span class="hljs-attr">name</span>=<span class="hljs-string">"captcha"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="73">                    <span class="hljs-attr">rules</span>=<span class="hljs-string">{[{</span> <span class="hljs-attr">required:</span> <span class="hljs-attr">true</span>, <span class="hljs-attr">message:</span> '请输入验证码!' }]}</span>
+<span class="code-block-extension-codeLine" data-line-num="74">                &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="75">                    <span class="hljs-tag">&lt;<span class="hljs-name">Input</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="76">                <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="77">                <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"primary"</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{sendCaptcha}</span>&gt;</span>发送验证码<span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="78">            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="79"></span>
+<span class="code-block-extension-codeLine" data-line-num="80">            <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="81">                {<span class="hljs-attr">...layout1</span>}</span>
+<span class="code-block-extension-codeLine" data-line-num="82">                <span class="hljs-attr">label</span>=<span class="hljs-string">" "</span></span>
+<span class="code-block-extension-codeLine" data-line-num="83">            &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="84">                <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'btn'</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"primary"</span> <span class="hljs-attr">htmlType</span>=<span class="hljs-string">"submit"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="85">                    修改密码</span>
+<span class="code-block-extension-codeLine" data-line-num="86">                <span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="87">            <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="88">        <span class="hljs-tag">&lt;/<span class="hljs-name">Form</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="89">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>   </span>
+<span class="code-block-extension-codeLine" data-line-num="90">}</span>
+</code></pre>
+<p>和前几个页面差不多。</p>
+<p>css：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-selector-id">#updateInfo-container</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attribute">width</span>: <span class="hljs-number">400px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attribute">margin</span>: <span class="hljs-number">50px</span> auto <span class="hljs-number">0</span> auto;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attribute">text-align</span>: center;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-selector-id">#updateInfo-container</span> <span class="hljs-selector-class">.btn</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-selector-id">#updateInfo-container</span> <span class="hljs-selector-class">.captcha-wrapper</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attribute">display</span>: flex;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attribute">justify-content</span>: flex-end;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+</code></pre>
+<p>访问 /update_info 可以看到这个页面：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cdbc7a199b96467c8178303263698d65~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个页面涉及到 3 个接口：</p>
+<ul>
+<li>
+<p>/user/info 查询用户信息的接口，用来回显数据</p>
+</li>
+<li>
+<p>/user/update 修改用户信息的接口，用来做修改</p>
+</li>
+<li>
+<p>/user/update/captcha 发送验证码的接口</p>
+</li>
+</ul>
+<p>我们看下 swagger 接口文档：</p>
+<p>/user/info 接口没有参数，但是需要登录：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5f24c63941074ccb8d6f99506f197f78~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>/user/update 接口需要在 body 传这么几个参数：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7a0959e2ac2243df85f09c2702ac84ee~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>/user/update/captcha 需要传一个邮箱地址：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/457dc1c5ed05499a9d7ea8beeb3d64fb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>不知道有没有同学发现这里有点不太合理：</p>
+<p>邮箱是用户自己传的，那如果传的不是注册用的邮箱呢？</p>
+<p>前面发送验证码需要传邮箱地址，是因为那是注册或者修改密码用，没有登录。</p>
+<p>而现在已经登录了，就不应该再传邮箱地址了，应该是放在 jwt 里，然后在 LoginGuard 里取出来注入 controller。</p>
+<p>我们改一下：</p>
+<p>改一下这个 login 接口，在 jwt 里放 email 的信息：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/383d258363e64af7a5ed2cf642eb9d5c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c1efd2f5ffef435fbce540d1bcfd0696~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>同时 refresh 接口也要改下放在 jwt 里的信息：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b523801fe1a54d84a597e5911757a0e4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a02f258ab5c3470ba608be2246f0e44f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里要取 user.email，需要在 UserService 的 findUserById 方法里返回下 email：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/84720182cae64e87874d6c71fd480f4f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 LoginGuard 里从 jwt 里取出 email 来：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/74e1689b21e24676864bb2e54c35201d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0753c6be22704694bed07af02f323c9c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 /user/update/captcha 就可以直接从 request.user 里拿 email 信息了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/01ec356cbab6476ea482c9fdc90e9e9d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把参数的标注去掉，其余的都不用变，这样就是从 jwt 里取登录用户的 email 来发邮件了。</p>
+<p>我们测试下：</p>
+<p>先登录：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bdff86b66e444cda8ac956f0ae81377b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后用这个 accessToken 访问下发送验证码接口：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/327bf1f73d324d65a76ac98bdf3828d6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>发送成功，收到了这个验证码：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4064d1cc933f40f5b0941f93b146c265~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后调用下查询用户信息的接口：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/640a1930a34348fdb1e9da26ea7b58fa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>之后调用修改接口：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6ad0755d5d7a4de39048f4d9b0d9bd65~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在数据库里看下，用户信息已经改过来了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/76678f13d7e44a3fa128cbad75d52b87~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>postman 里接口的流程跑通之后，我们在页面调用下。</p>
+<p>首先在 interfaces.ts 里添加这 3 个接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">getUserInfo</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> axiosInstance.<span class="hljs-title function_">get</span>(<span class="hljs-string">'/user/info'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">}</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">updateInfo</span>(<span class="hljs-params">data: UserInfo</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> axiosInstance.<span class="hljs-title function_">post</span>(<span class="hljs-string">'/user/update'</span>, data);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">updateUserInfoCaptcha</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> axiosInstance.<span class="hljs-title function_">get</span>(<span class="hljs-string">'/user/update/captcha'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<p>然后我们先做用户信息的回显：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">query</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> <span class="hljs-title function_">getUserInfo</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-keyword">const</span> { data } = res.<span class="hljs-property">data</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-keyword">if</span>(res.<span class="hljs-property">status</span> === <span class="hljs-number">201</span> || res.<span class="hljs-property">status</span> === <span class="hljs-number">200</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(data);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-title function_">query</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}, []);</span>
+</code></pre>
+<p>调用 getUserInfo 接口，返回数据后打印下。</p>
+<p>这个接口的访问需要登录，也就是要从 localStorage 里取出 accessToken 放到 header 里。</p>
+<p>这种携带 header 的通用逻辑可以放在 axios 的 interceptor 里做。</p>
+<p>并且还有 token 过期之后调用 refresh 刷新 token 的逻辑。</p>
+<p>这个我们前面写过，直接拿过来放在 interfaces.ts 里：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { message } <span class="hljs-keyword">from</span> <span class="hljs-string">"antd"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> axiosInstance = axios.<span class="hljs-title function_">create</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">baseURL</span>: <span class="hljs-string">'http://localhost:3005/'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">timeout</span>: <span class="hljs-number">3000</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">});</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">axiosInstance.<span class="hljs-property">interceptors</span>.<span class="hljs-property">request</span>.<span class="hljs-title function_">use</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">config</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">const</span> accessToken = <span class="hljs-variable language_">localStorage</span>.<span class="hljs-title function_">getItem</span>(<span class="hljs-string">'access_token'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">if</span>(accessToken) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        config.<span class="hljs-property">headers</span>.<span class="hljs-property">authorization</span> = <span class="hljs-string">'Bearer '</span> + accessToken;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">return</span> config;</span>
+<span class="code-block-extension-codeLine" data-line-num="15">})</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">interface <span class="hljs-title class_">PendingTask</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-attr">config</span>: <span class="hljs-title class_">AxiosRequestConfig</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-attr">resolve</span>: <span class="hljs-title class_">Function</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="21"><span class="hljs-keyword">let</span> refreshing = <span class="hljs-literal">false</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="22"><span class="hljs-keyword">const</span> <span class="hljs-attr">queue</span>: <span class="hljs-title class_">PendingTask</span>[] = [];</span>
+<span class="code-block-extension-codeLine" data-line-num="23"></span>
+<span class="code-block-extension-codeLine" data-line-num="24">axiosInstance.<span class="hljs-property">interceptors</span>.<span class="hljs-property">response</span>.<span class="hljs-title function_">use</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="26">        <span class="hljs-keyword">return</span> response;</span>
+<span class="code-block-extension-codeLine" data-line-num="27">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-keyword">async</span> (error) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="29">        <span class="hljs-keyword">if</span>(!error.<span class="hljs-property">response</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="30">            <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(error);</span>
+<span class="code-block-extension-codeLine" data-line-num="31">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="32">        <span class="hljs-keyword">let</span> { data, config } = error.<span class="hljs-property">response</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="33"></span>
+<span class="code-block-extension-codeLine" data-line-num="34">        <span class="hljs-keyword">if</span>(refreshing) {</span>
+<span class="code-block-extension-codeLine" data-line-num="35">            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="36">                queue.<span class="hljs-title function_">push</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="37">                    config,</span>
+<span class="code-block-extension-codeLine" data-line-num="38">                    resolve</span>
+<span class="code-block-extension-codeLine" data-line-num="39">                });</span>
+<span class="code-block-extension-codeLine" data-line-num="40">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="41">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="42"></span>
+<span class="code-block-extension-codeLine" data-line-num="43">        <span class="hljs-keyword">if</span> (data.<span class="hljs-property">code</span> === <span class="hljs-number">401</span> &amp;&amp; !config.<span class="hljs-property">url</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">'/user/refresh'</span>)) {</span>
+<span class="code-block-extension-codeLine" data-line-num="44">            </span>
+<span class="code-block-extension-codeLine" data-line-num="45">            refreshing = <span class="hljs-literal">true</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="46"></span>
+<span class="code-block-extension-codeLine" data-line-num="47">            <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> <span class="hljs-title function_">refreshToken</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="48"></span>
+<span class="code-block-extension-codeLine" data-line-num="49">            refreshing = <span class="hljs-literal">false</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="50"></span>
+<span class="code-block-extension-codeLine" data-line-num="51">            <span class="hljs-keyword">if</span>(res.<span class="hljs-property">status</span> === <span class="hljs-number">200</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="52"></span>
+<span class="code-block-extension-codeLine" data-line-num="53">                queue.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">{config, resolve}</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="54">                    <span class="hljs-title function_">resolve</span>(<span class="hljs-title function_">axiosInstance</span>(config))</span>
+<span class="code-block-extension-codeLine" data-line-num="55">                })</span>
+<span class="code-block-extension-codeLine" data-line-num="56"></span>
+<span class="code-block-extension-codeLine" data-line-num="57">                <span class="hljs-keyword">return</span> <span class="hljs-title function_">axiosInstance</span>(config);</span>
+<span class="code-block-extension-codeLine" data-line-num="58">            } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="59">                message.<span class="hljs-title function_">error</span>(res.<span class="hljs-property">data</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="60"></span>
+<span class="code-block-extension-codeLine" data-line-num="61">                <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="62">                    <span class="hljs-variable language_">window</span>.<span class="hljs-property">location</span>.<span class="hljs-property">href</span> = <span class="hljs-string">'/login'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="63">                }, <span class="hljs-number">1500</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="64">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="65">            </span>
+<span class="code-block-extension-codeLine" data-line-num="66">        } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="67">            <span class="hljs-keyword">return</span> error.<span class="hljs-property">response</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="68">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="69">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="70">)</span>
+<span class="code-block-extension-codeLine" data-line-num="71"></span>
+<span class="code-block-extension-codeLine" data-line-num="72"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">refreshToken</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="73">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axiosInstance.<span class="hljs-title function_">get</span>(<span class="hljs-string">'/user/refresh'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="74">        <span class="hljs-attr">params</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="75">          <span class="hljs-attr">refresh_token</span>: <span class="hljs-variable language_">localStorage</span>.<span class="hljs-title function_">getItem</span>(<span class="hljs-string">'refresh_token'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="76">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="77">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="78">    <span class="hljs-variable language_">localStorage</span>.<span class="hljs-title function_">setItem</span>(<span class="hljs-string">'access_token'</span>, res.<span class="hljs-property">data</span>.<span class="hljs-property">access_token</span> || <span class="hljs-string">''</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="79">    <span class="hljs-variable language_">localStorage</span>.<span class="hljs-title function_">setItem</span>(<span class="hljs-string">'refresh_token'</span>, res.<span class="hljs-property">data</span>.<span class="hljs-property">refresh_token</span> || <span class="hljs-string">''</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="80">    <span class="hljs-keyword">return</span> res;</span>
+<span class="code-block-extension-codeLine" data-line-num="81">}</span>
+</code></pre>
+<p>这段逻辑就是在每次发请求之前，在 header 里加上 authorization，带上 access_token。</p>
+<p>当响应码是 401 的时候，就刷新 token，刷新失败提示错误信息，然后跳到登录页。</p>
+<p>并且通过 refreshing 的标记和 task 队列实现了并发请求只刷新一次。</p>
+<p>这部分看不明白的同学建议回头看下 access_token 和 refresh_token 无感刷新那节。</p>
+<p>其中，这代码代码可能有同学有疑问：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">if</span>(!error.<span class="hljs-property">response</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(error);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">}</span>
+</code></pre>
+<p>是为了请求没有发送成功的情况的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c41c4d9c700f445b85f3601c68678587~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=662&amp;h=316&amp;s=62598&amp;e=png&amp;b=fefcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>请求没有发送成功时，错误对象没有 response 属性。</p>
+<p>接下来，我们先登录下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4bf746fc8f0642e98fc19e06296bfe38~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>给用户图标添加跳到 /update_info 的链接：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e0658c70cd3c49b89f3a6d813e1a54e6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b78070db300d4fbd88996ef93453fa86~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后可以看到控制台打印了当前登录用户的信息：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b4ae58579434d4b87bed572d378d1f1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们做下回显：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/647af8a7d2ec487ca1a2d729f7deef55~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">form.<span class="hljs-title function_">setFieldValue</span>(<span class="hljs-string">'headPic'</span>, data.<span class="hljs-property">headPic</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2">form.<span class="hljs-title function_">setFieldValue</span>(<span class="hljs-string">'nickName'</span>, data.<span class="hljs-property">nickName</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">form.<span class="hljs-title function_">setFieldValue</span>(<span class="hljs-string">'email'</span>, data.<span class="hljs-property">email</span>);</span>
+</code></pre>
+<p>这样，回显的数据就有了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/24b695dd92e940a9becc6d5b75f4c821~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后实现发送验证码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> sendCaptcha = <span class="hljs-title function_">useCallback</span>(<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> <span class="hljs-title function_">updateUserInfoCaptcha</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">if</span>(res.<span class="hljs-property">status</span> === <span class="hljs-number">201</span> || res.<span class="hljs-property">status</span> === <span class="hljs-number">200</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        message.<span class="hljs-title function_">success</span>(res.<span class="hljs-property">data</span>.<span class="hljs-property">data</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        message.<span class="hljs-title function_">error</span>(<span class="hljs-string">'系统繁忙，请稍后再试'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}, []);</span>
+</code></pre>
+<p>这里不需要填邮箱地址，服务端会从 jwt 里取。</p>
+<p>那这里的邮箱也是不应该修改的，给它加个 disabled：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1e3d089323254c90b0eb987530dd96f3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5a63f00139e74ad4b2b407ddb2f54a0d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击发送验证码。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f29f4a159b954c9588debf275f4472ec~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>提示发送成功，邮箱里也收到了这个验证码：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/75b13b47b52c4a0a8a1888ec6e6c85a4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>接下来就差更新接口了，我们调用下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> onFinish = <span class="hljs-title function_">useCallback</span>(<span class="hljs-keyword">async</span> (<span class="hljs-attr">values</span>: <span class="hljs-title class_">UserInfo</span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> <span class="hljs-title function_">updateInfo</span>(values);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">if</span>(res.<span class="hljs-property">status</span> === <span class="hljs-number">201</span> || res.<span class="hljs-property">status</span> === <span class="hljs-number">200</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-keyword">const</span> { <span class="hljs-attr">message</span>: msg, data} = res.<span class="hljs-property">data</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-keyword">if</span>(msg === <span class="hljs-string">'success'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">            message.<span class="hljs-title function_">success</span>(<span class="hljs-string">'用户信息更新成功'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            message.<span class="hljs-title function_">error</span>(data);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        message.<span class="hljs-title function_">error</span>(<span class="hljs-string">'系统繁忙，请稍后再试'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}, []);</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/74811a6e760a4ec08cf0ff594d54d308~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>修改信息，点击发送验证码：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5df16c92cf374852ad591081f178d3a0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>填入验证码，点击修改，提示用户信息更新成功。</p>
+<p>去数据库里看一下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e39625951d2a400bb2a2531afb1bd2d5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>确实修改成功了。</p>
+<p>这样，修改用户信息的流程就走完了。</p>
+<p>不过现在的头像是直接填的路径，这里应该做成图片的展示，以及图片的上传。</p>
+<p>我们需要添加个上传图片的接口：</p>
+<p>在 UserController 里添加这个 handler：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Post</span>(<span class="hljs-string">'upload'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">@<span class="hljs-title class_">UseInterceptors</span>(<span class="hljs-title class_">FileInterceptor</span>(<span class="hljs-string">'file'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">dest</span>: <span class="hljs-string">'uploads'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">}))</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-title function_">uploadFile</span>(<span class="hljs-params">@UploadedFile() file: Express.Multer.File</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'file'</span>, file);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-keyword">return</span> file.<span class="hljs-property">path</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+</code></pre>
+<p>安装用到的类型包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install @types/multer</span>
+</code></pre>
+<p>在 postman 里测试下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1c5535eb022a4874a3a9d1307be98bcb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>选择 form-data 类型，然后添加 file 字段，选择一个文件：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8888eda3c5f64d628b8ed40a0bf9792f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>返回了服务端保存路径，并且打印了文件信息：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/43eb068644aa4b3aa04084a55ba402db~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/86545f1efc5e47dc8dbee5141909de92~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们限制下只能上传图片：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9e3982c612db4432a3b258df289b25e2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> path <span class="hljs-keyword">from</span> <span class="hljs-string">'path'</span>;</span>
+</code></pre>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Post</span>(<span class="hljs-string">'upload'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">@<span class="hljs-title class_">UseInterceptors</span>(<span class="hljs-title class_">FileInterceptor</span>(<span class="hljs-string">'file'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">dest</span>: <span class="hljs-string">'uploads'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-title function_">fileFilter</span>(<span class="hljs-params">req, file, callback</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> extname = path.<span class="hljs-title function_">extname</span>(file.<span class="hljs-property">originalname</span>);        </span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">if</span>([<span class="hljs-string">'.png'</span>, <span class="hljs-string">'.jpg'</span>, <span class="hljs-string">'.gif'</span>].<span class="hljs-title function_">includes</span>(extname)) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-title function_">callback</span>(<span class="hljs-literal">null</span>, <span class="hljs-literal">true</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-title function_">callback</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'只能上传图片'</span>), <span class="hljs-literal">false</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}))</span>
+<span class="code-block-extension-codeLine" data-line-num="13"><span class="hljs-title function_">uploadFile</span>(<span class="hljs-params">@UploadedFile() file: Express.Multer.File</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'file'</span>, file);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  <span class="hljs-keyword">return</span> file.<span class="hljs-property">path</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">}</span>
+</code></pre>
+<p>callback 的第一个参数是 error，第二个参数是是否接收文件。</p>
+<p>然后我们上传一个非图片文件试一下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0332f1eb9211425d94f78858a7354da2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>返回了错误信息。</p>
+<p>上传图片是正常的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d17889cafa914f54bfe63cf6ef51af5a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后限制下图片大小，最大 3M:</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8ef1ff5f40f64038b578eda8f1fa919e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">limits</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">fileSize</span>: <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">3</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">}</span>
+</code></pre>
+<p>当你上传超过 3M 的图片时，会提示错误：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/380ffe4dc0d3457783e491c345cbf6fc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们改下保存的文件名，这需要自定义 storage。</p>
+<p>前面讲 multer 文件上传那节讲过，直接拿过来（忘了的同学可以回头看一下）：</p>
+<p>添加 src/my-file-storage.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> multer <span class="hljs-keyword">from</span> <span class="hljs-string">"multer"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> fs <span class="hljs-keyword">from</span> <span class="hljs-string">'fs'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> storage = multer.<span class="hljs-title function_">diskStorage</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">destination</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">req, file, cb</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-keyword">try</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">            fs.<span class="hljs-title function_">mkdirSync</span>(<span class="hljs-string">'uploads'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        }<span class="hljs-keyword">catch</span>(e) {}</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-title function_">cb</span>(<span class="hljs-literal">null</span>, <span class="hljs-string">'uploads'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">filename</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">req, file, cb</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-keyword">const</span> uniqueSuffix = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>() + <span class="hljs-string">'-'</span> + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">1E9</span>) + <span class="hljs-string">'-'</span> + file.<span class="hljs-property">originalname</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-title function_">cb</span>(<span class="hljs-literal">null</span>, uniqueSuffix)</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="16">});</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18"><span class="hljs-keyword">export</span> { storage };</span>
+</code></pre>
+<p>这个就是自己指定怎么存储，multer.distkStorage 是磁盘存储，通过 destination、filename 的参数分别指定保存的目录和文件名。</p>
+<p>指定 storage：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/94f76955ccbf489bb08b956b92d4099a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后测试下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/700b94fd0877437bb5f4efa31909e9dd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样路径就能看出来是什么文件了。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/01a3717e55134216b78f876000106c9f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们把这个目录设置为静态文件目录，这样能直接访问上传的图片。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b7716506af9f4739a0a35984c561472a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 main.ts 里添加 uploads 目录为静态目录：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">app.<span class="hljs-title function_">useStaticAssets</span>(<span class="hljs-string">'uploads'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">prefix</span>: <span class="hljs-string">'/uploads'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">});</span>
+</code></pre>
+<p>指定通过 /uploads 的前缀访问。</p>
+<p>然后我们把路径复制，在浏览器访问下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/147e219987f94e4c994d564f2a9c3f3a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7463c2dc1729452ea90b1aa1e4bfcccc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样就可以访问到上传的文件了。</p>
+<p>也就是说，上传头像之后，可以直接拿到图片的 url。</p>
+<p>我们在页面里加一下：</p>
+<p>在 src/page/update_info  下增加一个 HeadPicUpload.tsx</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Button</span>, <span class="hljs-title class_">Input</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"antd"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">interface <span class="hljs-title class_">HeadPicUploadProps</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    value?: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    onChange?: <span class="hljs-title class_">Function</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">}</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">HeadPicUpload</span>(<span class="hljs-params">props: HeadPicUploadProps</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">return</span> props?.<span class="hljs-property">value</span> ? <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">        {props.value}</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-tag">&lt;<span class="hljs-name">Button</span>&gt;</span>上传<span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>: <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-tag">&lt;<span class="hljs-name">Button</span>&gt;</span>上传<span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<p>在上传头像的地方引入下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8272e7c2fc754d329d77373d38364249~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>为什么是 value 和 onChange 两个参数呢？</p>
+<p>因为 antd 的 Form.Item 在渲染时会给子组件传这两个参数。</p>
+<p>现在渲染出来的是这样的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/56a0a3a955734d82a9361a3313f729f4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们在 postman 里上传个图片，比如这个：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a9c242a826a444619535b8cfb8614c3d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>拿到它的路径：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1a1bf760e5a84746bb7a5d47b4de9e97~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后手动去数据库里改一下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b5dd0a198d2446a8aaffc3baaad8e57~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击 apply。</p>
+<p>刷新下页面，可以看到确实变了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d0cd941956f6455a95978cfb0d78241e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后把它改成图片：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/108e51eccfbf4c7aa6acc901b2efb115~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">&lt;img src={<span class="hljs-string">'http://localhost:3005/'</span> + props.<span class="hljs-property">value</span>} alt=<span class="hljs-string">"头像"</span> width=<span class="hljs-string">"100"</span> height=<span class="hljs-string">"100"</span>/&gt;</span>
+</code></pre>
+<p>头像就显示出来了：
+<img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b6829ffd78434cfa8eb8cd2acc128eb5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们把后面的上传按钮改为 antd 的拖拽上传组件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/49ad6db7b8694b6cafae27daaa78620e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">InboxOutlined</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"@ant-design/icons"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Button</span>, <span class="hljs-title class_">Input</span>, message } <span class="hljs-keyword">from</span> <span class="hljs-string">"antd"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> <span class="hljs-title class_">Dragger</span>, { <span class="hljs-title class_">DraggerProps</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"antd/es/upload/Dragger"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">interface <span class="hljs-title class_">HeadPicUploadProps</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    value?: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    onChange?: <span class="hljs-title class_">Function</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-keyword">const</span> <span class="hljs-attr">props</span>: <span class="hljs-title class_">DraggerProps</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">name</span>: <span class="hljs-string">'file'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">action</span>: <span class="hljs-string">'http://localhost:3005/user/upload'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-title function_">onChange</span>(<span class="hljs-params">info</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-keyword">const</span> { status } = info.<span class="hljs-property">file</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-keyword">if</span> (status === <span class="hljs-string">'done'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(info.<span class="hljs-property">file</span>.<span class="hljs-property">response</span>);    </span>
+<span class="code-block-extension-codeLine" data-line-num="17">            message.<span class="hljs-title function_">success</span>(<span class="hljs-string">`<span class="hljs-subst">${info.file.name}</span> 文件上传成功`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (status === <span class="hljs-string">'error'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">            message.<span class="hljs-title function_">error</span>(<span class="hljs-string">`<span class="hljs-subst">${info.file.name}</span> 文件上传失败`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="20">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="22">};</span>
+<span class="code-block-extension-codeLine" data-line-num="23"></span>
+<span class="code-block-extension-codeLine" data-line-num="24"><span class="hljs-keyword">const</span> dragger = <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Dragger</span> {<span class="hljs-attr">...props</span>}&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"ant-upload-drag-icon"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">        <span class="hljs-tag">&lt;<span class="hljs-name">InboxOutlined</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"ant-upload-text"</span>&gt;</span>点击或拖拽文件到这个区域来上传<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29"><span class="hljs-tag">&lt;/<span class="hljs-name">Dragger</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30"></span>
+<span class="code-block-extension-codeLine" data-line-num="31"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">HeadPicUpload</span>(<span class="hljs-params">props: HeadPicUploadProps</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-keyword">return</span> props?.<span class="hljs-property">value</span> ? <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="33">        <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">{</span>'<span class="hljs-attr">http:</span>//<span class="hljs-attr">localhost:3005</span>/' + <span class="hljs-attr">props.value</span>} <span class="hljs-attr">alt</span>=<span class="hljs-string">"头像"</span> <span class="hljs-attr">width</span>=<span class="hljs-string">"100"</span> <span class="hljs-attr">height</span>=<span class="hljs-string">"100"</span>/&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="34">        {dragger}</span>
+<span class="code-block-extension-codeLine" data-line-num="35">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>: <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="36">        {dragger}</span>
+<span class="code-block-extension-codeLine" data-line-num="37">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="38">}</span>
+</code></pre>
+<p>测试下，提示上传成功：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e21936ea6b5e433fa5b1b74436c4861e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>控制台打印了文件路径：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/192498e410e24ce1a8f3fe1c4f7644b1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="i" loading="lazy" class="medium-zoom-image"></p>
+<p>服务端也确实有了这个文件：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c5e2f4ca504549bdac0b8c100c7484ff~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们浏览器访问下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ec77983568eb4b919bd849312ded7841~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>能够正常访问。</p>
+<p>接下来就通过 onChange 回调传给 Form 就好了。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/34ba8ebd1b9642e0b01880b5b8cf552e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样表单的值就会改，触发重新渲染，就可以看到新的头像：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bcfca0ff2ed244af8e87050526af89e2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>不过现在还没更新到数据库。</p>
+<p>点击发送验证码：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/43a08cc00eca4e66997aa43111f07701~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>填入验证码，点击修改：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aee31ed40a7d43ddbbf99b2bd254a071~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>提示更新成功。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d0450d9a3cf24a57acb3ce2454392887~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>数据库里确实更新了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/18a48ee2c16c44849e09d048dbb159f5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>刷新下页面，可以看到依然是这个头像：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/16ce3e93ca4b4c44a79d5bb43a710073~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>代表修改成功了。</p>
+<p>至此，我们完成了用户信息修改的前后端。</p>
+<p>案例代码在小册仓库：</p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fmeeting_room_booking_system_frontend_user" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/meeting_room_booking_system_frontend_user" ref="nofollow noopener noreferrer">用户端前端代码</a></p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fmeeting_room_booking_system_backend" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/meeting_room_booking_system_backend" ref="nofollow noopener noreferrer">后端代码</a></p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们实现了修改密码和修改个人信息这两个页面。</p>
+<p>修改密码页面不需要登录，但我们当时的接口是需要登录的，所以改了一下。</p>
+<p>并且给 username 加上了唯一约束，通过 username 来查询用户，然后修改。</p>
+<p>修改个人信息页面是登录后的，我们通过 React Router 的路由嵌套写了多级页面。</p>
+<p>实现了用户信息的回显和更新的功能。</p>
+<p>之后实现了头像上传，上传的目录作为静态文件目录，这样可以直接访问。</p>
+<p>这样，用户端的用户相关功能就都完成了。</p></div>

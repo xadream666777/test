@@ -1,0 +1,507 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><h2 data-id="heading-0">1. 封装通用资源懒加载库</h2>
+<p>接下来，我们就将基于上述介绍的基于<code>scroll</code>事件和基于<code>Intersection Observer API</code>，2类懒加载方案，封装一套懒加载库，实现通用的资源懒加载库，降低使用成本，提高开发体验，同时保证生产环境可用的浏览器兼容性。</p>
+<blockquote>
+<p>通用资源懒加载库 <strong>LazyloadAll</strong> GitHub 仓库链接：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Flazyload-all%3Ftab%3Dreadme-ov-file%23lazyload-all" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/lazyload-all?tab=readme-ov-file#lazyload-all" ref="nofollow noopener noreferrer">github.com/JuniorTour/…</a></p>
+</blockquote>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/40fe4dfab97848569daa1f9d085decd7~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1405&amp;h=969&amp;s=145127&amp;e=png&amp;b=0e1218" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h3 data-id="heading-1">1. 初始化仓库</h3>
+<p>首先我们初始化懒加载库的代码仓库。</p>
+<p>要想顺利高效地开发一个工具库，有许多基础设施需要配置，例如：ESLint、Prettier、打包编译工具、开发调试环境、自动化测试和持续集成CI等等，需要耗费大量时间精力。</p>
+<p>所以笔者推荐使用 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fyanhaijing%2Fjslib-base" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/yanhaijing/jslib-base" ref="nofollow noopener noreferrer">jslib-base</a> 工具库模板，快速生成一套基础设施，让我们能直接投入到源码编写中，为我们节省时间精力。</p>
+<p>使用这个模板工具非常简单，只需要运行命令：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">vbnet</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-vbnet code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx @js-<span class="hljs-keyword">lib</span>/cli <span class="hljs-built_in">new</span> <span class="hljs-keyword">lib</span>-name</span>
+</code></pre>
+<p>选择自己需要的语言、环境配置，即可自动生成所有工具库开发和发布的基础设施。</p>
+<p>我们的示例的工具库名称是<code>lazyload-all</code>，运行上述命令时替换<code>lib-name</code>部分，随后的命令行交互中，选择JS语言，最终生成的主要目录结构如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">.</span>
+<span class="code-block-extension-codeLine" data-line-num="2">├── demo 使用DEMO</span>
+<span class="code-block-extension-codeLine" data-line-num="3">├── dist 编译产出代码</span>
+<span class="code-block-extension-codeLine" data-line-num="4">├── <span class="hljs-attribute">src</span> 源代码目录</span>
+<span class="code-block-extension-codeLine" data-line-num="5">├── README<span class="hljs-selector-class">.md</span></span>
+</code></pre>
+<p>初始化完成后，我们直接打开<code>src/index.js</code>就可开始编写工具库的代码逻辑了。</p>
+<p>其他的语法检查、打包编译甚至GitHub持续集成环境（<code>.github\workflows\ci.yml</code>）都已经为我们配置好了，开箱即用。</p>
+<p>另外，为了便于我们在开发环境，改动代码后，<strong>自动触发</strong>打包，我们再安装一个<code>nodemon</code>库，用于监听文件变化，触发打包命令（<code>npm run build:aio</code>），并在<code>package.json</code>新增对应的调用命令，：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install nodemon --save-dev</span>
+</code></pre>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-string">"scripts"</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-string">"dev"</span>: <span class="hljs-string">"nodemon -e js,ts --watch src --delay 2.5 --exec "</span>npm run <span class="hljs-attr">build</span>:aio<span class="hljs-string">""</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">}</span>
+</code></pre>
+<p>这样，运行<code>npm run dev</code>后，我们对代码的改动就会自动触发打包命令：<code>npm run build:aio</code>。</p>
+<p>同时访问<code>\demo\demo-global.html</code>页面，就可以作为我们的本地开发调试环境，愉快地开始写代码了。</p>
+<p>在这个HTML页面中，我们在<code>index.js</code>中<code>export</code>导出的方法、属性，就可以通过<code>window['LazyLoadAll']</code>方便地开发调试：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c06b770783a64eac8a44322a060d0b4a~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1752&amp;h=943&amp;s=164974&amp;e=png&amp;b=aeaeae" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h3 data-id="heading-2">2. 实现初始化逻辑和<code>class LazyLoadAll</code></h3>
+<p>编写代码逻辑的第一步，当然是工具库的初始化逻辑。</p>
+<p>我们基于用户的需求和使用方式来确定初始化逻辑，从用户角度出发，设计工具库的API。</p>
+<p>用户使用懒加载库，核心的需求是：简单易用地实现资源懒加载。</p>
+<p>具体到使用方式，预计主要会有2种：</p>
+<ol>
+<li>为已经存在的DOM元素，例如SSR直接响应的DOM元素，增加懒加载逻辑。</li>
+<li>为新增的元素，例如组件动态渲染生成的DOM元素，增加懒加载逻辑。</li>
+</ol>
+<p>所以我们分别提供2个API，满足用户的以上用法：</p>
+<ol>
+<li><code>initLazyloadAll(options)</code>：初始化通用懒加载库，同时为已经存在的DOM元素，增加懒加载逻辑。</li>
+<li><code>lazyLoadeAllInstance.update()</code>：调用已经初始化的懒加载库实例方法<code>update()</code>，为新增的元素，增加懒加载逻辑</li>
+</ol>
+<p>用户使用方式示例代码如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">  <span class="hljs-keyword">const</span> lazyLoadeAllInstance = <span class="hljs-variable language_">window</span>.<span class="hljs-property">LazyLoadAll</span>.<span class="hljs-title function_">initLazyloadAll</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-comment">// mode: MODES.scroll,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-comment">// mode: MODES.intersectionObserver,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">once</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-comment">// 懒加载元素增减后，更新监视目标</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  lazyLoadeAllInstance.<span class="hljs-title function_">update</span>();</span>
+</code></pre>
+<p>接下来，就可以按照实现这2个API的目标，编写代码逻辑了。</p>
+<p>首先，在入口文件<code>index.js</code>中，导出<code>initLazyloadAll(options)</code>方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// src\index.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> <span class="hljs-title class_">LazyLoadAll</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'./LazyLoadAll'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { onIntersectCb } <span class="hljs-keyword">from</span> <span class="hljs-string">'./loadHandlers'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">MODES</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./const'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">initLazyloadAll</span>(<span class="hljs-params">options</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-comment">// debugger;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-keyword">const</span> lazyLoadeAllInstance = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LazyLoadAll</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    onIntersectCb,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">once</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-comment">// mode: MODES.scroll,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">mode</span>: <span class="hljs-variable constant_">MODES</span>.<span class="hljs-property">intersectionObserver</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    ...options,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">  lazyLoadeAllInstance.<span class="hljs-title function_">update</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">  <span class="hljs-keyword">return</span> lazyLoadeAllInstance;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">}</span>
+</code></pre>
+<p>新建<code>src\LazyLoadAll.js</code>，以面向对象的模式，创建并导出<code>class LazyLoadAll</code>：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> <span class="hljs-title class_">ScrollLazyLoader</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'./ScrollLazyloader'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> <span class="hljs-title class_">IntersectionLazyLoader</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'./IntersectionLazyLoader'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">MODES</span>, <span class="hljs-variable constant_">ATTRS</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./const'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LazyLoadAll</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  lazyLoader = <span class="hljs-literal">null</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">options</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">if</span> (options.<span class="hljs-property">mode</span> === <span class="hljs-variable constant_">MODES</span>.<span class="hljs-property">scroll</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-variable language_">this</span>.<span class="hljs-property">lazyLoader</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ScrollLazyLoader</span>(options);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (options.<span class="hljs-property">mode</span> === <span class="hljs-variable constant_">MODES</span>.<span class="hljs-property">intersectionObserver</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-variable language_">this</span>.<span class="hljs-property">lazyLoader</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">IntersectionLazyLoader</span>(options);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">  <span class="hljs-title function_">update</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-keyword">const</span> lazyloadEles = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">`[<span class="hljs-subst">${ATTRS.dataLaztload}</span>]`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    lazyloadEles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">ele</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-variable language_">this</span>.<span class="hljs-property">lazyLoader</span>.<span class="hljs-title function_">addTarget</span>(ele);</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="22">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="23">}</span>
+</code></pre>
+<p><code>LazyLoadAll</code>类就是我们通用懒加载库的核心逻辑，在这个类中，我们会根据初始化传入的<code>options.mode</code>决定当前使用基于<code>scroll</code>事件，还是基于<code>Intersection Observer API</code>的懒加载实现方案。</p>
+<p>它的<code>lazyLoader</code>属性，就是我们基于上述2类懒加载实现方案，编写出的懒加载运行逻辑，主要有3个方法：</p>
+<ol>
+<li>
+<p><code>init(options)</code>：初始化方法，用于监听<code>scroll</code>事件、初始化<a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FAPI%2FIntersection_Observer_API" target="_blank" rel="nofollow noopener noreferrer" title="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" ref="nofollow noopener noreferrer">Intersection Observer API</a>等逻辑。</p>
+</li>
+<li>
+<p><code>addTarget(ele)</code>：新增懒加载监视目标元素方法，用于对目标元素开始懒加载监视。</p>
+</li>
+<li>
+<p><code>removeTarget(ele)</code>：删除懒加载监视目标元素方法，用于在元素懒加载触发后，停止监视。</p>
+</li>
+</ol>
+<h3 data-id="heading-3">3. 实现 <code>class IntersectionLazyLoader</code></h3>
+<p>之后，我们先编写基于<a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FAPI%2FIntersection_Observer_API" target="_blank" rel="nofollow noopener noreferrer" title="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" ref="nofollow noopener noreferrer">Intersection Observer API</a>方案的<code>IntersectionLazyLoader</code>类及其3个方法，代码逻辑如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// src\IntersectionLazyLoader.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">IntersectionLazyLoader</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  observer = <span class="hljs-literal">null</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">options</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">init</span>(options);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-title function_">init</span>(<span class="hljs-params">{ onIntersectCb, once, ObserverOptions }</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">if</span> (!onIntersectCb) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-string">`initScrollLazyLoader have falsy onIntersectCb=<span class="hljs-subst">${onIntersectCb}</span> `</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      );</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">observer</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">observer</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">IntersectionObserver</span>(<span class="hljs-function">(<span class="hljs-params">entries</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">      <span class="hljs-comment">// 遍历所有观察的元素</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">      entries.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">entry</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-comment">// 如果该元素进入了视口，就执行该元素对应的回调</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">        <span class="hljs-keyword">if</span> (entry.<span class="hljs-property">isIntersecting</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="25">          <span class="hljs-keyword">const</span> ele = entry.<span class="hljs-property">target</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="26">          <span class="hljs-title function_">onIntersectCb</span>(ele);</span>
+<span class="code-block-extension-codeLine" data-line-num="27">          <span class="hljs-keyword">if</span> (once) {</span>
+<span class="code-block-extension-codeLine" data-line-num="28">            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeTarget</span>(ele);</span>
+<span class="code-block-extension-codeLine" data-line-num="29">          }</span>
+<span class="code-block-extension-codeLine" data-line-num="30">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="31">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="32">    }, <span class="hljs-title class_">ObserverOptions</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="33">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="34"></span>
+<span class="code-block-extension-codeLine" data-line-num="35">  <span class="hljs-title function_">addTarget</span>(<span class="hljs-params">ele</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="36">    <span class="hljs-keyword">if</span> (!ele) {</span>
+<span class="code-block-extension-codeLine" data-line-num="37">      <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="38">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="39">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">observer</span>.<span class="hljs-title function_">observe</span>(ele);</span>
+<span class="code-block-extension-codeLine" data-line-num="40">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="41"></span>
+<span class="code-block-extension-codeLine" data-line-num="42">  <span class="hljs-title function_">removeTarget</span>(<span class="hljs-params">ele</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="43">    <span class="hljs-keyword">if</span> (!ele) {</span>
+<span class="code-block-extension-codeLine" data-line-num="44">      <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="45">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="46">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">observer</span>.<span class="hljs-title function_">unobserve</span>(ele);</span>
+<span class="code-block-extension-codeLine" data-line-num="47">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="48">}</span>
+</code></pre>
+<p><code>IntersectionLazyLoader</code>类的3个方法，逻辑分别是：</p>
+<ol>
+<li>
+<p><code>init(options)</code>：初始化<a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FAPI%2FIntersection_Observer_API" target="_blank" rel="nofollow noopener noreferrer" title="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" ref="nofollow noopener noreferrer">Intersection Observer API</a>实例。同时指定回调函数，当目标元素，满足懒加载条件时（<code>entry.isIntersecting === true</code>），调用<code>onIntersectCb()</code>方法，执行真正的加载资源逻辑。</p>
+</li>
+<li>
+<p><code>addTarget(ele)</code>：对懒加载监视目标元素调用<code>observe(ele)</code>方法，开始监视。</p>
+</li>
+<li>
+<p><code>removeTarget(ele)</code>：对懒加载监视目标元素调用<code>unobserve(ele)</code>方法，停止监视。</p>
+</li>
+</ol>
+<h3 data-id="heading-4">4. 实现 <code>class ScrollLazyLoader</code></h3>
+<p>接下来再实现基于监听<code>scroll</code>事件方案的的<code>ScrollLazyLoader</code>类及其3个方法，代码逻辑如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// src\ScrollLazyloader.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">function</span> <span class="hljs-title function_">throttle</span>(<span class="hljs-params">callback, limit</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-comment">// ... 通用节流方法</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ScrollLazyLoader</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  inited = <span class="hljs-literal">false</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  targetEles = [];</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">options</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">init</span>(options);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">inited</span> = <span class="hljs-literal">true</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">  <span class="hljs-title function_">runLoad</span>(<span class="hljs-params">{ onIntersectCb, once }</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">targetEles</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">ele</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-comment">// 获取图片与视口顶部的相对距离</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-keyword">const</span> topPos = ele.<span class="hljs-title function_">getBoundingClientRect</span>().<span class="hljs-property">top</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-comment">// 与 视口高度（window.innerHeight）对比，判断是否在视口内</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-keyword">if</span> (topPos &lt; <span class="hljs-variable language_">window</span>.<span class="hljs-property">innerHeight</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        <span class="hljs-comment">// debugger;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-title function_">onIntersectCb</span>(ele);</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-keyword">if</span> (once) {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">          <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeTarget</span>(ele);</span>
+<span class="code-block-extension-codeLine" data-line-num="25">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="26">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="27">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="28">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="29"></span>
+<span class="code-block-extension-codeLine" data-line-num="30">  <span class="hljs-title function_">init</span>(<span class="hljs-params">options</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-keyword">if</span> (!options.<span class="hljs-property">onIntersectCb</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="32">      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="33">        <span class="hljs-string">`initScrollLazyLoader have falsy onIntersectCb=<span class="hljs-subst">${options.onIntersectCb}</span> `</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="34">      );</span>
+<span class="code-block-extension-codeLine" data-line-num="35">      <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="36">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="37">    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">inited</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="38">      <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="39">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="40"></span>
+<span class="code-block-extension-codeLine" data-line-num="41">    <span class="hljs-comment">// 初始化时，运行一次runLoad()，</span></span>
+<span class="code-block-extension-codeLine" data-line-num="42">    <span class="hljs-comment">// 从而实现页面刷新，滚动位置不变时，仍能触发懒加载</span></span>
+<span class="code-block-extension-codeLine" data-line-num="43">    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">runLoad</span>(options);</span>
+<span class="code-block-extension-codeLine" data-line-num="44"></span>
+<span class="code-block-extension-codeLine" data-line-num="45">    <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">addEventListener</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="46">      <span class="hljs-string">'scroll'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="47">      <span class="hljs-title function_">throttle</span>(<span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="48">        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">runLoad</span>(options);</span>
+<span class="code-block-extension-codeLine" data-line-num="49">      }),</span>
+<span class="code-block-extension-codeLine" data-line-num="50">      <span class="hljs-number">200</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="51">    );</span>
+<span class="code-block-extension-codeLine" data-line-num="52">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="53"></span>
+<span class="code-block-extension-codeLine" data-line-num="54">  <span class="hljs-title function_">addTarget</span>(<span class="hljs-params">ele</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="55">    <span class="hljs-keyword">if</span> (!ele) {</span>
+<span class="code-block-extension-codeLine" data-line-num="56">      <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="57">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="58">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">targetEles</span>.<span class="hljs-title function_">push</span>(ele);</span>
+<span class="code-block-extension-codeLine" data-line-num="59">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="60"></span>
+<span class="code-block-extension-codeLine" data-line-num="61">  <span class="hljs-title function_">removeTarget</span>(<span class="hljs-params">ele</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="62">    <span class="hljs-keyword">if</span> (!ele) {</span>
+<span class="code-block-extension-codeLine" data-line-num="63">      <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="64">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="65">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">targetEles</span>.<span class="hljs-title function_">splice</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">targetEles</span>.<span class="hljs-title function_">indexOf</span>(ele), <span class="hljs-number">1</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="66">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="67">}</span>
+</code></pre>
+<p><code>ScrollLazyLoader</code>类同样暴露3个方法，逻辑分别是：</p>
+<ol>
+<li>
+<p><code>init(options)</code>：开始监听页面<code>scroll</code>事件，同时指定回调函数，当目标元素，满足懒加载条件时（<code>topPos &lt; window.innerHeight</code>），调用<code>onIntersectCb()</code>方法，执行真正的加载资源逻辑。并添加节流处理<code>throttle()</code>，节省运行时开销。</p>
+</li>
+<li>
+<p><code>addTarget(ele)</code>：将懒加载监视目标元素，<strong>添加</strong>到类实例的<code>this.targetEles</code>属性，开始监视。</p>
+</li>
+<li>
+<p><code>removeTarget(ele)</code>：对懒加载监视目标元素，<strong>移除</strong>出类实例的<code>this.targetEles</code>属性，停止监视。</p>
+</li>
+</ol>
+<p>有了<code>IntersectionLazyLoader</code>和<code>ScrollLazyLoader</code>2个类，帮我们处理监视懒加载目标、判断是否执行加载资源。</p>
+<p>我们接下来就要实现核心执行加载资源逻辑的<code>onIntersectCb()</code>方法了。</p>
+<h3 data-id="heading-5">5. 分情况处理各类元素</h3>
+<p>执行加载资源逻辑的<code>onIntersectCb()</code>方法主要功能是目标：</p>
+<ul>
+<li>获取提前在懒加载目标元素上声明的<code>data-src</code>属性值。</li>
+<li>将<code>data-src</code>属性值设为<code>src</code>属性值，从而真正加载目标资源。</li>
+</ul>
+<p>我们实现的是<strong>通用</strong>资源懒加载工具库，所以计划兼容以下5类资源的懒加载逻辑：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>元素</th><th>加载资源逻辑</th><th>注意事项</th></tr></thead><tbody><tr><td><code>&lt;img&gt;</code></td><td><code>src</code>属性设置为图片URL</td><td>--</td></tr><tr><td><code>&lt;video&gt;</code>及其附带的<code>&lt;source&gt;</code>子元素</td><td><code>&lt;video&gt;</code>触发加载资源有2种用法：<br>1.  <code>&lt;video&gt;</code>的<code>src</code>属性设置为视频URL<br>1.  <code>&lt;source&gt;</code>子元素的<code>src</code>属性设置为视频URL</td><td><code>&lt;video&gt;</code>元素<code>&lt;source&gt;</code>子元素的<code>src</code>更新后，必须主动调用<code>&lt;video&gt;</code>元素引用的<code>load()</code>方法，否则，不会触发视频资源加载。</td></tr><tr><td><code>&lt;iframe&gt;</code></td><td><code>src</code>属性设置为页面URL</td><td>--</td></tr><tr><td><code>&lt;picture&gt;</code>及其附带的<code>&lt;source&gt;</code>子元素</td><td><code>&lt;source&gt;</code>子元素的**<code>srcset</code>**属性设置为图片URL</td><td><code>&lt;source&gt;</code>用的是**<code>srcset</code>**属性，与<code>&lt;video&gt;</code>元素<code>&lt;source&gt;</code>子元素的<code>src</code>属性不同。</td></tr><tr><td>CSS<code>background-image</code>属性</td><td><code>background-image</code>属性值设置为图片URL</td><td>--</td></tr></tbody></table>
+<p>经过梳理分析，这5类元素最终需要4类加载逻辑：</p>
+<ol>
+<li><code>loadSrc</code>：加载<code>&lt;img&gt;</code>和<code>&lt;iframe&gt;</code>资源</li>
+<li><code>loadVideo</code>：加载<code>&lt;video&gt;</code>及其附带的<code>&lt;source&gt;</code>子元素资源</li>
+<li><code>loadPicture</code>：加载<code>&lt;picture&gt;</code>及其附带的<code>&lt;source&gt;</code>子元素资源</li>
+<li><code>loadBgImg</code>：加载CSS<code>background-image</code>属性资源</li>
+</ol>
+<p>对应的代码逻辑如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// src\loadHandlers.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">DATA_PROP_PREFIX</span>, <span class="hljs-variable constant_">ATTRS</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./const'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">function</span> <span class="hljs-title function_">loadSources</span>(<span class="hljs-params">sourceEles, srcAttrName = ATTRS.dataSrc</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-keyword">if</span> (!sourceEles?.<span class="hljs-property">length</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">`[lazyload-all] loadSource no ele.`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  sourceEles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">ele</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">const</span> srcVal = ele.<span class="hljs-title function_">getAttribute</span>(srcAttrName);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    ele.<span class="hljs-title function_">setAttribute</span>(srcAttrName.<span class="hljs-title function_">replace</span>(<span class="hljs-variable constant_">DATA_PROP_PREFIX</span>, <span class="hljs-string">''</span>), srcVal);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15"><span class="hljs-keyword">function</span> <span class="hljs-title function_">loadVideo</span>(<span class="hljs-params">videoEle</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">  <span class="hljs-keyword">if</span> (!videoEle) {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">`[lazyload-all] processVideoSource no videoEle.`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="20">  <span class="hljs-keyword">const</span> sourceEles = videoEle.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">'source'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="21">  <span class="hljs-keyword">if</span> (!sourceEles || !sourceEles.<span class="hljs-property">length</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-title function_">loadSrc</span>(videoEle);</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="24">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">  <span class="hljs-title function_">loadSources</span>(sourceEles);</span>
+<span class="code-block-extension-codeLine" data-line-num="26">  <span class="hljs-comment">// 重要！不然只修改 source &amp;&amp; src 不会触发 Video 加载</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">  videoEle.<span class="hljs-title function_">load</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="28">}</span>
+<span class="code-block-extension-codeLine" data-line-num="29"></span>
+<span class="code-block-extension-codeLine" data-line-num="30"><span class="hljs-keyword">function</span> <span class="hljs-title function_">loadBgImg</span>(<span class="hljs-params">ele</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="31">  <span class="hljs-keyword">if</span> (!ele) {</span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="33">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="34">  <span class="hljs-keyword">const</span> bgSrcVal = ele.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-variable constant_">ATTRS</span>.<span class="hljs-property">dataBgSrc</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="35">  <span class="hljs-keyword">if</span> (bgSrcVal) {</span>
+<span class="code-block-extension-codeLine" data-line-num="36">    ele.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">'style'</span>, <span class="hljs-string">`background-image: url(<span class="hljs-subst">${bgSrcVal}</span>)`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="37">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="38">}</span>
+<span class="code-block-extension-codeLine" data-line-num="39"></span>
+<span class="code-block-extension-codeLine" data-line-num="40"><span class="hljs-keyword">function</span> <span class="hljs-title function_">loadSrc</span>(<span class="hljs-params">ele</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="41">  <span class="hljs-keyword">const</span> srcAttrName = <span class="hljs-variable constant_">ATTRS</span>.<span class="hljs-property">dataSrc</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="42">  <span class="hljs-keyword">const</span> srcVal = ele.<span class="hljs-title function_">getAttribute</span>(srcAttrName);</span>
+<span class="code-block-extension-codeLine" data-line-num="43">  <span class="hljs-keyword">if</span> (!srcVal) {</span>
+<span class="code-block-extension-codeLine" data-line-num="44">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">`[lazyload-all] lazyload ele no src | srcset value.`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="45">    <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="46">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="47">  ele.<span class="hljs-title function_">setAttribute</span>(srcAttrName.<span class="hljs-title function_">replace</span>(<span class="hljs-variable constant_">DATA_PROP_PREFIX</span>, <span class="hljs-string">''</span>), srcVal);</span>
+<span class="code-block-extension-codeLine" data-line-num="48">  ele.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">ATTRS</span>.<span class="hljs-property">dataLaztloaded</span>, <span class="hljs-literal">true</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="49">}</span>
+<span class="code-block-extension-codeLine" data-line-num="50"></span>
+<span class="code-block-extension-codeLine" data-line-num="51"><span class="hljs-keyword">function</span> <span class="hljs-title function_">loadPicture</span>(<span class="hljs-params">ele</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="52">  <span class="hljs-keyword">if</span> (!ele) {</span>
+<span class="code-block-extension-codeLine" data-line-num="53">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">`[lazyload-all] loadPicture no ele input.`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="54">    <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="55">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="56">  <span class="hljs-keyword">const</span> sourceEles = ele.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">'source'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="57">  <span class="hljs-keyword">if</span> (!sourceEles || !sourceEles.<span class="hljs-property">length</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="58">    <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="59">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="60">  <span class="hljs-title function_">loadSources</span>(sourceEles, <span class="hljs-variable constant_">ATTRS</span>.<span class="hljs-property">dataSrcset</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="61">}</span>
+<span class="code-block-extension-codeLine" data-line-num="62"></span>
+<span class="code-block-extension-codeLine" data-line-num="63"><span class="hljs-keyword">const</span> loadHandlers = {</span>
+<span class="code-block-extension-codeLine" data-line-num="64">  <span class="hljs-attr">IMG</span>: loadSrc,</span>
+<span class="code-block-extension-codeLine" data-line-num="65">  <span class="hljs-attr">VIDEO</span>: loadVideo,</span>
+<span class="code-block-extension-codeLine" data-line-num="66">  <span class="hljs-attr">PICTURE</span>: loadPicture,</span>
+<span class="code-block-extension-codeLine" data-line-num="67">  <span class="hljs-attr">IFRAME</span>: loadSrc,</span>
+<span class="code-block-extension-codeLine" data-line-num="68">};</span>
+<span class="code-block-extension-codeLine" data-line-num="69"></span>
+<span class="code-block-extension-codeLine" data-line-num="70"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">onIntersectCb</span>(<span class="hljs-params">ele</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="71">  <span class="hljs-keyword">if</span> (ele.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-variable constant_">ATTRS</span>.<span class="hljs-property">dataLaztloaded</span>)) {</span>
+<span class="code-block-extension-codeLine" data-line-num="72">    <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="73">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="74">  <span class="hljs-keyword">const</span> tag = ele.<span class="hljs-property">tagName</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="75">  <span class="hljs-keyword">let</span> load = loadHandlers[tag];</span>
+<span class="code-block-extension-codeLine" data-line-num="76"></span>
+<span class="code-block-extension-codeLine" data-line-num="77">  <span class="hljs-comment">// 触发资源加载</span></span>
+<span class="code-block-extension-codeLine" data-line-num="78">  <span class="hljs-keyword">if</span> (load) {</span>
+<span class="code-block-extension-codeLine" data-line-num="79">    <span class="hljs-title function_">load</span>(ele);</span>
+<span class="code-block-extension-codeLine" data-line-num="80">  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (ele.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-variable constant_">ATTRS</span>.<span class="hljs-property">dataBgSrc</span>)) {</span>
+<span class="code-block-extension-codeLine" data-line-num="81">    <span class="hljs-title function_">loadBgImg</span>(ele);</span>
+<span class="code-block-extension-codeLine" data-line-num="82">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="83">}</span>
+</code></pre>
+<p>在<code>src\loadHandlers.js</code>文件中我们会导出执行加载资源逻辑的<code>onIntersectCb(ele)</code>，其中会根据目标元素的标签名（<code>ele.tagName</code>）选择上述4类加载逻辑之一执行，触发资源加载。</p>
+<h3 data-id="heading-6">6.  使用示例</h3>
+<p>实际使用时，可以和前端框架结合起来，封装一些组件或hook，便于复用。</p>
+<p>例如，和React.js框架结合，利用<code>useEffect</code>hook自动调用<code>lazyLoadeAllInstance.update()</code>，实现DOM更新，自动应用懒加载的逻辑。</p>
+<p>示例代码请参考：</p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fstackblitz.com%2Fedit%2Fstackblitz-starters-myzkwy%3Ffile%3Dsrc%252FApp.js" target="_blank" rel="nofollow noopener noreferrer" title="https://stackblitz.com/edit/stackblitz-starters-myzkwy?file=src%2FApp.js" ref="nofollow noopener noreferrer">lazyload-all 在线运行DEMO</a></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">function</span> <span class="hljs-title function_">useInitLazyLoadAll</span>(<span class="hljs-params">options</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-comment">/*</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  initLazyloadAll 可选选项：</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    mode: MODES.scroll,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    mode: MODES.intersectionObserver,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    once: true,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    afterLoadCb(ele) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      debugger;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      console.log(`After lazyload`, ele);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  */</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-keyword">const</span> [lazyLoadeAllInstance] = <span class="hljs-title function_">useState</span>(<span class="hljs-title function_">initLazyloadAll</span>(options));</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">  <span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-comment">// 懒加载元素增减后，更新监视目标</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    lazyLoadeAllInstance.<span class="hljs-title function_">update</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="19">  }, []);</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">  <span class="hljs-keyword">return</span> lazyLoadeAllInstance;</span>
+<span class="code-block-extension-codeLine" data-line-num="22">}</span>
+<span class="code-block-extension-codeLine" data-line-num="23"></span>
+<span class="code-block-extension-codeLine" data-line-num="24"><span class="hljs-keyword">function</span> <span class="hljs-title function_">LazyLoadContainer</span>(<span class="hljs-params">{ children }</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="25">  <span class="hljs-title function_">useInitLazyLoadAll</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="26"></span>
+<span class="code-block-extension-codeLine" data-line-num="27">  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;&gt;</span>{children}<span class="hljs-tag">&lt;/&gt;</span></span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="28">}</span>
+</code></pre>
+<h2 data-id="heading-7">2. 验证、量化和评估</h2>
+
+<h3 data-id="heading-8">1. 验证</h3>
+
+<h4 data-id="heading-9">1. 注意避免懒加载对CLS、LCP的负面影响</h4>
+<p>懒加载图片、视频可能对<code>最大内容绘制耗时（LCP）</code>和<code>累计布局变化（CLS）</code>有<strong>负面</strong>影响。</p>
+<p>例如，我们对图片进行懒加载时，如果我们没有给图片设置默认的宽高，那么当图片未加载时，图片元素的宽高就是默认值<code>0px</code>或是<code>alt</code>属性文案的宽高，但是当图片进入视口、图片资源加载后，图片元素的尺寸又会变为图片文件的大小。</p>
+<p>这就是典型的意外布局变化（Layout Shift），可能会使得页面中元素的位置突然变化，导致用户操作失误，对用户体验会有显著的负面影响。</p>
+<p>再比如，我们懒加载的目标元素，如果是页面中的最大尺寸内容（Largest Content），是LCP指标测量的目标元素，那么对这个元素的应用懒加载，导致其加载时间推迟，就会自然而然地导致LCP指标恶化。</p>
+<p>所以，在进行资源懒加载优化时，务必：</p>
+<ul>
+<li>对懒加载目标元素设置默认的宽高尺寸。</li>
+<li>避免对LCP指标的目标元素进行懒加载优化。</li>
+</ul>
+<blockquote>
+<p>注：LCP指标的目标元素可以通过以下方式获取：</p>
+<ol>
+<li>Devtool的Performance Insight检测获取。</li>
+<li>或用第1节《数据驱动、指标先行》介绍的<code>web-vitals</code>库<code>onLCP</code>API，从其返回数据中的<code>entries</code>属性值中获取，示例数据：</li>
+</ol>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/221f80777d5a4efc8ec8132834d5c92b~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=988&amp;s=217987&amp;e=png&amp;b=2b2b2b" alt="" loading="lazy" class="medium-zoom-image"></p>
+</blockquote>
+<h4 data-id="heading-10">2. 复用UA信息指标，确认兼容性目标</h4>
+<p>资源懒加载的各类解决方案都和浏览器兼容性有关，所以在实施资源懒加载前，我们可以复用第14节介绍的《各浏览器版本占比》Grafana 图表，确认前端项目当前用户的浏览器版本分布情况，决定在生产环境中使用哪种资源懒加载解决方案。</p>
+<h3 data-id="heading-11">2. 量化</h3>
+
+<h4 data-id="heading-12">1. 新建懒加载触发次数指标</h4>
+<p>量化懒加载优化效果的直接手段就是统计懒加载触发了多少次，次数越多，说明懒加载的影响用户量越多、影响范围越大，能直接说明我们的优化收益。</p>
+<p>所以我们首先要建立的量化指标就是<strong>懒加载触发次数指标。</strong></p>
+<p>我们的<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Flazyload-all%3Ftab%3Dreadme-ov-file%23lazyload-all%3A~%3Atext%3Dtrue%250A2.%2520false-%2CafterLoadCb%2C-%25E8%25A7%25A6%25E5%258F%2591%25E5%258A%25A0%25E8%25BD%25BD" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/lazyload-all?tab=readme-ov-file#lazyload-all:~:text=true%0A2.%20false-,afterLoadCb,-%E8%A7%A6%E5%8F%91%E5%8A%A0%E8%BD%BD" ref="nofollow noopener noreferrer"><strong>LazyloadAll 工具库</strong></a>有为我们准备相应的API：<code>afterLoadCb()</code>，通过这个属性指定的函数，将会在懒加载触发后被调用。</p>
+<p>我们在<code>afterLoadCb()</code>函数内再次使用我们的数据收集服务接口<code>/counter-metric</code>，上报数据到Grafana，就可以进一步绘制出对应的可视化图表，用来量化<strong>懒加载触发次数</strong>。</p>
+<p>示例代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">report</span>(<span class="hljs-params">{name, labels, help, sampleRate}</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-comment">// await fetch('http://localhost:4001/counter-metric', ......</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">}</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">const</span> lazyLoadeAllInstance = <span class="hljs-title function_">initLazyloadAll</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-title function_">afterLoadCb</span>(<span class="hljs-params">ele</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-title function_">report</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">name</span>: <span class="hljs-string">'LazyLoadTrigger'</span>, </span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">help</span>: <span class="hljs-string">'LazyLoad trigger count'</span>, </span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">labels</span>: { <span class="hljs-attr">type</span>: ele?.<span class="hljs-property">tagName</span> },</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attr">sampleRate</span>: <span class="hljs-number">0.01</span>, <span class="hljs-comment">// 采样率应该根据用户总量而定</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="14">});</span>
+</code></pre>
+<h4 data-id="heading-13">2. 复用加载资源总体积指标</h4>
+<p>在前端页面中，并非所有用户都会完整浏览页面的所有内容，所以资源懒加载优化，通常可以让这部分没有被用户浏览的资源不触发加载，进而前端应用加载的资源体积显著减少。</p>
+<p>所以量化资源懒加载优化懒加载的另一可用指标就是第5节介绍的<a href="https://juejin.cn/book/7306163555449962533/section/7311383488376012835#heading-9" target="_blank" title="https://juejin.cn/book/7306163555449962533/section/7311383488376012835#heading-9">加载资源总体积指标</a>，在优化前后观察对比这一指标的变化，就能量化我们的优化效果。</p>
+<h4 data-id="heading-14">3. 避免LCP和CLS恶化</h4>
+<p>资源懒加载也可能导致<code>最大内容绘制耗时（LCP）</code>和<code>累计布局变化（CLS）</code>指标恶化，所以我们在实施资源懒加载时，也应该关注已经建立的LCP和CLS指标状况，避免其出现显著的恶化情况。</p>
+<h3 data-id="heading-15">3. 评估</h3>
+<p>资源懒加载的具体优化效果会因为前端应用中各类资源的数量多少、体积大小有所不同，但是普遍都能对下列2方面产生优化效果：</p>
+<ul>
+<li>
+<p>节省CDN的流量开销：显著减少前端应用加载资源总体积，同时节省用户流量消耗。</p>
+</li>
+<li>
+<p>用户体验优化：改善首次内容绘制FCP指标，加快页面初始化加载。</p>
+</li>
+</ul></div>

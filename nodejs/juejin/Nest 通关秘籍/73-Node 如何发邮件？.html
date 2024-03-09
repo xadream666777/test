@@ -1,0 +1,299 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>除了微信外，邮件也是我们常用的通讯方式。</p>
+<p>那你平时都是怎么收发邮件的呢？</p>
+<p>大多数人会回答，就用邮箱客户端啊，比如 qq 邮箱的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b92c0eae252a47a8a22512126f4fe0e3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bf6ac87027e24e3b9a55f63346be519e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但是这样体验并不好，比如写邮件的时候：</p>
+<p>我有个漂亮的 html 页面，想直接把它作为邮件内容。</p>
+<p>或者我想用 markdown 来写邮件。</p>
+<p>但是它只支持富文本编辑器：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/01086b793a8b4063ac6a5930140f952a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再比如收邮件的时候，我想把一些重要邮件的内容保存下来，附件啥的都下载到本地。</p>
+<p>但是邮件多了的话，一个个手动搞太麻烦了。</p>
+<p>有没有什么更好的方式呢？</p>
+<p>当然是有的，作为一个专业的 Node 程序员，自然要用代码的方式来收发邮件了！</p>
+<p>邮件有专门的协议：</p>
+<p><strong>发邮件用 SMTP 协议。</strong></p>
+<p><strong>收邮件用 POP3 协议、或者 IMAP 协议。</strong></p>
+<p>并且在 node 里也有对应的包，发邮件用 nodemailer 包，收邮件用 imap 包。</p>
+<p>我们来试试：</p>
+<p>首先，要开启 smtp、imap 等服务，这里以 qq 邮箱举例（其他邮箱也类似）：</p>
+<p>在邮箱帮助中心 <a href="https://link.juejin.cn?target=https%3A%2F%2Fservice.mail.qq.com%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://service.mail.qq.com/" ref="nofollow noopener noreferrer">service.mail.qq.com/</a> 可以搜到如何开启 smtp、imap 等服务：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0224a90307f8434dbbfa14bd294b39e9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>开启后可以在设置里看到：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9000e01314fc470b87a406fb254d003b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在帮助中心页面搜索授权码：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/45036a9ade4f47339c0e4c3bf7a12840~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>按照指引生成一个授权码：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/48886d0d39564171ac029998ef538cba~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个是 qq 邮箱特有的一个第三方登录密码：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/22911ac0100b4f2a9f0e829b67a1e57e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后就可以开始写代码了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> nodemailer = <span class="hljs-built_in">require</span>(<span class="hljs-string">"nodemailer"</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> transporter = nodemailer.<span class="hljs-title function_">createTransport</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">host</span>: <span class="hljs-string">"smtp.qq.com"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">port</span>: <span class="hljs-number">587</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">secure</span>: <span class="hljs-literal">false</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">auth</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">user</span>: <span class="hljs-string">'xxxxx@qq.com'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">pass</span>: <span class="hljs-string">'你的授权码'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="11">});</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-keyword">const</span> info = <span class="hljs-keyword">await</span> transporter.<span class="hljs-title function_">sendMail</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">from</span>: <span class="hljs-string">'"guang" &lt;xxxx@qq.com&gt;'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">to</span>: <span class="hljs-string">"xxxx@xx.com"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-attr">subject</span>: <span class="hljs-string">"Hello 111"</span>, </span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-attr">text</span>: <span class="hljs-string">"xxxxx"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"邮件发送成功："</span>, info.<span class="hljs-property">messageId</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="22">}</span>
+<span class="code-block-extension-codeLine" data-line-num="23"></span>
+<span class="code-block-extension-codeLine" data-line-num="24"><span class="hljs-title function_">main</span>().<span class="hljs-title function_">catch</span>(<span class="hljs-variable language_">console</span>.<span class="hljs-property">error</span>);</span>
+</code></pre>
+<p>安装 nodemailer 包，然后执行上面的代码：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1de52723b3e745b1aae9ccc95899d04b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到邮件发送成功了。</p>
+<p>我们在邮箱里看看：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2811274a2652417fbfff8148640c0e4c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>确实收到了这个邮件：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5f8c9963490a4a78b6a6c26530e3c7f6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样我们就用 node 发送了第一个邮件！</p>
+<p>而且邮件是支持 html + css 的，比如把我之前写的一个 <a href="https://juejin.cn/post/7167355169934409758" target="_blank" title="https://juejin.cn/post/7167355169934409758">3 只小鸟的 button 的 html</a> 拿过来：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8cfe464929c448648c2dae4a5d6eb788~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>放到一个文件里，然后发邮件的时候读取这个文件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/98d204cc417b4ff9808fc7d15cf90002~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再跑下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/16aa6adb898148649ea359e17a5b6fc9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>收到的邮件也渲染出了这个 html，并且 css 动画也是正常的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/88eeaf82f5bc42f889e2fd7fcddd5984~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那是不是可以加一些 js 呢？</p>
+<p>想多了，邮件里可以包含任何 html+ css，但是不支持 js。</p>
+<p>不过基于 html + css，我们就已经可以实现各种炫酷的邮件了。</p>
+<p>就像前面说的 markdown 格式来写邮件，这个加一个 markdown 转 html 的包，然后作为邮件的 html 内容发送就好了。</p>
+<p>也就是说，通过代码的方式，我们可以做出更炫酷的邮件来。</p>
+<p>发邮件我们会了，那如何通过 node 来收邮件呢？</p>
+<p>收邮件是用 pop3 或者 imap 协议，需要换一个包。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> <span class="hljs-title class_">Imap</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">'imap'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> imap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Imap</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">user</span>: <span class="hljs-string">'xxx@qq.com'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">password</span>: <span class="hljs-string">'你的授权码'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">host</span>: <span class="hljs-string">'imap.qq.com'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">port</span>: <span class="hljs-number">993</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">tls</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">});</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">imap.<span class="hljs-title function_">once</span>(<span class="hljs-string">'ready'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    imap.<span class="hljs-title function_">openBox</span>(<span class="hljs-string">'INBOX'</span>, <span class="hljs-literal">true</span>, <span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        imap.<span class="hljs-title function_">search</span>([[<span class="hljs-string">'SEEN'</span>], [<span class="hljs-string">'SINCE'</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-string">'2023-07-10 19:00:00'</span>).<span class="hljs-title function_">toLocaleString</span>()]], <span class="hljs-function">(<span class="hljs-params">err, results</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">            <span class="hljs-keyword">if</span> (!err) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(results);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">                <span class="hljs-keyword">throw</span> err;</span>
+<span class="code-block-extension-codeLine" data-line-num="18">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="21">});</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23">imap.<span class="hljs-title function_">connect</span>();</span>
+</code></pre>
+<p>安装 imap 的包，然后填入 qq 邮箱的 imap 服务器的域名、端口，填入用户名和授权码，就可以连接了。</p>
+<p>这里的 imap 服务器的信息也是在帮助中心里搜索：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ea3ac2f7d42045fc89be427d743ba163~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>search 的参数我们写了两个：</p>
+<p>['SEEN'] 是查询已读的邮件。</p>
+<p>['SINCE', '某个日期'] 是查询从这个日期以来的邮件。</p>
+<p>当然，还有更多的搜索条件，可以看 <a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fimap" target="_blank" rel="nofollow noopener noreferrer" title="https://www.npmjs.com/package/imap" ref="nofollow noopener noreferrer">imap 包的文档</a>。</p>
+<p>我们跑下试试：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/19eb0a88b68f4d8c834e036f8ea57bac~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到打印了搜索出的符合条件的邮件的 id，然后我们来处理下这些 id：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/00ae4bdbd1d3420e99090cad776606b6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> { <span class="hljs-title class_">MailParser</span> } =<span class="hljs-built_in">require</span>(<span class="hljs-string">'mailparser'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">function</span> <span class="hljs-title function_">handleResults</span>(<span class="hljs-params">results</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    imap.<span class="hljs-title function_">fetch</span>(results, { </span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">bodies</span>: <span class="hljs-string">''</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    }).<span class="hljs-title function_">on</span>(<span class="hljs-string">'message'</span>, <span class="hljs-function">(<span class="hljs-params">msg</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-keyword">const</span> mailparser = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MailParser</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">        msg.<span class="hljs-title function_">on</span>(<span class="hljs-string">'body'</span>, <span class="hljs-function">(<span class="hljs-params">stream</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">            </span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+</code></pre>
+<p>这里用 imap.fetch 来请求这些 id 的内容，bodies 为 '' 是查询 header + body 的意思：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7e3f9dde7ec14b6daa10976e81c2ad00~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后处理下 body 的内容，把结果保存到 info 对象里。</p>
+<p>这里解析邮件内容要使用 mailparser 这个包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> { <span class="hljs-title class_">MailParser</span> } =<span class="hljs-built_in">require</span>(<span class="hljs-string">'mailparser'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> <span class="hljs-title class_">Imap</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">'imap'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">function</span> <span class="hljs-title function_">handleResults</span>(<span class="hljs-params">results</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    imap.<span class="hljs-title function_">fetch</span>(results, { </span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">bodies</span>: <span class="hljs-string">''</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    }).<span class="hljs-title function_">on</span>(<span class="hljs-string">'message'</span>, <span class="hljs-function">(<span class="hljs-params">msg</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-keyword">const</span> mailparser = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MailParser</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        msg.<span class="hljs-title function_">on</span>(<span class="hljs-string">'body'</span>, <span class="hljs-function">(<span class="hljs-params">stream</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">            <span class="hljs-keyword">const</span> info = {};</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            stream.<span class="hljs-title function_">pipe</span>(mailparser);</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">            mailparser.<span class="hljs-title function_">on</span>(<span class="hljs-string">"headers"</span>, <span class="hljs-function">(<span class="hljs-params">headers</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">                info.<span class="hljs-property">theme</span> = headers.<span class="hljs-title function_">get</span>(<span class="hljs-string">'subject'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="20">                info.<span class="hljs-property">form</span> = headers.<span class="hljs-title function_">get</span>(<span class="hljs-string">'from'</span>).<span class="hljs-property">value</span>[<span class="hljs-number">0</span>].<span class="hljs-property">address</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="21">                info.<span class="hljs-property">mailName</span> = headers.<span class="hljs-title function_">get</span>(<span class="hljs-string">'from'</span>).<span class="hljs-property">value</span>[<span class="hljs-number">0</span>].<span class="hljs-property">name</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="22">                info.<span class="hljs-property">to</span> = headers.<span class="hljs-title function_">get</span>(<span class="hljs-string">'to'</span>).<span class="hljs-property">value</span>[<span class="hljs-number">0</span>].<span class="hljs-property">address</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="23">                info.<span class="hljs-property">datatime</span> = headers.<span class="hljs-title function_">get</span>(<span class="hljs-string">'date'</span>).<span class="hljs-title function_">toLocaleString</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="24">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="25"></span>
+<span class="code-block-extension-codeLine" data-line-num="26">            mailparser.<span class="hljs-title function_">on</span>(<span class="hljs-string">"data"</span>, <span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="27">                <span class="hljs-keyword">if</span> (data.<span class="hljs-property">type</span> === <span class="hljs-string">'text'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="28">                    info.<span class="hljs-property">html</span> = data.<span class="hljs-property">html</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="29">                    info.<span class="hljs-property">text</span> = data.<span class="hljs-property">text</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="30">                    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(info);</span>
+<span class="code-block-extension-codeLine" data-line-num="31">                }</span>
+<span class="code-block-extension-codeLine" data-line-num="32">                <span class="hljs-keyword">if</span> (data.<span class="hljs-property">type</span> === <span class="hljs-string">'attachment'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="33">                    <span class="hljs-keyword">const</span> filePath = path.<span class="hljs-title function_">join</span>(__dirname, <span class="hljs-string">'files'</span>, data.<span class="hljs-property">filename</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="34">                    <span class="hljs-keyword">const</span> ws = fs.<span class="hljs-title function_">createWriteStream</span>(filePath);</span>
+<span class="code-block-extension-codeLine" data-line-num="35">                    data.<span class="hljs-property">content</span>.<span class="hljs-title function_">pipe</span>(ws);</span>
+<span class="code-block-extension-codeLine" data-line-num="36">                }</span>
+<span class="code-block-extension-codeLine" data-line-num="37">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="38">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="39">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="40">}</span>
+</code></pre>
+<p>这部分还是容易看懂的，就是把 headers 的信息提取出来，把邮件 body 的信息提取出来，放到 info
+对象里，打印。</p>
+<p>如果有附件，就写到 files 目录下。</p>
+<p>我们在本地创建个 files 目录，然后跑一下。</p>
+<p>可以看到，我们前面发的那两个邮件都取到了。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b0b1c3627ab64a0eab41dc9a336c0315~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>日期也确实都是 7 月 10 日的。</p>
+<p>我邮箱里有这样一个邮件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/de8337f6903345bfa2aba85a5f1709bb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，附件也下载到了 files 目录下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4882b3059d6b484da4390e4047420cd6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们把 html 的内容保存到本地文件里：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/19d2c63615d94709823359ba7d6b6716~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> filePath = path.<span class="hljs-title function_">join</span>(__dirname, <span class="hljs-string">'mails'</span>, info.<span class="hljs-property">theme</span> + <span class="hljs-string">'.html'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2">fs.<span class="hljs-title function_">writeFileSync</span>(filePath, info.<span class="hljs-property">html</span> || info.<span class="hljs-property">text</span>)</span>
+</code></pre>
+<p>以邮件主题为文件名。</p>
+<p>当然，要现在本地创建 mails 这个目录，然后跑一下：</p>
+<p>邮件内容和附件内容都保存了下来：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f334573062dd4f499677968c60c265fd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在邮箱里可以看到也是这些邮件：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e8351c9d67104b86b88944dbfab86b09~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们打开这些 html 看看，起一个 http-server：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">vbscript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-vbscript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx http-<span class="hljs-built_in">server</span> .</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d7e13671716e40fa871186fcb12db58e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2b2e7aec109740918a71ac4d2d309f84~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>和在邮箱里看一模一样。</p>
+<p>这样，我们就把邮件内容和附件都保存了下来。</p>
+<p>你想保存一些重要邮件的时候，还需要手动一个个复制和下载附件么？</p>
+<p>不需要，用 node 写代码保存不更方便么？</p>
+<p>收邮件部分的代码如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> { <span class="hljs-title class_">MailParser</span> } =<span class="hljs-built_in">require</span>(<span class="hljs-string">'mailparser'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> <span class="hljs-title class_">Imap</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">'imap'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">const</span> imap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Imap</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">user</span>: <span class="hljs-string">'xx@qq.com'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">password</span>: <span class="hljs-string">'你的授权码'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">host</span>: <span class="hljs-string">'imap.qq.com'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">port</span>: <span class="hljs-number">993</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">tls</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">});</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">imap.<span class="hljs-title function_">once</span>(<span class="hljs-string">'ready'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    imap.<span class="hljs-title function_">openBox</span>(<span class="hljs-string">'INBOX'</span>, <span class="hljs-literal">true</span>, <span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        imap.<span class="hljs-title function_">search</span>([[<span class="hljs-string">'SEEN'</span>], [<span class="hljs-string">'SINCE'</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-string">'2023-07-10 19:00:00'</span>).<span class="hljs-title function_">toLocaleString</span>()]], <span class="hljs-function">(<span class="hljs-params">err, results</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">            <span class="hljs-keyword">if</span> (!err) {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">                <span class="hljs-title function_">handleResults</span>(results);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">            } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">                <span class="hljs-keyword">throw</span> err;</span>
+<span class="code-block-extension-codeLine" data-line-num="21">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="24">});</span>
+<span class="code-block-extension-codeLine" data-line-num="25"></span>
+<span class="code-block-extension-codeLine" data-line-num="26"></span>
+<span class="code-block-extension-codeLine" data-line-num="27"><span class="hljs-keyword">function</span> <span class="hljs-title function_">handleResults</span>(<span class="hljs-params">results</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    imap.<span class="hljs-title function_">fetch</span>(results, { </span>
+<span class="code-block-extension-codeLine" data-line-num="29">        <span class="hljs-attr">bodies</span>: <span class="hljs-string">''</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    }).<span class="hljs-title function_">on</span>(<span class="hljs-string">'message'</span>, <span class="hljs-function">(<span class="hljs-params">msg</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="31">        <span class="hljs-keyword">const</span> mailparser = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MailParser</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="32"></span>
+<span class="code-block-extension-codeLine" data-line-num="33">        msg.<span class="hljs-title function_">on</span>(<span class="hljs-string">'body'</span>, <span class="hljs-function">(<span class="hljs-params">stream</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="34"></span>
+<span class="code-block-extension-codeLine" data-line-num="35">            <span class="hljs-keyword">const</span> info = {};</span>
+<span class="code-block-extension-codeLine" data-line-num="36">            stream.<span class="hljs-title function_">pipe</span>(mailparser);</span>
+<span class="code-block-extension-codeLine" data-line-num="37">            mailparser.<span class="hljs-title function_">on</span>(<span class="hljs-string">"headers"</span>, <span class="hljs-function">(<span class="hljs-params">headers</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="38">                info.<span class="hljs-property">theme</span> = headers.<span class="hljs-title function_">get</span>(<span class="hljs-string">'subject'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="39">                info.<span class="hljs-property">form</span> = headers.<span class="hljs-title function_">get</span>(<span class="hljs-string">'from'</span>).<span class="hljs-property">value</span>[<span class="hljs-number">0</span>].<span class="hljs-property">address</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="40">                info.<span class="hljs-property">mailName</span> = headers.<span class="hljs-title function_">get</span>(<span class="hljs-string">'from'</span>).<span class="hljs-property">value</span>[<span class="hljs-number">0</span>].<span class="hljs-property">name</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="41">                info.<span class="hljs-property">to</span> = headers.<span class="hljs-title function_">get</span>(<span class="hljs-string">'to'</span>).<span class="hljs-property">value</span>[<span class="hljs-number">0</span>].<span class="hljs-property">address</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="42">                info.<span class="hljs-property">datatime</span> = headers.<span class="hljs-title function_">get</span>(<span class="hljs-string">'date'</span>).<span class="hljs-title function_">toLocaleString</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="43">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="44"></span>
+<span class="code-block-extension-codeLine" data-line-num="45">            mailparser.<span class="hljs-title function_">on</span>(<span class="hljs-string">"data"</span>, <span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="46">                <span class="hljs-keyword">if</span> (data.<span class="hljs-property">type</span> === <span class="hljs-string">'text'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="47">                    info.<span class="hljs-property">html</span> = data.<span class="hljs-property">html</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="48">                    info.<span class="hljs-property">text</span> = data.<span class="hljs-property">text</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="49"></span>
+<span class="code-block-extension-codeLine" data-line-num="50">                    <span class="hljs-keyword">const</span> filePath = path.<span class="hljs-title function_">join</span>(__dirname, <span class="hljs-string">'mails'</span>, info.<span class="hljs-property">theme</span> + <span class="hljs-string">'.html'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="51">                    fs.<span class="hljs-title function_">writeFileSync</span>(filePath, info.<span class="hljs-property">html</span> || info.<span class="hljs-property">text</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="52"></span>
+<span class="code-block-extension-codeLine" data-line-num="53">                    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(info);</span>
+<span class="code-block-extension-codeLine" data-line-num="54">                }</span>
+<span class="code-block-extension-codeLine" data-line-num="55">                <span class="hljs-keyword">if</span> (data.<span class="hljs-property">type</span> === <span class="hljs-string">'attachment'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="56">                    <span class="hljs-keyword">const</span> filePath = path.<span class="hljs-title function_">join</span>(__dirname, <span class="hljs-string">'files'</span>, data.<span class="hljs-property">filename</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="57">                    <span class="hljs-keyword">const</span> ws = fs.<span class="hljs-title function_">createWriteStream</span>(filePath);</span>
+<span class="code-block-extension-codeLine" data-line-num="58">                    data.<span class="hljs-property">content</span>.<span class="hljs-title function_">pipe</span>(ws);</span>
+<span class="code-block-extension-codeLine" data-line-num="59">                }</span>
+<span class="code-block-extension-codeLine" data-line-num="60">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="61">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="62">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="63">}</span>
+<span class="code-block-extension-codeLine" data-line-num="64"></span>
+<span class="code-block-extension-codeLine" data-line-num="65">imap.<span class="hljs-title function_">connect</span>();</span>
+</code></pre>
+<p>案例代码上传了<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fmail-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/mail-test" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>邮件是常用的通讯方式，我们一般是通过邮箱客户端来收发邮件。</p>
+<p>但是这样不够方便：</p>
+<p>比如写邮件不能直接贴 html + css，不能写 markdown，收邮件不能按照规则自动下载附件、自动保存邮件内容。</p>
+<p>这些需求我们都能通过代码来自己实现。</p>
+<p>发邮件是基于 SMTP 协议，收邮件是基于 POP3 或 IMAP 协议。</p>
+<p>node 分别有 nodemailer 包和 imap 包用来支持收发邮件的协议。</p>
+<p>我们通过 nodemailer 发送了 html 的邮件，可以发送任何 html+css 的内容。</p>
+<p>通过 imap 实现了邮件的搜索，然后用 mailparser来做了内容解析，然后把邮件内容和附件做了下载。</p>
+<p>能够写代码来收发邮件之后，就可以做很多自动化的事情了：</p>
+<p>比如定时自动发一些邮件，内容是从数据库查出来的，比如自动拉取邮件，根据一定的规则来保存邮件和附件内容等。</p>
+<p>这就是 Node 里收发邮件的方式。</p></div>

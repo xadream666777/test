@@ -1,0 +1,178 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>文件上传是常见需求，一般我们不会直接把文件保存在服务器的某个目录下，因为服务器的存储容量是有限的，这样不好扩展。</p>
+<p>我们会用 OSS （Object Storage Service）对象存储服务来存文件，它是支持分布式扩展的，不用担心存储容量问题，而且也好管理。</p>
+<p>比如阿里云的 OSS 服务。</p>
+<p>但是有一些业务场景下，数据需要保密，要求私有部署，也就是要在自己的机房里部署一套 OSS 服务。</p>
+<p>这时候怎么办呢？</p>
+<p>这种需求一般我们会用 minio 来做。</p>
+<p>它可以实现和阿里云 OSS 一样的功能。</p>
+<p>首先，我们用一下阿里云的 OSS 服务。</p>
+<p>OSS 里的文件是放在一个个 Bucekt（桶）里的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e160417af6d64029bf13473977bfbf36~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1060&amp;h=508&amp;s=102325&amp;e=png&amp;b=fffefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们创建个 Bucket：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9f1fa488ca024ca18f1a23e0e52702a5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1708&amp;h=1236&amp;s=278242&amp;e=png&amp;b=fefcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后进入文件列表，就可以上传文件了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/70d09ee8647e4988b73880df71eea219~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1848&amp;h=698&amp;s=149099&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>因为创建的 Bucket 设置了公共读，所以可以直接访问：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3996562ab54441ab8f40a790e3e8b8c4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2310&amp;h=1254&amp;s=758784&amp;e=png&amp;b=8c8c8c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>此外，阿里云 OSS 还可以通过 SDK 来上传文件。</p>
+<p>创建个项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-built_in">mkdir</span> minio-test</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-built_in">cd</span> minio-test</span>
+<span class="code-block-extension-codeLine" data-line-num="3">npm init -y</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9d96eb2559ac46fbb02e017835018567~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=822&amp;h=614&amp;s=116276&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>进入项目，安装 ali-oss：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install ali-oss</span>
+</code></pre>
+<p>创建 index.js</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">OSS</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">'ali-oss'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> client = <span class="hljs-keyword">new</span> <span class="hljs-title function_">OSS</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">region</span>: <span class="hljs-string">'oss-cn-beijing'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">bucket</span>: <span class="hljs-string">'guang-666'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">accessKeyId</span>: <span class="hljs-string">''</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">accessKeySecret</span>: <span class="hljs-string">''</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">});</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">put</span> () {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-keyword">try</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">put</span>(<span class="hljs-string">'smile.png'</span>, <span class="hljs-string">'./smile.png'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(result);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  } <span class="hljs-keyword">catch</span> (e) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19"><span class="hljs-title function_">put</span>();</span>
+</code></pre>
+<p>填入 region、bucket 和 accessKeyId、accessKeySecret</p>
+<p>这里的 region 可以从概览里看到：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bd75de8c0c574468b00a9ea7877944b5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1686&amp;h=928&amp;s=225918&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>acessKey 是在这里看：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/41cd70bb22d7421a95cc00ccc7bfcac2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=708&amp;h=686&amp;s=67637&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>具体创建 accessKey 的流程看<a href="https://juejin.cn/book/7226988578700525605/section/7324620995183968293" target="_blank" title="https://juejin.cn/book/7226988578700525605/section/7324620995183968293">之前 OSS 那节</a></p>
+<p>然后跑一下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4c05b7e4930049d2b0fca2201acba67a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1048&amp;h=962&amp;s=176487&amp;e=png&amp;b=1b1b1b" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>上传成功之后就可以通过 OSS 服务访问这个图片了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dc4f029f4e8d4d9db4c4dd3650f28065~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2344&amp;h=1270&amp;s=797467&amp;e=png&amp;b=8c8c8c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也可以通过 sdk 下载图片：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/03d670392ddb403abd3534360658520c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=818&amp;h=424&amp;s=44036&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>执行后可以看到，图片被下载下来了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a3a7cd455974839b431c4793c58cd41~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1124&amp;h=612&amp;s=95408&amp;e=png&amp;b=1c1c1c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是阿里云 OSS 的用法。</p>
+<p>那我们用 minio 自己搭呢？</p>
+<p>首先，我们需要安装 <a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.docker.com%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://www.docker.com/" ref="nofollow noopener noreferrer">docker 桌面端</a>：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/260fc42611fd4f6aa84a0356286d79f3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2040&amp;h=1270&amp;s=210506&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>打开后可以看到本地的所有镜像和容器：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4edf8c78c292448db124d132ca79d76f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2096&amp;h=968&amp;s=266517&amp;e=png&amp;b=f7f7f8" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>搜索下 minio（这步需要科学上网）：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1451e7ef59b7432892ccefa417b67500~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1998&amp;h=1274&amp;s=258702&amp;e=png&amp;b=f2f3f7" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>填入一些信息：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/87eb9a405bae4470834b2bb29899053d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1518&amp;h=1470&amp;s=230560&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>name 是容器名。</p>
+<p>port 是映射本地 9000 和 9001 端口到容器内的端口。</p>
+<p>volume 是挂载本地目录到容器内的目录</p>
+<p>这里挂载了一个本地一个目录到容器内的数据目录 /bitnami/minio/data，这样容器里的各种数据都保存在本地了。</p>
+<p>还要指定两个环境变量，MINIO_ROOT_USER 和 MINIO_ROOT_PASSWORD，是用来登录的。</p>
+<p>点击 run，跑起来之后可以看到数据目录被标记为 mounted，端口也映射成功了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c94439277d9149869b9d343214538fe0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1342&amp;h=1022&amp;s=107797&amp;e=png&amp;b=f8f8f9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>访问下 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A9001" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:9001" ref="nofollow noopener noreferrer">http://localhost:9001</a></p>
+<p>输入刚才环境变量填的用户名密码：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/baef7edbd8174f53a508dec6ec4a1c2f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2578&amp;h=1022&amp;s=779261&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>进入管理界面：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/590cd0c074844e329ca296ed890e3252~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1930&amp;h=1332&amp;s=653275&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个 bucket 就是管理桶的地方，而 object browser 就是管理文件列表的地方。</p>
+<p>和阿里云 OSS 用法一样。</p>
+<p>我们创建个 bucket：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d485eaf6eaa14d3aa225ea84d3463be7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1520&amp;h=1016&amp;s=94712&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在这个 bucket 下上传一个文件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f7a8f077b04d4b8b98bc85067b50b737~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2338&amp;h=1116&amp;s=596635&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6363048236144ab691f4ff2d9c3e3203~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1988&amp;h=900&amp;s=145669&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击 share 就可以看到这个文件的 url：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/427ac302512a4d7aa94aeba2188c70fc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1854&amp;h=808&amp;s=119246&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9573aaa5a6914711b600ff66c0447fdd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1766&amp;h=1032&amp;s=242268&amp;e=png&amp;b=ececec" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在倒是能在浏览器访问，只不过需要带后面的一长串东西：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c42a7bc7b89e47308fb5b21725943b70~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2158&amp;h=1206&amp;s=669084&amp;e=png&amp;b=0202f3" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>不带的话会提示拒绝访问：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4378e11261914c19afe147791c2f9b66~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1472&amp;h=288&amp;s=47877&amp;e=png&amp;b=ffffff" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p>因为现在文件访问权限不是公开的。</p>
+<p>我们设置下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dc0f1990162d401dafa60444b84f38a2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2258&amp;h=966&amp;s=483874&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/76ffdce9aa904d4fac72b01abdf36392~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1750&amp;h=766&amp;s=172612&amp;e=png&amp;b=e9e9e9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>添加一个 / 的匿名的访问规则。</p>
+<p>然后就可以直接访问了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5b76d7716ddb45ffa10a94d4fbb4ef53~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1950&amp;h=980&amp;s=468443&amp;e=png&amp;b=0202f3" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>是不是感觉用起来和阿里云的 OSS 差不多？</p>
+<p>我们再来试试 sdk 的方式：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install minio</span>
+</code></pre>
+<p>安装 minio 包。</p>
+<p>然后创建 index2.js</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">var</span> <span class="hljs-title class_">Minio</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">'minio'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">var</span> minioClient = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Minio</span>.<span class="hljs-title class_">Client</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">endPoint</span>: <span class="hljs-string">'localhost'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attr">port</span>: <span class="hljs-number">9000</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">useSSL</span>: <span class="hljs-literal">false</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">accessKey</span>: <span class="hljs-string">''</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-attr">secretKey</span>: <span class="hljs-string">''</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">})</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-keyword">function</span> <span class="hljs-title function_">put</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    minioClient.<span class="hljs-title function_">fPutObject</span>(<span class="hljs-string">'aaa'</span>, <span class="hljs-string">'hello.png'</span>, <span class="hljs-string">'./smile.png'</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params">err, etag</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err)</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'上传成功'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="16">}</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18"><span class="hljs-title function_">put</span>();</span>
+</code></pre>
+<p>创建用到的 accessKey：
+<img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a7912ac2bae84a7c8e185b0c2876195f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2178&amp;h=998&amp;s=528632&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aa7c4a1e52f5470da5d7978595f954b1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1734&amp;h=890&amp;s=338812&amp;e=png&amp;b=f4f4f4" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>跑一下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dfb07408e94b4f7fb61515f7a103928a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=702&amp;h=110&amp;s=18112&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，文件上传成功了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c9695e5104db45248e2c4f72cafcdf88~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1482&amp;h=708&amp;s=347394&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/98299e5024b64886a9790926e98e8d39~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1568&amp;h=948&amp;s=364737&amp;e=png&amp;b=0202f3" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>同样，也可以下载文件：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d42133eba37248b18f79b4977600f0bc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1094&amp;h=486&amp;s=86475&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">function</span> <span class="hljs-title function_">get</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    minioClient.<span class="hljs-title function_">getObject</span>(<span class="hljs-string">'aaa'</span>, <span class="hljs-string">'hello.png'</span>, <span class="hljs-function">(<span class="hljs-params">err, stream</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err)</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        stream.<span class="hljs-title function_">pipe</span>(fs.<span class="hljs-title function_">createWriteStream</span>(<span class="hljs-string">'./xxx.png'</span>));</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-title function_">get</span>();</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d12088c76edd4e6fafcf5bf26e658e85~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1408&amp;h=720&amp;s=126200&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用起来和阿里云 OSS 几乎一毛一样。</p>
+<p>更多的 api 用法可以看 <a href="https://link.juejin.cn?target=https%3A%2F%2Fmin.io%2Fdocs%2Fminio%2Flinux%2Fdevelopers%2Fjavascript%2Fminio-javascript.html" target="_blank" rel="nofollow noopener noreferrer" title="https://min.io/docs/minio/linux/developers/javascript/minio-javascript.html" ref="nofollow noopener noreferrer">minio 文档</a>。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a5fb69960a0a4e9c96777068737c08b2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1652&amp;h=1194&amp;s=331748&amp;e=png&amp;b=e7eaec" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>最后，还记得我们跑 docker 容器的时候指定了挂载目录么：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1ad955a69ff846fb8e351c5b2a90ffe0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1342&amp;h=1022&amp;s=100335&amp;e=png&amp;b=f8f8f9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，数据就会保存在本地的那个目录下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3477dab0c0194f57b7eeedf7f2700030~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1386&amp;h=252&amp;s=60541&amp;e=png&amp;b=fbf9f9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那为什么 OSS 服务都这么相似呢？</p>
+<p>因为它们都是遵循 AWS 的 Simple Storage Service（S3）规范的，简称 S3 规范。</p>
+<p>所以不管哪家的 OSS，用起来都是差不多的。</p>
+<p>案例代码上传了<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fminio-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/minio-test" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>文件上传一般我们都是用 OSS 服务来存储，比如阿里云的 OSS。</p>
+<p>但是 OSS 是收费的，而且有些敏感数据不能传到云上，需要私有部署，这种就可以自己搭一个 OSS 服务。</p>
+<p>我们用 docker 跑了一个 minio 的容器，然后分别在管理界面和用 npm 包的方式做了文件上传和下载。</p>
+<p>用法和阿里云 OSS 差不多，因为他们都是亚马逊 S3 规范的实现。</p>
+<p>你公司内部有没有自己用 minio 搭 OSS 服务呢？</p></div>

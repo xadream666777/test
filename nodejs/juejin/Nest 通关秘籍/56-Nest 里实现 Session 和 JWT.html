@@ -1,0 +1,161 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>上节我们知道了保存登录状态的两种方式，session + cookie、jwt，这节我们用 Nest 来实现下吧。</p>
+<p>首先用 @nest/cli 快速创建一个 Nest.js 项目</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> jwt-<span class="hljs-keyword">and</span>-session -p npm</span>
+</code></pre>
+<p>我们先实现 session  + cookie 的方式：</p>
+<p>Nest 里实现 session 实现还是用的 express 的中间件 express-session。</p>
+<p>安装 express-session 和它的 ts 类型定义：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install express-session @types/express-session</span>
+</code></pre>
+<p>然后在入口模块里启用它：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">NestFactory</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/core'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.module'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> session <span class="hljs-keyword">from</span> <span class="hljs-string">'express-session'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">bootstrap</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">const</span> app = <span class="hljs-keyword">await</span> <span class="hljs-title class_">NestFactory</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">AppModule</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  app.<span class="hljs-title function_">use</span>(<span class="hljs-title function_">session</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">secret</span>: <span class="hljs-string">'guang'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">resave</span>: <span class="hljs-literal">false</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">saveUninitialized</span>: <span class="hljs-literal">false</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  }));</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-keyword">await</span> app.<span class="hljs-title function_">listen</span>(<span class="hljs-number">3000</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+<span class="code-block-extension-codeLine" data-line-num="15"><span class="hljs-title function_">bootstrap</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+</code></pre>
+<p>使用 express-session 中间件，指定加密的密钥 secret。</p>
+<p>resave 为 true 是每次访问都会更新 session，不管有没有修改 session 的内容，而 false 是只有 session 内容变了才会去更新 session。</p>
+<p>saveUninitalized 设置为 true 是不管是否设置 session，都会初始化一个空的 session 对象。比如你没有登录的时候，也会初始化一个 session 对象，这个设置为 false 就好。</p>
+<p>然后在 controller 里就可以注入 session 对象：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'sss'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-title function_">sss</span>(<span class="hljs-params">@Session() session</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(session)</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    session.<span class="hljs-property">count</span> = session.<span class="hljs-property">count</span> ? session.<span class="hljs-property">count</span> + <span class="hljs-number">1</span> : <span class="hljs-number">1</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">return</span> session.<span class="hljs-property">count</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">}</span>
+</code></pre>
+<p>我在 session 里放了个 count 的变量，每次访问加一，然后返回这个 count。</p>
+<p>这样就可以判断 http 请求是否有了状态。</p>
+<p>把它跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">start</span> <span class="hljs-comment">--watch</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/74f805d6f4954fba8bbf5a070e08c31e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后用 postman 测试下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a533a453fe45496fb61084e9409345f9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到每次请求返回的数据都不同，而且返回了一个 cookie 是 connect.sid，这个就是对应 session 的 id。</p>
+<p>因为 cookie 在请求的时候会自动带上，就可以实现请求的标识，给 http 请求加上状态。</p>
+<p>session + cookie 的方式用起来还是很简单的，我们再来看下 jwt 的方式：</p>
+<p>jwt 需要引入 @nestjs/jwt 这个包</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install @nestjs/jwt</span>
+</code></pre>
+<p>然后在 AppModule 里引入 JwtModule：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">JwtModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/jwt'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppController</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.controller'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">imports</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-title class_">JwtModule</span>.<span class="hljs-title function_">register</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">secret</span>: <span class="hljs-string">'guang'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-attr">signOptions</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attr">expiresIn</span>: <span class="hljs-string">'7d'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  <span class="hljs-attr">controllers</span>: [<span class="hljs-title class_">AppController</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="16">  <span class="hljs-attr">providers</span>: [<span class="hljs-title class_">AppService</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="17">})</span>
+<span class="code-block-extension-codeLine" data-line-num="18"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppModule</span> {}</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+</code></pre>
+<p>JwtModule 是一个动态模块，通过 register 传入 option。</p>
+<p>或者是 registerAsync，然后通过 useFactory 异步拿到 option 传入：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0690af4482204510857f640ec11f1b9c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这部分是动态模块的知识，忘了的同学可以看看动态模块那节。</p>
+<p>指定 secret，也就是加密 jwt 的密钥，还有 token 过期时间 expiresIn，设置 7 天。</p>
+<p>然后在 controller 里注入 JwtModule 里的 JwtService：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/66c2384eacb14d4795d359f9f58f8f18~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后添加一个 handler：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'ttt'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-title function_">ttt</span>(<span class="hljs-params">@Res({ passthrough: <span class="hljs-literal">true</span>}) response: Response</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">const</span> newToken = <span class="hljs-variable language_">this</span>.<span class="hljs-property">jwtService</span>.<span class="hljs-title function_">sign</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">      <span class="hljs-attr">count</span>: <span class="hljs-number">1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    response.<span class="hljs-title function_">setHeader</span>(<span class="hljs-string">'token'</span>, newToken);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">return</span> <span class="hljs-string">'hello'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+</code></pre>
+<p>这里使用 jwtService.sign 来生成一个 jwt token，放到 response header 里。</p>
+<p>因为注入 response 对象之后，默认不会把返回值作为 body 了，需要设置 passthrough 为 true 才可以。</p>
+<p>然后访问下试试看：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2a622591c25041c2bec8b2c73630aa97~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，返回的响应确实带上了这个 header。</p>
+<p>后面的请求需要带上这个 token，在服务端取出来，然后 +1 之后再放回去：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'ttt'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-title function_">ttt</span>(<span class="hljs-params">@Headers(<span class="hljs-string">'authorization'</span>) authorization: string, @Res({ passthrough: <span class="hljs-literal">true</span>}) response: Response</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">if</span>(authorization) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">      <span class="hljs-keyword">try</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-keyword">const</span> token = authorization.<span class="hljs-title function_">split</span>(<span class="hljs-string">' '</span>)[<span class="hljs-number">1</span>];</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-keyword">const</span> data = <span class="hljs-variable language_">this</span>.<span class="hljs-property">jwtService</span>.<span class="hljs-title function_">verify</span>(token);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-keyword">const</span> newToken = <span class="hljs-variable language_">this</span>.<span class="hljs-property">jwtService</span>.<span class="hljs-title function_">sign</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">          <span class="hljs-attr">count</span>: data.<span class="hljs-property">count</span> + <span class="hljs-number">1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        response.<span class="hljs-title function_">setHeader</span>(<span class="hljs-string">'token'</span>, newToken);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-keyword">return</span> data.<span class="hljs-property">count</span> + <span class="hljs-number">1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">      } <span class="hljs-keyword">catch</span>(e) {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnauthorizedException</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-keyword">const</span> newToken = <span class="hljs-variable language_">this</span>.<span class="hljs-property">jwtService</span>.<span class="hljs-title function_">sign</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-attr">count</span>: <span class="hljs-number">1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">      response.<span class="hljs-title function_">setHeader</span>(<span class="hljs-string">'token'</span>, newToken);</span>
+<span class="code-block-extension-codeLine" data-line-num="23">      <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">}</span>
+</code></pre>
+<p>通过 @Headers 装饰器取出 autorization 的 header，然后通过 jwtService.verify 对它做验证。</p>
+<p>如果验证失败，那就抛出 UnauthorizedException 异常，让 Nest 内置的 Exception Filter 来处理。</p>
+<p>验证成功就重新生成 jwt 放到 header 里返回。</p>
+<p>如果没有 autorization 的 header，那就生成一个 jwt 放到 header 里返回。</p>
+<p>然后我们测试下。</p>
+<p>第一次访问，会返回 jwt token，把它复制下来：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f40b87a16e344006a58a29a95e3dee33~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>放到请求的 header 里：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/825a4a3bba2c445a80ae0df3bb2316a9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候响应为 2，并且返回一个新的 token：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7a73e766c8b04e58a93d22fac74e7861~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把它复制下来放到 header 里再次请求：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/65a1cd5c2144432bb077c39faf7ffe11~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候返回的就是 3 了。</p>
+<p>这就是通过 jwt 保存状态的方式。</p>
+<p>那我们带一个错误的 token 呢？</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/04d7d1d5150c445a92ce331dec24ebb1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候 jwtService.verify 方法就会抛异常，然后我们返回了 401 错误。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bdf2a2485c3641e7ae0c8883f3825f34~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，我们就分别用 Nest 分别实现了 session + cookie 和 jwt 两种保存 http 状态的方式。</p>
+<p><strong>携带 jwt 需要加载 authorization 的 header 里，以 Bearer xxx 的格式，但是返回 jwt 可以放在任何地方，header、cookie 或者 body 里都可以。</strong></p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fjwt-and-session" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/jwt-and-session" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>我们分别在 nest 里实现了 session、jwt 两种给 http 添加状态的方式。</p>
+<p>session 使用的是 express 的 express-session 中间件，通过 @Session 装饰器取出来传入 controller 里。</p>
+<p>jwt 需要引入 @nestjs/jwt 包的 JwtModule，注入其中的 JwtService，然后通过 jwtService.sign 生成 token，通过 jwtService.verify 验证 token。</p>
+<p>token 放在 authorization 的 header 里。</p>
+<p>session 或者 jwt 都是非常常用的给 http 添加状态的方式，下节我们用这两种方式实现下登录注册功能。</p></div>

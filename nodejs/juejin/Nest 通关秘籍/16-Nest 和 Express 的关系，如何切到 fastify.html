@@ -1,0 +1,127 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>前面我们用的 Nest 的 request、response 对象都是 Express 的，而且 Nest 也支持 Express 的中间件机制。</p>
+<p>那 Nest 和 Express 是什么关系呢？</p>
+<p>Express 是一个处理请求、响应的库，它是这样用的：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> cookieParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">'cookie-parser'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> cookieValidator = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./cookieValidator'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">const</span> app = <span class="hljs-title function_">express</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">validateCookies</span> (req, res, next) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-keyword">await</span> <span class="hljs-title function_">cookieValidator</span>(req.<span class="hljs-property">cookies</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-title function_">next</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">app.<span class="hljs-title function_">use</span>(<span class="hljs-title function_">cookieParser</span>())</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">app.<span class="hljs-title function_">use</span>(validateCookies)</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">app.<span class="hljs-title function_">use</span>(<span class="hljs-function">(<span class="hljs-params">err, req, res, next</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  res.<span class="hljs-title function_">status</span>(<span class="hljs-number">400</span>).<span class="hljs-title function_">send</span>(err.<span class="hljs-property">message</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="18">})</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">app.<span class="hljs-title function_">listen</span>(<span class="hljs-number">3000</span>)</span>
+</code></pre>
+<p>通过 use 一个个中间件来处理请求、返回响应。</p>
+<p>这种调用链叫做洋葱模型：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5dd1dde7a5ac42f194ee6c3c13dfbf2f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>基于中间件能完成各种功能。</p>
+<p>但是 Express 只是一个处理请求的库，并没有提供组织代码的架构能力，代码可能写成各种样子。</p>
+<p>所以企业级开发，我们会用对它封装了一层的库，比如 Nest。</p>
+<p>Nest 提供了 IOC、AOP 等架构特性，规定了代码组织的形式，而且对 websocket、graphql、orm 等各种方案都提供了开箱即用的支持。</p>
+<p>也就是说，用 Node 写一个 http 服务有三个层次：</p>
+<ul>
+<li>直接使用 http、https 的模块</li>
+<li>使用 express、koa 这种库</li>
+<li>使用 Nest 这种企业级框架</li>
+</ul>
+<p>就像写 java 你还会直接处理 http 请求并手动集成各种方案么？</p>
+<p>不会，会直接用 Spring 这种一站式企业级开发框架。</p>
+<p>同样的道理， Nest 就是 node 生态里的 Spring。</p>
+<p>但是 Nest 也没有和 Express 强耦合，它做了一层抽象：</p>
+<p>定义了 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fnestjs%2Fnest%2Fblob%2Fd352e6f138bc70ff33cccf830053946d17272b82%2Fpackages%2Fcommon%2Finterfaces%2Fhttp%2Fhttp-server.interface.ts%23L21C1-L85" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/nestjs/nest/blob/d352e6f138bc70ff33cccf830053946d17272b82/packages/common/interfaces/http/http-server.interface.ts#L21C1-L85" ref="nofollow noopener noreferrer">HttpServer 的 interface</a>：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/737f4e28b4e04a0681338bbbaa91ec72~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后封装了 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fnestjs%2Fnest%2Fblob%2Fd352e6f138bc70ff33cccf830053946d17272b82%2Fpackages%2Fcore%2Fadapters%2Fhttp-adapter.ts%23L12C1-L131" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/nestjs/nest/blob/d352e6f138bc70ff33cccf830053946d17272b82/packages/core/adapters/http-adapter.ts#L12C1-L131" ref="nofollow noopener noreferrer">AbstractHttpAdapter 的 abstract class</a>：</p>
+<p>之后分别提供了 express 和 fastify 的实现：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/45563511aff34a8890efb03088db5d12~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ac036845aabe45e1ae942da5e3f28d83~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Adapter 是适配器的意思，也就是说 Nest 内部并没有直接依赖任何一个 http 处理的库，只是依赖了抽象的接口，想用什么库需要实现这些接口的适配器。</p>
+<p>你可以用 express，也可以灵活的切换成 fastify，对 Nest 没有任何影响。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0785a342c5be4bb281be14a2392748b1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这俩适配器分别在 @nestjs/platform-express 和 @nestjs/platform-fastify 的包里：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/79700acb386b4273a64e0731f2ef9434~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>默认用的是 platform-express 的包：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dec436a6d1b240cb8a44649d300dedcf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>下面我们切换到 fastify 试试看：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> fastify-test -p npm</span>
+</code></pre>
+<p>同样，先用 @nestjs/cli 创建个 nest 项目</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9ad59bc066ef4152b2fa2951ac583be1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后把它跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">start</span> <span class="hljs-comment">--watch</span></span>
+</code></pre>
+<p>浏览器访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000" ref="nofollow noopener noreferrer">http://localhost:3000</a> 看到 hello world 就是服务跑成功了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/310458702e914659a54a8cd5c94dee41~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在用的是默认的 express，我们切换到 fastify 试试看：</p>
+<p>安装 fastify 和 @nestjs/platform-fastify：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install fastify @nestjs/platform-fastify</span>
+</code></pre>
+<p>然后修改下 Nest 创建的方式：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4a243dd5577b42d9b105ccf0beb765bf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>改成这样：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/58a860f3c9c24c5d85c3837518c309e9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个 FastifyAdapter 前面讲过，传入这个 adapter 之后，就切换到了 fastify 平台。</p>
+<p>这里你还可以再传一个类型参数：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1c1767014d83455cb69862c28cc74238~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样返回的 app 就会提示 fastify 平台特有的方法了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b91dd5b6f85435db7b79a84c59713ce~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这也是为什么之前我们要传入 NestExpressApplication 才有 useStaticAssets 方法：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/13a07116cbc949369f1c32c95b33b41a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 controller 里可以注入 fastify 的 reqeust 和 reply 对象：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Controller</span>, <span class="hljs-title class_">Get</span>, <span class="hljs-title class_">Request</span>, <span class="hljs-title class_">Response</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">FastifyReply</span>, <span class="hljs-title class_">FastifyRequest</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'fastify'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Controller</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">private readonly appService: AppService</span>) {}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  @<span class="hljs-title class_">Get</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-title function_">getHello</span>(<span class="hljs-params">@Request() request: FastifyRequest, @Response() reply: FastifyReply</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    reply.<span class="hljs-title function_">header</span>(<span class="hljs-string">'url'</span>, request.<span class="hljs-property">url</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    reply.<span class="hljs-title function_">send</span>(<span class="hljs-string">'hello'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+</code></pre>
+<p>我们注入了 fastify 的 request 和 reply 对象，然后用它来设置 header 发送响应：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aa142f5c756945e9821982873126f59b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1dd35f0b9ea64bac906d18f72b48bd5c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里要注意的是一旦用 @Response 注入了响应对象，就不能通过 return 的方式来返回响应内容了，需要手动调用 res.send。</p>
+<p>这点用 express 时也是一样。</p>
+<p>很容易理解，因为你可能在方法里用 resposne 对象发送数据了，那如果 Nest 再把返回值作为响应内容，不就冲突了么？</p>
+<p>当然，你也可以这样做：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5873e1f9eb3d44b5a6e930a75e9525b4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>传个 passthrough 参数，代表不会在方法里自己发送响应内容。</p>
+<p>这样返回值就生效了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/80828b7f572a43958e6e33e0d265da46~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>最后，我们来思考下为什么 Nest 要做能够轻松切换 http 处理库呢？</p>
+<p>因为 Nest 的核心还是在于 IOC、AOP 这些架构特性，像 express、fastify 只不过是请求、响应的方法不同而已，区别并不大。</p>
+<p>如果强依赖于 express，万一有更好的 http 处理库怎么办？</p>
+<p>这种加一层抽象和适配器的方式，能让 Nest 更加通用、灵活，有更强的扩展性。</p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Ffastify-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/fastify-test" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>express 是基于中间件的洋葱模型处理请求、响应的库，它并没有提供组织代码的架构特性，代码可以写的很随意。</p>
+<p>而为了更好的可维护性，我们都会用 Nest 这种一站式企业级开发框架。就像 java 里会用 Spring 框架一样。</p>
+<p>Nest 底层是 express 但也不完全是，它内部实现是基于 interface 的，而且提供了 @nestjs/platform-express、@nestjs/platform-fastify 这两个 adapter 包。</p>
+<p>这样就可以轻松的切换 express、fastify 或者其他的 http 请求处理的库。</p>
+<p>这就是适配器模式的魅力。</p></div>

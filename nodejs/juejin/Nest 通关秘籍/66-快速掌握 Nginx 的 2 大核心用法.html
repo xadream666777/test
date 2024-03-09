@@ -1,0 +1,359 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>Nginx 是流行的服务器，一般用它对静态资源做托管、对动态资源做反向代理。</p>
+<p>Docker 是流行的容器技术，里面可以跑任何服务。</p>
+<p>那 Docker + Nginx 如何结合使用呢？</p>
+<p>我们来试一下：</p>
+<p>搜索 nginx（这一步需要科学上网，因为要访问 hub.docker.com 这个网站），点击 run：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/00e5aee594134afaa61f694318f5e5bc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>输入容器名和要映射的端口：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bdd09b12aa0f44cb81391d4fa6f01c6d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里把宿主机的 81 端口映射到容器内的 80 端口，点击 run。</p>
+<p>这时候就可以看到 docker 容器跑起来了，并且打印了日志：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d1b47a61ffd84ff898466f5f4654c0dd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问下 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A81" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:81" ref="nofollow noopener noreferrer">http://localhost:81</a> 可以看到 nginx 欢迎页面：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/380ba9b4dd2d4498902b283388b4b3e8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这很明显是容器里跑的服务。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dd728ed4ac9d431ba4cf54e1bceae23d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但是现在的页面是默认的，我想用 nginx 来托管我的一些静态 html 页面怎么做呢？</p>
+<p>首先我们要知道现在的配置文件和页面都存在哪里。</p>
+<p>在 files 面板可以看到容器内的文件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0b8ade092f38457db1008e9a55297fd3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>里面的 /usr/share/nginx/html/ 目录下面就是所有的静态文件。</p>
+<p>双击点开 index.html 看看：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/73d1299c10e240f0ad1a1f1785f2e13e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7cc53d2060d34cfcaed74eb31f86e5cf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>和我们浏览器看到的页面一毛一样。</p>
+<p>也就是说，这个目录就是保存静态文件的目录。</p>
+<p>那我们在这个目录下放我们自己的 html 不就行了？</p>
+<p>我们先把这个目录复制出来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker <span class="hljs-built_in">cp</span>  nginx1:/usr/share/nginx/html ~/nginx-html</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5b38b7faccaa4752985f081949c04792~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>docker cp 这个命令就是用于在宿主机和容器之间复制文件和目录的。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cc75fa0808d94a38bd70c2ea2ec4a17b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>比如我们把这个目录再复制到容器里：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker <span class="hljs-built_in">cp</span>  ~/nginx-html nginx1:/usr/share/nginx/html-xxx</span>
+</code></pre>
+<p>可以看到容器内就多了这个目录：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f9d8e208251844b2a3575c62abaac702~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们在这个目录下添加两个 html 来试试看：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-built_in">echo</span> aaa &gt; aaa.html</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-built_in">echo</span> bbb &gt; bbb.html</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">docker <span class="hljs-built_in">cp</span>  ~/nginx-html nginx1:/usr/share/nginx/html</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7daa21fa354e42adbdfa34faf75403a6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但当目标目录存在的时候，docker 会把他复制到目标目录下面：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9bb689cf738f4647ab093fa723b9b77e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们需要先删除容器的这个目录，再复制：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/99795389649d4cd3b5c6c884d0cafef9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker <span class="hljs-built_in">cp</span>  ~/nginx-html nginx1:/usr/share/nginx/html</span>
+</code></pre>
+<p>这样就好了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8207eb74aef344d89cc22bb6b6cee6a0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后浏览器访问下试试：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f9bb908bd3ad4a46b9d82c46e29d0a49~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e1cc464e9b624b5e91da817f6c29e481~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在就可以访问容器内的这些目录了。</p>
+<p>也就是说只要放到 /usr/share/nginx/html 下的文件，都可以通过被访问到。</p>
+<p>可是为什么呢？</p>
+<p>这是因为 nginx 的默认配置。</p>
+<p>我们看下 nginx 配置文件，也就是 /etc/nginx/nginx.conf。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e68093260f174d06baedfb91a4577cf8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>复制出来看看：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker <span class="hljs-built_in">cp</span>  nginx1:/etc/nginx/nginx.conf ~/nginx-html</span>
+</code></pre>
+<p>这是就是 nginx 的默认配置：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/034c6eddb15049ff97bc2d82ba9737ea~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>其实这个 nginx.conf 叫做主配置文件，里面一般做一些全局的配置，比如错误日志的目录等等。</p>
+<p>可以看到 http 下面有个 include 引入了 /etc/nginx/conf.d/*.conf 的配置。</p>
+<p>一般具体的路由配置都是在这些子配置文件里。</p>
+<p>目录 conf.d 是 configuration directory 的意思。</p>
+<p>我们把这个目录也复制出来看看：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker <span class="hljs-built_in">cp</span>  nginx1:/etc/nginx/conf.d ~/nginx-html</span>
+</code></pre>
+<p>这里面就配置了 localhost:80 的虚拟主机下的所有路由。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b0c567876af4ce8862b20c213d31613~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>虚拟主机是什么呢？</p>
+<p>就是可以用一台 nginx 服务器来为多个域名和端口的提供服务。</p>
+<p>只要多加几个 server 配置就可以。</p>
+<p>这里我们就配置 localhost:80 这一个虚拟主机。</p>
+<p>下面的 location 就是路由配置。</p>
+<p>比如这个配置：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a090ca1b6a184825870c24c92929dd53~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它就配置了 / 下的所有路由，都是在 root 指定的目录查找。</p>
+<p>所以 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%2Faaa.html" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost/aaa.html" ref="nofollow noopener noreferrer">http://localhost/aaa.html</a> 就是从 /usr/share/nginx/html/aaa.html 找的。</p>
+<p>location 支持的语法有好几个，我们分别试一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">nginx</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-nginx code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">location = /111/ {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    default_type text/plain;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    return 200 "111 success";</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">location /222 {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    default_type text/plain;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    return 200 $uri;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">location ~ ^/333/bbb.*\.html$ {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    default_type text/plain;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    return 200 $uri;</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">location ~* ^/444/AAA.*\.html$ {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    default_type text/plain;</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    return 200 $uri;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">}</span>
+</code></pre>
+<p>把之前的 location / 删掉，添加这样几个路由配置。</p>
+<p>具体这些配置都是什么意思待会再说。</p>
+<p>把这个文件复制到容器内：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker cp ~<span class="hljs-regexp">/nginx-html/</span>conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span> <span class="hljs-attr">nginx1</span>:<span class="hljs-regexp">/etc/</span>nginx/conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span></span>
+</code></pre>
+<p>然后在容器内的 terminal 执行：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nginx -s reload</span>
+</code></pre>
+<p>重新加载配置文件。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/343fc8ca6d8240c5873575aaf3007734~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后来看第一条路由：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1e55e5e48280486b95587b19ae087544~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>location 和路径之间加了个 =，代表精准匹配，也就是只有完全相同的 url 才会匹配这个路由。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/08ecc55b43604c1cb2f7918125871e76~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3d6a14c0dfc84b3fac127d1b3ba6ba1e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>不带 = 代表根据前缀匹配，后面可以是任意路径。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8ff67c9f669b415bb99bb19652677767~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里的 $uri 是取当前路径。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9d682ce69cba4d05b4ea5adbdff7cd56~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1c39332791374cb7a09d462fd638a79b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后如果想支持正则，就可以加个 ~。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b263205a29844ade884e8bf0f61ae21c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里的正则语法不难看懂，就是 /333/bbb 开头，然后中间是任意字符，最后 .html 结尾的 url。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4a18793fc15d43eb9a5de1a1464905ea~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/61a43a791da44bf596a523f2acbefe73~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但是它是区分大小写的，比如这样就不行了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/21bdf43ba7414bd0a8761992aed80a72~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>换成小写就可以：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c0eed6101d4c40bab2a28c8182dde164~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果想让正则不区分大小写，可以再加个 *</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c0ac2ad52e0c4187bd8760b4e02f7ccc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>试一下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/58600f38f1324bfe89bdb43f89327bc0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8f55941ba3ff4b3b828e2bdd96944bd4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>任意的大小写都是可以的。</p>
+<p>此外，还有一种语法：</p>
+<p>在配置文件加上这个配置：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">location /<span class="hljs-number">444</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    default_type text/plain;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-number">200</span> <span class="hljs-string">'xxxx'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>然后复制到容器里，并 reload：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker cp ~<span class="hljs-regexp">/nginx-html/</span>conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span> <span class="hljs-attr">nginx1</span>:<span class="hljs-regexp">/etc/</span>nginx/conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span></span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/23967f110d1f4d2ca1831b8c605a1eef~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候就有两个 /444 的路由了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/63203172626a4e97ac836631c0ecd864~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候浏览器访问，还是匹配上面的那个路由：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/34cd4b0e3c2c46ce9c3dc080ca13bed7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果想提高优先级，可以使用 ^~</p>
+<p>改成这样：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">location ^~ /<span class="hljs-number">444</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    default_type text/plain;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-number">200</span> <span class="hljs-string">'xxxx'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>然后复制到容器里，并 reload：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker cp ~<span class="hljs-regexp">/nginx-html/</span>conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span> <span class="hljs-attr">nginx1</span>:<span class="hljs-regexp">/etc/</span>nginx/conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/89a432fa547246b4a26d41408d4c38f8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候同一个 url，匹配的就是下面的路由了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7b7ab371a63341f6b66f68650d38e55f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也就是说 ^~ 能够提高前缀匹配的优先级。</p>
+<p>总结一下，一共 4 个 location 语法：</p>
+<p>location = /aaa 是精确匹配 /aaa 的路由。</p>
+<p>location /bbb 是前缀匹配 /bbb 的路由。</p>
+<p>location ~ /ccc.*.html 是正则匹配。可以再加个 * 表示不区分大小写 location ~* /ccc.*.html</p>
+<p>location ^~ /ddd 是前缀匹配，但是优先级更高。</p>
+<p>这 4 种语法的优先级是这样的：</p>
+<p><strong>精确匹配（=） &gt; 高优先级前缀匹配（^~） &gt; 正则匹配（～ ~*） &gt; 普通前缀匹配</strong></p>
+<p>我们现在是直接用 return 返回的内容，其实应该返回 html 文件。</p>
+<p>可以这样改：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">location /222 {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-built_in">alias</span> /usr/share/nginx/html;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">}</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">location ~ ^/333/bbb.*\.html$ {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-built_in">alias</span> /usr/share/nginx/html/bbb.html;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+</code></pre>
+<p>然后复制到容器里，并 reload：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker cp ~<span class="hljs-regexp">/nginx-html/</span>conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span> <span class="hljs-attr">nginx1</span>:<span class="hljs-regexp">/etc/</span>nginx/conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/89a432fa547246b4a26d41408d4c38f8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>都是能正确返回对应的 html 的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7ee5f117ce05432f8e0a2e570bd6291c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7e044e5743124fc88760e9ecdd0b817f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4a171bc715a14627b5c9a804f05240be~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>前面用过 root：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/318dc32f873146b5a758533ce62a611f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>root 和 alias 有什么区别呢？</p>
+<p>比如这样的两个配置：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">location /222 {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-built_in">alias</span> /dddd;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">}</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">location /222 {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    root /dddd;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+</code></pre>
+<p>同样是 /222/xxx/yyy.html，如果是用 root 的配置，会把整个 uri 作为路径拼接在后面。</p>
+<p>也就是会查找 /dddd/222/xxx/yyy.html 文件。</p>
+<p>如果是 alias 配置，它会把去掉 /222 之后的部分路径拼接在后面。</p>
+<p>也就是会查找 /dddd/xxx/yyy.html 文件。</p>
+<p>也就是 我们 <strong>root 和 alias 的区别就是拼接路径时是否包含匹配条件的路径。</strong></p>
+<p>这就是 nginx 的第一个功能：静态文件托管。</p>
+<p>主配置文件在 /etc/nginx/nginx.conf，而子配置文件在 /etc/nginx/conf.d 目录下。</p>
+<p>默认的 html 路径是 /usr/share/nginx/html。</p>
+<p>然后来看下 nginx 的第二大功能：动态资源的反向代理。</p>
+<p>什么是正向、什么是反向呢？</p>
+<p>从用户的角度看，方向一致的就是正向，反过来就是反向。</p>
+<p>比如这样两个代理：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8158459f8f694f38a2b1369c90f20207~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/40ee2dabb15c45178b66228b1da66128~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>第一个是正向代理，第二个是反向代理。</p>
+<p>第一个代理是代理的用户请求，和用户请求方向一致，叫做正向代理。</p>
+<p>第二个代理是代理服务器处理用户请求，和用户请求方向相反，叫做反向代理。</p>
+<p>测试 nginx 做反向代理服务器之前，我们先创建个 nest 服务。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx nest <span class="hljs-keyword">new</span> nest-app -p npm</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/42a2d90944d44105a697885a4a9c5f60~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bb7fd9e654ca43fe9586cc508bdd7df7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器就访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000" ref="nofollow noopener noreferrer">http://localhost:3000</a> 看到 hello world 就代表 nest 服务跑成功了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2e857fe44156440684cf014f53f35ca9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>添加一个全局的前缀 /api</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1567dd0464bb43e88b077a63554df27b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/479209c942c240efb58f07ab2ca03ef4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>改下 nginx 配置，添加个路由：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">location ^~ /api {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    proxy_pass http:<span class="hljs-comment">//192.168.1.6:3000;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">}</span>
+</code></pre>
+<p>这个路由是根据前缀匹配 /api 开头的 url， ^~ 是提高优先级用的。</p>
+<p>然后复制到容器里，并 reload：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker cp ~<span class="hljs-regexp">/nginx-html/</span>conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span> <span class="hljs-attr">nginx1</span>:<span class="hljs-regexp">/etc/</span>nginx/conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/89a432fa547246b4a26d41408d4c38f8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后你访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A81%2Fapi" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:81/api" ref="nofollow noopener noreferrer">http://localhost:81/api</a> 就可以看到 nest 服务返回的响应了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c2a61491809e446fa2de48cd9142abb4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也就是这样的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/027fbc84896647eeb5598ed32a8b2cd3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>为什么要多 nginx 这一层代理呢？</p>
+<p>自然是可以在这一层做很多事情的。</p>
+<p>比如修改 header：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/502d4d3bfa8b42cfa6b24db26ba700d0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后复制到容器里，并 reload：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker cp ~<span class="hljs-regexp">/nginx-html/</span>conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span> <span class="hljs-attr">nginx1</span>:<span class="hljs-regexp">/etc/</span>nginx/conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/89a432fa547246b4a26d41408d4c38f8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 nest 服务的 handler 里注入 headers，打印一下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/367c102b0c4c42158f491ee9363afbd4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后浏览器访问下。</p>
+<p>直接访问 nest 服务的话，是没有这个 header 的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/11ef37cff0a142ad9c5ed8fdaa6adc33~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8d363c53044c4a8ba144cc01fd204eb5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>访问 nginx 的反向代理服务器，做一次中转：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/220ff528185d418abf5f940a15b0b0e8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/807b50f73cc144ebab6317c048f2c306~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是反向代理服务器的作用，可以透明的修改请求、响应。</p>
+<p>而且，还可以用它实现负载均衡。</p>
+<p>在 controlller 里打印下访问日志：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f1321cb7502f4a9e80e55ca4b700ac1c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把 nest 服务停掉，然后重新 npm run start</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b47a6600dff549d0b430a7b5e1ef3d4a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>3001 和 3002 端口各跑一个：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/78b1e80e003f46b89ba2def1c6aea66f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问下，都是正常的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8c68f71eb3dc4b6a915b9a169a7e852a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/87548445dfc749b693e64ad1190758b3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>控制台也打印了访问日志：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9444046f35374d9d8a6a6f909eeeb593~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>问题来了，现在有一个 nginx 服务器，两个 nest 服务器了，nginx 该如何应对呢？</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b51f76b08bc74cadae95cb0d0c6f936a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>nginx 的解决方式就是负载均衡，把请求按照一定的规则分到不同的服务器。</p>
+<p>改下 nginx 配置文件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b7e3ed96deaf4037a5aab7444ae98a3e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 upstream 里配置它代理的目标服务器的所有实例。</p>
+<p>下面 proxy_pass 通过 upstream 的名字来指定。</p>
+<p>然后复制到容器里，并 reload：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker cp ~<span class="hljs-regexp">/nginx-html/</span>conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span> <span class="hljs-attr">nginx1</span>:<span class="hljs-regexp">/etc/</span>nginx/conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/89a432fa547246b4a26d41408d4c38f8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候我访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A81%2Fapi" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:81/api" ref="nofollow noopener noreferrer">http://localhost:81/api</a> 刷新 5 次页面：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/67d1a60b7fdf4f8b81fb9ccd6fed01ce~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到两个 nest 服务，一个 3 次，一个 2 次。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/92c02560584d4eb68e6ac303f5da67c7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>因为默认是轮询的方式。</p>
+<p>一共有 4 种负载均衡策略：</p>
+<ul>
+<li>轮询：默认方式。</li>
+<li>weight：在轮询基础上增加权重，也就是轮询到的几率不同。</li>
+<li>ip_hash：按照 ip 的 hash 分配，保证每个访客的请求固定访问一个服务器，解决 session 问题。</li>
+<li>fair：按照响应时间来分配，这个需要安装 nginx-upstream-fair 插件。</li>
+</ul>
+<p>我们测试下 weight 和 ip_hash 的方式。</p>
+<p>添加一个 weight=2，默认是 1，这样两个服务器轮询到的几率是 2 比 1。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1c2453efe71a4c9c83f48362181a1197~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后复制到容器里，并 reload：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker cp ~<span class="hljs-regexp">/nginx-html/</span>conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span> <span class="hljs-attr">nginx1</span>:<span class="hljs-regexp">/etc/</span>nginx/conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/89a432fa547246b4a26d41408d4c38f8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>按 command + k，把 nest 服务的控制台日志清空下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6899294da7274c7d89002d7e60b33090~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我访问了 8 次 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A81%2Fapi" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:81/api" ref="nofollow noopener noreferrer">http://localhost:81/api</a></p>
+<p>看打印的日志来看，差不多就是 2:1 的轮询几率。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ad411f5c61e5415988d201dafa33a187~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是带权重的轮询。</p>
+<p>我们再试下 ip_hash 的方式；</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f399064d59154040ba96b2790781e491~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后复制到容器里，并 reload：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">docker cp ~<span class="hljs-regexp">/nginx-html/</span>conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span> <span class="hljs-attr">nginx1</span>:<span class="hljs-regexp">/etc/</span>nginx/conf.<span class="hljs-property">d</span>/<span class="hljs-keyword">default</span>.<span class="hljs-property">conf</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/89a432fa547246b4a26d41408d4c38f8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>按 command + k，把 nest 服务的控制台日志清空下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6899294da7274c7d89002d7e60b33090~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再次访问了 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A81%2Fapi" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:81/api" ref="nofollow noopener noreferrer">http://localhost:81/api</a></p>
+<p>可以看到一直请求到了一台服务器：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2202ecd0ee484ba58129b632b73f1777~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是 Nginx 的负载均衡的策略。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>我们通过 docker 跑了 nginx 服务器，并使用了它的静态资源托管功能，还有动态资源的反向代理功能。</p>
+<p>nginx 的配置文件在 /etc/nginx/nginx.conf 里，它默认还引入了 /etc/nginx/conf.d 下的子配置文件。</p>
+<p>默认 html 都放在 /usr/share/nginx/html 下。</p>
+<p>我们可以通过 docker cp 来把容器内文件复制到宿主机来修改。</p>
+<p>修改 nginx 配置，在 server 里配置路由，根据不同的 url 返回不同的静态文件。</p>
+<p>有 4 种 location 语法：</p>
+<ul>
+<li>location /aaa 根据前缀匹配</li>
+<li>location ^~ /aaa 根据前缀匹配，优先级更高</li>
+<li>location = /aaa 精准匹配</li>
+<li>location ~ /aaa/.*html 正则匹配</li>
+<li>location ~* /aaa/.*html 正则匹配，而且不区分大小写</li>
+</ul>
+<p>优先级是 精确匹配（=） &gt; 高优先级前缀匹配（^~） &gt; 正则匹配（～ ~*） &gt; 普通前缀匹配</p>
+<p>除了静态资源托管外，nginx 还可以对动态资源做反向代理。</p>
+<p>也就是请求发给 nginx，由它转发给应用服务器，这一层也可以叫做网关。</p>
+<p>nginx 反向代理可以修改请求、响应信息，比如设置 header。</p>
+<p>当有多台应用服务器的时候，可以通过 upstream 配置负载均衡，有 4 种策略：轮询、带权重的轮询、ip_hash、fair。</p>
+<p>掌握了静态资源托管、动态资源的反向代理+负载均衡，就算是掌握了 Nginx 的核心用法了。</p></div>

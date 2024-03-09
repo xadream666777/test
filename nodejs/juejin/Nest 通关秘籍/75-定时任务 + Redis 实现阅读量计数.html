@@ -1,0 +1,612 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>文章都会有个阅读量，那这个阅读量是怎么计数的呢？</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/26b7aa9c69b14847ad90c389f236593b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>有同学说，很简单啊，这不就是文章表里加个 views 的字段，然后每次刷新页面都加一么？</p>
+<p>这样是可以，但有两个问题：</p>
+<ul>
+<li>
+<p>每次刷新阅读量都加一，其实还是同一个人看的这篇文章，这样统计出来的阅读量是不准的，我们想要的阅读量是有多少人看过这篇文章</p>
+</li>
+<li>
+<p>阅读是个很高频的操作，直接存到数据库，数据库压力会太大</p>
+</li>
+</ul>
+<p>这两个问题分别都怎么解决呢？</p>
+<p>其实我们学完 Redis 就应该能想到解决方案了：</p>
+<ul>
+<li>
+<p>在 redis 中存储 user 和 article 的关系，比如 user_111_article_222 为 key，10 分钟后删除，如果存在这个 key，就说明该用户看过这篇文章，就不更新阅读量，否则才更新</p>
+<p>10 分钟后，这个人再看这篇文章，就可以算是新的一次阅读量了。</p>
+</li>
+<li>
+<p>访问文章时把阅读量加载到 redis，之后的阅读量计数只更新 redis，不更新数据库，等业务低峰期再把最新的阅读量写入数据库</p>
+<p>这里在业务低峰期，比如凌晨 4 点的时候写入数据库，可以用定时任务来做。</p>
+</li>
+</ul>
+<p>思路理清了，我们来实现一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest new <span class="hljs-selector-tag">article</span>-views -<span class="hljs-selector-tag">p</span> npm</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dcfd1c5e7f004bb798b8a7ba9697e0de~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>创建个 nest 项目。</p>
+<p>安装 typeorm 相关的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> <span class="hljs-keyword">@nestjs</span>/typeorm typeorm mysql2</span>
+</code></pre>
+<p>在 AppModule 引入 TypeOrmModule：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">TypeOrmModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/typeorm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppController</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.controller'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">imports</span>: [ </span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-title class_">TypeOrmModule</span>.<span class="hljs-title function_">forRoot</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">type</span>: <span class="hljs-string">"mysql"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-attr">host</span>: <span class="hljs-string">"localhost"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">port</span>: <span class="hljs-number">3306</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-attr">username</span>: <span class="hljs-string">"root"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-attr">password</span>: <span class="hljs-string">"guang"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-attr">database</span>: <span class="hljs-string">"article_views"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-attr">synchronize</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-attr">logging</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-attr">entities</span>: [],</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-attr">poolSize</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-attr">connectorPackage</span>: <span class="hljs-string">'mysql2'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-attr">extra</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">          <span class="hljs-attr">authPlugin</span>: <span class="hljs-string">'sha256_password'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    }),</span>
+<span class="code-block-extension-codeLine" data-line-num="24">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="25">  <span class="hljs-attr">controllers</span>: [<span class="hljs-title class_">AppController</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="26">  <span class="hljs-attr">providers</span>: [<span class="hljs-title class_">AppService</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="27">})</span>
+<span class="code-block-extension-codeLine" data-line-num="28"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppModule</span> {}</span>
+</code></pre>
+<p>在 mysql workbench 里创建这个 database</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">CREATE</span> DATABASE article<span class="hljs-operator">-</span>views <span class="hljs-keyword">DEFAULT</span> <span class="hljs-type">CHARACTER</span> <span class="hljs-keyword">SET</span> utf8mb4;</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/525cdf775e4347468986e5f7e214078a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1204&amp;h=162&amp;e=png&amp;b=f5f4f4" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>刷新可以看到这个 database</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/191672a15d064ac180dc2699a3650a94~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=500&amp;h=456&amp;e=png&amp;b=e9e6e3" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后建个文章和用户的模块：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g resource user --no-spec</span>
+<span class="code-block-extension-codeLine" data-line-num="2">nest g resource article --no-spec</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2067e9ddbd804c0b8f31b13f691eff20~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=884&amp;h=602&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>添加 user 和 article 的 entity</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span>, <span class="hljs-title class_">Entity</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">User</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'用户名'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">username</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'密码'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">password</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+</code></pre>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Article</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'文章名字'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">length</span>: <span class="hljs-number">50</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">title</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'内容'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">type</span>: <span class="hljs-string">'text'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-attr">content</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'阅读量'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-attr">default</span>: <span class="hljs-number">0</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-attr">viewCount</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="25"></span>
+<span class="code-block-extension-codeLine" data-line-num="26">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="27">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'点赞量'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="28">        <span class="hljs-attr">default</span>: <span class="hljs-number">0</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    <span class="hljs-attr">likeCount</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="31"></span>
+<span class="code-block-extension-codeLine" data-line-num="32">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="33">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'收藏量'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="34">        <span class="hljs-attr">default</span>: <span class="hljs-number">0</span></span>
+<span class="code-block-extension-codeLine" data-line-num="35">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="36">    <span class="hljs-attr">collectCount</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="37">}</span>
+<span class="code-block-extension-codeLine" data-line-num="38"></span>
+</code></pre>
+<p>在 entities 引入：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aa3df96660be4d22b6366d7d2d2a29b0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=894&amp;h=1050&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到 typeorm 自动创建了这两个表：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/64dde61b048940b3b75bd83739afee0a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1634&amp;h=670&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后插入一些数据：</p>
+<p>在 AppController 创建 init-data 的路由，然后注入 EntityManager：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0446c10bb0f94671bdd1a4b99b8ee92f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1108&amp;h=862&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">InjectEntityManager</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  private <span class="hljs-attr">entityManager</span>: <span class="hljs-title class_">EntityManager</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  @<span class="hljs-title class_">Get</span>(<span class="hljs-string">'init-data'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-keyword">async</span> <span class="hljs-title function_">initData</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-attr">username</span>: <span class="hljs-string">'dong'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-attr">password</span>: <span class="hljs-string">'111111'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">username</span>: <span class="hljs-string">'guang'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-attr">password</span>: <span class="hljs-string">'222222'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">Article</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-attr">title</span>: <span class="hljs-string">'基于 Axios 封装一个完美的双 token 无感刷新'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-attr">content</span>: <span class="hljs-string">`用户登录之后，会返回一个用户的标识，之后带上这个标识请求别的接口，就能识别出该用户。</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">      标识登录状态的方案有两种： session 和 jwt。</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      `</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">Article</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">      <span class="hljs-attr">title</span>: <span class="hljs-string">'Three.js 手写跳一跳小游戏'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">      <span class="hljs-attr">content</span>: <span class="hljs-string">`前几年，跳一跳小游戏火过一段时间。</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26"></span>
+<span class="code-block-extension-codeLine" data-line-num="27">      玩家从一个方块跳到下一个方块，如果没跳过去就算失败，跳过去了就会再出现下一个方块。`</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-keyword">return</span> <span class="hljs-string">'done'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="30">  }</span>
+</code></pre>
+<p>两个 entity 分别插入 2 条数据。</p>
+<p>浏览器访问下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b41c9f560eb44c87bd7f2ef913f59c86~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=712&amp;h=216&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到 4 条 insert 语句：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2d1726aa77334d79b5430b2df16e7e19~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1672&amp;h=672&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 mysql workbench 里也可以看到两个表都插入了数据：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f4ea593b965a4509941e46f57d2251c4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1758&amp;h=394&amp;e=png&amp;b=f0eeed" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0c0d4d171eb14fdebfe891e53e1ce7b9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1038&amp;h=420&amp;e=png&amp;b=edeae8" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后先实现登录：</p>
+<p>这次用 session 的方案：</p>
+<p>安装相关的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install express-session @types/express-session</span>
+</code></pre>
+<p>在 main.ts 里启用：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/689b475a6a8f4c6b9f3e8790dbc8a600~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=928&amp;h=648&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">NestFactory</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/core'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.module'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> session <span class="hljs-keyword">from</span> <span class="hljs-string">'express-session'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">bootstrap</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">const</span> app = <span class="hljs-keyword">await</span> <span class="hljs-title class_">NestFactory</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">AppModule</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  app.<span class="hljs-title function_">use</span>(<span class="hljs-title function_">session</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">secret</span>: <span class="hljs-string">'guang'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">resave</span>: <span class="hljs-literal">false</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">saveUninitialized</span>: <span class="hljs-literal">false</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  }));</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-keyword">await</span> app.<span class="hljs-title function_">listen</span>(<span class="hljs-number">3000</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+<span class="code-block-extension-codeLine" data-line-num="16"><span class="hljs-title function_">bootstrap</span>();</span>
+</code></pre>
+<p>然后实现下登录：</p>
+<p>在 UserController 添加 login 的路由：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Post</span>(<span class="hljs-string">'login'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">login</span>(<span class="hljs-params">@Body() loginUserDto: LoginUserDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(loginUserDto);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>新建 src/user/dto/login-user.dto.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LoginUserDto</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">username</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">password</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6c02152dcbd440fe86ee86120ae7fd3f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=716&amp;h=628&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/13514ad5de634e18876e9dfe0512625d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=772&amp;h=396&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 UserService 实现登录逻辑：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">InjectEntityManager</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="2">private <span class="hljs-attr">entityManager</span>: <span class="hljs-title class_">EntityManager</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">async</span> <span class="hljs-title function_">login</span>(<span class="hljs-params">loginUser: LoginUserDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOne</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">username</span>: loginUser.<span class="hljs-property">username</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">if</span>(!user) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'用户不存在'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">if</span>(user.<span class="hljs-property">password</span> !== loginUser.<span class="hljs-property">password</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'密码错误'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-keyword">return</span> user;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">}</span>
+</code></pre>
+<p>在 UserController 调用下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Post</span>(<span class="hljs-string">'login'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">login</span>(<span class="hljs-params">@Body() loginUserDto: LoginUserDto, @Session() session</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>.<span class="hljs-title function_">login</span>(loginUserDto);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    session.<span class="hljs-property">user</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">id</span>: user.<span class="hljs-property">id</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">username</span>: user.<span class="hljs-property">username</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<p>调用 userService 的 login 方法，实现登录验证，然后把用户信息存入 session。</p>
+<p>当用户不存在时：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3afa73c85f8545339664bc4708c2f494~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=800&amp;h=764&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当密码错误时：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d86d6b88e5a942049fe74e07cdf705f1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=818&amp;h=748&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>登录成功时：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/66a65a32faca464fb889cfbd7b3da07d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=754&amp;h=670&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 ArticleController 添加一个查询文章的接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">':id'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findOne</span>(<span class="hljs-params">@Param(<span class="hljs-string">'id'</span>) id: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">articleService</span>.<span class="hljs-title function_">findOne</span>(+id);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>实现 articleService.findOne 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">InjectEntityManager</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="2">private <span class="hljs-attr">entityManager</span>: <span class="hljs-title class_">EntityManager</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findOne</span>(<span class="hljs-params">id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOneBy</span>(<span class="hljs-title class_">Article</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      id</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b1537ebd9b484709aa8933ccb5e02095~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1224&amp;h=896&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们在 ArticleController 加一个阅读的接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">':id/view'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">view</span>(<span class="hljs-params">@Param(<span class="hljs-string">'id'</span>) id: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">articleService</span>.<span class="hljs-title function_">view</span>(+id);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>然后在 ArticleService 里实现具体的逻辑：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">view</span>(<span class="hljs-params">id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> article = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">findOne</span>(id);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    article.<span class="hljs-property">viewCount</span> ++;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(article);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">return</span> article.<span class="hljs-property">viewCount</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/31879fdb321a4f5994a1fe2ba3dc09be~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1262&amp;h=768&amp;e=gif&amp;f=24&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>数据库里阅读量确实更新了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0909a6305c95493997cd6f34f2fbccba~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1214&amp;h=304&amp;e=png&amp;b=f6f6f6" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再次查询出来的就是新的阅读量：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9bb624bd733840e98795ceb1ceb09446~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=966&amp;h=806&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样是能实现功能，但有前面我们讲到的两个问题：</p>
+<ul>
+<li>
+<p>每次刷新阅读量都加一，其实还是同一个人看的这篇文章，这样统计出来的阅读量是不准的，我们想要的阅读量是有多少人看过这篇文章</p>
+</li>
+<li>
+<p>阅读是个很高频的操作，直接存到数据库，数据库压力会太大</p>
+</li>
+</ul>
+<p>所以，我们要引入 redis。</p>
+<p>安装 redis 的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> redis</span>
+</code></pre>
+<p>然后创建个 redis 模块：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g <span class="hljs-keyword">module</span> redis</span>
+<span class="code-block-extension-codeLine" data-line-num="2">nest g service redis</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eaf36dbe385544309bc35de23c2a45a7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=722&amp;h=196&amp;e=webp&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 RedisModule 创建连接 redis 的 provider，导出 RedisService，并把这个模块标记为 @Global 模块</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Global</span>, <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'redis'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">RedisService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./redis.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Global</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">providers</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-title class_">RedisService</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-attr">provide</span>: <span class="hljs-string">'REDIS_CLIENT'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-keyword">async</span> <span class="hljs-title function_">useFactory</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-keyword">const</span> client = <span class="hljs-title function_">createClient</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="13">            <span class="hljs-attr">socket</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">                <span class="hljs-attr">host</span>: <span class="hljs-string">'localhost'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">                <span class="hljs-attr">port</span>: <span class="hljs-number">6379</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">connect</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-keyword">return</span> client;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="22">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="23">  <span class="hljs-attr">exports</span>: [<span class="hljs-title class_">RedisService</span>]</span>
+<span class="code-block-extension-codeLine" data-line-num="24">})</span>
+<span class="code-block-extension-codeLine" data-line-num="25"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RedisModule</span> {}</span>
+</code></pre>
+<p>然后在 RedisService 里注入 REDIS_CLIENT，并封装一些方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">RedisClientType</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'redis'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RedisService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @<span class="hljs-title class_">Inject</span>(<span class="hljs-string">'REDIS_CLIENT'</span>) </span>
+<span class="code-block-extension-codeLine" data-line-num="8">    private <span class="hljs-attr">redisClient</span>: <span class="hljs-title class_">RedisClientType</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">get</span>(<span class="hljs-params">key: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">get</span>(key);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">set</span>(<span class="hljs-params">key: string, value: string | number, ttl?: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">set</span>(key, value);</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-keyword">if</span>(ttl) {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">            <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">expire</span>(key, ttl);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">hashGet</span>(<span class="hljs-params">key: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">hGetAll</span>(key);</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="25"></span>
+<span class="code-block-extension-codeLine" data-line-num="26">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">hashSet</span>(<span class="hljs-params">key: string, obj: Record&lt;string, any&gt;, ttl?: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="27">        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> name <span class="hljs-keyword">in</span> obj) {</span>
+<span class="code-block-extension-codeLine" data-line-num="28">            <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">hSet</span>(key, name, obj[name]);</span>
+<span class="code-block-extension-codeLine" data-line-num="29">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="30"></span>
+<span class="code-block-extension-codeLine" data-line-num="31">        <span class="hljs-keyword">if</span>(ttl) {</span>
+<span class="code-block-extension-codeLine" data-line-num="32">            <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">expire</span>(key, ttl);</span>
+<span class="code-block-extension-codeLine" data-line-num="33">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="34">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="35">}</span>
+</code></pre>
+<p>我们封装了 get、set、hashGet、hashSet 方法，分别是对 redis 的 string、hash 数据结构的读取。</p>
+<p>然后在 view 方法里引入 redis：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">RedisService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">private <span class="hljs-attr">redisService</span>: <span class="hljs-title class_">RedisService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">async</span> <span class="hljs-title function_">view</span>(<span class="hljs-params">id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">hashGet</span>(<span class="hljs-string">`article_<span class="hljs-subst">${id}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">if</span>(res.<span class="hljs-property">viewCount</span> === <span class="hljs-literal">undefined</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-keyword">const</span> article = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">findOne</span>(id);</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">      article.<span class="hljs-property">viewCount</span> ++;</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(article);</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">hashSet</span>(<span class="hljs-string">`article_<span class="hljs-subst">${id}</span>`</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-attr">viewCount</span>: article.<span class="hljs-property">viewCount</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">likeCount</span>: article.<span class="hljs-property">likeCount</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-attr">collectCount</span>: article.<span class="hljs-property">collectCount</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-keyword">return</span> article.<span class="hljs-property">viewCount</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">hashSet</span>(<span class="hljs-string">`article_<span class="hljs-subst">${id}</span>`</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        ...res,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">        <span class="hljs-attr">viewCount</span>: +res.<span class="hljs-property">viewCount</span> + <span class="hljs-number">1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="27">      <span class="hljs-keyword">return</span> +res.<span class="hljs-property">viewCount</span> + <span class="hljs-number">1</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="29">}</span>
+</code></pre>
+<p>先查询 redis，如果没查到就从数据库里查出来返回，并存到 redis 里。</p>
+<p>查到了就更新 redis 的 viewCount，直接返回 viewCount + 1</p>
+<p>测试下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9546b6f44a01456eb5c7a1dfd755d2d5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=772&amp;h=640&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>服务端打印了 3 条 sql：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d3626eedca554a6587282af70d1c8ac8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1596&amp;h=314&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>redis 里也有了这个 hash 的结构：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1e530ee6adad439ab08a6808947b4377~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2246&amp;h=838&amp;e=png&amp;b=1a1a1a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>为什么是 3 条呢？</p>
+<p>因为 findOne 发一条 select，save 会先发一条 select，再发一条 update。</p>
+<p>我们可以优化一下，把 save 换成 update：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/948b542076df453ebf7c84532609b353~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=984&amp;h=652&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">update</span>(<span class="hljs-title class_">Article</span>, {  id }, {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">viewCount</span>: article.<span class="hljs-property">viewCount</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">});</span>
+</code></pre>
+<p>然后把 redis 那条数据删掉：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9788237156734af0a24fa841d5c4b68c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1412&amp;h=824&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>重新跑一下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3737234048e341439251f70d71fa5c2c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1618&amp;h=216&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在就只有一条 select、一条 update 了。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/faf52919e478446bbfd90c65ca20931a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1944&amp;h=706&amp;e=png&amp;b=1c1c1c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后多刷新几次：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/026c9f9fe0ab42b696cf2717c38a9a5c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1270&amp;h=670&amp;e=gif&amp;f=19&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没发送 sql，还是之前那两条：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ed1d914a14f34ec193c2624d045e6ba8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1078&amp;h=228&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>因为这时候查的是 redis。</p>
+<p>redis 里数据更新了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/acb2f7c7a439424b81a837c26e163db9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1924&amp;h=738&amp;e=png&amp;b=1c1c1c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但是数据库里的 viewCount 还是 8</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f0e47c613c6f475881a4f8a93aa3afe2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1042&amp;h=240&amp;e=png&amp;b=fafafa" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样一重启 redis 数据就没了。</p>
+<p>所以还要同步到数据库。</p>
+<p>同步倒是不用很频繁，可以放在凌晨 4 点，访问量少的时候通过定时任务同步数据库。</p>
+<p>我们需要引入定时任务包 @nestjs/schedule</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> <span class="hljs-keyword">@nestjs</span>/schedule</span>
+</code></pre>
+<p>在 AppModule 引入下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/da9dd554de1b4601ad796006221742af~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=988&amp;h=602&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后创建一个 service：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g <span class="hljs-keyword">module</span> task</span>
+<span class="code-block-extension-codeLine" data-line-num="2">nest g service task</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/54cfef67d208453eab9317728cdcfec3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=732&amp;h=248&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>定义个方法，通过 @Cron 声明每 10s 执行一次：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Injectable</span>, <span class="hljs-title class_">Logger</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Cron</span>, <span class="hljs-title class_">CronExpression</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/schedule'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TasksService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">  @<span class="hljs-title class_">Cron</span>(<span class="hljs-title class_">CronExpression</span>.<span class="hljs-property">EVERY_10_SECONDS</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-title function_">handleCron</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'task execute'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<p>然后就可以看到控制台会每 10s 打印一次</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ebee4294bf994a3e8f057dfe909b3d14~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1084&amp;h=738&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们在 TaskModule 引入 ArticleModule：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">TaskService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./task.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ArticleModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'src/article/article.module'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">imports</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-title class_">ArticleModule</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-attr">providers</span>: [<span class="hljs-title class_">TaskService</span>]</span>
+<span class="code-block-extension-codeLine" data-line-num="10">})</span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TaskModule</span> {}</span>
+</code></pre>
+<p>并且在 ArticleModule 导出 ArticleService</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bdb0e59201a84700b742a3673502a5f0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=882&amp;h=488&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 TaskService 里注入 articleService</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Injectable</span>, <span class="hljs-title class_">Logger</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Cron</span>, <span class="hljs-title class_">CronExpression</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/schedule'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ArticleService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'src/article/article.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TaskService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  @<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">ArticleService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  private <span class="hljs-attr">articleService</span>: <span class="hljs-title class_">ArticleService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">  @<span class="hljs-title class_">Cron</span>(<span class="hljs-title class_">CronExpression</span>.<span class="hljs-property">EVERY_MINUTE</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-keyword">async</span> <span class="hljs-title function_">handleCron</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">articleService</span>.<span class="hljs-title function_">flushRedisToDB</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<p>每分钟执行一次，调用 articleService 的 flushRedisToDB 方法。</p>
+<p>然后我们实现这个方法：</p>
+<p>先在 RedisService 添加一个 keys 方法，用来查询 key：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0783f06b09b845ebbb813e6caf2e1cfb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=920&amp;h=512&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">keys</span>(<span class="hljs-params">pattern: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">keys</span>(pattern);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">}</span>
+</code></pre>
+<p>然后在 ArticleService 里实现同步数据库的逻辑：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">flushRedisToDB</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> keys = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">keys</span>(<span class="hljs-string">`article_*`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(keys);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>我们先打印下 keys。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cadcfe5c40ad490dbf0d2a0243eff546~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=358&amp;h=214&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在只有一个 key，我们再访问下另一篇文章</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3b861eb19d5c4488a4cd691ff25941ac~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=742&amp;h=576&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在就有 2 个 key 了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a2623fea2564d47a42118e61bea4e99~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=496&amp;h=174&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们把所有的 key 对应的值存入数据库：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">flushRedisToDB</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> keys = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">keys</span>(<span class="hljs-string">`article_*`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; keys.<span class="hljs-property">length</span>; i++) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-keyword">const</span> key = keys[i];</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">hashGet</span>(key);</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-keyword">const</span> [, id] = key.<span class="hljs-title function_">split</span>(<span class="hljs-string">'_'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">update</span>(<span class="hljs-title class_">Article</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">id</span>: +id</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      }, {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">viewCount</span>: +res.<span class="hljs-property">viewCount</span>,        </span>
+<span class="code-block-extension-codeLine" data-line-num="15">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+</code></pre>
+<p>查询出 key 对应的值，更新到数据库。</p>
+<p>测试下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d6ef2153ce824061a42daaa7f96303a8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1320&amp;h=864&amp;e=gif&amp;f=29&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>刷新几次 view 接口，redis 里阅读量增加了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/30c2b390069a404f922d08146b51dcb6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1916&amp;h=678&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但是数据库里没变：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c5e3bc2f86f24a409e6e16f1dca68490~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1108&amp;h=238&amp;e=png&amp;b=fafafa" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>过了一会，控制台打印了 2 条 update 语句：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b2ded51d38646a0b1a6fc54b16a0fb9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1176&amp;h=180&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>数据库里的数据就更新了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/64857cb5a78745028c80ea6d1da94b74~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1048&amp;h=236&amp;e=png&amp;b=f9f9f9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>接下来只要把定时任务的执行时间改为 4 点就好了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0bbbbb54c49e444fa3bcb3c7eeaba66d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=936&amp;h=598&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Cron</span>(<span class="hljs-title class_">CronExpression</span>.<span class="hljs-property">EVERY_DAY_AT_4AM</span>)</span>
+</code></pre>
+<p>这样，基于 redis 的阅读量缓存，以及定时任务更新数据库就完成了。</p>
+<p>还有剩下的一个问题：</p>
+<ul>
+<li>每次刷新阅读量都加一，其实还是同一个人看的这篇文章，这样统计出来的阅读量是不准的，我们想要的阅读量是有多少人看过这篇文章</li>
+</ul>
+<p>我们可以在用户访问文章的时候在 redis 存一个 10 分钟过期的标记，有这个标记的时候阅读量不增加。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5efa6c2989b8452090c4d747cfdd8c64~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1018&amp;h=1238&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">set</span>(<span class="hljs-string">`user_<span class="hljs-subst">${userId}</span>_article_<span class="hljs-subst">${id}</span>`</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>);</span>
+</code></pre>
+<p>为了测试方便，我们先设置 3s 过期。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> flag = <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">`user_<span class="hljs-subst">${userId}</span>_article_<span class="hljs-subst">${id}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">if</span>(flag) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">return</span> res.<span class="hljs-property">viewCount</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>这里需要传入 userId。</p>
+<p>我们在 ArticleController 的 view 方法里传入下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">':id/view'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">view</span>(<span class="hljs-params">@Param(<span class="hljs-string">'id'</span>) id: string, @Session() session, @Req() req</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">articleService</span>.<span class="hljs-title function_">view</span>(+id, session?.<span class="hljs-property">user</span>?.<span class="hljs-property">id</span> || req.<span class="hljs-property">ip</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>试试看：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/44075eeee18742dd8071c58547e67370~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1266&amp;h=684&amp;e=gif&amp;f=38&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，现在就不是每次刷新都增加阅读量了，而是 3s 之后再刷新才增加。</p>
+<p>在 redis 里可以看到这个 key：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5ee2fa1fe43b41a186ae89520ad89ab3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1246&amp;h=600&amp;e=png&amp;b=1c1c1c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>只不过现在没登录，用的是 ip，而本地访问的时候获取的 ip 就是 ::1 这样的，线上就能拿到具体的 ip 了。</p>
+<p>然后我们登录下再访问：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/63184b6d205448918f25939aeefb1459~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=696&amp;h=586&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/94fba69d15f5465c8a72e66e074222c8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=750&amp;h=584&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时用的就是用户 id 了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dca4a9e9f38343d9a38f3eece0a87d49~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1214&amp;h=626&amp;e=png&amp;b=1b1b1b" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样就实现了真实的阅读量计数。</p>
+<p>案例代码上传了<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Farticle-views" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/article-views" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>我们通过 redis + 定时任务实现了阅读量计数的功能。</p>
+<p>因为阅读是个高频操作，所以我们查出数据后存在 redis里，之后一直访问 redis 的数据，然后通过定时任务在凌晨 4 点把最新数据写入数据库。</p>
+<p>并且为了统计真实的用户阅读量，我们在 redis 存储了用户看了哪篇文章的标识，10 分钟后过期。</p>
+<p>这就是我们常见的阅读量功能的实现原理。</p></div>

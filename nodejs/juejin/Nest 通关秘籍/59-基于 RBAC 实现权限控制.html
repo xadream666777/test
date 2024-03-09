@@ -1,0 +1,666 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>上节实现了基于 ACL 的权限控制，这节来实现 RBAC 权限控制。</p>
+<p>RBAC 是 Role Based Access Control，基于角色的权限控制。</p>
+<p>上节我们学的 ACL 是这样的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/782aa95188114311bf09706428c92270~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>直接给用户分配权限。</p>
+<p>而 RBAC 是这样的：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6df45dc5d1ef4ba881a9974bf635f828~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>给角色分配权限，然后给用户分配角色。</p>
+<p>这样有什么好处呢？</p>
+<p>比如说管理员有 aaa、bbb、ccc 3 个权限，而张三、李四、王五都是管理员。</p>
+<p>有一天想给管理员添加一个 ddd 的权限。</p>
+<p>如果给是 ACL 的权限控制，需要给张三、李四、王五分别分配这个权限。</p>
+<p>而 RBAC 呢？</p>
+<p>只需要给张三、李四、王五分配管理员的角色，然后只更改管理员角色对应的权限就好了。</p>
+<p>所以说，当用户很多的时候，给不同的用户分配不同的权限会很麻烦，这时候我们一般会先把不同的权限封装到角色里，再把角色授予用户。</p>
+<p>下面我们就用 Nest 实现一下 RBAC 权限控制吧。</p>
+<p>创建 rbac_test 的 database：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">CREATE</span> DATABASE rbac_test <span class="hljs-keyword">DEFAULT</span> <span class="hljs-type">CHARACTER</span> <span class="hljs-keyword">SET</span> utf8mb4;</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b8b509f1367145c791e9a285824c7268~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到创建出的 database：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5d7793d4faf849129943e2d0138fe6e9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后创建 nest 项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> rbac-test -p npm</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/35066d285daa4fd18ee672d6636db0ce~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>安装 typeorm 的依赖：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> <span class="hljs-keyword">@nestjs</span>/typeorm typeorm mysql2</span>
+</code></pre>
+<p>在 AppModule 引入 TypeOrmModule：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">TypeOrmModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/typeorm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppController</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.controller'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">imports</span>: [ </span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-title class_">TypeOrmModule</span>.<span class="hljs-title function_">forRoot</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">type</span>: <span class="hljs-string">"mysql"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-attr">host</span>: <span class="hljs-string">"localhost"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">port</span>: <span class="hljs-number">3306</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-attr">username</span>: <span class="hljs-string">"root"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-attr">password</span>: <span class="hljs-string">"guang"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-attr">database</span>: <span class="hljs-string">"rbac_test"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-attr">synchronize</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-attr">logging</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-attr">entities</span>: [],</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-attr">poolSize</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-attr">connectorPackage</span>: <span class="hljs-string">'mysql2'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-attr">extra</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">          <span class="hljs-attr">authPlugin</span>: <span class="hljs-string">'sha256_password'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    }),</span>
+<span class="code-block-extension-codeLine" data-line-num="24">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="25">  <span class="hljs-attr">controllers</span>: [<span class="hljs-title class_">AppController</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="26">  <span class="hljs-attr">providers</span>: [<span class="hljs-title class_">AppService</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="27">})</span>
+<span class="code-block-extension-codeLine" data-line-num="28"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppModule</span> {}</span>
+</code></pre>
+<p>然后添加创建 user 模块：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g resource <span class="hljs-keyword">user</span></span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0d6d66d7feca42a79ff2eabe6fa08e83~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>添加 User、Role、Permission 的 Entity：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1bbade0f25c94049b3a5ff0362ecaa82~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用户、角色、权限都是多对多的关系。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">CreateDateColumn</span>, <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span>, <span class="hljs-title class_">UpdateDateColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">User</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">length</span>: <span class="hljs-number">50</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">username</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">length</span>: <span class="hljs-number">50</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">password</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    @<span class="hljs-title class_">CreateDateColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-attr">createTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    @<span class="hljs-title class_">UpdateDateColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-attr">updateTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    </span>
+<span class="code-block-extension-codeLine" data-line-num="24">    @<span class="hljs-title class_">ManyToMany</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title class_">Role</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    @<span class="hljs-title class_">JoinTable</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="26">        <span class="hljs-attr">name</span>: <span class="hljs-string">'user_role_relation'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-attr">roles</span>: <span class="hljs-title class_">Role</span>[] </span>
+<span class="code-block-extension-codeLine" data-line-num="29">}</span>
+</code></pre>
+<p>User 有 id、username、password、createTime、updateTime 5 个字段。</p>
+<p>通过 @ManyToMany 映射和 Role 的多对多关系，并指定中间表的名字。</p>
+<p>然后创建 Role 的 entity：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">CreateDateColumn</span>, <span class="hljs-title class_">Entity</span>,<span class="hljs-title class_">PrimaryGeneratedColumn</span>, <span class="hljs-title class_">UpdateDateColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Role</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">length</span>: <span class="hljs-number">20</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">name</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    @<span class="hljs-title class_">CreateDateColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-attr">createTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    @<span class="hljs-title class_">UpdateDateColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-attr">updateTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    </span>
+<span class="code-block-extension-codeLine" data-line-num="19">    @<span class="hljs-title class_">ManyToMany</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title class_">Permission</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    @<span class="hljs-title class_">JoinTable</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        <span class="hljs-attr">name</span>: <span class="hljs-string">'role_permission_relation'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-attr">permissions</span>: <span class="hljs-title class_">Permission</span>[] </span>
+<span class="code-block-extension-codeLine" data-line-num="24">}</span>
+<span class="code-block-extension-codeLine" data-line-num="25"></span>
+</code></pre>
+<p>Role 有 id、name、createTime、updateTime 4 个字段。</p>
+<p>通过 @ManyToMany 映射和 Permission 的多对多关系，并指定中间表的名字。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">CreateDateColumn</span>, <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span>, <span class="hljs-title class_">UpdateDateColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Permission</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">length</span>: <span class="hljs-number">50</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">name</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    </span>
+<span class="code-block-extension-codeLine" data-line-num="13">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">length</span>: <span class="hljs-number">100</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-attr">nullable</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-attr">desc</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    @<span class="hljs-title class_">CreateDateColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-attr">createTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    @<span class="hljs-title class_">UpdateDateColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-attr">updateTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="24">}</span>
+</code></pre>
+<p>Permission 有 id、name、createTime、updateTime 4 个字段。</p>
+<p>然后在 TypeOrm.forRoot 的 entities 数组加入这三个 entity：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/473156a1bb154c9ebb5a6aab0dbd9d38~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把 Nest 服务跑起来试试：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f73b90864b9546c596120da55e82e40d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到生成了 user、role、permission 这 3 个表，还有 user_roole_relation、role_permission_relation 这 2 个中间表。</p>
+<p>两个中间表的外键约束也是对的。</p>
+<p>在 mysql workbench 里看下这 5 个表：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6c16f960e04b444b85fd116c88b0c0c2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2067c6648d65480dbd14684e93440b2e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/58c805339829499a916c265b5e5fc0c4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd68bf843a1b408a93668bde85387f35~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f2cf2c5285154c6d8885584463c86a47~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>还有外键：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/40146db63eb54a5c8a5ede096243218e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1a85552c665548678304f8fb2cdc2845~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>都没啥问题。</p>
+<p>然后我们来添加一些数据，同样是用代码的方式。</p>
+<p>修改下 UserService，添加这部分代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">InjectEntityManager</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-attr">entityManager</span>: <span class="hljs-title class_">EntityManager</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">async</span> <span class="hljs-title function_">initData</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> user1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    user1.<span class="hljs-property">username</span> = <span class="hljs-string">'张三'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    user1.<span class="hljs-property">password</span> = <span class="hljs-string">'111111'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">const</span> user2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    user2.<span class="hljs-property">username</span> = <span class="hljs-string">'李四'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    user2.<span class="hljs-property">password</span> = <span class="hljs-string">'222222'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">const</span> user3 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    user3.<span class="hljs-property">username</span> = <span class="hljs-string">'王五'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    user3.<span class="hljs-property">password</span> = <span class="hljs-string">'333333'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-keyword">const</span> role1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Role</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    role1.<span class="hljs-property">name</span> = <span class="hljs-string">'管理员'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-keyword">const</span> role2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Role</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    role2.<span class="hljs-property">name</span> = <span class="hljs-string">'普通用户'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-keyword">const</span> permission1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Permission</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    permission1.<span class="hljs-property">name</span> = <span class="hljs-string">'新增 aaa'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="25"></span>
+<span class="code-block-extension-codeLine" data-line-num="26">    <span class="hljs-keyword">const</span> permission2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Permission</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="27">    permission2.<span class="hljs-property">name</span> = <span class="hljs-string">'修改 aaa'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-keyword">const</span> permission3 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Permission</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    permission3.<span class="hljs-property">name</span> = <span class="hljs-string">'删除 aaa'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="31"></span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-keyword">const</span> permission4 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Permission</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="33">    permission4.<span class="hljs-property">name</span> = <span class="hljs-string">'查询 aaa'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="34"></span>
+<span class="code-block-extension-codeLine" data-line-num="35">    <span class="hljs-keyword">const</span> permission5 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Permission</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="36">    permission5.<span class="hljs-property">name</span> = <span class="hljs-string">'新增 bbb'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="37"></span>
+<span class="code-block-extension-codeLine" data-line-num="38">    <span class="hljs-keyword">const</span> permission6 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Permission</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="39">    permission6.<span class="hljs-property">name</span> = <span class="hljs-string">'修改 bbb'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="40"></span>
+<span class="code-block-extension-codeLine" data-line-num="41">    <span class="hljs-keyword">const</span> permission7 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Permission</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="42">    permission7.<span class="hljs-property">name</span> = <span class="hljs-string">'删除 bbb'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="43"></span>
+<span class="code-block-extension-codeLine" data-line-num="44">    <span class="hljs-keyword">const</span> permission8 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Permission</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="45">    permission8.<span class="hljs-property">name</span> = <span class="hljs-string">'查询 bbb'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="46"></span>
+<span class="code-block-extension-codeLine" data-line-num="47"></span>
+<span class="code-block-extension-codeLine" data-line-num="48">    role1.<span class="hljs-property">permissions</span> = [</span>
+<span class="code-block-extension-codeLine" data-line-num="49">      permission1,</span>
+<span class="code-block-extension-codeLine" data-line-num="50">      permission2,</span>
+<span class="code-block-extension-codeLine" data-line-num="51">      permission3,</span>
+<span class="code-block-extension-codeLine" data-line-num="52">      permission4,</span>
+<span class="code-block-extension-codeLine" data-line-num="53">      permission5,</span>
+<span class="code-block-extension-codeLine" data-line-num="54">      permission6,</span>
+<span class="code-block-extension-codeLine" data-line-num="55">      permission7,</span>
+<span class="code-block-extension-codeLine" data-line-num="56">      permission8</span>
+<span class="code-block-extension-codeLine" data-line-num="57">    ]</span>
+<span class="code-block-extension-codeLine" data-line-num="58"></span>
+<span class="code-block-extension-codeLine" data-line-num="59">    role2.<span class="hljs-property">permissions</span> = [</span>
+<span class="code-block-extension-codeLine" data-line-num="60">      permission1,</span>
+<span class="code-block-extension-codeLine" data-line-num="61">      permission2,</span>
+<span class="code-block-extension-codeLine" data-line-num="62">      permission3,</span>
+<span class="code-block-extension-codeLine" data-line-num="63">      permission4</span>
+<span class="code-block-extension-codeLine" data-line-num="64">    ]</span>
+<span class="code-block-extension-codeLine" data-line-num="65"></span>
+<span class="code-block-extension-codeLine" data-line-num="66">    user1.<span class="hljs-property">roles</span> = [role1];</span>
+<span class="code-block-extension-codeLine" data-line-num="67"></span>
+<span class="code-block-extension-codeLine" data-line-num="68">    user2.<span class="hljs-property">roles</span> = [role2];</span>
+<span class="code-block-extension-codeLine" data-line-num="69"></span>
+<span class="code-block-extension-codeLine" data-line-num="70">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">Permission</span>, [</span>
+<span class="code-block-extension-codeLine" data-line-num="71">      permission1, </span>
+<span class="code-block-extension-codeLine" data-line-num="72">      permission2,</span>
+<span class="code-block-extension-codeLine" data-line-num="73">      permission3,</span>
+<span class="code-block-extension-codeLine" data-line-num="74">      permission4,</span>
+<span class="code-block-extension-codeLine" data-line-num="75">      permission5,</span>
+<span class="code-block-extension-codeLine" data-line-num="76">      permission6,</span>
+<span class="code-block-extension-codeLine" data-line-num="77">      permission7,</span>
+<span class="code-block-extension-codeLine" data-line-num="78">      permission8</span>
+<span class="code-block-extension-codeLine" data-line-num="79">    ])</span>
+<span class="code-block-extension-codeLine" data-line-num="80"></span>
+<span class="code-block-extension-codeLine" data-line-num="81">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">Role</span>, [</span>
+<span class="code-block-extension-codeLine" data-line-num="82">      role1,</span>
+<span class="code-block-extension-codeLine" data-line-num="83">      role2</span>
+<span class="code-block-extension-codeLine" data-line-num="84">    ])</span>
+<span class="code-block-extension-codeLine" data-line-num="85"></span>
+<span class="code-block-extension-codeLine" data-line-num="86">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">User</span>, [</span>
+<span class="code-block-extension-codeLine" data-line-num="87">      user1,</span>
+<span class="code-block-extension-codeLine" data-line-num="88">      user2</span>
+<span class="code-block-extension-codeLine" data-line-num="89">    ])  </span>
+<span class="code-block-extension-codeLine" data-line-num="90">}</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ca846a099f4243b2a44faff1632ff576~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 UserController 里添加一个 handler：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'init'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">initData</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>.<span class="hljs-title function_">initData</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">return</span> <span class="hljs-string">'done'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>然后把 nest 服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p>浏览器访问下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/644029ffacfc4de3acf170d6df5e53df~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>服务端控制台打印了一堆 sql：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/356705c44c78489388ad6d3cfb2eab03~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到分别插入了 user、role、permission 还有 2 个中间表的数据。</p>
+<p>在 mysql workbench 里看下：</p>
+<p>permission 表：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/841bdfcd3c914d54850d4dd9c1efd66e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>role 表：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6af139f124d742929ea14c06de7eb797~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>user 表：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1745c9474b4a43f2ad05da7461ddb929~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>role_permission_relation 中间表：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc600565951247988191a9ae64b82bbb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>user_role_relation 中间表：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8beb4f2e5ea74ee6a4dec47da5502446~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>都没啥问题。</p>
+<p>然后我们实现下登录，通过 jwt 的方式。</p>
+<p>在 UserController 里增加一个 login 的 handler：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Post</span>(<span class="hljs-string">'login'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-title function_">login</span>(<span class="hljs-params">@Body() loginUser: UserLoginDto</span>){</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(loginUser)</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>添加 user/dto/user-login.dto.ts：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserLoginDto</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">username</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">password</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>安装 ValidationPipe 用到的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install --save <span class="hljs-keyword">class</span>-validator <span class="hljs-keyword">class</span>-transformer</span>
+</code></pre>
+<p>然后给 dto 对象添加 class-validator 的装饰器：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">IsNotEmpty</span>, <span class="hljs-title class_">Length</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"class-validator"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserLoginDto</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @<span class="hljs-title class_">IsNotEmpty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @<span class="hljs-title class_">Length</span>(<span class="hljs-number">1</span>, <span class="hljs-number">50</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">username</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @<span class="hljs-title class_">IsNotEmpty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    @<span class="hljs-title class_">Length</span>(<span class="hljs-number">1</span>, <span class="hljs-number">50</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">password</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<p>全局启用 ValidationPipe：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4ed775c910a84e5294fc51d393965998~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 postman 里测试下：</p>
+<p>ValidationPipe 不通过的时候，会返回错误信息：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/df202c93f6d643f9a1a009d38b6de2a7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>ValidationPipe 通过之后，就会执行 handler 里的方法：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c823ec87861a4eeea897f66dbe2e3f74~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ceff4fea046e4a66b5942589293d836b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>接下来实现查询数据库的逻辑，在 UserService 添加 login 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">login</span>(<span class="hljs-params">loginUserDto: UserLoginDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOne</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-attr">username</span>: loginUserDto.<span class="hljs-property">username</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">relations</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">roles</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">if</span>(!user) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HttpException</span>(<span class="hljs-string">'用户不存在'</span>, <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">ACCEPTED</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">if</span>(user.<span class="hljs-property">password</span> !== loginUserDto.<span class="hljs-property">password</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HttpException</span>(<span class="hljs-string">'密码错误'</span>, <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">ACCEPTED</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-keyword">return</span> user;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">}</span>
+</code></pre>
+<p>这里把 user 的 roles 也关联查询出来。</p>
+<p>我们在 UserController 的 login 方法里调用下试试：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Post</span>(<span class="hljs-string">'login'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">login</span>(<span class="hljs-params">@Body() loginUser: UserLoginDto</span>){</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>.<span class="hljs-title function_">login</span>(loginUser);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(user);</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+</code></pre>
+<p>可以看到，user 信息和 roles 信息都查询出来了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b917fdfd1f2a4c32bffb984bbb52916a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ef10e46be0ef472eb23b290a0d840662~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们要把 user 信息放到 jwt 里，所以安装下相关的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> <span class="hljs-keyword">@nestjs</span>/jwt</span>
+</code></pre>
+<p>然后在 AppModule 里引入 JwtModule：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d468382f52544f44bfebcfddcc713783~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>设置为全局模块，这样不用每个模块都引入。</p>
+<p>然后在 UserController 里注入 JwtModule 里的 JwtService：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5c432c2bec944ae5996e74f5f903daa6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把 user 信息放到 jwt 里，然后返回：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Post</span>(<span class="hljs-string">'login'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">login</span>(<span class="hljs-params">@Body() loginUser: UserLoginDto</span>){</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>.<span class="hljs-title function_">login</span>(loginUser);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-keyword">const</span> token = <span class="hljs-variable language_">this</span>.<span class="hljs-property">jwtService</span>.<span class="hljs-title function_">sign</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">user</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-attr">username</span>: user.<span class="hljs-property">username</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-attr">roles</span>: user.<span class="hljs-property">roles</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      token</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba388f4965e6436497bff42234713aad~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>服务端在登录后返回了 jwt 的 token。</p>
+<p>然后在请求带上这个 token 才能访问一些资源。</p>
+<p>我们添加 aaa、bbb 两个模块，分别生成 CRUD 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g resource aaa </span>
+<span class="code-block-extension-codeLine" data-line-num="2">nest g resource bbb </span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7a06b3ef207e4eb3b91ac07ad48b9819~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5c91016bc4be4ee0b6a4445d0d357ab5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在这些接口可以直接访问：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8a9724b76fae4a16965bf58f27295d38~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0e96a5281a094eeeaaba535bc2ead0cc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而实际上这些接口是要控制权限的。</p>
+<p>管理员的角色有 aaa、bbb 的增删改查权限，而普通用户只有 bbb 的增删改查权限。</p>
+<p>所以要对接口的调用做限制。</p>
+<p>先添加一个 LoginGuard，限制只有登录状态才可以访问这些接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g guard login <span class="hljs-attr">--no-spec</span> <span class="hljs-attr">--flat</span></span>
+</code></pre>
+<p>然后增加登录状态的检查：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CanActivate</span>, <span class="hljs-title class_">ExecutionContext</span>, <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Injectable</span>, <span class="hljs-title class_">UnauthorizedException</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">JwtService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/jwt'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Request</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Observable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LoginGuard</span> implements <span class="hljs-title class_">CanActivate</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  </span>
+<span class="code-block-extension-codeLine" data-line-num="9">  @<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">JwtService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  private <span class="hljs-attr">jwtService</span>: <span class="hljs-title class_">JwtService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  </span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-title function_">canActivate</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">context</span>: <span class="hljs-title class_">ExecutionContext</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  ): boolean | <span class="hljs-title class_">Promise</span>&lt;boolean&gt; | <span class="hljs-title class_">Observable</span>&lt;boolean&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">const</span> <span class="hljs-attr">request</span>: <span class="hljs-title class_">Request</span> = context.<span class="hljs-title function_">switchToHttp</span>().<span class="hljs-title function_">getRequest</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    </span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-keyword">const</span> authorization = request.<span class="hljs-property">headers</span>.<span class="hljs-property">authorization</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-keyword">if</span>(!authorization) {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnauthorizedException</span>(<span class="hljs-string">'用户未登录'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-keyword">try</span>{</span>
+<span class="code-block-extension-codeLine" data-line-num="24">      <span class="hljs-keyword">const</span> token = authorization.<span class="hljs-title function_">split</span>(<span class="hljs-string">' '</span>)[<span class="hljs-number">1</span>];</span>
+<span class="code-block-extension-codeLine" data-line-num="25">      <span class="hljs-keyword">const</span> data = <span class="hljs-variable language_">this</span>.<span class="hljs-property">jwtService</span>.<span class="hljs-title function_">verify</span>(token);</span>
+<span class="code-block-extension-codeLine" data-line-num="26"></span>
+<span class="code-block-extension-codeLine" data-line-num="27">      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    } <span class="hljs-keyword">catch</span>(e) {</span>
+<span class="code-block-extension-codeLine" data-line-num="29">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnauthorizedException</span>(<span class="hljs-string">'token 失效，请重新登录'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="31">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="32">}</span>
+</code></pre>
+<p>这里不用查数据库了，因为 jwt 是用密钥加密的，只要 jwt 能 verify 通过就行了。</p>
+<p>然后把它放到 request 上：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3dd353f6eaf14ff795d2312f900b593b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但这时候会报错 user 不在 Request 的类型上。</p>
+<p>扩展下就好了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/04b5bf978da74390983d44189cf01ed7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">declare</span> <span class="hljs-variable language_">module</span> <span class="hljs-string">'express'</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Request</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">user</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">      <span class="hljs-attr">username</span>: <span class="hljs-built_in">string</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-attr">roles</span>: <span class="hljs-title class_">Role</span>[]</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+</code></pre>
+<p>因为 typescript 里同名 module 和 interface 会自动合并，可以这样扩展类型。</p>
+<p>上节我们是一个个加的 Guard：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/486fb3ea083b440dbbfa5985389787c1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样太麻烦了，这次我们全局加：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b8281ab12a654bd9ae05d1f86020a824~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>前面讲过，通过 app.userGlobalXxx 的方式不能注入 provider，可以通过在 AppModule 添加 token 为 APP_XXX 的 provider 的方式来声明全局 Guard、Pipe、Intercepter 等：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/efd69b23eecf4b1f96f009795b6d9117~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再访问下 aaa、bbb 接口：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eb743fcf74184c539050f24133f1d261~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/965d59386b1a477782cfc731b5d21aa2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但这时候你访问 /user/login 接口也被拦截了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/efc12f8ee98542249fe52c3272714c4b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们需要区分哪些接口需要登录，哪些接口不需要。</p>
+<p>这时候就可以用 SetMetadata 了。</p>
+<p>我们添加一个 custom-decorator.ts 来放自定义的装饰器：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">SetMetadata</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"@nestjs/common"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span>  <span class="hljs-title function_">RequireLogin</span> = (<span class="hljs-params"></span>) =&gt; <span class="hljs-title class_">SetMetadata</span>(<span class="hljs-string">'require-login'</span>, <span class="hljs-literal">true</span>);</span>
+</code></pre>
+<p>声明一个 RequireLogin 的装饰器。</p>
+<p>在 aaa、bbb 的 controller 上用一下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a5656697a5e499f8648e3bfb0225a31~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b91023de50de42a288b8adaa3bd86a2c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们支持在 controller 上添加声明，不需要每个 handler 都添加，这样方便很多。</p>
+<p>然后需要改造下 LoginGuard，取出目标 handler 的 metadata 来判断是否需要登录：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4ebc51e075c14e7d973bafc39c5abb42~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> requireLogin = <span class="hljs-variable language_">this</span>.<span class="hljs-property">reflector</span>.<span class="hljs-title function_">getAllAndOverride</span>(<span class="hljs-string">'require-login'</span>, [</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  context.<span class="hljs-title function_">getClass</span>(),</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  context.<span class="hljs-title function_">getHandler</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4">]);</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(requireLogin)</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">if</span>(!requireLogin) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+</code></pre>
+<p>如果目标 handler 或者 controller 不包含 require-login 的 metadata，那就放行，否则才检查 jwt。</p>
+<p>我们再试下：</p>
+<p>现在登录接口能正常访问了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6a38a45faddf454f926c337f9fd9e127~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>因为没有 require-login 的 metadata：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8df2766d29984b4b941ef887ca84bc95~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而 aaa、bbb 是需要登录的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/42222c343ce144b2a9e2681a049c1398~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f5228c44bafd4764a93e771bb3a7894c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>因为它们包含 require-login 的metadata：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a6c35ef9d5184fab91a98c00774ea4c5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们登录下，带上 token 访问试试：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5330bbbfce0f4874aa8cd99faca56148~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b9d4581b5824437aac91a32f3e929fc6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>带上 token 就能正常访问了。</p>
+<p>然后我们再进一步控制权限。</p>
+<p>但是这样还不够，我们还需要再做登录用户的权限控制，所以再写个 PermissionGuard:</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g guard permission <span class="hljs-attr">--no-spec</span> <span class="hljs-attr">--flat</span></span>
+</code></pre>
+<p>同样声明成全局 Guard：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ab462c4d0b644b7bbce3832b7a30808c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>PermissionGuard 里需要用到 UserService，所以在 UserModule 里导出下 UserService：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5c8158f0210946bebe6a12f2e289f121~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>注入 UserService：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CanActivate</span>, <span class="hljs-title class_">ExecutionContext</span>, <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Request</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Observable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">UserService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./user.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PermissionGuard</span> implements <span class="hljs-title class_">CanActivate</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  @<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">UserService</span>) </span>
+<span class="code-block-extension-codeLine" data-line-num="10">  private <span class="hljs-attr">userService</span>: <span class="hljs-title class_">UserService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-title function_">canActivate</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">context</span>: <span class="hljs-title class_">ExecutionContext</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  ): boolean | <span class="hljs-title class_">Promise</span>&lt;boolean&gt; | <span class="hljs-title class_">Observable</span>&lt;boolean&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="20">}</span>
+</code></pre>
+<p>然后在 userService 里实现查询 role 的信息的 service：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findRolesByIds</span>(<span class="hljs-params">roleIds: <span class="hljs-built_in">number</span>[]</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">find</span>(<span class="hljs-title class_">Role</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-attr">id</span>: <span class="hljs-title class_">In</span>(roleIds)</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">relations</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">permissions</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+</code></pre>
+<p>关联查询出 permissions。</p>
+<p>然后在 PermissionGuard 里调用下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CanActivate</span>, <span class="hljs-title class_">ExecutionContext</span>, <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Request</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">UserService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./user/user.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-meta">@Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PermissionGuard</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">CanActivate</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-meta">@Inject</span>(<span class="hljs-title class_">UserService</span>) </span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-keyword">private</span> <span class="hljs-attr">userService</span>: <span class="hljs-title class_">UserService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-keyword">async</span> <span class="hljs-title function_">canActivate</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">context</span>: <span class="hljs-title class_">ExecutionContext</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  ): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-built_in">boolean</span>&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">const</span> <span class="hljs-attr">request</span>: <span class="hljs-title class_">Request</span> = context.<span class="hljs-title function_">switchToHttp</span>().<span class="hljs-title function_">getRequest</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-keyword">if</span>(!request.<span class="hljs-property">user</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-keyword">const</span> roles = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>.<span class="hljs-title function_">findRolesByIds</span>(request.<span class="hljs-property">user</span>.<span class="hljs-property">roles</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">id</span>))</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-keyword">const</span> <span class="hljs-attr">permissions</span>: <span class="hljs-title class_">Permission</span>[]  = roles.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">total, current</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">      total.<span class="hljs-title function_">push</span>(...current.<span class="hljs-property">permissions</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="24">      <span class="hljs-keyword">return</span> total;</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    }, []);</span>
+<span class="code-block-extension-codeLine" data-line-num="26"></span>
+<span class="code-block-extension-codeLine" data-line-num="27">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(permissions);</span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="30">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="31">}</span>
+</code></pre>
+<p>因为这个 PermissionGuard 在 LoginGuard 之后调用（在 AppModule 里声明在 LoginGuard 之后），所以走到这里 request 里就有 user 对象了。</p>
+<p>但也不一定，因为 LoginGuard 没有登录也可能放行，所以要判断下 request.user 如果没有，这里也放行。</p>
+<p>然后取出 user 的 roles 的 id，查出 roles 的 permission 信息，然后合并到一个数组里。</p>
+<p>我们试试看：</p>
+<p>带上 token 访问：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/edce48228f664ebc866b1a5ab8f9d017~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到打印了这个用户拥有的角色的所有 permission 信息：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e72abec4874844e2a21e47552adaaaa9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再增加个自定义 decorator：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3202ef8fd95f40208dcf173ffea6b1fc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span>  <span class="hljs-title function_">RequirePermission</span> = (<span class="hljs-params">...permissions: <span class="hljs-built_in">string</span>[]</span>) =&gt; <span class="hljs-title class_">SetMetadata</span>(<span class="hljs-string">'require-permission'</span>, permissions);</span>
+</code></pre>
+<p>然后我们在 BbbController 上声明需要的权限。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/53bbafe2e8044568afe0ca91c958f251~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 PermissionGuard 里取出来判断：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5c2fe257fec34293881f66744a458814~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> requiredPermissions = <span class="hljs-variable language_">this</span>.<span class="hljs-property">reflector</span>.<span class="hljs-property">getAllAndOverride</span>&lt;string[]&gt;(<span class="hljs-string">'require-permission'</span>, [</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  context.<span class="hljs-title function_">getClass</span>(),</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  context.<span class="hljs-title function_">getHandler</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4">])</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(requiredPermissions);</span>
+</code></pre>
+<p>先打印下试试：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c8fb77e7e1b44a9391eccf4a77c303fc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>带上 token 访问：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a162f4f285464092bbcdcdf425445b0a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到打印了用户有的 permission 还有这个接口需要的 permission。</p>
+<p>那这两个一对比，不就知道有没有权限访问这个接口了么？</p>
+<p>添加这样的对比逻辑：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/399a549210db4c95bf785bda6b443115~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; requiredPermissions.<span class="hljs-property">length</span>; i++) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-keyword">const</span> curPermission = requiredPermissions[i];</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-keyword">const</span> found = permissions.<span class="hljs-title function_">find</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">name</span> === curPermission);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-keyword">if</span>(!found) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnauthorizedException</span>(<span class="hljs-string">'您没有访问该接口的权限'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+</code></pre>
+<p>测试下：</p>
+<p>当前用户是李四，是没有访问 bbb 的权限的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/57ed01373705498fb6e8d951997dc6f3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们再登录下张三账号：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a3408c41c38d4dd4bfb30b1bf46b973f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用这个 token 去访问下 bbb 接口，就能正常访问了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eaf67dc7a42b4e6fab09fb1018226aaf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>他是有这个权限的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f08e5980ebe74e95a27e19094c682b4d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，我们就实现了基于 RBAC 的权限控制。</p>
+<p>有的同学说，这和 ACL 的差别也不大呀？</p>
+<p>检查权限的部分确实差别不大，都是通过声明的需要的权限和用户有的权限作对比。</p>
+<p>但是分配权限的时候，是以角色为单位的，这样如果这个角色的权限变了，那分配这个角色的用户权限也就变了。</p>
+<p>这就是 RBAC 相比 ACL 更方便的地方。</p>
+<p>此外，这里查询角色需要的权限没必要每次都查数据库，可以通过 redis 来加一层缓存，减少数据库访问，提高性能。（具体写法参考上节）</p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Frbac-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/rbac-test" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们学了 RBAC（role based access control） 权限控制，它相比于 ACL （access control list）的方式，多了一层角色，给用户分配角色而不是直接分配权限。</p>
+<p>当然，检查权限的时候还是要把角色的权限合并之后再检查是否有需要的权限的。</p>
+<p>我们通过 jwt 实现了登录，把用户和角色信息放到 token 里返回。</p>
+<p>添加了 LoginGuard 来做登录状态的检查。</p>
+<p>然后添加了 PermissionGuard 来做权限的检查。</p>
+<p>LoginGuard 里从 jwt 取出 user 信息放入 request，PermissionGuard 从数据库取出角色对应的权限，检查目标 handler 和 controller 上声明的所需权限是否满足。</p>
+<p>LoginGuard 和 PermissionGuard 需要注入一些 provider，所以通过在 AppModule 里声明 APP_GUARD 为 token 的 provider 来注册的全局 Gard。</p>
+<p>然后在 controller 和 handler 上添加 metadata 来声明是否需要登录，需要什么权限，之后在 Guard 里取出来做检查。</p>
+<p>这种方案查询数据库也比较频繁，也应该加一层 redis 来做缓存。</p>
+<p>这就是基于 RBAC 的权限控制，是用的最多的一种权限控制方案。</p>
+<p>当然，这是 RBAC0 的方案，更复杂一点的权限模型，可能会用 RBAC1、RBAC2 等，那个就是多角色继承、用户组、角色之间互斥之类的概念，会了 RBAC0，那些也就是做一些变形的事情。</p>
+<p>绝大多数系统，用 RBAC0 就足够了。</p></div>

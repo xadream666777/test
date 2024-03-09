@@ -1,0 +1,110 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>Nest 项目会有很多模块，模块之间相互依赖，模块内有 controller、service 等。</p>
+<p>当项目复杂之后，模块之间的关系错综复杂。</p>
+<p>这时候我们可以用 compodoc 生成一份文档，把依赖关系可视化。</p>
+<p>compodoc 本来是给 angular 项目生成项目文档的，但是因为 angular 和 nest 项目结构类似，所以也支持了 nest。</p>
+<p>我们创建个项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> compodoc-test</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/142fb1bcc11e492281c1d9a2a6b7e334~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1004&amp;h=696&amp;s=162264&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>安装 compodoc：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save-dev</span> <span class="hljs-keyword">@compodoc</span>/compodoc</span>
+</code></pre>
+<p>然后生成一份文档：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx @compodoc/compodoc -p tsconfig.json -s -o</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/47df7a17e54349809f98ad9cae4eabdb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1246&amp;h=670&amp;s=56502&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个 README 就是项目下的 README.md:</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6ff2612a4d6148ac9e34136364748ef6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2136&amp;h=1438&amp;s=299871&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>改一下 READMD.md，然后重新执行命令生成：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/883e1471264d4254b17272f7179adb6c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1328&amp;h=944&amp;s=158651&amp;e=png&amp;b=1c1c1c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到页面上的也变了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/050755c00629402aacd7b6f27cc09aeb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1490&amp;h=1040&amp;s=115146&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>overview 部分上面是依赖图，下面是项目有几个模块、controller，可注入的 provider</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bbd969ac7ee34156884f7c834475139c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2532&amp;h=1336&amp;s=207004&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们在项目下加几个模块：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g resource aaa</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">nest g resource bbb</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2eee91ece02a44b5a1f1311460ec052a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=776&amp;h=412&amp;s=100199&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a39fed6d77454a6fbcb68012fe9739de~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=780&amp;h=360&amp;s=88181&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 AaaModule 里把 AaaService 导出：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d965e009870c4d5b931c50f394a22b16~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=854&amp;h=472&amp;s=85655&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后 BbbModule 引入 AaaModule：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/35c843c5461a47ce9b4bb3ac6640dacc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=858&amp;h=560&amp;s=98790&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 BbbService 里注入 AaaService：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/45322f42acd743e4bb7bf3b4ce34b7c4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1204&amp;h=726&amp;s=160144&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>先跑起来看一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f42bca5192534333a1ba14beea6418b9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1534&amp;h=614&amp;s=275578&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没啥问题：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/19bb581382514a4db7fcb7830c89794a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=812&amp;h=248&amp;s=24966&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>类似这种依赖关系，compodoc 可视化之后是什么样的呢？</p>
+<p>重新跑一下 compodoc：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx @compodoc/compodoc -p tsconfig.json -s -o</span>
+</code></pre>
+<p>依赖可视化是这样的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4e2f65a59f4e4a9a86b34c8748fdfe92~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1548&amp;h=1284&amp;s=140377&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用不同的颜色表示 Module、Provider、Exports 等。</p>
+<p>可以看到 AppModule 引入了 AaaModule、BbbModule。</p>
+<p>AaaModule 导出了 AaaService。</p>
+<p>以及每个模块的 provider。</p>
+<p>都可以可视化的看到。</p>
+<p>点击左侧的 Modules，可以看到每个模块的可视化分析：</p>
+<p>AaaModule：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee7548ad946641d68d96ab273d9ec054~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2334&amp;h=1004&amp;s=171232&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>BbbModule：
+<img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5167be109f8245faa4d533cd6ac35a7d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2160&amp;h=1098&amp;s=162601&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>AppModule：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4141dce1360f4286b660ec150a552529~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2378&amp;h=1086&amp;s=181131&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然，我们这个例子还是比较简单，当项目依赖复杂之后，这个可视化还是比较有用的。</p>
+<p>此外，可以看到每个 Controller、Service 或者其他的 class 的属性、方法，点进去可以看到方法的参数、返回值等：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4b50a3f4efb44fed8f058b495c584d68~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2206&amp;h=1260&amp;s=173584&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a58345f247864d2ab8af833aba937b64~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1800&amp;h=1322&amp;s=195763&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当新人接手这个项目的时候，可以通过这份文档快速了解项目的结构。</p>
+<p>回过头来，我们看下 compodoc 的一些 cli 选项：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx @compodoc/compodoc -p tsconfig.json -s -o</span>
+</code></pre>
+<p>-p 是指定 tsconfig 文件</p>
+<p>-s 是启动静态服务器</p>
+<p>-o 是打开浏览器</p>
+<p>更多选项在 <a href="https://link.juejin.cn?target=https%3A%2F%2Fcompodoc.app%2Fguides%2Foptions.html" target="_blank" rel="nofollow noopener noreferrer" title="https://compodoc.app/guides/options.html" ref="nofollow noopener noreferrer">compodoc 文档</a>里可以看到:</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7300bd910d944b82a73338fd9089c1e1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2138&amp;h=1432&amp;s=344861&amp;e=png&amp;b=fdfdfd" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p>比如 --theme 可以指定主题，一共有 gitbook,aravel, original, material, postmark, readthedocs, stripe, vagrant 这 8 个主题：</p>
+<p>跑一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx <span class="hljs-variable">@compodoc</span><span class="hljs-operator">/</span>compodoc <span class="hljs-operator">-</span>p tsconfig.json <span class="hljs-operator">-</span>s <span class="hljs-operator">-</span>o <span class="hljs-comment">--theme postmark</span></span>
+</code></pre>
+<p>可以看到文档主题换了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/799ce8ea459d449a80b007a1c72fa83f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2266&amp;h=1250&amp;s=211864&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>选项还是挺多的，如果都写在命令行也不现实，compodoc 同样支持配置文件。</p>
+<p>我们在项目下添加一个 .compodoc.json 的文件：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">"port"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">8888</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">"theme"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"postmark"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<p>然后再跑下 compodoc：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx @compodoc/compodoc -p tsconfig.json -s -o -c .compodoc.json</span>
+</code></pre>
+<p>可以看到，配置生效了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eaefa079eef24d669f77f20db59edb4e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1558&amp;h=1170&amp;s=120468&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>文档里写的这些 cli options，基本都可以写在配置文件里。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b1fdd5f87d4c49fa857494017753eeec~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1998&amp;h=1426&amp;s=347859&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>不过一般也不咋用配置。</p>
+<p>案例代码上传了<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fcompodoc-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/compodoc-test" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>我们学习了用 compodoc 生成 nest 项目的文档，它会列出项目的模块，可视化展示模块之间的依赖关系，展示每个模块下的 provider、exports 等。</p>
+<p>对于新人接手项目来说，还是比较有用的。</p>
+<p>而且可视化分析依赖和模块结构，对于复杂项目来说，是比较有帮助的。</p>
+<p>compodoc 算是一个不错的 nest 相关的工具。</p></div>

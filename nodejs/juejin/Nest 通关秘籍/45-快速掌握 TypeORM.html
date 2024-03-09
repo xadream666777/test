@@ -1,0 +1,471 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>上节我们简单用了下 TypeORM，这节我们把它全部的概念过一遍。</p>
+<p>新建一个 TypeORM 项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">shell</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-shell code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx typeorm@latest init --name typeorm-all-feature --database mysql</span>
+</code></pre>
+<p>然后改下用户名密码数据库，把连接 msyql 的驱动包改为 mysql2，并修改加密密码的方式：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3e65e7022353432fb0e3b44505b547af~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> <span class="hljs-string">"reflect-metadata"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">DataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title class_">AppDataSource</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DataSource</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">type</span>: <span class="hljs-string">"mysql"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">host</span>: <span class="hljs-string">"localhost"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">port</span>: <span class="hljs-number">3306</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">username</span>: <span class="hljs-string">"root"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">password</span>: <span class="hljs-string">"guang"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">database</span>: <span class="hljs-string">"practice"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">synchronize</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">logging</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-attr">entities</span>: [<span class="hljs-title class_">User</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">migrations</span>: [],</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">subscribers</span>: [],</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-attr">poolSize</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-attr">connectorPackage</span>: <span class="hljs-string">'mysql2'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-attr">extra</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">        <span class="hljs-attr">authPlugin</span>: <span class="hljs-string">'sha256_password'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="22">})</span>
+<span class="code-block-extension-codeLine" data-line-num="23"></span>
+</code></pre>
+<p>然后安装 mysql2:</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">shell</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-shell code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install --save mysql2</span>
+</code></pre>
+<p>我们分别来过一遍这些配置：</p>
+<p>type 是数据库的类型，因为 TypeORM 不只支持 MySQL 还支持 postgres、oracle、sqllite 等数据库。</p>
+<p>host、port 是指定数据库服务器的主机和端口号。</p>
+<p>user、password 是登录数据库的用户名和密码。</p>
+<p>database 是要指定操作的 database，因为 mysql 是可以有多个 database 或者叫 schema 的。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d3bd5f96b94741ff87b656584a4edaa3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>synchronize 是根据同步建表，也就是当 database 里没有和 Entity 对应的表的时候，会自动生成建表 sql 语句并执行。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a3db666e0d544ed8a13939e80bb6ac4c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然，如果有对应的表就不会创建了。</p>
+<p>logging 是打印生成的 sql 语句。</p>
+<p>entities 是指定有哪些和数据库的表对应的 Entity。</p>
+<p>除了 class，还可以通过这种方式指定：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4e900f3ca41e4ec290afecb12921d69a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>migrations 是修改表结构之类的 sql，暂时用不到，就不展开了。</p>
+<p>subscribers 是一些 Entity 生命周期的订阅者，比如 insert、update、remove 前后，可以加入一些逻辑：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd69bce785c74e63bf7c70b8a3881325~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>poolSize 是指定数据库连接池中连接的最大数量。</p>
+<p>connectorPackage 是指定用什么驱动包。</p>
+<p>extra 是额外发送给驱动包的一些选项。</p>
+<p>这些配置都保存在 DataSource 里。</p>
+<p>DataSource 会根据你传入的连接配置、驱动包，来创建数据库连接，并且如果指定了 synchronize 的话，会同步创建表。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/13574d2cbcab420594c68b22a5c76aa7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而创建表的依据就是 Entity：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4ad4d6c2c372447da02d9f2f745e6eac~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>跑一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start</span>
+</code></pre>
+<p>比如这个 Entity 就会执行这样的 sql：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/43eabb8c38e64b3fbad642e8adb3d8af~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>主键为 INT 自增、firstName 和 lastName 是 VARCHAR(255)，age 是 INT。</p>
+<p>这是默认的映射关系。</p>
+<p>那如果我 number 不是想映射到 INT 而是 DOUBLE 呢？</p>
+<p>或者如果 string 不是想映射到 VARCHAR(255)，而是 TEXT （长文本）呢？</p>
+<p>这样映射：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span>, <span class="hljs-title class_">Column</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">name</span>: <span class="hljs-string">'t_aaa'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">})</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Aaa</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'这是 id'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">id</span>: number</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">name</span>: <span class="hljs-string">'a_aa'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-attr">type</span>: <span class="hljs-string">'text'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'这是 aaa'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-attr">aaa</span>: string</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        <span class="hljs-attr">unique</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-attr">nullable</span>: <span class="hljs-literal">false</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-attr">length</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        <span class="hljs-attr">type</span>: <span class="hljs-string">'varchar'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">        <span class="hljs-attr">default</span>: <span class="hljs-string">'bbb'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="27">    <span class="hljs-attr">bbb</span>: string</span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="30">        <span class="hljs-attr">type</span>: <span class="hljs-string">'double'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="31">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-attr">ccc</span>: number</span>
+<span class="code-block-extension-codeLine" data-line-num="33">}</span>
+<span class="code-block-extension-codeLine" data-line-num="34"></span>
+</code></pre>
+<p>我们新增了一个 Entity Aaa。</p>
+<p>@Entity 指定它是一个 Entity，name 指定表名为 t_aaa。</p>
+<p>@PrimaryGeneratedColumn 指定它是一个自增的主键，通过 comment 指定注释。</p>
+<p>@Column 映射属性和字段的对应关系。</p>
+<p>通过 name 指定字段名，type 指定映射的类型，length 指定长度，default 指定默认值。</p>
+<p>nullable 设置 NOT NULL 约束，unique 设置 UNIQUE 唯一索引。</p>
+<p>type 这里指定的都是数据库里的数据类型。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a6d8d778ba3c4e569b5abd68e0c3a773~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 DataSource 的 entities 里引入下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b3431824d221481f91e3020a52bdeeb0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>重新跑 npm run start。</p>
+<p>生成建表 sql 是这样的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7092c94ea067447aadff8806f2bcb9dd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>格式化一下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7e5a0c83ad8344089b98788d55f99847~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>对比着 Entity 看下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/93bd5026335149edaa0809092e6a2ef5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>是不是就明白怎么映射了？</p>
+<p>在 mysql workbench 里看下，确实生成了这个表：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/afcd64e6dba1446ab7a8114e1cad2444~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>表创建好了，接下来就是增删改查了。</p>
+<p>在 index.ts 里创建个 user 对象，然后调用 AppDataSource.manager.save 来保存：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    user.<span class="hljs-property">firstName</span> = <span class="hljs-string">"aaa"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    user.<span class="hljs-property">lastName</span> = <span class="hljs-string">"bbb"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    user.<span class="hljs-property">age</span> = <span class="hljs-number">25</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">save</span>(user)</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+</code></pre>
+<p>删除 User 表重新跑 npm run start。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/084859cba8c74a17a0f404d6a60db9f2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b93845bcf05b4270a1290ab4a8359320~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到数据库插入了这条记录：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/77d8c04d92394f379425f75c968465be~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果你指定了 id，那就变成修改了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    user.<span class="hljs-property">id</span> = <span class="hljs-number">1</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    user.<span class="hljs-property">firstName</span> = <span class="hljs-string">"aaa111"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    user.<span class="hljs-property">lastName</span> = <span class="hljs-string">"bbb"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    user.<span class="hljs-property">age</span> = <span class="hljs-number">25</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">save</span>(user)</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+</code></pre>
+<p>重新跑下 npm run start。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/620f22208da34a76af7ebe3ec6d09ea0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，生成的 sql 语句变成了 select 和 update：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/635bd50975a14fb79fd31142dc622503~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当你指定了 id 的时候，typeorm 会先查询这个 id 的记录，如果查到了，那就执行 update。</p>
+<p>在 mysql workbench 里看下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1ef46bd77a8d489a897348707b0f9dc1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>确实修改了。</p>
+<p>那如果想批量插入和修改呢？</p>
+<p>这样写：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">User</span>, [</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        { <span class="hljs-attr">firstName</span>: <span class="hljs-string">'ccc'</span>, <span class="hljs-attr">lastName</span>: <span class="hljs-string">'ccc'</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">21</span>},</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        { <span class="hljs-attr">firstName</span>: <span class="hljs-string">'ddd'</span>, <span class="hljs-attr">lastName</span>: <span class="hljs-string">'ddd'</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">22</span>},</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        { <span class="hljs-attr">firstName</span>: <span class="hljs-string">'eee'</span>, <span class="hljs-attr">lastName</span>: <span class="hljs-string">'eee'</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">23</span>}</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    ]);</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+</code></pre>
+<p>我们 npm run start 跑一下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ab4f3167d36f4e6da3e92969911e8aef~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到确实生成了 3 条 insert into 的 sql 语句。</p>
+<p>数据库中也能看到：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4a4ea2f430be4f37a09901d271aa3991~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>批量修改也很容易想到，是这样写：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">User</span>, [</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        { <span class="hljs-attr">id</span>: <span class="hljs-number">2</span> ,<span class="hljs-attr">firstName</span>: <span class="hljs-string">'ccc111'</span>, <span class="hljs-attr">lastName</span>: <span class="hljs-string">'ccc'</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">21</span>},</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        { <span class="hljs-attr">id</span>: <span class="hljs-number">3</span> ,<span class="hljs-attr">firstName</span>: <span class="hljs-string">'ddd222'</span>, <span class="hljs-attr">lastName</span>: <span class="hljs-string">'ddd'</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">22</span>},</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        { <span class="hljs-attr">id</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">firstName</span>: <span class="hljs-string">'eee333'</span>, <span class="hljs-attr">lastName</span>: <span class="hljs-string">'eee'</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">23</span>}</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    ]);</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+</code></pre>
+<p>执行 npm run start，会看到一条 select 语句， 3 条 update 语句：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/76aa394475a6459a83ece608184cd6c7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 workbench 里也可以看到数据被修改了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0c39aa49edf94c32a52742ad8a12946e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是 typeorm 里新增和修改的方式，使用 save 方法。</p>
+<p>其实 EntityManager 还有 update 和 insert 方法，分别是修改和插入的，但是它们不会先 select 查询一次。而 save 方法会先查询一次数据库来确定是插入还是修改。</p>
+<p>删除和批量删除用 delete 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">delete</span>(<span class="hljs-title class_">User</span>, <span class="hljs-number">1</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">delete</span>(<span class="hljs-title class_">User</span>, [<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]);</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+</code></pre>
+<p>执行下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b871457474e34430ac73ab50729dca7d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>数据库了对应记录就被删除了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/355ae75b691843d9a143525a7130f8ad~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里也可以用 remove 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    user.<span class="hljs-property">id</span> = <span class="hljs-number">1</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">remove</span>(<span class="hljs-title class_">User</span>, user);</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+</code></pre>
+<p><strong>delete 和 remove 的区别是，delete 直接传 id、而 remove 则是传入 entity 对象。</strong></p>
+<p>而查询是使用 find 方法：</p>
+<p>先插入几条数据：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">User</span>, [</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    { <span class="hljs-attr">firstName</span>: <span class="hljs-string">'ccc'</span>, <span class="hljs-attr">lastName</span>: <span class="hljs-string">'ccc'</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">21</span>},</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    { <span class="hljs-attr">firstName</span>: <span class="hljs-string">'ddd'</span>, <span class="hljs-attr">lastName</span>: <span class="hljs-string">'ddd'</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">22</span>},</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    { <span class="hljs-attr">firstName</span>: <span class="hljs-string">'eee'</span>, <span class="hljs-attr">lastName</span>: <span class="hljs-string">'eee'</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">23</span>}</span>
+<span class="code-block-extension-codeLine" data-line-num="5">]);</span>
+</code></pre>
+<p>再查一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> users = <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">find</span>(<span class="hljs-title class_">User</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(users);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    </span>
+<span class="code-block-extension-codeLine" data-line-num="8">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+</code></pre>
+<p>控制台打印了查询出的数据：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6b35f9ecd71f427cbb08c4d361bccd28~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也可以通过 findBy 方法根据条件查询：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">In</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">const</span> users = <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">findBy</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">age</span>: <span class="hljs-number">23</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(users);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">   </span>
+<span class="code-block-extension-codeLine" data-line-num="11">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cb9b2f24cbd7447b8e512bc32ce0edec~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>此外，你还可以用 findAndCount 来拿到有多少条记录：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> [users, count] = <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">findAndCount</span>(<span class="hljs-title class_">User</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(users, count);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+</code></pre>
+<p>会额外执行一个统计的 sql：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8579254a024945acb0cdb85a1133c70f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>count 是可以指定条件的：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> [users, count] = <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">findAndCountBy</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">age</span>: <span class="hljs-number">23</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(users, count);</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+</code></pre>
+<p>可以看到，生成的 sql 里多了一个 where 条件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2b9ea24966784cfbb34d514ce6976d8d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>除了可以查询多条，还可以查询一条，使用 findOne：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">findOne</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">select</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">            <span class="hljs-attr">firstName</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">            <span class="hljs-attr">age</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">            <span class="hljs-attr">id</span>: <span class="hljs-number">4</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">order</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">            <span class="hljs-attr">age</span>: <span class="hljs-string">'ASC'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(user);</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+</code></pre>
+<p>指定查询的 where 条件是 id 为 4 ，指定 select 的列为 firstName 和 age，然后 order 指定根据 age 升序排列。</p>
+<p>查询结果如下:</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c8a78ff10d6a44679ba516f47e6f54c7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>findOne 只是比 find 多加了个 LIMIT 1，其余的都一样。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">In</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> users = <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">find</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">select</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-attr">firstName</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">            <span class="hljs-attr">age</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">            <span class="hljs-attr">id</span>: <span class="hljs-title class_">In</span>([<span class="hljs-number">4</span>, <span class="hljs-number">8</span>])</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-attr">order</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-attr">age</span>: <span class="hljs-string">'ASC'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(users);</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+</code></pre>
+<p>把它改为 find，id 改为 In([4, 8]) 之后，结果如下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8125186d186242a5808b1a229a93c4cb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>通过 findOneBy 也可以：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">findOneBy</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">age</span>: <span class="hljs-number">23</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(user);</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ac138e01557a4a62889dc64d5aeff80c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>此外，findOne 还有两个特殊的方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">try</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">findOneOrFail</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">            <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">                <span class="hljs-attr">id</span>: <span class="hljs-number">666</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(user);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    }<span class="hljs-keyword">catch</span>(e) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'没找到该用户'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+</code></pre>
+<p>findOneOrFail 或者 findOneByOrFail，如果没找到，会抛一个 EntityNotFoundError 的异常：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c99afb58485b4cd1a639705baaeea0e8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>此外，你还可以用 query 方法直接执行 sql 语句：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> users = <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">query</span>(<span class="hljs-string">'select * from user where age in(?, ?)'</span>, [<span class="hljs-number">21</span>, <span class="hljs-number">22</span>]);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(users);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ff2f8b7f751d4260ac96a813c3586514~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但复杂 sql 语句不会直接写，而是会用 query builder：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> queryBuilder = <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">createQueryBuilder</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> queryBuilder.<span class="hljs-title function_">select</span>(<span class="hljs-string">"user"</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    .<span class="hljs-title function_">from</span>(<span class="hljs-title class_">User</span>, <span class="hljs-string">"user"</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    .<span class="hljs-title function_">where</span>(<span class="hljs-string">"user.age = :age"</span>, { <span class="hljs-attr">age</span>: <span class="hljs-number">21</span> })</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    .<span class="hljs-title function_">getOne</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(user);</span>
+</code></pre>
+<p>生成的 sql 语句如下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fe7d9cddd5104c2d96338594b0c37799~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>有同学说，用 query builder 和我用 find 指定 where 有什么区别么？</p>
+<p>比如这种复杂的关联查询：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/001dab3056554f77aa363f4d9b32c889~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>涉及到多个表，也就是多个 Entity 的关联查询，就得用 query builder 了。</p>
+<p>简单点查询直接 find 指定 where 条件就行。</p>
+<p>此外，多条有关联的数据的增删改都离不开事务，怎么开启事务呢？</p>
+<p>用 transaction 方法包裹下就好了。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">transaction</span>(<span class="hljs-keyword">async</span> manager =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">await</span> manager.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">id</span>: <span class="hljs-number">4</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-attr">firstName</span>: <span class="hljs-string">'eee'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-attr">lastName</span>: <span class="hljs-string">'eee'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">age</span>: <span class="hljs-number">20</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="8">});</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0fc82b394b94424dad6ae1124970d339~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>还有，调用每个方法的时候都要先传入实体类，这也太麻烦了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d249eb48590b49db85284b9b4da6cdd8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>有没有什么简便方法呢？</p>
+<p>有，可以先调用 getRepository 传入 Entity，拿到专门处理这个 Entity 的增删改查的类，再调用这些方法：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/621f7d87ca734963aff778b7e4ee454e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>具体的方法和 EntityManager 是一样的。</p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Ftypeorm-all-feature" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/typeorm-all-feature" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>我们过了一遍 TypeORM 的各种概念，画个图总结下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/df762fa8ccb948f6ae3ca66a92640975~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>DataSource 里管理着数据库连接配置，数据库驱动包，调用它的 intialize 方法会创建和 mysql 的连接。</p>
+<p>连接创建的时候，如果指定了 synchronize，会根据 Entitiy 生成建表 sql。</p>
+<p>Entity 里通过 @Entity 指定和数据库表的映射，通过 @PrimaryGeneratedColumn 和 @Column 指定和表的字段的映射。</p>
+<p>对 Entity 做增删改查通过 EntityManager 的 save、delete、find、createQueryBuilder 等方法。</p>
+<p>如果只是对单个 Entity 做 CRUD，那可以先 getRepository 拿到对具体 Entity 操作的工具类，再调用 save、delete、find 等方法。</p>
+<p>具体的 EntityManager 和 Repository 的方法有这些：</p>
+<ul>
+<li>save：新增或者修改 Entity，如果传入了 id 会先 select 再决定修改还新增</li>
+<li>update：直接修改 Entity，不会先 select</li>
+<li>insert：直接插入 Entity</li>
+<li>delete：删除 Entity，通过 id</li>
+<li>remove：删除 Entity，通过对象</li>
+<li>find：查找多条记录，可以指定 where、order by 等条件</li>
+<li>findBy：查找多条记录，第二个参数直接指定 where 条件，更简便一点</li>
+<li>findAndCount：查找多条记录，并返回总数量</li>
+<li>findByAndCount：根据条件查找多条记录，并返回总数量</li>
+<li>findOne：查找单条记录，可以指定 where、order by 等条件</li>
+<li>findOneBy：查找单条记录，第二个参数直接指定 where 条件，更简便一点</li>
+<li>findOneOrFail：查找失败会抛 EntityNotFoundError 的异常</li>
+<li>query：直接执行 sql 语句</li>
+<li>createQueryBuilder：创建复杂 sql 语句，比如 join 多个 Entity 的查询</li>
+<li>transaction：包裹一层事务的 sql</li>
+<li>getRepository：拿到对单个 Entity 操作的类，方法同 EntityManager</li>
+</ul>
+<p>这些概念和 api 在后面会经常用到，需要理解它们各自都是干啥的。</p></div>

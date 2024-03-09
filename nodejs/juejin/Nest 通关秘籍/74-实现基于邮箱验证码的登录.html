@@ -1,0 +1,673 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>上节我们学习了用 Node 来收发邮件，其实 Node 发邮件最常见的场景还是邮箱验证码。</p>
+<p>比如登录的时候除了可以通过用户名、密码来验证身份，还可以通过邮箱验证码来验证。</p>
+<p>这节我们就实现下这个功能。</p>
+<p>首先，我们写个简单的登录页面:</p>
+<p>通过 create-react-app 创建个项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">lua</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-lua code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx <span class="hljs-built_in">create</span>-react-app email-login-frontend</span>
+</code></pre>
+<p>然后进入项目把开发服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/88aa773d3926406ca695f6dc618b54b3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/93940e5dc88140b49f78509ee42fd3bb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>安装 antd：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install antd <span class="hljs-attr">--save</span></span>
+</code></pre>
+<p>然后来写下登录 UI：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Button</span>, <span class="hljs-title class_">Form</span>, <span class="hljs-title class_">Input</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'antd'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> <span class="hljs-title function_">login</span> = (<span class="hljs-params">values</span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'Success:'</span>, values);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">};</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">const</span> <span class="hljs-title function_">sendEmailCode</span> = (<span class="hljs-params"></span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'send email code'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-keyword">const</span> <span class="hljs-title function_">App</span> = (<span class="hljs-params"></span>) =&gt; (</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{{width:</span> '<span class="hljs-attr">500px</span>', <span class="hljs-attr">margin:</span> '<span class="hljs-attr">100px</span> <span class="hljs-attr">auto</span>'}}&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-tag">&lt;<span class="hljs-name">Form</span> <span class="hljs-attr">onFinish</span>=<span class="hljs-string">{login}</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-attr">label</span>=<span class="hljs-string">"邮箱"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-attr">name</span>=<span class="hljs-string">"email"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-attr">rules</span>=<span class="hljs-string">{[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">          {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">            <span class="hljs-attr">required:</span> <span class="hljs-attr">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="22">            <span class="hljs-attr">message:</span> '请输入邮箱地址',</span>
+<span class="code-block-extension-codeLine" data-line-num="23">          },</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        ]}</span>
+<span class="code-block-extension-codeLine" data-line-num="25">      &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="26">        <span class="hljs-tag">&lt;<span class="hljs-name">Input</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">      <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29">      <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="30">        <span class="hljs-attr">label</span>=<span class="hljs-string">"验证码"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">        <span class="hljs-attr">name</span>=<span class="hljs-string">"code"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">        <span class="hljs-attr">rules</span>=<span class="hljs-string">{[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="33">          {</span>
+<span class="code-block-extension-codeLine" data-line-num="34">            <span class="hljs-attr">required:</span> <span class="hljs-attr">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="35">            <span class="hljs-attr">message:</span> '请输入验证码',</span>
+<span class="code-block-extension-codeLine" data-line-num="36">          },</span>
+<span class="code-block-extension-codeLine" data-line-num="37">        ]}</span>
+<span class="code-block-extension-codeLine" data-line-num="38">      &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="39">        <span class="hljs-tag">&lt;<span class="hljs-name">Input</span>/&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="40">      <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="41"></span>
+<span class="code-block-extension-codeLine" data-line-num="42">      <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="43">        <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{sendEmailCode}</span>&gt;</span>发送验证码<span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="44">      <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="45"></span>
+<span class="code-block-extension-codeLine" data-line-num="46">      <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="47">        <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"primary"</span> <span class="hljs-attr">htmlType</span>=<span class="hljs-string">"submit"</span>&gt;</span>登录<span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="48">      <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="49"></span>
+<span class="code-block-extension-codeLine" data-line-num="50">    <span class="hljs-tag">&lt;/<span class="hljs-name">Form</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="51">  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="52">);</span>
+<span class="code-block-extension-codeLine" data-line-num="53"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">App</span>;</span>
+</code></pre>
+<p>在 App.js 输入上面的代码，就可以看到登录页面：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/91a6fe6fdd9e4726bec4a810c8bf1b0b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>比较丑，但功能是没问题的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ae30f9ceac9f43ff825698da60e92ee1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们再来写下后端代码。</p>
+<p>创建个 nest 项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> email-login-backend -p npm</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/981c34fcbcbe4e82961db5ba42d29ec3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 main.ts 启用跨域，并且修改下端口号（因为前端项目开发服务也用这个端口号）：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/550ec1d9925f4eda89b37495209f18bf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p>浏览器访问可以看到 hello world 代表 nest 服务跑成功了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6a1e897d2b38464eabbd142c8a98fcf7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在前端项目里访问下。</p>
+<p>在前端项目安装 axios：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> axios</span>
+</code></pre>
+<p>然后调用下接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> axios <span class="hljs-keyword">from</span> <span class="hljs-string">'axios'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> <span class="hljs-title function_">login</span> = (<span class="hljs-params">values</span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'Success:'</span>, values);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">};</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">const</span> <span class="hljs-title function_">sendEmailCode</span> = <span class="hljs-keyword">async</span> (<span class="hljs-params"></span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'http://localhost:3001'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'send email code'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+</code></pre>
+<p>试一下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/83d7ee3fa99644e3beeaffba0dd6fbb0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>接口调通了。</p>
+<p>然后回到后端项目，我们继续写后端接口：</p>
+<p>创建 user 模块：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g resource <span class="hljs-keyword">user</span></span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dcfe8c5a8e264f52a7a49c97b57bc0fb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>安装 typeorm 的依赖：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> <span class="hljs-keyword">@nestjs</span>/typeorm typeorm mysql2</span>
+</code></pre>
+<p>在 AppModule 引入 TypeOrmModule：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">TypeOrmModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/typeorm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppController</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.controller'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">UserModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./user/user.module'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-attr">imports</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-title class_">UserModule</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-title class_">TypeOrmModule</span>.<span class="hljs-title function_">forRoot</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">type</span>: <span class="hljs-string">"mysql"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-attr">host</span>: <span class="hljs-string">"localhost"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-attr">port</span>: <span class="hljs-number">3306</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-attr">username</span>: <span class="hljs-string">"root"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-attr">password</span>: <span class="hljs-string">"guang"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-attr">database</span>: <span class="hljs-string">"email_login_test"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-attr">synchronize</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-attr">logging</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-attr">entities</span>: [],</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-attr">poolSize</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="21">      <span class="hljs-attr">connectorPackage</span>: <span class="hljs-string">'mysql2'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-attr">extra</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">          <span class="hljs-attr">authPlugin</span>: <span class="hljs-string">'sha256_password'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="24">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    }),</span>
+<span class="code-block-extension-codeLine" data-line-num="26">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="27">  <span class="hljs-attr">controllers</span>: [<span class="hljs-title class_">AppController</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="28">  <span class="hljs-attr">providers</span>: [<span class="hljs-title class_">AppService</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="29">})</span>
+<span class="code-block-extension-codeLine" data-line-num="30"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppModule</span> {}</span>
+</code></pre>
+<p>然后我们在 mysql workbench 创建个新的 database：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/28bd7114029240ae8657533e388395aa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>输入 database 或者叫 schema 的名字，指定字符集为 utf8mb4。</p>
+<p>点击 apply 可以看到生成的 sql：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8cd3c3564bfa438da1d4b0ce81161760~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>改下 User 的 entity：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">User</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">length</span>: <span class="hljs-number">50</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'用户名'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">username</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">length</span>: <span class="hljs-number">50</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'密码'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-attr">password</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-attr">length</span>: <span class="hljs-number">50</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'邮箱地址'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">    }) </span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-attr">email</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="26">}</span>
+</code></pre>
+<p>user 表有 id、username、password、email 这 4 个字段。</p>
+<p>在 TypeOrm 的 entities 注册下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/393f8780ac7e4ac291dec5c3cd43627b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>保存，nest 服务会自动重新跑：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a880e338e7a541db8f3a41f4ea5b954a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到 user 表被创建了。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/804f5a86f16e49d18db738158bd57e56~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这次我们手动插入下数据：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7dca8fd38a894ebcb7b18ca399557aa4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>输入内容后，点击 apply，可以看到生成的 sql：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/da6028f5b2c34665baad01ecad4a1cff~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>你直接执行这个 sql 来插入数据也行：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `email_login_test`.`<span class="hljs-keyword">user</span>` </span>
+<span class="code-block-extension-codeLine" data-line-num="2">  (`id`, `username`, `password`, `email`) </span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">'1'</span>, <span class="hljs-string">'aaaa'</span>, <span class="hljs-string">'bbbb'</span>, <span class="hljs-string">'xxx@xx.com'</span>);</span>
+</code></pre>
+<p>这里邮箱要改成你自己的，因为待会要发邮件用。</p>
+<p>之后来添加下发邮件的接口。</p>
+<p>添加个 email 模块，这次不用生成 crud 代码了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g resource email</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a2af9a89494b42a082a52fb3d7440861~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/09ecb98c8ceb454badbebf13f32d0342~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们安装 nodemailer 包来发邮件：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> nodemailer</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">npm install <span class="hljs-attr">--save-dev</span> <span class="hljs-keyword">@types</span>/nodemailer</span>
+</code></pre>
+<p>在 MailService 里来发邮件：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { createTransport, <span class="hljs-title class_">Transporter</span>} <span class="hljs-keyword">from</span> <span class="hljs-string">'nodemailer'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">EmailService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">transporter</span>: <span class="hljs-title class_">Transporter</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    </span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-variable language_">this</span>.<span class="hljs-property">transporter</span> = <span class="hljs-title function_">createTransport</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="11">            <span class="hljs-attr">host</span>: <span class="hljs-string">"smtp.qq.com"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">            <span class="hljs-attr">port</span>: <span class="hljs-number">587</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">            <span class="hljs-attr">secure</span>: <span class="hljs-literal">false</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">            <span class="hljs-attr">auth</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">                <span class="hljs-attr">user</span>: <span class="hljs-string">'xx@xx.com'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">                <span class="hljs-attr">pass</span>: <span class="hljs-string">'你的授权码'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">            },</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">sendMail</span>(<span class="hljs-params">{ to, subject, html }</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">transporter</span>.<span class="hljs-title function_">sendMail</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-attr">from</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">          <span class="hljs-attr">name</span>: <span class="hljs-string">'系统邮件'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">          <span class="hljs-attr">address</span>: <span class="hljs-string">'xx@xx.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="27">        to,</span>
+<span class="code-block-extension-codeLine" data-line-num="28">        subject,</span>
+<span class="code-block-extension-codeLine" data-line-num="29">        html</span>
+<span class="code-block-extension-codeLine" data-line-num="30">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="31">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="32">}</span>
+</code></pre>
+<p>把邮箱和授权码改成你自己的。</p>
+<p>然后添加一个 controller 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Controller</span>, <span class="hljs-title class_">Get</span>, <span class="hljs-title class_">Query</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">EmailService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./email.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Controller</span>(<span class="hljs-string">'email'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">EmailController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">private readonly emailService: EmailService</span>) {}</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  @<span class="hljs-title class_">Get</span>(<span class="hljs-string">'code'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-keyword">async</span> <span class="hljs-title function_">sendEmailCode</span>(<span class="hljs-params">@Query(<span class="hljs-string">"address"</span>) address</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">emailService</span>.<span class="hljs-title function_">sendMail</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">to</span>: address,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-attr">subject</span>: <span class="hljs-string">'登录验证码'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-attr">html</span>: <span class="hljs-string">'&lt;p&gt;你的登录验证码是 123456&lt;/p&gt;'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">return</span> <span class="hljs-string">'发送成功'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+</code></pre>
+<p>我们调用下试试：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5174540adbae451088b8da895a44fcef~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>发送成功，邮箱里确实也收到了这封邮件：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/18d36bc45599467e838eb8a14fbfb4df~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bd651142d7684f9e9ed0b6170650f8d7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>回过头来看一下，我们现在是把邮箱相关信息直接写在代码里了。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b734d8eb5e9845498f3ff59afdc85f5f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>实际上这些应该从配置读取。</p>
+<p>我们安装下配置模块：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> <span class="hljs-keyword">@nestjs</span>/config</span>
+</code></pre>
+<p>在 AppModule 里引入，并且把它声明为全局的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b327e1b0c78949b2b3122be5a5175beb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-title class_">ConfigModule</span>.<span class="hljs-title function_">forRoot</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">isGlobal</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">envFilePath</span>: <span class="hljs-string">'src/.env'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">})</span>
+</code></pre>
+<p>在 src 下添加这个 .env 文件：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a615f96bac4e4fd1beb3da98b40cad39~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 EmailService 里注入 ConfigService，从中读取配置：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4a515a1017e24f78ad568933da5d2769~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ConfigService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/config'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { createTransport, <span class="hljs-title class_">Transporter</span>} <span class="hljs-keyword">from</span> <span class="hljs-string">'nodemailer'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">EmailService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">transporter</span>: <span class="hljs-title class_">Transporter</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    </span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-title function_">constructor</span>(<span class="hljs-params">private configService: ConfigService</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-variable language_">this</span>.<span class="hljs-property">transporter</span> = <span class="hljs-title function_">createTransport</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="12">          <span class="hljs-attr">host</span>: <span class="hljs-string">"smtp.qq.com"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">          <span class="hljs-attr">port</span>: <span class="hljs-number">587</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">          <span class="hljs-attr">secure</span>: <span class="hljs-literal">false</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">          <span class="hljs-attr">auth</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">              <span class="hljs-attr">user</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">configService</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">'email_user'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="17">              <span class="hljs-attr">pass</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">configService</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">'email_password'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="18">          },</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">sendMail</span>(<span class="hljs-params">{ to, subject, html }</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">transporter</span>.<span class="hljs-title function_">sendMail</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        <span class="hljs-attr">from</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="25">          <span class="hljs-attr">name</span>: <span class="hljs-string">'系统邮件'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="26">          <span class="hljs-attr">address</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">configService</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">'email_user'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="27">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="28">        to,</span>
+<span class="code-block-extension-codeLine" data-line-num="29">        subject,</span>
+<span class="code-block-extension-codeLine" data-line-num="30">        html</span>
+<span class="code-block-extension-codeLine" data-line-num="31">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="32">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="33"></span>
+<span class="code-block-extension-codeLine" data-line-num="34">}</span>
+<span class="code-block-extension-codeLine" data-line-num="35"></span>
+</code></pre>
+<p>再调用下接口，这时依然是正常的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bec76944d0ba4dbb8bf8809c4209f6a8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c9f91ba5de6c4f41bc9645d7e2302f2c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>说明配置正确读取出来了。</p>
+<p>不过用了 .env 配置文件之后有个问题：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b5faae4d10684ad4bd63faf3ad9d2c88~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>dist 目录下没有这个文件。</p>
+<p>.env 需要配置下 assets 才会复制过去。</p>
+<p>改下 nest-cli.json</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/973dbe96fc8d4c4e9ffa7c0aca02a297~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>添加 assets 为 *.env 这样就会在编译的时候把 src 下的 .env 文件复制到 dist 下。</p>
+<p>注意，<strong>assets 只支持 src 下的文件复制</strong>。如果你是放在根目录，那就要自己复制了。</p>
+<p>改了编译配置需要重新跑服务：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/651b83bc997c43158431cea2d46a99e4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时就可以在 dist 下看到这个文件了。</p>
+<p>但现在你改了 src 下的 .env 之后，dist 下的 .env 不会跟着改，需要重新跑服务才可以。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8818c524278c439498cb70c9d27f2db2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候可以加一个 watchAssets：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5520e0a32f7743558906f98b840d2a02~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再重新跑下服务。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7ccb94ef5dc64a1886caed415b94fbb1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候改了 src 下的 .env 就会立刻复制了。</p>
+<p>也就是说，<strong>如果你用到了 .env 文件或者 yaml 等文件来配置，需要在 nest-cli.json 里配置下 assets 和 watchAssets。</strong></p>
+<p>回过头来继续搞验证码的事情。</p>
+<p>首先，验证码要随机，我们通过 Math.random 来生成：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b3234306c764761afb10ea468099dd3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> code = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>().<span class="hljs-title function_">toString</span>().<span class="hljs-title function_">slice</span>(<span class="hljs-number">2</span>,<span class="hljs-number">8</span>);</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/03d986ff400e4478a00b866c267ac16c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在前端项目里调用下看看：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/01c2e6cfbc8a45e0a9bb15653a339404~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>通过 useForm 创建 form 实例，然后就可以通过 form.getFieldsValue 拿到表单值了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6c050d23f47b4728a7f1e44c01e27cac~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Button</span>, <span class="hljs-title class_">Form</span>, <span class="hljs-title class_">Input</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'antd'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> axios <span class="hljs-keyword">from</span> <span class="hljs-string">'axios'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">const</span> <span class="hljs-title function_">login</span> = (<span class="hljs-params">values</span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'Success:'</span>, values);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">};</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-keyword">const</span> <span class="hljs-title function_">App</span> = (<span class="hljs-params"></span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-keyword">const</span> [form] = <span class="hljs-title class_">Form</span>.<span class="hljs-title function_">useForm</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-keyword">const</span> <span class="hljs-title function_">sendEmailCode</span> = <span class="hljs-keyword">async</span> (<span class="hljs-params"></span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'http://localhost:3001'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  </span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(form.<span class="hljs-title function_">getFieldsValue</span>());</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res);</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'send email code'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="19">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="20">  </span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{{width:</span> '<span class="hljs-attr">500px</span>', <span class="hljs-attr">margin:</span> '<span class="hljs-attr">100px</span> <span class="hljs-attr">auto</span>'}}&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-tag">&lt;<span class="hljs-name">Form</span> <span class="hljs-attr">form</span>=<span class="hljs-string">{form}</span> <span class="hljs-attr">onFinish</span>=<span class="hljs-string">{login}</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">      <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">        <span class="hljs-attr">label</span>=<span class="hljs-string">"邮箱"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">        <span class="hljs-attr">name</span>=<span class="hljs-string">"email"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">        <span class="hljs-attr">rules</span>=<span class="hljs-string">{[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29">          {</span>
+<span class="code-block-extension-codeLine" data-line-num="30">            <span class="hljs-attr">required:</span> <span class="hljs-attr">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="31">            <span class="hljs-attr">message:</span> '请输入邮箱地址',</span>
+<span class="code-block-extension-codeLine" data-line-num="32">          },</span>
+<span class="code-block-extension-codeLine" data-line-num="33">        ]}</span>
+<span class="code-block-extension-codeLine" data-line-num="34">      &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="35">        <span class="hljs-tag">&lt;<span class="hljs-name">Input</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="36">      <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="37"></span>
+<span class="code-block-extension-codeLine" data-line-num="38">      <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="39">        <span class="hljs-attr">label</span>=<span class="hljs-string">"验证码"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="40">        <span class="hljs-attr">name</span>=<span class="hljs-string">"code"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="41">        <span class="hljs-attr">rules</span>=<span class="hljs-string">{[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="42">          {</span>
+<span class="code-block-extension-codeLine" data-line-num="43">            <span class="hljs-attr">required:</span> <span class="hljs-attr">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="44">            <span class="hljs-attr">message:</span> '请输入验证码',</span>
+<span class="code-block-extension-codeLine" data-line-num="45">          },</span>
+<span class="code-block-extension-codeLine" data-line-num="46">        ]}</span>
+<span class="code-block-extension-codeLine" data-line-num="47">      &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="48">        <span class="hljs-tag">&lt;<span class="hljs-name">Input</span>/&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="49">      <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="50"></span>
+<span class="code-block-extension-codeLine" data-line-num="51">      <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="52">        <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{sendEmailCode}</span>&gt;</span>发送验证码<span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="53">      <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="54"></span>
+<span class="code-block-extension-codeLine" data-line-num="55">      <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="56">        <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"primary"</span> <span class="hljs-attr">htmlType</span>=<span class="hljs-string">"submit"</span>&gt;</span>登录<span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="57">      <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="58"></span>
+<span class="code-block-extension-codeLine" data-line-num="59">    <span class="hljs-tag">&lt;/<span class="hljs-name">Form</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="60">  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="61">};</span>
+<span class="code-block-extension-codeLine" data-line-num="62"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">App</span>;</span>
+</code></pre>
+<p>在点击发送验证码的时候，验证下邮箱是否为空，不为空就调用后端接口来发送验证码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { message } <span class="hljs-keyword">from</span> <span class="hljs-string">'antd'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> <span class="hljs-title function_">App</span> = (<span class="hljs-params"></span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-keyword">const</span> [form] = <span class="hljs-title class_">Form</span>.<span class="hljs-title function_">useForm</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">const</span> <span class="hljs-title function_">sendEmailCode</span> = <span class="hljs-keyword">async</span> (<span class="hljs-params"></span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> email = form.<span class="hljs-title function_">getFieldValue</span>(<span class="hljs-string">'email'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    </span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(email)</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">if</span>(!email) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      message.<span class="hljs-title function_">error</span>(<span class="hljs-string">'邮箱不能为空'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'http://localhost:3001/email/code'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-attr">params</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-attr">address</span>: email</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="20">  </span>
+<span class="code-block-extension-codeLine" data-line-num="21">    message.<span class="hljs-title function_">info</span>(res.<span class="hljs-property">data</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="22">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="23">  </span>
+</code></pre>
+<p>我们来试试看：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/66fd29142b524e6698f4298209694301~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击发送验证码，这个邮箱收到了一封验证码的邮件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/10bea665108a4d38b153ebc3d39356cc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们来实现下登录。</p>
+<p>登录就是根据用户填的信息去数据库匹配，如果匹配到了就查询出该用户的信息，放入 session 或者 jwt 里。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8de0ff950b3944d1ac5cc320ef528c56~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>验证用户身份的信息，可以是用户名 + 密码，也可以是邮箱 + 验证码。</p>
+<p>用邮箱验证码验证用户身份的流程是这样的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/856aacfe0a304d0eb849cf292b81a16f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用户填入邮箱地址，点击发送验证码，后端会生成验证码，发送邮件。并且还要把这个验证码存入 redis，以用户邮箱地址为 key。</p>
+<p>之后用户输入验证码，点击登录。</p>
+<p>后端根据邮箱地址去 redis 中查询下验证码，和用户传过来的验证码比对下，如果一致，就从 mysql 数据库中查询该用户的信息，放入 jwt 中返回。</p>
+<p>思路理清了，我们来实现下：</p>
+<p>创建个 redis 模块：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g resource redis  <span class="hljs-attr">--no-spec</span></span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/92716a577dff4a308481a2297fdb1bd6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>安装 redis 的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install redis <span class="hljs-attr">--save</span></span>
+</code></pre>
+<p>把 RedisModule 声明为全局模块，并导出 RedisService。</p>
+<p>然后添加一个 provider：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Global</span>, <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">RedisService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./redis.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">RedisController</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./redis.controller'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'redis'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">@<span class="hljs-title class_">Global</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-attr">controllers</span>: [<span class="hljs-title class_">RedisController</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-attr">providers</span>: [<span class="hljs-title class_">RedisService</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">provide</span>: <span class="hljs-string">'REDIS_CLIENT'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">useFactory</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-keyword">const</span> client = <span class="hljs-title function_">createClient</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="13">          <span class="hljs-attr">socket</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">              <span class="hljs-attr">host</span>: <span class="hljs-string">'localhost'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">              <span class="hljs-attr">port</span>: <span class="hljs-number">6379</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">          }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-keyword">await</span> client.<span class="hljs-title function_">connect</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-keyword">return</span> client;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="21">  }],</span>
+<span class="code-block-extension-codeLine" data-line-num="22">  <span class="hljs-attr">exports</span>: [<span class="hljs-title class_">RedisService</span>]</span>
+<span class="code-block-extension-codeLine" data-line-num="23">})</span>
+<span class="code-block-extension-codeLine" data-line-num="24"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RedisModule</span> {}</span>
+<span class="code-block-extension-codeLine" data-line-num="25"></span>
+</code></pre>
+<p>在 RedisService 里封装 redis 的 get、set 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">RedisClientType</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'redis'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RedisService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @<span class="hljs-title class_">Inject</span>(<span class="hljs-string">'REDIS_CLIENT'</span>) </span>
+<span class="code-block-extension-codeLine" data-line-num="8">    private <span class="hljs-attr">redisClient</span>: <span class="hljs-title class_">RedisClientType</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">get</span>(<span class="hljs-params">key: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">get</span>(key);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">set</span>(<span class="hljs-params">key: string, value: string | number, ttl?: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">set</span>(key, value);</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-keyword">if</span>(ttl) {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">            <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisClient</span>.<span class="hljs-title function_">expire</span>(key, ttl);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="21">}</span>
+</code></pre>
+<p>然后修改下发送邮箱验证码的逻辑：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/11942bb0152b4abbb16953c6d6579a8d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>注入 RedisService，并且发送验证码之前把它存入 redis，key 为 captcha_邮箱地址。</p>
+<p>这里的 captcha 就是验证码的意思。</p>
+<p>过期时间为 5 分钟。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Controller</span>, <span class="hljs-title class_">Get</span>, <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Query</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">RedisService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'src/redis/redis.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">EmailService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./email.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Controller</span>(<span class="hljs-string">'email'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">EmailController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">private readonly emailService: EmailService</span>) {}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  @<span class="hljs-title class_">Inject</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  private <span class="hljs-attr">redisService</span>: <span class="hljs-title class_">RedisService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  @<span class="hljs-title class_">Get</span>(<span class="hljs-string">'code'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-keyword">async</span> <span class="hljs-title function_">sendEmailCode</span>(<span class="hljs-params">@Query(<span class="hljs-string">"address"</span>) address</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">const</span> code = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>().<span class="hljs-title function_">toString</span>().<span class="hljs-title function_">slice</span>(<span class="hljs-number">2</span>,<span class="hljs-number">8</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">set</span>(<span class="hljs-string">`captcha_<span class="hljs-subst">${address}</span>`</span>, code, <span class="hljs-number">5</span> * <span class="hljs-number">60</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">emailService</span>.<span class="hljs-title function_">sendMail</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-attr">to</span>: address,</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-attr">subject</span>: <span class="hljs-string">'登录验证码'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="21">      <span class="hljs-attr">html</span>: <span class="hljs-string">`&lt;p&gt;你的登录验证码是 <span class="hljs-subst">${code}</span>&lt;/p&gt;`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-keyword">return</span> <span class="hljs-string">'发送成功'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="24">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">}</span>
+</code></pre>
+<p>我们试试看：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/701c92673e374b3287a407e37d5eef51~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>输入邮箱地址，点击发送验证码。</p>
+<p>邮箱收到了这个验证码：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5a1b3061a9ed4488a3915caafd644be5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>redis 里也保存了一份：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5cc3a3877c6e4eb1b3b442442d98caf5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>接下来只要填入这个验证码，点击登录就可以了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5c1a52cc8be748629322adb54b291ce7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们再来实现下登录接口：</p>
+<p>在 UserController 里添加一个路由：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Post</span>(<span class="hljs-string">'login'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-title function_">login</span>(<span class="hljs-params">@Body() loginUserDto: LoginUserDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(loginUserDto);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>定义这个 LoginUserDto：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/faad6cdc9c67494a8b2584b81399e55e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后需要对它做校验，我们引入 class-validator 和 class-transformer：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install --save <span class="hljs-keyword">class</span>-validator <span class="hljs-keyword">class</span>-transformer</span>
+</code></pre>
+<p>在 main.ts 里全局启用 ValidationPipe：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b797d034382649fc8505a2504c9ac166~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后给 LoginUserDto 添加一些约束：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">IsEmail</span>, <span class="hljs-title class_">IsNotEmpty</span>, <span class="hljs-title class_">Length</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"class-validator"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LoginUserDto</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @<span class="hljs-title class_">IsNotEmpty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @<span class="hljs-title class_">IsEmail</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">email</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @<span class="hljs-title class_">IsNotEmpty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    @<span class="hljs-title class_">Length</span>(<span class="hljs-number">6</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">code</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<p>在 postman 里测试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8cef8edd17dd42f3946c597740fc7e1f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b666dcfd95ec4522beff55a92a3aeecf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没啥问题。</p>
+<p>我们来实现下具体的验证逻辑:</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">RedisService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">private <span class="hljs-attr">redisService</span>: <span class="hljs-title class_">RedisService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Post</span>(<span class="hljs-string">'login'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">async</span> <span class="hljs-title function_">login</span>(<span class="hljs-params">@Body() loginUserDto: LoginUserDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> { email, code } = loginUserDto;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">const</span> codeInRedis = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">`captcha_<span class="hljs-subst">${email}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">if</span>(!codeInRedis) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnauthorizedException</span>(<span class="hljs-string">'验证码已失效'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">if</span>(code !== codeInRedis) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnauthorizedException</span>(<span class="hljs-string">'验证码不正确'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>.<span class="hljs-title function_">findUserByEmail</span>(email);</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(user);</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="23">}</span>
+</code></pre>
+<p>从 redis 中查找这个邮箱对应的验证码。</p>
+<p>如果没查找，就返回验证码已失效。</p>
+<p>查到的话和用户传过来的验证码对比，如果不一致，就返回验证码不正确。</p>
+<p>验证码通过之后，从数据库中查询这个用户的信息。</p>
+<p>我们在 UserService 里实现下这个方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">InjectEntityManager</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="2">private <span class="hljs-attr">entityManager</span>: <span class="hljs-title class_">EntityManager</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findUserByEmail</span>(<span class="hljs-params">email: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOneBy</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      email</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+</code></pre>
+<p>然后在前端代码里调用下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> <span class="hljs-title function_">login</span> = <span class="hljs-keyword">async</span> (<span class="hljs-params">values</span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">post</span>(<span class="hljs-string">'http://localhost:3001/user/login'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">email</span>: values.<span class="hljs-property">email</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">code</span>: values.<span class="hljs-property">code</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">if</span>(res.<span class="hljs-property">data</span> === <span class="hljs-string">'success'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    message.<span class="hljs-title function_">success</span>(<span class="hljs-string">'登录成功'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    message.<span class="hljs-title function_">error</span>(res.<span class="hljs-property">data</span>.<span class="hljs-property">message</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="11">};</span>
+</code></pre>
+<p>我们整体试一下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2db70633a78a4559ba569b403ab964c6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>输入邮箱，点击发送验证码。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/50ba4ca2f10040ac9c5edde348eacb72~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>收到了验证码邮件，并且 redis 里也存了这个 key：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7dac6c02c59a4f05b51255999eff0f00~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>带上这个验证码请求：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c28e7a52c94147cdb820da49828ebf8a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到服务端通过了校验，并且从数据库中查询出了用户信息：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2c6b8b3734c442f39c6ca1061e0bc587~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>接下来只要返回对应的 jwt token 就好了。</p>
+<p>这部分可以参考前面 jwt 登录章节的内容，就不展开了。</p>
+<p>案例代码上传了小册仓库：</p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Femail-login-frontend" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/email-login-frontend" ref="nofollow noopener noreferrer">前端代码</a></p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Femail-login-backend" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/email-login-backend" ref="nofollow noopener noreferrer">后端代码</a></p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们实现了基于邮箱验证码的登录。</p>
+<p>流程可以看这张图：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ce964be279c24780b6f5e1b90ddbbbfd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>综合用到了 mysql、redis、typeorm、nodemailer 等技术。</p>
+<p>并且使用 @nestjs/config 包的 ConfigModule 来封装配置。</p>
+<p>要注意的是，如果用了 .env 文件，需要保证它在 src 下，并且要在 nest-cli.json 里配置 assets 和 watchAssets，不然 build 的时候不会复制到 dist 下。</p>
+<p>这节实现的功能，前后端代码都有，算是一个不错的综合练习。</p></div>

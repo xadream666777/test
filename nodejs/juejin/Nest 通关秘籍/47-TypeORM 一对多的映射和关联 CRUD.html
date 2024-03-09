@@ -1,0 +1,227 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>这节我们继续来学习 TypeORM 的一对多关系的映射和 CRUD。</p>
+<p>我们再创建个 typeorm 项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">kotlin</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-kotlin code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx <span class="hljs-symbol">typeorm@</span>latest <span class="hljs-keyword">init</span> --name typeorm-relation-mapping2 --database mysql</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dde5d6e41ad141319a2496d4d761ead7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>进入项目目录，安装驱动包 mysql2：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install mysql2</span>
+</code></pre>
+<p>然后修改 data-source.ts 的配置：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> <span class="hljs-string">"reflect-metadata"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">DataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./entity/User"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title class_">AppDataSource</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DataSource</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">type</span>: <span class="hljs-string">"mysql"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">host</span>: <span class="hljs-string">"localhost"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">port</span>: <span class="hljs-number">3306</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">username</span>: <span class="hljs-string">"root"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">password</span>: <span class="hljs-string">"guang"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">database</span>: <span class="hljs-string">"typeorm_test"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">synchronize</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">logging</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-attr">entities</span>: [<span class="hljs-title class_">User</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">migrations</span>: [],</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">subscribers</span>: [],</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-attr">poolSize</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-attr">connectorPackage</span>: <span class="hljs-string">'mysql2'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-attr">extra</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">        <span class="hljs-attr">authPlugin</span>: <span class="hljs-string">'sha256_password'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="22">})</span>
+</code></pre>
+<p>这些前面讲过，就不解释了。</p>
+<p>这次我们创建 Department 和 Employee 两个实体：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx typeorm entity:create src/entity/Department</span>
+<span class="code-block-extension-codeLine" data-line-num="2">npx typeorm entity:create src/entity/Employee</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f0604b5a3cac4b2f8e6bad406c303265~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后添加 Department 和 Employee 的映射信息：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Department</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">length</span>: <span class="hljs-number">50</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">name</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+</code></pre>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Employee</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">length</span>: <span class="hljs-number">50</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">name</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+</code></pre>
+<p>把这俩 Entity 添加到 DataSource 的 entities 里：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/03a61bf59552446aa4350256e51da21d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>因为 index.ts 里用到了 User，我们用不到，把这些代码删掉：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/74447a43f4684f26ba23e0b9f1e888cf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后 npm run start：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1c92660e35454f9e8150d8eb3ee54d80~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，这两个表都创建成功了。</p>
+<p>如何给它们添加一对多的映射呢？</p>
+<p>通过 @ManyToOne 的装饰器：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bfa9952b7f154b889fadcf0cfe7e1170~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在多的一方使用 @ManyToOne 装饰器。</p>
+<p>把这两个表删掉：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9ac14654840f4316b4ed94f482f8b7c1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>重新 npm run start：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e2475c4ecb6a49f791202d4153bd212c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>就可以看到创建了两个表，并且在 employee 表添加了外建约束。</p>
+<p>workbench 里也可以看到这个外键：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2591f81f48c24601a0acbc0bfe03d99f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>改下 index.ts，新增一些数据，调用 save 保存：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Department</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./entity/Department'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Employee</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./entity/Employee'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> d1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Department</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    d1.<span class="hljs-property">name</span> = <span class="hljs-string">'技术部'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">const</span> e1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Employee</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    e1.<span class="hljs-property">name</span> = <span class="hljs-string">'张三'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    e1.<span class="hljs-property">department</span> = d1;</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">const</span> e2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Employee</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    e2.<span class="hljs-property">name</span> = <span class="hljs-string">'李四'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    e2.<span class="hljs-property">department</span> = d1;</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-keyword">const</span> e3 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Employee</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    e3.<span class="hljs-property">name</span> = <span class="hljs-string">'王五'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    e3.<span class="hljs-property">department</span> = d1;</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">Department</span>, d1);</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">Employee</span>,[e1, e2, e3]);</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25"></span>
+<span class="code-block-extension-codeLine" data-line-num="26">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+<span class="code-block-extension-codeLine" data-line-num="27"></span>
+</code></pre>
+<p>再跑下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4be620ad3f954e669b145d404f50be10~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到被 transaction 包裹的 4 条 insert 语句，分别插入了 Department 和 3 个 Employee。</p>
+<p>当然，如果是设置了 cascade，那就只需要保存 empolyee 就好了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/745f52949d64473d8eb2d7933e5d5af5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1bca5a6471ba490cb5dc47e89be08025~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>department 会自动级联保存。</p>
+<p>不过一对多关系更多还是在一的那一方来保持关系，我们改下 Department：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7b15bc0a2d4844769fba04375a9e6c04~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里要通过第二个参数指定外键列在 employee.department 维护。</p>
+<p>一对一的时候我们还通过 @JoinColumn 来指定外键列，为什么一对多就不需要了呢？</p>
+<p>因为一对多的关系只可能是在多的那一方保存外键呀！</p>
+<p>所以并不需要 @JoinColumn。</p>
+<p>不过你也可以通过 @JoinColumn 来修改外键列的名字：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5de7e821f8f14236b9f03c22f68fb699~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>加上 @OneToMany 装饰器，再设置下 cascade：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0e9078f868684211a03bf09c8c491917~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样当你保存 department 的时候，关联的 employee 也都会保存了。</p>
+<p>不过这时候要把 @ManyToOne 的 cascade 去掉。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b3b1a6a929c549d5bc613bb2fdf251fd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>不然，双方都级联保存，那不就无限循环了么？</p>
+<p>然后修改下 index.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Department</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./entity/Department'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Employee</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./entity/Employee'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppDataSource</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./data-source"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-title class_">AppDataSource</span>.<span class="hljs-title function_">initialize</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">async</span> () =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">const</span> e1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Employee</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    e1.<span class="hljs-property">name</span> = <span class="hljs-string">'张三'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">const</span> e2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Employee</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    e2.<span class="hljs-property">name</span> = <span class="hljs-string">'李四'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">const</span> e3 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Employee</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    e3.<span class="hljs-property">name</span> = <span class="hljs-string">'王五'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">const</span> d1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Department</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    d1.<span class="hljs-property">name</span> = <span class="hljs-string">'技术部'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    d1.<span class="hljs-property">employees</span> = [e1, e2, e3];</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">Department</span>, d1);</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">}).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error))</span>
+</code></pre>
+<p>只需要设置 department 的 employees 属性，然后 save 这个 department。</p>
+<p>这样关联的 employee 就会自动保存：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c72d102c8b524a9882f20fff0b47425f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再来试下查询：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> deps = <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">find</span>(<span class="hljs-title class_">Department</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(deps);</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/84912b3adb084482a8bb78252feb61a2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>想要关联查询需要声明下 relations：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> deps = <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">find</span>(<span class="hljs-title class_">Department</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">relations</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">employees</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="5">});</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(deps);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(deps.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">employees</span>))</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aa1c72281bf84b6e810505951c3f8c3d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个 relations 其实就是 left join on，或者通过 query builder 来手动关联：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> es = <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">getRepository</span>(<span class="hljs-title class_">Department</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">            .<span class="hljs-title function_">createQueryBuilder</span>(<span class="hljs-string">'d'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="3">            .<span class="hljs-title function_">leftJoinAndSelect</span>(<span class="hljs-string">'d.employees'</span>, <span class="hljs-string">'e'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            .<span class="hljs-title function_">getMany</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(es);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(es.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">employees</span>))</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0923a93bc67344dfb0f1c5ba07aed1cc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>先 getRepository 再创建 query builder。</p>
+<p>也可以直接用 EntityManager 来创建 query builder：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> es = <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    .<span class="hljs-title function_">createQueryBuilder</span>(<span class="hljs-title class_">Department</span>, <span class="hljs-string">'d'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    .<span class="hljs-title function_">leftJoinAndSelect</span>(<span class="hljs-string">'d.employees'</span>, <span class="hljs-string">'e'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    .<span class="hljs-title function_">getMany</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(es);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(es.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">employees</span>))</span>
+</code></pre>
+<p>删除的话，需要先把关联的 employee 删了，再删除 department：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> deps = <span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">find</span>(<span class="hljs-title class_">Department</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">relations</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">employees</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="5">});</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">delete</span>(<span class="hljs-title class_">Employee</span>, deps[<span class="hljs-number">0</span>].<span class="hljs-property">employees</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">await</span> <span class="hljs-title class_">AppDataSource</span>.<span class="hljs-property">manager</span>.<span class="hljs-title function_">delete</span>(<span class="hljs-title class_">Department</span>, deps[<span class="hljs-number">0</span>].<span class="hljs-property">id</span>);</span>
+</code></pre>
+<p>当然，如果你设置了 onDelete 为 SET NULL 或者 CASCADE：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dc3d68fe32de4d9b81599b19b1c6563f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那就不用自己删 employee 了，只要删了 department，mysql 会自动把关联的 employee 记录删除，或者是把它们的外键 id 置为空。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dd78e822ae5b47c09d18e02c534247c0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Ftypeorm-relation-mapping2" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/typeorm-relation-mapping2" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们学了一对多关系的映射，通过 @ManyToOne 或者 @OneToMany 装饰器。</p>
+<p>TypeORM 会自动在多的那一方添加外键，不需要通过 @JoinColumn 指定，不过你可以通过 @JoinColumn 来修改外键列的名字。</p>
+<p>双方只能有一方 cascade，不然会无限循环。设置了 cascade 之后，只要一方保存，关联的另一方就会自动保存。</p>
+<p>删除的话，如果设置了外键的 CASCADE 或者 SET NULL，那只删除主表（一的那一方）对应的 Entity 就好了，msyql 会做后续的关联删除或者 id 置空。</p>
+<p>否则就要先删除所有的从表（多的那一方）对应的 Entity 再删除主表对应的 Entity。</p>
+<p>这就是 typeorm 的一对多关系的映射和 CRUD。</p></div>

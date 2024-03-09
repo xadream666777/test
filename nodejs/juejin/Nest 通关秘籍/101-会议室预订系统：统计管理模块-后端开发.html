@@ -1,0 +1,194 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>写完用户模块、会议室模块、预定模块之后，就只剩下统计模块了，这节我们就来写下这个模块。</p>
+<p>这个模块只有 2 个统计的功能：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ad9645b6ba914e35a7adece8551676cd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=652&amp;h=252&amp;s=37584&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>分别是统计会议室的使用频率、用户的预定频率：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a0df7c49dbb84b33a6589816a68e619a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3e83c09ddcd54e2a997f083784154baa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没有新的实体，只是对已有数据的统计。</p>
+<p>在 <a href="https://link.juejin.cn?target=https%3A%2F%2Fecharts.apache.org%2Fhandbook%2Fzh%2Fhow-to%2Fchart-types%2Fbar%2Fbasic-bar" target="_blank" rel="nofollow noopener noreferrer" title="https://echarts.apache.org/handbook/zh/how-to/chart-types/bar/basic-bar" ref="nofollow noopener noreferrer">echarts 官网</a>可以看到柱形图和饼图都只需要一个二维的数据，也就是 [[a, b], [a, b], [a, b]] 这样的形式的数据：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/867f6fc03c094a059bce82f8b0003d3b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1662&amp;h=1098&amp;s=94292&amp;e=png&amp;b=283237" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1f51ef332d09464294d0bd001b15383f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1544&amp;h=1338&amp;s=108806&amp;e=png&amp;b=283237" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们先在数据库里写下这个 sql：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">select</span> u.username 用户名, <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) 预定次数</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">from</span> booking b</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">left</span> <span class="hljs-keyword">join</span> users u</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">on</span> b.userId <span class="hljs-operator">=</span> u.id</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">where</span> b.startTime <span class="hljs-keyword">between</span> <span class="hljs-string">'2023-09-24'</span> <span class="hljs-keyword">and</span> <span class="hljs-string">'2023-09-30'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> b.userId;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4c1dda931b1549069cef4838eb7cec21~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1068&amp;h=728&amp;s=223590&amp;e=png&amp;b=fafafa" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>关联 users 和 booking 表，过滤出在这段日期内的预定记录，根据用户分组，统计每组的预定数量。</p>
+<p>这样查询出来的就是这段时间内每个用户预定了多少次会议室。</p>
+<p>同理，也可以很轻松的统计处会议室被预定的频率：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">select</span> m.name 会议室名字, <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) 预定次数</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">from</span> booking b</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">left</span> <span class="hljs-keyword">join</span> meeting_room m</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">on</span> b.roomId <span class="hljs-operator">=</span> m.id</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">where</span> b.startTime <span class="hljs-keyword">between</span> <span class="hljs-string">'2023-09-24'</span> <span class="hljs-keyword">and</span> <span class="hljs-string">'2023-09-30'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> b.roomId;</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/725717c6ab094fbf8d1bee6af1fd8b07~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1070&amp;h=686&amp;s=223232&amp;e=png&amp;b=fafafa" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把关联的表换成 meeting_room 就好了。</p>
+<p>当然，现在的数据不是很多，我们添加一些数据：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/beb02e7dd67c42c6bfcd4e1bb5aafd17~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1330&amp;h=748&amp;s=316611&amp;e=png&amp;b=efeeee" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>直接通过 mysql workbench 的 copy row 和 paste row 快速复制一些数据就好了。</p>
+<p>复制出来的数据要改下 id，以及其他一些信息。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d06eeed8c4ec4c6080a1958c266d4521~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1788&amp;h=610&amp;s=373166&amp;e=png&amp;b=f5f5f5" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我添加了 4 条数据，并且指定了不同的 userId 和 roomId，点击 apply 应用修改。</p>
+<p>然后再跑下那两个统计 sql</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dcd1609fd5314b3b89e03d6546fdb479~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1038&amp;h=738&amp;s=226804&amp;e=png&amp;b=fafafa" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1d56f91a310640c7a645d6072f8735a1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1072&amp;h=724&amp;s=215222&amp;e=png&amp;b=f9f9f9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没啥问题。</p>
+<p>接下来在 nest 里把这个统计 sql 实现就好了。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g <span class="hljs-keyword">module</span> statistic</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/109321f3e3ac41048e63c553c170185f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=760&amp;h=110&amp;s=25163&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>生成一个新的 module。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g service statistic</span>
+<span class="code-block-extension-codeLine" data-line-num="2">nest g controller statistic</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/004d17b0362542539f708ca907fad1ae~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=860&amp;h=224&amp;s=59481&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>之后生成 controller 和 service。</p>
+<p>然后在 service 里实现下上面两个统计。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">InjectEntityManager</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/typeorm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Booking</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'src/booking/entities/booking.entity'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'src/user/entities/user.entity'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">EntityManager</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'typeorm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">StatisticService</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    @<span class="hljs-title class_">InjectEntityManager</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    private <span class="hljs-attr">entityManager</span>: <span class="hljs-title class_">EntityManager</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">userBookingCount</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">            .<span class="hljs-title function_">createQueryBuilder</span>(<span class="hljs-title class_">Booking</span>, <span class="hljs-string">'b'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            .<span class="hljs-title function_">select</span>(<span class="hljs-string">'u.id'</span>, <span class="hljs-string">'用户id'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="17">            .<span class="hljs-title function_">addSelect</span>(<span class="hljs-string">'u.username'</span>, <span class="hljs-string">'用户名'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="18">            .<span class="hljs-title function_">leftJoin</span>(<span class="hljs-title class_">User</span>, <span class="hljs-string">'u'</span>, <span class="hljs-string">'b.userId = u.id'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="19">            .<span class="hljs-title function_">addSelect</span>(<span class="hljs-string">'count(1)'</span>, <span class="hljs-string">'预定次数'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="20">            .<span class="hljs-title function_">where</span>(<span class="hljs-string">'b.startTime between :time1 and :time2'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">                <span class="hljs-attr">time1</span>: <span class="hljs-string">'2023-09-24'</span>, </span>
+<span class="code-block-extension-codeLine" data-line-num="22">                <span class="hljs-attr">time2</span>: <span class="hljs-string">'2023-09-30'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">            })</span>
+<span class="code-block-extension-codeLine" data-line-num="24">            .<span class="hljs-title function_">addGroupBy</span>(<span class="hljs-string">'b.user'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="25">            .<span class="hljs-title function_">getRawMany</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="26">        <span class="hljs-keyword">return</span> res;</span>
+<span class="code-block-extension-codeLine" data-line-num="27">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29"></span>
+<span class="code-block-extension-codeLine" data-line-num="30">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">meetingRoomUsedCount</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="31"></span>
+<span class="code-block-extension-codeLine" data-line-num="32">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="33">}</span>
+</code></pre>
+<p>注入 entityManager 来查询。</p>
+<p>统计相关的 sql 比较复杂，我们使用 queryBuilder 的 api。</p>
+<p>queryBuilder 的 api 和写 sql 的体验差不多。</p>
+<p>我们用 repl 的方式跑下试试：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run repl</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cc0e0a67851842958b5ef76c51f1d10a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1570&amp;h=408&amp;s=99920&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">await</span> <span class="hljs-title function_">get</span>(<span class="hljs-title class_">StatisticService</span>).<span class="hljs-title function_">userBookingCount</span>()</span>
+</code></pre>
+<p>仔细观察下这个打印的 sql，其实和我们前面在 mysql workbench 里写的是一样的。</p>
+<p>用 typeorm 的 query buidler 的 api 可以写各种 sql。</p>
+<p>然后我们加上参数，并且改下别名：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/365cc744f1984df084fea382f5c06d26~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=936&amp;h=532&amp;s=107383&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">userBookingCount</span>(<span class="hljs-params">startTime: string, endTime: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">        .<span class="hljs-title function_">createQueryBuilder</span>(<span class="hljs-title class_">Booking</span>, <span class="hljs-string">'b'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        .<span class="hljs-title function_">select</span>(<span class="hljs-string">'u.id'</span>, <span class="hljs-string">'userId'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        .<span class="hljs-title function_">addSelect</span>(<span class="hljs-string">'u.username'</span>, <span class="hljs-string">'username'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        .<span class="hljs-title function_">leftJoin</span>(<span class="hljs-title class_">User</span>, <span class="hljs-string">'u'</span>, <span class="hljs-string">'b.userId = u.id'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        .<span class="hljs-title function_">addSelect</span>(<span class="hljs-string">'count(1)'</span>, <span class="hljs-string">'bookingCount'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        .<span class="hljs-title function_">where</span>(<span class="hljs-string">'b.startTime between :time1 and :time2'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-attr">time1</span>: startTime, </span>
+<span class="code-block-extension-codeLine" data-line-num="10">            <span class="hljs-attr">time2</span>: endTime</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        })</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        .<span class="hljs-title function_">addGroupBy</span>(<span class="hljs-string">'b.user'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        .<span class="hljs-title function_">getRawMany</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">return</span> res;</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<p>再跑下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">await</span> <span class="hljs-title function_">get</span>(<span class="hljs-title class_">StatisticService</span>).<span class="hljs-title function_">userBookingCount</span>(<span class="hljs-string">'2023-09-23'</span>, <span class="hljs-string">'2023-09-30'</span>)</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/59496b629abd45e786d048c2960d0cd9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1532&amp;h=380&amp;s=92898&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没啥问题。</p>
+<p>然后在 controller 里加个接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Controller</span>, <span class="hljs-title class_">Get</span>, <span class="hljs-title class_">Inject</span>, <span class="hljs-title class_">Query</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">StatisticService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./statistic.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Controller</span>(<span class="hljs-string">'statistic'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">StatisticController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">StatisticService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    private <span class="hljs-attr">statisticService</span>: <span class="hljs-title class_">StatisticService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    @<span class="hljs-title class_">Get</span>(<span class="hljs-string">'userBookingCount'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">async</span> <span class="hljs-title function_">userBookignCount</span>(<span class="hljs-params">@Query(<span class="hljs-string">'startTime'</span>) startTime: string, @Query(<span class="hljs-string">'endTime'</span>) endTime</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">statisticService</span>.<span class="hljs-title function_">userBookingCount</span>(startTime, endTime);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+</code></pre>
+<p>把 repl 的模式停掉，重新跑服务：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p>用 postman 访问下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e80eff4384814de5bffa2d70142e39e8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1206&amp;h=1234&amp;s=154841&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">http://localhost:3005/statistic/userBookingCount?startTime=2023-09-23&amp;endTime=2023-09-30</span>
+</code></pre>
+<p>可以看到，返回了这段时间的统计数据。</p>
+<p>这样，加个 echarts 就可以实现饼图、柱形图了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1f51ef332d09464294d0bd001b15383f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1544&amp;h=1338&amp;s=108806&amp;e=png&amp;b=283237" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后，我们再写另一个接口。</p>
+<p>和用户预定次数的统计差不多：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">meetingRoomUsedCount</span>(<span class="hljs-params">startTime: string, endTime: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">        .<span class="hljs-title function_">createQueryBuilder</span>(<span class="hljs-title class_">Booking</span>, <span class="hljs-string">'b'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        .<span class="hljs-title function_">select</span>(<span class="hljs-string">'m.id'</span>, <span class="hljs-string">'meetingRoomId'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        .<span class="hljs-title function_">addSelect</span>(<span class="hljs-string">'m.name'</span>, <span class="hljs-string">'meetingRoomName'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        .<span class="hljs-title function_">leftJoin</span>(<span class="hljs-title class_">MeetingRoom</span>, <span class="hljs-string">'m'</span>, <span class="hljs-string">'b.roomId = m.id'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        .<span class="hljs-title function_">addSelect</span>(<span class="hljs-string">'count(1)'</span>, <span class="hljs-string">'usedCount'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        .<span class="hljs-title function_">where</span>(<span class="hljs-string">'b.startTime between :time1 and :time2'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-attr">time1</span>: startTime, </span>
+<span class="code-block-extension-codeLine" data-line-num="10">            <span class="hljs-attr">time2</span>: endTime</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        })</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        .<span class="hljs-title function_">addGroupBy</span>(<span class="hljs-string">'b.roomId'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        .<span class="hljs-title function_">getRawMany</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">return</span> res;</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<p>上面是 service 部分。</p>
+<p>然后是 controller：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'meetingRoomUsedCount'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">meetingRoomUsedCount</span>(<span class="hljs-params">@Query(<span class="hljs-string">'startTime'</span>) startTime: string, @Query(<span class="hljs-string">'endTime'</span>) endTime</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">statisticService</span>.<span class="hljs-title function_">meetingRoomUsedCount</span>(startTime, endTime);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>postman 里测试下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/301ce91fc00d4f0696c3a9df6afb69d2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1214&amp;h=1286&amp;s=162093&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">http://localhost:3005/statistic/meetingRoomUsedCount?startTime=2023-09-23&amp;endTime=2023-09-30</span>
+</code></pre>
+<p>也没啥问题，和我们在 mysql workbench 里自己写 sql 统计的结果一样。</p>
+<p>这样，统计模块的后端部分就完成了。</p>
+<p>代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fmeeting_room_booking_system_backend" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/meeting_room_booking_system_backend" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们实现了统计模块的后端代码。</p>
+<p>就两个统计 sql，我们先在 mysql workbench 里写了这个统计 sql，然后在 typeorm 里用 query builder 的方式实现。</p>
+<p>query builder 的 api 和直接写 sql 差不多。</p>
+<p>前端部分拿到统计的数据，就可以用 echarts 展示饼图或者柱形图了。</p></div>

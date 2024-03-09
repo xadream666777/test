@@ -1,0 +1,225 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>不知道大家有没有感觉很神奇，只是通过装饰器声明了一下，然后启动 Nest 应用，这时候对象就给创建好了，依赖也给注入了。</p>
+<p>那它是怎么实现的呢？</p>
+<p>大家如果就这样去思考它的实现原理，还真不一定能想出来，因为缺少了一些前置知识。也就是实现 Nest 最核心的一些 api： Reflect 的 metadata 的 api。</p>
+<p>有的同学会说，Reflect 的 api 我很熟呀，就是操作对象的属性、方法、构造器的一些 api：</p>
+<p>比如 Reflect.get 是获取对象属性值</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b5a7ba0e6dc94d0fb842cafc25ac4dd2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Reflect.set 是设置对象属性值</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/69c386cd587d4b958212a5ee1ee09a96~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Reflect.has 是判断对象属性是否存在</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/783e8067a805459d9ec0d56292f529a4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Reflect.apply 是调用某个方法，传入对象和参数</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7708d7a8c01a4fb6ae10b51b98442921~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Reflect.construct 是用构造器创建对象实例，传入构造器参数</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ed7bde270882465cb9ffdc624bbb4e61~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这些 api 在 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FJavaScript%2FReference%2FGlobal_Objects%2FReflect" target="_blank" rel="nofollow noopener noreferrer" title="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect" ref="nofollow noopener noreferrer">MDN 文档</a>里可以查到，因为它们都已经是 es 标准了，也被很多浏览器实现了。</p>
+<p>但是实现 Nest 用到的 api 还没有进入标准，还在草案阶段，也就是 <a href="https://link.juejin.cn?target=https%3A%2F%2Frbuckton.github.io%2Freflect-metadata%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://rbuckton.github.io/reflect-metadata/" ref="nofollow noopener noreferrer">metadata 的 api</a>：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a9cf799a18794e0a903170b6bf76fa21~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它有这些 api：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">defineMetadata</span>(metadataKey, metadataValue, target);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">defineMetadata</span>(metadataKey, metadataValue, target, propertyKey);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">let</span> result = <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">getMetadata</span>(metadataKey, target);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">let</span> result = <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">getMetadata</span>(metadataKey, target, propertyKey);</span>
+</code></pre>
+<p>Reflect.defineMetadata 和 Reflect.getMetadata 分别用于设置和获取某个类的元数据，如果最后传入了属性名，还可以单独为某个属性设置元数据。</p>
+<p>那元数据存在哪呢？</p>
+<p>存在类或者对象上呀，如果给类或者类的静态属性添加元数据，那就保存在类上，如果给实例属性添加元数据，那就保存在对象上，用类似 [[metadata]] 的 key 来存的。</p>
+<p>这有啥用呢？</p>
+<p>看上面的 api 确实看不出啥来，但它也支持装饰器的方式使用：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">metadata</span>(metadataKey, metadataValue)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">class</span> <span class="hljs-title class_">C</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  @<span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">metadata</span>(metadataKey, metadataValue)</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-title function_">method</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+</code></pre>
+<p>Reflect.metadata 装饰器当然也可以再封装一层：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Type</span>(<span class="hljs-params"><span class="hljs-keyword">type</span></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">metadata</span>(<span class="hljs-string">"design:type"</span>, <span class="hljs-keyword">type</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">}</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">function</span> <span class="hljs-title function_">ParamTypes</span>(<span class="hljs-params">...types</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">metadata</span>(<span class="hljs-string">"design:paramtypes"</span>, types);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">}</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">function</span> <span class="hljs-title function_">ReturnType</span>(<span class="hljs-params"><span class="hljs-keyword">type</span></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">metadata</span>(<span class="hljs-string">"design:returntype"</span>, <span class="hljs-keyword">type</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-meta">@ParamTypes</span>(<span class="hljs-title class_">String</span>, <span class="hljs-title class_">Number</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Guang</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">text, i</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">  <span class="hljs-meta">@Type</span>(<span class="hljs-title class_">String</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  <span class="hljs-keyword">get</span> <span class="hljs-title function_">name</span>() { <span class="hljs-keyword">return</span> <span class="hljs-string">"text"</span>; }</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">  <span class="hljs-meta">@Type</span>(<span class="hljs-title class_">Function</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="20">  <span class="hljs-meta">@ParamTypes</span>(<span class="hljs-title class_">Number</span>, <span class="hljs-title class_">Number</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="21">  <span class="hljs-meta">@ReturnType</span>(<span class="hljs-title class_">Number</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="22">  <span class="hljs-title function_">add</span>(<span class="hljs-params">x, y</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-keyword">return</span> x + y;</span>
+<span class="code-block-extension-codeLine" data-line-num="24">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">}</span>
+</code></pre>
+<p>然后我们就可以通过 Reflect metadata 的 api 获取这个类和对象的元数据了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">let</span> obj = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Guang</span>(<span class="hljs-string">"a"</span>, <span class="hljs-number">1</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">let</span> paramTypes = <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">getMetadata</span>(<span class="hljs-string">"design:paramtypes"</span>, obj, <span class="hljs-string">"add"</span>); </span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-comment">// [Number, Number]</span></span>
+</code></pre>
+<p>这里我们用 Reflect.getMetadata 的 api 取出了 add 方法的参数的类型。</p>
+<p>看到这里，大家是否明白 nest 的原理了呢？</p>
+<p>我们再看下 nest 的源码：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f2bb578b9b624bf993aaedc250ec053d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>上面就是 @Module 装饰器的实现，里面就调用了 Reflect.defineMetadata 来给这个类添加了一些元数据。</p>
+<p>所以我们这样用的时候：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">python</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-python code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { Module } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { CatsController } <span class="hljs-keyword">from</span> <span class="hljs-string">'./cats.controller'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { CatsService } <span class="hljs-keyword">from</span> <span class="hljs-string">'./cats.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-meta">@Module(<span class="hljs-params">{</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">  controllers: [CatsController],</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  providers: [CatsService],</span>
+<span class="code-block-extension-codeLine" data-line-num="8">})</span>
+<span class="code-block-extension-codeLine" data-line-num="9">export <span class="hljs-keyword">class</span> <span class="hljs-title class_">CatsModule</span> {}</span>
+</code></pre>
+<p>其实就是给 CatsModule 添加了 controllers 的元数据和 providers 的元数据。</p>
+<p>后面创建 IOC 容器的时候就会取出这些元数据来处理：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/12e7eca6e54e4fa1867b16b83237135a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/32ea9f7aa5374ce681053a4dcae06723~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而且 @Controller 和 @Injectable 的装饰器也是这样实现的：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bd7235bd63374965a7d55c5866471983~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c82a1514a28749668ec631b7e565e466~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Nest 的实现原理就是通过装饰器给 class 或者对象添加元数据，然后初始化的时候取出这些元数据，进行依赖的分析，然后创建对应的实例对象就可以了。</p>
+<p>所以说，nest 实现的核心就是 Reflect metadata 的 api。</p>
+<p>当然，现在 metadata 的 api 还在草案阶段，需要使用 reflect-metadata 这个 polyfill 包才行。</p>
+<p>其实还有一个疑问，依赖的扫描可以通过 metadata 数据，但是创建的对象需要知道构造器的参数，现在并没有添加这部分 metadata 数据呀：</p>
+<p>比如这个 CatsController 依赖了 CatsService，但是并没有添加 metadata 呀：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Body</span>, <span class="hljs-title class_">Controller</span>, <span class="hljs-title class_">Get</span>, <span class="hljs-title class_">Param</span>, <span class="hljs-title class_">Post</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CatsService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./cats.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CreateCatDto</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./dto/create-cat.dto'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-meta">@Controller</span>(<span class="hljs-string">'cats'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CatsController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> catsService: CatsService</span>) {}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-meta">@Post</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-keyword">async</span> <span class="hljs-title function_">create</span>(<span class="hljs-params"><span class="hljs-meta">@Body</span>() createCatDto: CreateCatDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">catsService</span>.<span class="hljs-title function_">create</span>(createCatDto);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-meta">@Get</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  <span class="hljs-keyword">async</span> <span class="hljs-title function_">findAll</span>(): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-title class_">Cat</span>[]&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">catsService</span>.<span class="hljs-title function_">findAll</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="18">}</span>
+</code></pre>
+<p>这就不得不提到 TypeScript 的优势了，TypeScript 支持编译时自动添加一些 metadata 数据：</p>
+<p>比如这段代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">typescript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-typescript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> <span class="hljs-string">"reflect-metadata"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"> </span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Guang</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-meta">@Reflect</span>.<span class="hljs-title function_">metadata</span>(<span class="hljs-string">"名字"</span>, <span class="hljs-string">"光光"</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-keyword">public</span> <span class="hljs-title function_">say</span>(<span class="hljs-attr">a</span>: <span class="hljs-built_in">number</span>): <span class="hljs-built_in">string</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">return</span> <span class="hljs-string">'加油鸭'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+</code></pre>
+<p>按理说我们只添加了一个元数据，生成的代码也确实是这样的：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4c525cd38ea542bab80ef31a15719265~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但是呢，ts 有一个编译选项叫做 emitDecoratorMetadata，开启它就会自动添加一些元数据。</p>
+<p>开启之后再试一下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d14d5736bef144a9a6830c7626b15b9f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>你会看到多了三个元数据：</p>
+<p>design:type 是 Function，很明显，这个是描述装饰目标的元数据，这里装饰的是函数</p>
+<p>design:paramtypes 是 [Number]，很容易理解，就是参数的类型</p>
+<p>design:returntype 是 String，也很容易理解，就是返回值的类型</p>
+<p>所以说，只要开启了这个编译选项，ts 生成的代码会自动添加一些元数据。</p>
+<p>然后创建对象的时候就可以通过 design:paramtypes 来拿到构造器参数的类型了，那不就知道怎么注入依赖了么？</p>
+<p>所以，nest 源码里你会看到这样的代码：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/af6a8ad0ce814857881fbf2a7c503e7c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>就是获取构造器的参数类型的。这个常量就是我们上面说的那个：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3c6b32199ab1443794f56bdac63a2a5b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这也是为什么 nest 会用 ts 来写，因为它很依赖这个 emitDecoratorMetadata 的编译选项。</p>
+<p>你用 cli 生成的代码模版里也都默认开启了这个编译选项：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a984d979388a42bbb77bcef2b3c4dc26~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是 nest 的核心实现原理：<strong>通过装饰器给 class 或者对象添加 metadata，并且开启 ts 的 emitDecoratorMetadata 来自动添加类型相关的 metadata，然后运行的时候通过这些元数据来实现依赖的扫描，对象的创建等等功能。</strong></p>
+<p>Nest 的装饰器都是依赖 reflect-metadata 实现的，而且还提供了一个 @SetMetadata 的装饰器让我们可以给 class、method 添加一些 metadata：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0ea48d21da6943bfad91b6d81562cafa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个装饰器的底层实现自然是 Reflect.defineMetadata：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0da98c74bf4242fba7e65512d2992a8c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Nest 为什么暴露这样一个底层的 metadata api 出来呢？</p>
+<p>因为这个 metadata 是可以在代码里取出来用的：</p>
+<p>我们创建新项目来测试下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> metadata-<span class="hljs-keyword">and</span>-reflector -p npm</span>
+</code></pre>
+<p>创建 guard 和 interceptor：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g interceptor aaa <span class="hljs-attr">--flat</span> <span class="hljs-attr">--no-spec</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">nest g guard aaa <span class="hljs-attr">--flat</span> <span class="hljs-attr">--no-spec</span></span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0806331a696341bbacccc66a182fb9c7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在路由级别应用：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9adde1c019d54639976f3dfdbd98f72a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>加个打印语句：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c704ae3bc02047b382cd030fc726b182~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9d3db5800377466693337238e4c17ba2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后 nest start --watch 把服务跑起来。</p>
+<p>浏览器访问：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d8f1ac70d54c45e28dc0d9057599357d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到 guard 和 interceptor 成功执行了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/86989a513c4b499bbad8ccd87835e13d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们用 @SetMetadata 在 controller 上加个 metadata：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e61d10f799764322bb0127432b43604d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 guard 和 interceptor 就就可以这样取出来：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cef2879ad7db444289320fa0f1aa05cb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>通过 ExecutationContext 取到目标 handler，然后注入 reflector，通过 reflector.get 取出 handler 上的 metadata。</p>
+<p>interceptor 里也是这样，这里换种属性注入方式：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b407535dd6614d9b994f910b1b1d8634~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>刷新下页面，就可以看到已经拿到了 metadata：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/10dc4b40265c433bb20e0fd4a1f862e6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>拿到 metadata 有什么用呢？</p>
+<p>可以判断权限呀，比如这个路由需要 admin 角色，那可以取出 request 的 user 对象，看看它有没有这个角色，有才放行。</p>
+<p>当然这只是一种用途。</p>
+<p>除了能拿到 handler 上的装饰器，也可以拿到 class 上的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/12538621a1a74dbd88c0bb20a8ef3e87~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ad6a4834d0974b31b6528a3942ed0535~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9d46cbf4ac5848c4b303ea0648f30fb2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>reflector 还有 3 个方法：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4c2d3d5f95af42f285627e55f1cc4f70~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这 4 个方法有啥区别呢？</p>
+<p>看下<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fnestjs%2Fnest%2Fblob%2F5bba7e9d264319490f142ca5e8099c559fa7e7e3%2Fpackages%2Fcore%2Fservices%2Freflector.service.ts%23L11-L97" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/nestjs/nest/blob/5bba7e9d264319490f142ca5e8099c559fa7e7e3/packages/core/services/reflector.service.ts#L11-L97" ref="nofollow noopener noreferrer">它们的源码</a>就知道了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/85d6f8b0a5504b9eaf7099bf6912d8d9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>get 的实现就是 Reflect.getMetadata。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc0456df139b40998bb735047684b332~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>getAll 是返回一个 metadata 的数组。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/136db1840afc4b44b9f38c555cb0db02~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>getAllAndMerge，会把它们合并为一个对象或者数组。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7081c65ccd744f83ac28df0a43eae4ed~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>getAllAndOverride 会返回第一个非空的 metadata。</p>
+<p>我们试一下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/af05ff6a849642e799db7124c8425ab0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到它们结果的区别：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4af40c29df31495eb94d6636f3f1dece~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fmetadata-and-reflector" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/metadata-and-reflector" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>Nest 的装饰器的实现原理就是 Reflect.getMetadata、Reflect.defineMetadata 这些 api。通过在 class、method 上添加 metadata，然后扫描到它的时候取出 metadata 来做相应的处理来完成各种功能。</p>
+<p>Nest 的 Controller、Module、Service 等等所有的装饰器都是通过 Reflect.meatdata 给类或对象添加元数据的，然后初始化的时候取出来做依赖的扫描，实例化后放到 IOC 容器里。</p>
+<p>实例化对象还需要构造器参数的类型，这个开启 ts 的 emitDecoratorMetadata 的编译选项之后， ts 就会自动添加一些元数据，也就是 design:type、design:paramtypes、design:returntype 这三个，分别代表被装饰的目标的类型、参数的类型、返回值的类型。</p>
+<p>当然，reflect metadata 的 api 还在草案阶段，需要引入 reflect metadata 的包做 polyfill。</p>
+<p>Nest 还提供了 @SetMetadata 的装饰器，可以在 controller 的 class 和 method 上添加 metadata，然后在 interceptor 和 guard 里通过 reflector 的 api 取出来。</p>
+<p>理解了 metadata，nest 的实现原理就很容易搞懂了。</p></div>

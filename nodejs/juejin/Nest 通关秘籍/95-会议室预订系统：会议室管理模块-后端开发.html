@@ -1,0 +1,573 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>用户相关的功能，后端代码、用户端前端代码、管理端前端代码都写完了。</p>
+<p>这节我们开始写下一个模块：会议室管理。</p>
+<p>看下当时分析的需求：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/115207b6183243f59cc82845e5445c86~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1010&amp;h=1058&amp;s=148539&amp;e=png&amp;b=fefcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d0a7cba91eb247e9bd39ed629fd70b62~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=946&amp;h=950&amp;s=119536&amp;e=png&amp;b=fcf3f2" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>以及我们分析出来的接口：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>接口路径</th><th>请求方式</th><th>描述</th></tr></thead><tbody><tr><td>/meeting_room/list</td><td>GET</td><td>会议室列表</td></tr><tr><td>/meeting_room/delete/:id</td><td>DELETE</td><td>会议室删除</td></tr><tr><td>/meeting_room/update/:id</td><td>PUT</td><td>会议室更新</td></tr><tr><td>/meeting_room/create</td><td>POST</td><td>会议室新增</td></tr><tr><td>/meeting_room/search</td><td>GET</td><td>会议室搜索</td></tr></tbody></table>
+<p>一共 5 个接口。</p>
+<p>在后端项目下创建一个 meeting-room 模块：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g resource meeting-room</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bdf1ad89dd5f47fa950659e70567d6d3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=966&amp;h=294&amp;s=84812&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>修改下 meeting-room.entity.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">CreateDateColumn</span>, <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span>, <span class="hljs-title class_">UpdateDateColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Entity</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MeetingRoom</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    </span>
+<span class="code-block-extension-codeLine" data-line-num="6">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'会议室ID'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">length</span>: <span class="hljs-number">50</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'会议室名字'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">name</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'会议室容量'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-attr">capacity</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-attr">length</span>: <span class="hljs-number">50</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'会议室位置'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    <span class="hljs-attr">location</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="27"></span>
+<span class="code-block-extension-codeLine" data-line-num="28">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="29">        <span class="hljs-attr">length</span>: <span class="hljs-number">50</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="30">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'设备'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="31">        <span class="hljs-attr">default</span>: <span class="hljs-string">''</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="33">    <span class="hljs-attr">equipment</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="34"></span>
+<span class="code-block-extension-codeLine" data-line-num="35">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="36">        <span class="hljs-attr">length</span>: <span class="hljs-number">100</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="37">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'描述'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="38">        <span class="hljs-attr">default</span>: <span class="hljs-string">''</span></span>
+<span class="code-block-extension-codeLine" data-line-num="39">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="40">    <span class="hljs-attr">description</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="41"></span>
+<span class="code-block-extension-codeLine" data-line-num="42">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="43">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'是否被预订'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="44">        <span class="hljs-attr">default</span>: <span class="hljs-literal">false</span></span>
+<span class="code-block-extension-codeLine" data-line-num="45">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="46">    <span class="hljs-attr">isBooked</span>: boolean;</span>
+<span class="code-block-extension-codeLine" data-line-num="47"></span>
+<span class="code-block-extension-codeLine" data-line-num="48">    @<span class="hljs-title class_">CreateDateColumn</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="49">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'创建时间'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="50">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="51">    <span class="hljs-attr">createTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="52"></span>
+<span class="code-block-extension-codeLine" data-line-num="53">    @<span class="hljs-title class_">UpdateDateColumn</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="54">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'更新时间'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="55">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="56">    <span class="hljs-attr">updateTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="57">}</span>
+</code></pre>
+<p>这个是根据当时我们的数据库设计来的：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>字段名</th><th>数据类型</th><th>描述</th></tr></thead><tbody><tr><td>id</td><td>INT</td><td>会议室ID</td></tr><tr><td>name</td><td>VARCHAR(50)</td><td>会议室名字</td></tr><tr><td>capacity</td><td>INT</td><td>会议室容量</td></tr><tr><td>location</td><td>VARCHAR(50)</td><td>会议室位置</td></tr><tr><td>equipment</td><td>VARCHAR(50)</td><td>设备</td></tr><tr><td>description</td><td>VARCHAR(100)</td><td>描述</td></tr><tr><td>is_booked</td><td>BOOLEAN</td><td>是否被预订</td></tr><tr><td>create_time</td><td>DATETIME</td><td>创建时间</td></tr><tr><td>update_time</td><td>DATETIME</td><td>更新时间</td></tr></tbody></table>
+<p>在 entities 里引入下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d4ffa26231ef4cf18ee0f331f81ba36c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=982&amp;h=770&amp;s=172196&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p>会生成建表语句：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a87904e493334385997e055d7f07483f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1334&amp;h=234&amp;s=108356&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 mysql workbench 里点击刷新就可以看到这个表：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2be653160249403fb11d05c374ad06c2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=638&amp;h=798&amp;s=185766&amp;e=png&amp;b=e9e6e4" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击第二个图标，查看表定义：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fb744168fda14063ad2398f30f829435~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1508&amp;h=912&amp;s=379688&amp;e=png&amp;b=f1efee" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没啥问题。</p>
+<p>然后我们先来初始化下数据：</p>
+<p>在 MeetingRoomModule 引入 MeetingRoom 的 Repository：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3f734b6574d34024953429d945284b25~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=856&amp;h=612&amp;s=128891&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d6c741167d54474ca28e9a22aa0b9f73~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=852&amp;h=586&amp;s=134636&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">InjectRepository</span>(<span class="hljs-title class_">MeetingRoom</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">private <span class="hljs-attr">repository</span>: <span class="hljs-title class_">Repository</span>&lt;<span class="hljs-title class_">MeetingRoom</span>&gt;;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-title function_">initData</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>然后来写初始化数据的逻辑：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-title function_">initData</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> room1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MeetingRoom</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    room1.<span class="hljs-property">name</span> = <span class="hljs-string">'木星'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    room1.<span class="hljs-property">capacity</span> = <span class="hljs-number">10</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    room1.<span class="hljs-property">equipment</span> = <span class="hljs-string">'白板'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    room1.<span class="hljs-property">location</span> = <span class="hljs-string">'一层西'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">const</span> room2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MeetingRoom</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    room2.<span class="hljs-property">name</span> = <span class="hljs-string">'金星'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    room2.<span class="hljs-property">capacity</span> = <span class="hljs-number">5</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    room2.<span class="hljs-property">equipment</span> = <span class="hljs-string">''</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    room2.<span class="hljs-property">location</span> = <span class="hljs-string">'二层东'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">const</span> room3 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MeetingRoom</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    room3.<span class="hljs-property">name</span> = <span class="hljs-string">'天王星'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    room3.<span class="hljs-property">capacity</span> = <span class="hljs-number">30</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    room3.<span class="hljs-property">equipment</span> = <span class="hljs-string">'白板，电视'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    room3.<span class="hljs-property">location</span> = <span class="hljs-string">'三层东'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">repository</span>.<span class="hljs-title function_">save</span>([room1, room2, room3])</span>
+<span class="code-block-extension-codeLine" data-line-num="21">}</span>
+</code></pre>
+<p>还需要像 user 模块那样，添加一个 init-data 的路由，浏览器访问么？</p>
+<p>不用，可以用 repl 的模式来跑：</p>
+<p>添加 src/repl.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { repl } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/core'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.module'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">bootstrap</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> replServer = <span class="hljs-keyword">await</span> <span class="hljs-title function_">repl</span>(<span class="hljs-title class_">AppModule</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    replServer.<span class="hljs-title function_">setupHistory</span>(<span class="hljs-string">".nestjs_repl_history"</span>, <span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-keyword">if</span> (err) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(err);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-title function_">bootstrap</span>();</span>
+</code></pre>
+<p>然后在 package.json 里添加一个 scripts</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/423669d0353c43d596659e1b511271f8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=996&amp;h=634&amp;s=124531&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">"repl"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"nest start --watch --entryFile repl"</span><span class="hljs-punctuation">,</span></span>
+</code></pre>
+<p>把服务停掉，执行：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run repl</span>
+</code></pre>
+<p>先查看下 MeetingRoomService 的方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">scss</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-scss code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-built_in">methods</span>(MeetingRoomService)</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9e148a8e246e4e3095f2bb40c9f55533~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=494&amp;h=300&amp;s=24746&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后调用下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">scss</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-scss code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-built_in">get</span>(MeetingRoomService)<span class="hljs-selector-class">.initData</span>()</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9629d5c039764ed5ab462e1475548f4a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1332&amp;h=702&amp;s=214502&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>打印了 3 条 insert 语句，之后又把它 select 出来返回：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/43c01e0314a14bda9896cf917ae9408b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1304&amp;h=674&amp;s=213150&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>数据库里也可以看到插入的三条数据：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/585a7e05e6e3433d98f0f3aa24640324~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1524&amp;h=384&amp;s=192008&amp;e=png&amp;b=e8e6e5" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们很多地方都是用的 repository.save，但如果你确定是 insert 或者 update 的时候，直接用 repository.insert  或者 repository.update 更好。</p>
+<p>先 truncate table 清空数据：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9acecd774ac5460c9c88fe60503026f3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=720&amp;h=738&amp;s=220332&amp;e=png&amp;b=e7e3e0" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>刷新可以看到，确实清空了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/402250c636c64892b68da07a7ea591be~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1168&amp;h=366&amp;s=119566&amp;e=gif&amp;f=15&amp;b=f6f6f6" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把 save 换成 insert：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36878901246f48448439f3f2bee87c32~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=984&amp;h=864&amp;s=176152&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>重新跑一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">scss</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-scss code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-built_in">get</span>(MeetingRoomService)<span class="hljs-selector-class">.initData</span>()</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0c3e91ec7ef44fc5a15d87fde8f4f798~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1190&amp;h=356&amp;s=88343&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在是批量插入了 3 条数据。</p>
+<p>所以说确定是 insert 的时候 用 insert 比用 save 更好，能够批量插入数据。</p>
+<p>同理，确定是 update 的时候，也不要用 save，因为它会先 select 一次，再确定是 udpate 还是 insert。</p>
+<p>然后我们写一下 CRUD 的接口：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>接口路径</th><th>请求方式</th><th>描述</th></tr></thead><tbody><tr><td>/meeting_room/list</td><td>GET</td><td>会议室列表</td></tr><tr><td>/meeting_room/delete/:id</td><td>DELETE</td><td>会议室删除</td></tr><tr><td>/meeting_room/update/:id</td><td>PUT</td><td>会议室更新</td></tr><tr><td>/meeting_room/create</td><td>POST</td><td>会议室新增</td></tr><tr><td>/meeting_room/search</td><td>GET</td><td>会议室搜索</td></tr></tbody></table>
+<p>在 MeetingRoomtController 增加一个 list 接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Controller</span>, <span class="hljs-title class_">Get</span>, <span class="hljs-title class_">Post</span>, <span class="hljs-title class_">Body</span>, <span class="hljs-title class_">Patch</span>, <span class="hljs-title class_">Param</span>, <span class="hljs-title class_">Delete</span>, <span class="hljs-title class_">Query</span>, <span class="hljs-title class_">DefaultValuePipe</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">MeetingRoomService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./meeting-room.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { generateParseIntPipe } <span class="hljs-keyword">from</span> <span class="hljs-string">'src/utils'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Controller</span>(<span class="hljs-string">'meeting-room'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MeetingRoomController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">private readonly meetingRoomService: MeetingRoomService</span>) {}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  @<span class="hljs-title class_">Get</span>(<span class="hljs-string">'list'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-keyword">async</span> <span class="hljs-title function_">list</span>(<span class="hljs-params"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    @Query(<span class="hljs-string">'pageNo'</span>, <span class="hljs-keyword">new</span> DefaultValuePipe(<span class="hljs-number">1</span>), generateParseIntPipe(<span class="hljs-string">'pageNo'</span>)) pageNo: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    @Query(<span class="hljs-string">'pageSize'</span>, <span class="hljs-keyword">new</span> DefaultValuePipe(<span class="hljs-number">2</span>), generateParseIntPipe(<span class="hljs-string">'pageSize'</span>)) pageSize: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  ) {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">meetingRoomService</span>.<span class="hljs-title function_">find</span>(pageNo, pageSize);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="16">}</span>
+</code></pre>
+<p>然后在 MeetingRoomService 添加 find 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">find</span>(<span class="hljs-params">pageNo: number, pageSize: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">if</span>(pageNo &lt; <span class="hljs-number">1</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'页码最小为 1'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> skipCount = (pageNo - <span class="hljs-number">1</span>) * pageSize;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> [meetingRooms, totalCount] = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">repository</span>.<span class="hljs-title function_">findAndCount</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">skip</span>: skipCount,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">take</span>: pageSize</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        meetingRooms,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        totalCount</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="16">}</span>
+</code></pre>
+<p>重新跑下服务：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ebd271cb6c1a4949b63170ff6f4d45e4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1196&amp;h=1314&amp;s=161636&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没啥问题。</p>
+<p>然后是 create 接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Post</span>(<span class="hljs-string">'create'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">create</span>(<span class="hljs-params">@Body() meetingRoomDto: CreateMeetingRoomDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">meetingRoomService</span>.<span class="hljs-title function_">create</span>(meetingRoomDto);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>修改下 create-meeting-room.dto.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">IsNotEmpty</span>, <span class="hljs-title class_">MaxLength</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"class-validator"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CreateMeetingRoomDto</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @<span class="hljs-title class_">IsNotEmpty</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">message</span>: <span class="hljs-string">'会议室名称不能为空'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @<span class="hljs-title class_">MaxLength</span>(<span class="hljs-number">10</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">message</span>: <span class="hljs-string">'会议室名称最长为 10 字符'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">name</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    @<span class="hljs-title class_">IsNotEmpty</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">message</span>: <span class="hljs-string">'容量不能为空'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">capacity</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    @<span class="hljs-title class_">IsNotEmpty</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-attr">message</span>: <span class="hljs-string">'位置不能为空'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    @<span class="hljs-title class_">MaxLength</span>(<span class="hljs-number">50</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-attr">message</span>: <span class="hljs-string">'位置最长为 50 字符'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-attr">location</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="25"></span>
+<span class="code-block-extension-codeLine" data-line-num="26">    @<span class="hljs-title class_">IsNotEmpty</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="27">        <span class="hljs-attr">message</span>: <span class="hljs-string">'设备不能为空'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    @<span class="hljs-title class_">MaxLength</span>(<span class="hljs-number">50</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="30">        <span class="hljs-attr">message</span>: <span class="hljs-string">'设备最长为 50 字符'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-attr">equipment</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="33"></span>
+<span class="code-block-extension-codeLine" data-line-num="34">    @<span class="hljs-title class_">IsNotEmpty</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="35">        <span class="hljs-attr">message</span>: <span class="hljs-string">'描述不能为空'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="36">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="37">    @<span class="hljs-title class_">MaxLength</span>(<span class="hljs-number">100</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="38">        <span class="hljs-attr">message</span>: <span class="hljs-string">'描述最长为 100 字符'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="39">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="40">    <span class="hljs-attr">description</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="41"></span>
+<span class="code-block-extension-codeLine" data-line-num="42">}</span>
+</code></pre>
+<p>在 MeetingRoomService 里添加 create 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">create</span>(<span class="hljs-params">meetingRoomDto: CreateMeetingRoomDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">repository</span>.<span class="hljs-title function_">insert</span>(meetingRoomDto);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">}</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d7e323cbb0c746efb2a3448de89c9695~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1286&amp;h=824&amp;s=105682&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个错误的格式是我们在 exception filter 里自定义的。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e3199d99f01d40f0b0aa658f7bfa4970~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1028&amp;h=1164&amp;s=169979&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/64e7fcbf75e74ca98b43b72bc3fb9f17~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1138&amp;h=320&amp;s=142031&amp;e=png&amp;b=f6f6f6" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>创建成功时会返回创建成功的会议室信息。</p>
+<p>这个会议室名其实应该保持唯一，我们加一下校验逻辑：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">create</span>(<span class="hljs-params">meetingRoomDto: CreateMeetingRoomDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> room = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">repository</span>.<span class="hljs-title function_">findOneBy</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-attr">name</span>: meetingRoomDto.<span class="hljs-property">name</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">if</span>(room) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'会议室名字已存在'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">repository</span>.<span class="hljs-title function_">save</span>(meetingRoomDto);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aca9a4d8ae7f42fb89f6b64342a340b6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=878&amp;h=846&amp;s=99750&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样就能保证会议室名字不会重复。</p>
+<p>然后实现下 update 接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Put</span>(<span class="hljs-string">'update'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">update</span>(<span class="hljs-params">@Body() meetingRoomDto: UpdateMeetingRoomDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">meetingRoomService</span>.<span class="hljs-title function_">update</span>(meetingRoomDto);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>这里的 UpdateMeetingRoomDto 和 CreateMeetingRoomDto 基本一样，只是多了个 id。</p>
+<p>所以直接用 PartialType 继承，然后添加一个 id 即可：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">PartialType</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/swagger'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CreateMeetingRoomDto</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-meeting-room.dto'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">IsNotEmpty</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'class-validator'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UpdateMeetingRoomDto</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">PartialType</span>(<span class="hljs-title class_">CreateMeetingRoomDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @<span class="hljs-title class_">IsNotEmpty</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">message</span>: <span class="hljs-string">'id 不能为空'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<p>然后在 MeetingRoomService 实现 update 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">update</span>(<span class="hljs-params">meetingRoomDto: UpdateMeetingRoomDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> meetingRoom = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">repository</span>.<span class="hljs-title function_">findOneBy</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-attr">id</span>: meetingRoomDto.<span class="hljs-property">id</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">if</span>(!meetingRoom) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'会议室不存在'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    meetingRoom.<span class="hljs-property">capacity</span> = meetingRoomDto.<span class="hljs-property">capacity</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    meetingRoom.<span class="hljs-property">location</span> = meetingRoomDto.<span class="hljs-property">location</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    meetingRoom.<span class="hljs-property">name</span> = meetingRoomDto.<span class="hljs-property">name</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">if</span>(meetingRoomDto.<span class="hljs-property">description</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      meetingRoom.<span class="hljs-property">description</span> = meetingRoomDto.<span class="hljs-property">description</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-keyword">if</span>(meetingRoomDto.<span class="hljs-property">equipment</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      meetingRoom.<span class="hljs-property">equipment</span> = meetingRoomDto.<span class="hljs-property">equipment</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">repository</span>.<span class="hljs-title function_">update</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-attr">id</span>: meetingRoom.<span class="hljs-property">id</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    } , meetingRoom);</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="25">}</span>
+</code></pre>
+<p>先查询一下，如果查不到就返回会议室不存在。</p>
+<p>否则，更新会议室信息。</p>
+<p>这里的 description 和 equipment 因为可以不传，所以要判断下，传了才更新。</p>
+<p>测试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d4f165d9ab2549fcb4730cac355d7905~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=996&amp;h=958&amp;s=108864&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>服务端打印了 select 和 update 的 sql：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ac34c9ae875a4ec28fdaa922867611bd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1448&amp;h=446&amp;s=172611&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>数据库中也更新了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a5d39d84588044fdb48a9a7dbb803f86~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=802&amp;h=318&amp;s=101912&amp;e=png&amp;b=fafafa" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后还需要一个回显的接口，用在修改的时候回显数据：</p>
+<p>添加一个 :id 接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">':id'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">find</span>(<span class="hljs-params">@Param(<span class="hljs-string">'id'</span>) id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">meetingRoomService</span>.<span class="hljs-title function_">findById</span>(id);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>然后在 service 实现这个方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findById</span>(<span class="hljs-params">id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">repository</span>.<span class="hljs-title function_">findOneBy</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      id</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    }); </span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/11c41d45c2aa4330b695eb20a6026ad8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=980&amp;h=1064&amp;s=132865&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后是 delete 接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Delete</span>(<span class="hljs-string">':id'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">delete</span>(<span class="hljs-params">@Param(<span class="hljs-string">'id'</span>) id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">meetingRoomService</span>.<span class="hljs-title function_">delete</span>(id);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>在 service 实现 delete 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">delete</span>(<span class="hljs-params">id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">repository</span>.<span class="hljs-title function_">delete</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      id</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">}</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e4be53c3459543339ebce76afbc92750~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=910&amp;h=710&amp;s=71020&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a6fa1601b92f40d599857b36fd4f80f2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1392&amp;h=346&amp;s=171960&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c24e456169e44df0a5f992939c27ac17~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1042&amp;h=336&amp;s=166150&amp;e=gif&amp;f=17&amp;b=f6f6f6" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>确实删除了。</p>
+<p>最后，还有个搜索接口：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c3958d95537d4168854dc34688604afe~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1228&amp;h=844&amp;s=78981&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们没必要单独新建个接口，直接改下 list 接口就行：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'list'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">list</span>(<span class="hljs-params"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    @Query(<span class="hljs-string">'pageNo'</span>, <span class="hljs-keyword">new</span> DefaultValuePipe(<span class="hljs-number">1</span>), generateParseIntPipe(<span class="hljs-string">'pageNo'</span>)) pageNo: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @Query(<span class="hljs-string">'pageSize'</span>, <span class="hljs-keyword">new</span> DefaultValuePipe(<span class="hljs-number">2</span>), generateParseIntPipe(<span class="hljs-string">'pageSize'</span>)) pageSize: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @Query(<span class="hljs-string">'name'</span>) name: string,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    @Query(<span class="hljs-string">'capacity'</span>) capacity: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @Query(<span class="hljs-string">'equipment'</span>) equipment: string</span>
+<span class="code-block-extension-codeLine" data-line-num="8">) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">meetingRoomService</span>.<span class="hljs-title function_">find</span>(pageNo, pageSize, name, capacity, equipment);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+</code></pre>
+<p>添加 3 个参数。</p>
+<p>service 里的 find 方法也要添加 3 个参数：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">find</span>(<span class="hljs-params">pageNo: number, pageSize: number, name: string, capacity: number, equipment: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">if</span>(pageNo &lt; <span class="hljs-number">1</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'页码最小为 1'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> skipCount = (pageNo - <span class="hljs-number">1</span>) * pageSize;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> <span class="hljs-attr">condition</span>: <span class="hljs-title class_">Record</span>&lt;string, any&gt; = {};</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">if</span>(name) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        condition.<span class="hljs-property">name</span> = <span class="hljs-title class_">Like</span>(<span class="hljs-string">`%<span class="hljs-subst">${name}</span>%`</span>);   </span>
+<span class="code-block-extension-codeLine" data-line-num="11">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">if</span>(equipment) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        condition.<span class="hljs-property">equipment</span> = <span class="hljs-title class_">Like</span>(<span class="hljs-string">`%<span class="hljs-subst">${equipment}</span>%`</span>); </span>
+<span class="code-block-extension-codeLine" data-line-num="14">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">if</span>(capacity) {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        condition.<span class="hljs-property">capacity</span> = capacity;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-keyword">const</span> [meetingRooms, totalCount] = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">repository</span>.<span class="hljs-title function_">findAndCount</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="20">        <span class="hljs-attr">skip</span>: skipCount,</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        <span class="hljs-attr">take</span>: pageSize,</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-attr">where</span>: condition</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="26">        meetingRooms,</span>
+<span class="code-block-extension-codeLine" data-line-num="27">        totalCount</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="29">}</span>
+</code></pre>
+<p>如果传了这三个参数，就添加查询的 where 条件。</p>
+<p>测试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/37b047abe26248a6a760218ab1c4ecda~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1126&amp;h=1208&amp;s=149733&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e20405c6737b408b935212701ad615b9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1126&amp;h=1236&amp;s=153829&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a8eff66048ac4590a86d92517e6e8443~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1114&amp;h=1256&amp;s=150921&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没啥问题。</p>
+<p>这样，会议室管理模块的接口就写完了。</p>
+<p>案例代码上传了<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fmeeting_room_booking_system_backend" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/meeting_room_booking_system_backend" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节，我们实现了会议室管理模块。</p>
+<p>首先添加了 entity，然后实现了 CRUD 方法。</p>
+<p>其中，我们在 list 接口实现了分页和搜索。</p>
+<p>这些接口我们在用户模块都写过。</p>
+<p>其实很多模块的功能都是差不多的，都是 CRUD 的复合。</p></div>

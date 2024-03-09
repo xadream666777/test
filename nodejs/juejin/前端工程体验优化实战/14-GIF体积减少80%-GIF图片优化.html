@@ -1,0 +1,803 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>GIF是网络上常见的图片格式，具有<strong>自动播放动态内容</strong>的独特功能，常用于动态表情包或功能演示，在网页中应用广泛。</p>
+<p>但是GIF图片也有显著的痛点，主要体现在：</p>
+<ul>
+<li>体积巨大</li>
+<li>加载慢</li>
+<li>帧数低</li>
+<li>分辨率不高</li>
+</ul>
+<p>因此，对GIF图片进行优化的方案应运而生，这其中，经过实践检验，投入产出比最高的就是GIF图片转视频优化。</p>
+<h2 data-id="heading-0">1. GIF、MP4和Webm格式对比</h2>
+<p>首先，让我们对比一下3种格式的异同，请看这张表格：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>特性 \ 格式</strong></th><th>GIF</th><th>MP4</th><th>Webm</th></tr></thead><tbody><tr><td>动态内容</td><td>支持</td><td>支持</td><td>支持</td></tr><tr><td>自动播放</td><td>支持</td><td>支持（仅限静音时）</td><td>支持（仅限静音时）</td></tr><tr><td>包含音频</td><td><strong>不</strong>支持</td><td>支持</td><td>支持</td></tr><tr><td>体积* 体积变化视文件内容有所波动</td><td>695 KB (100%)</td><td>191 KB (27%)</td><td>88 KB（12%）</td></tr><tr><td>浏览器兼容性</td><td>几乎所有浏览器</td><td>几乎所有浏览器</td><td>- Chrome 25+ （2013年发布） <br>- Safari 16+ （2022年发布）</td></tr><tr><td>开始播放时机</td><td>图片完全加载后， <code>onload</code>事件触发时</td><td>第一帧加载后， <code>onloadeddata</code>事件触发时</td><td>第一帧加载后， <code>onloadeddata</code>事件触发时</td></tr></tbody></table>
+<p>通过上述对比可以看出，同样是展示动态内容，MP4 和 WebM 等视频格式相较于GIF格式图片有显著优势，主要体现在：</p>
+<h3 data-id="heading-1">1. 视频格式的体积显著小于GIF格式图片：</h3>
+<p>因为视频格式有<strong>运动估计(Motion Estimation)、预测编码(Predictive Coding)</strong> &nbsp;等专用的编码优化技术，可以实现<code>相邻帧优化</code>，对于视频中相邻的几帧图像，只需要保存帧与帧之间的<strong>部分</strong>差异像素数据，而GIF格式则需要保存每一帧的<strong>所有</strong>像素。</p>
+<h3 data-id="heading-2">2. 视频格式播放开始时间早于GIF格式图片：</h3>
+<p>视频格式在浏览器中可以利用<strong>HTTP范围请求（HTTP Range 响应头）</strong> &nbsp;实现<code>分片加载</code>，一个视频文件，只需要加载一小部分即可开始播放，同时边播放边下载剩余部分。</p>
+<p>但GIF格式的图片，则必须要等待完全加载（触发<code>onload</code>事件）才能开始播放，通常要远远慢于视频格式。</p>
+<p>总之，MP4 和 WebM 等视频格式的在体积，播放开始时间等各方面都优于GIF格式。</p>
+<p>如果我们的前端工程有大量GIF格式的图片，将GIF图片转为MP4和WebM视频格式，既可以节省用户的带宽和CDN流量，也能为前端应用带来更好用户体验。</p>
+<blockquote>
+<p>注：<a href="https://link.juejin.cn?target=http%3A%2F%2Ftwitter.com" target="_blank" rel="nofollow noopener noreferrer" title="http://twitter.com" ref="nofollow noopener noreferrer">Twitter</a>、<a href="https://link.juejin.cn?target=https%3A%2F%2Fimgur.com%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://imgur.com/" ref="nofollow noopener noreferrer">Imgur</a>、<a href="https://link.juejin.cn?target=https%3A%2F%2Fzhihu.com" target="_blank" rel="nofollow noopener noreferrer" title="https://zhihu.com" ref="nofollow noopener noreferrer">知乎</a>等网站都有应用这项GIF转视频优化方案，经过了业界的实践检验。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a7af13742b9a4faa9b98e2bec2628dfa~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=112506&amp;e=webp&amp;b=2a2a2a" alt="" loading="lazy" class="medium-zoom-image"></p>
+</blockquote>
+<p>那么在实践中，如何方便快捷地为前端项目实现 GIF 图片转换视频呢？</p>
+<h2 data-id="heading-3">2. 用 FFmpeg 实现 GIF 图片转视频</h2>
+<p><code>FFmpeg</code>是广泛使用的开源跨平台音视频处理工具，持续维护了20余年，是开源界的常青树。众多流行的视频剪辑应用、图片裁剪工具、格式转换工具底层都是基于FFmpeg实现的。</p>
+<p>其主要使用方式是通过命令行调用，接下来我们首先学习以命令行的形式，使用FFmpeg将GIF图像转换为MP4或WebM视频格式的步骤。</p>
+<h3 data-id="heading-4">1. 下载并安装FFmpeg</h3>
+<p>我们可以从官方网站（<a href="https://link.juejin.cn?target=https%3A%2F%2Fffmpeg.org" target="_blank" rel="nofollow noopener noreferrer" title="https://ffmpeg.org" ref="nofollow noopener noreferrer">ffmpeg.org</a> ）下载安装程序，也可以使用<code>apt-get</code>等包管理工具安装：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sh</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sh code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">// 示例：Ubuntu 系统使用 apt-get 安装 ffmpeg</span>
+<span class="code-block-extension-codeLine" data-line-num="2">sudo apt-get update &amp;&amp; sudo apt install ffmpeg</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">ffmpeg -v</span>
+<span class="code-block-extension-codeLine" data-line-num="5">// 输出：ffmpeg version 4.2.7-0ubuntu0.1 Copyright (c) 2000-2022 the FFmpeg developers...</span>
+</code></pre>
+<h3 data-id="heading-5">2. GIF图像转MP4示例</h3>
+<p>非常简单，只需要2项参数：</p>
+<ul>
+<li>输入文件路径：<code>input.GIF</code></li>
+<li>输出文件路径：<code>output.mp4</code></li>
+</ul>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sh</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sh code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ffmpeg -i input.GIF output.mp4</span>
+</code></pre>
+<p>此外，我们还可以通过以下参数调整细节：</p>
+<ul>
+<li>
+<p><code>-crf 10</code>，CRF即Constant Rate Factor，用于指定视频质量。值的范围视编码器而定，以<code>x264</code>编码器为例取值范围是0到51，0表示无损转换，51表示最低质量转换。质量参数也会直接影响产物的体积，值越小，产物质量越高、体积越大。</p>
+</li>
+<li>
+<p><code>-c:v</code>指定使用libvpx编解码器进行视频编码，可选值有：</p>
+<ul>
+<li><code>libx264</code>即H.264编码器，默认CRF值为23。</li>
+<li><code>libx265</code>即H.265/HEVC编码器，默认CRF值为28。</li>
+</ul>
+</li>
+</ul>
+<h3 data-id="heading-6">3. GIF图像转Webm示例</h3>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sh</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sh code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">ffmpeg -i input.GIF output.webm</span>
+</code></pre>
+<p>仍然只需要输入文件路径和输出文件路径项2项参数即可。</p>
+<h4 data-id="heading-7">封装FFMpeg Shell脚本示例</h4>
+<p>如果需要转换格式的图片来自前端项目内部，可以将上述命令行封装成Shell脚本文件，做为前端项目构建的一个步骤执行。</p>
+<p>例如对指定的<code>dist/images</code>目录下的所有<code>.GIF</code>格式图片，用FFmpeg转换成WebM格式，Shell脚本就可以写成：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sh</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sh code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">#!/bin/bash</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-comment"># 指定要转换的目录和文件类型</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-built_in">dir</span>=<span class="hljs-string">"./materials"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">filetype=<span class="hljs-string">".GIF"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> <span class="hljs-string">"<span class="hljs-variable">$dir</span>"</span>/*<span class="hljs-string">"<span class="hljs-variable">$filetype</span>"</span>; <span class="hljs-keyword">do</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-built_in">echo</span> <span class="hljs-string">"Start process for <span class="hljs-variable">$file</span>"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-comment"># 获取文件名和路径</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">filename=$(<span class="hljs-built_in">basename</span> <span class="hljs-string">"<span class="hljs-variable">$file</span>"</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="11">filepath=$(<span class="hljs-built_in">dirname</span> <span class="hljs-string">"<span class="hljs-variable">$file</span>"</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="12">output=<span class="hljs-string">"<span class="hljs-variable">${filename%.*}</span>.webm"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">output_path=<span class="hljs-string">"<span class="hljs-variable">$filepath</span>/<span class="hljs-variable">$output</span>"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15"><span class="hljs-comment"># 使用FFmpeg将 GIF 转换成 WebM 文件</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">ffmpeg -i <span class="hljs-string">"<span class="hljs-variable">$file</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$output_path</span>"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17"><span class="hljs-keyword">done</span></span>
+</code></pre>
+<p>但是如果GIF图片来自项目外部，且数量较多，例如<strong>用户上传GIF图片</strong>这一常见场景。</p>
+<p>我们又该如何实现GIF转视频这一关键步骤呢？</p>
+<h2 data-id="heading-8">3. GIF转视频后端服务</h2>
+<p>对于用户上传GIF图片的场景，我们可以考虑新建一个后端服务，用于在用户上传GIF图片时，转换成视频格式文件，供后续使用。</p>
+<h3 data-id="heading-9">1. 新建Node.js服务器应用</h3>
+<p>首先，我们需要新建一个Node.js服务器应用，用于接收用户上传的GIF图片文件，为了便于前端工程师理解和开发维护，我们仍然选择Node.js &amp;&amp; Express 的架构，初始代码很简单：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// index.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> app = <span class="hljs-title function_">express</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> port = <span class="hljs-number">3088</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">app.<span class="hljs-title function_">listen</span>(port, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`GIF2Video Server listening on http://localhost:<span class="hljs-subst">${port}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">});</span>
+</code></pre>
+<p>在配置几个package.json脚本命令用于本地环境开发调试，即可开始大展身手了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">"scripts"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">"start-debug"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"node --inspect ./src/index"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">"start"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"node ./src/index"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+</code></pre>
+<p>这个Node.js服务器的主要功能是2方面：</p>
+<ol>
+<li>接收并保存上传的GIF图片到服务器本地</li>
+<li>调用FFmpeg将服务器本地的GIF图片转换为视频格式，并消费（例如上传到CDN）</li>
+</ol>
+<h3 data-id="heading-10">2. 接收并保存上传的GIF图片</h3>
+<p>所以，接下来，让我们实现第一部分功能：接收并保存上传的GIF图片。</p>
+<p>我们先用Express的路由，搭建一个上传文件的HTML页面作为测试场地playground，用于测试上传功能：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">app.<span class="hljs-title function_">get</span>(<span class="hljs-string">'/upload-page'</span>, <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  res.<span class="hljs-title function_">sendFile</span>(__dirname + <span class="hljs-string">'/upload-page.html'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">});</span>
+</code></pre>
+<p>响应的<code>upload-page.html</code>是一个以<code>FormData</code>形式调用HTTP接口上传文件的简单页面，代码如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>文件上传示例<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>文件上传<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"file"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"fileInput"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"file"</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">"uploadFile()"</span>&gt;</span>上传<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">target</span>=<span class="hljs-string">"_blank"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://github.com/JuniorTour/fe-optimization-demo"</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        &gt;《现代前端工程体验优化》示例&lt;/a</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-keyword">function</span> <span class="hljs-title function_">uploadFile</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-keyword">var</span> fileInput = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">'fileInput'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="20">        <span class="hljs-keyword">var</span> file = fileInput.<span class="hljs-property">files</span>[<span class="hljs-number">0</span>];</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-keyword">var</span> formData = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FormData</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        formData.<span class="hljs-title function_">append</span>(<span class="hljs-string">'file'</span>, file);</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        formData.<span class="hljs-title function_">append</span>(<span class="hljs-string">'name'</span>, file.<span class="hljs-property">name</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="25">        formData.<span class="hljs-title function_">append</span>(<span class="hljs-string">'type'</span>, file.<span class="hljs-property">type</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="26"></span>
+<span class="code-block-extension-codeLine" data-line-num="27">        <span class="hljs-title function_">fetch</span>(<span class="hljs-string">'http://localhost:3088/GIF2video'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="28">          <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="29">          <span class="hljs-attr">body</span>: formData,</span>
+<span class="code-block-extension-codeLine" data-line-num="30">        })</span>
+<span class="code-block-extension-codeLine" data-line-num="31">          .<span class="hljs-title function_">then</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">response</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="32">            <span class="hljs-keyword">if</span> (response.<span class="hljs-property">ok</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="33">              <span class="hljs-comment">// 请求成功处理逻辑</span></span>
+<span class="code-block-extension-codeLine" data-line-num="34">              <span class="hljs-keyword">return</span> response.<span class="hljs-title function_">text</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="35">            } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="36">              <span class="hljs-comment">// 请求失败处理逻辑</span></span>
+<span class="code-block-extension-codeLine" data-line-num="37">              <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">'上传文件失败'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="38">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="39">          })</span>
+<span class="code-block-extension-codeLine" data-line-num="40">          .<span class="hljs-title function_">then</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="41">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(data);</span>
+<span class="code-block-extension-codeLine" data-line-num="42">          })</span>
+<span class="code-block-extension-codeLine" data-line-num="43">          .<span class="hljs-title function_">catch</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">error</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="44">            <span class="hljs-comment">// 错误处理逻辑</span></span>
+<span class="code-block-extension-codeLine" data-line-num="45">            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(error);</span>
+<span class="code-block-extension-codeLine" data-line-num="46">          });</span>
+<span class="code-block-extension-codeLine" data-line-num="47">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="48">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="49">  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="50"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>其中的上传接口URL：<a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3088%2FGIF2video" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3088/GIF2video" ref="nofollow noopener noreferrer">http://localhost:3088/GIF2video</a> ，就是我们要新增的另一个后端路由接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> multer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'multer'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> { <span class="hljs-attr">v4</span>: uuid } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'uuid'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> upload = <span class="hljs-title function_">multer</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">app.<span class="hljs-title function_">post</span>(<span class="hljs-string">'/GIF2video'</span>, upload.<span class="hljs-title function_">single</span>(<span class="hljs-string">'file'</span>), <span class="hljs-keyword">async</span> (req, res) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`/GIF2video get formData`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-keyword">const</span> fileId = <span class="hljs-title function_">uuid</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  </span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-comment">// https://www.npmjs.com/package/multer#file-information</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-comment">// startGIF2Video(fileId, req.file);</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">  res.<span class="hljs-title function_">send</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-attr">msg</span>: <span class="hljs-string">'FormData数据已接收'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    fileId,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="17">});</span>
+</code></pre>
+<p>这个接口中，我们使用开源库<a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fmulter" target="_blank" rel="nofollow noopener noreferrer" title="https://www.npmjs.com/package/multer" ref="nofollow noopener noreferrer">multer</a>的<code>upload.single('file')</code>中间件，来方便地获取随HTTP请求上传的文件数据。</p>
+<p>同时使用<code>uuid</code>库，生成一个唯一ID供我们关联定位GIF图片及其转换后的视频文件。</p>
+<p>最后，我们就要实现核心的转换格式逻辑了。</p>
+<h3 data-id="heading-11">3. 在Node.js平台使用FFmpeg</h3>
+<p>在Node.js平台调用FFmpeg有很多方式，笔者接下来分享一套基于<code>fluent-ffmpeg</code>和<code>@ffmpeg-installer/ffmpeg</code>开源库简单方便的实现方案。</p>
+<p>安装<code>@ffmpeg-installer/ffmpeg</code>NPM包后，会附带下载当前系统对应的FFmpeg运行时到<code>node_modules</code>文件夹中。</p>
+<blockquote>
+<p>例如 Windows 平台对应FFmpeg的下载路径是：<code>node_modules@ffmpeg-installer\win32-x64\ffmpeg.exe</code></p>
+</blockquote>
+<p>再调用<code>ffmpeg.setFfmpegPath(ffmpegPath.path)</code>，就可以将FFmpeg的运行时上下文同步给<code>fluent-ffmpeg</code>库供我们后续在JS代码中以链式调用的形式使用FFmpeg。</p>
+<p>请看示例代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> ffmpegPath = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@ffmpeg-installer/ffmpeg'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> ffmpeg = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fluent-ffmpeg'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">ffmpeg.<span class="hljs-title function_">setFfmpegPath</span>(ffmpegPath.<span class="hljs-property">path</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-title function_">ffmpeg</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  .<span class="hljs-title function_">input</span>(absPath)</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-comment">// 其余常用选项示例：</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-comment">// .videoCodec('libx264')    </span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-comment">// .inputFPS(24)</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-comment">// .size('320x240')</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">  .<span class="hljs-title function_">on</span>(<span class="hljs-string">'stderr'</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params">stderrLine</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'[FFmpeg] '</span> + stderrLine);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  })</span>
+<span class="code-block-extension-codeLine" data-line-num="16">  .<span class="hljs-title function_">on</span>(<span class="hljs-string">'error'</span>, <span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(err);</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-title function_">reject</span>(err);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">  })</span>
+<span class="code-block-extension-codeLine" data-line-num="20">  .<span class="hljs-title function_">on</span>(<span class="hljs-string">'end'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-string">`[FFmpeg] Convert end. Time cost: <span class="hljs-subst">${<span class="hljs-built_in">Date</span>.now() - startTime}</span> ms`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    );</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-title function_">resolve</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="25">  })</span>
+<span class="code-block-extension-codeLine" data-line-num="26">  .<span class="hljs-title function_">save</span>(path.<span class="hljs-title function_">resolve</span>(outputFilePath, outputFileName));</span>
+</code></pre>
+<p>上述代码逻辑，就是<code>/GIF2video</code>HTTP接口的核心逻辑，我们加以封装后，就可以实现输入指定路径的GIF文件，输出指定格式的视频文件。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">runConvertFile</span>(<span class="hljs-params">fileId</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-keyword">const</span> <span class="hljs-title class_">GIFData</span> = <span class="hljs-title function_">getGIFFilePath</span>(fileId);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`GIFData=<span class="hljs-subst">${<span class="hljs-built_in">JSON</span>.strinGIFy(GIFData)}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-keyword">try</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">await</span> <span class="hljs-title function_">convertGIFFileToVideo</span>(<span class="hljs-title class_">GIFData</span>, <span class="hljs-string">'webm'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">await</span> <span class="hljs-title function_">convertGIFFileToVideo</span>(<span class="hljs-title class_">GIFData</span>, <span class="hljs-string">'mp4'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  } <span class="hljs-keyword">catch</span> (error) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">`runConvertFile ERROR:`</span>, error);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14"><span class="hljs-keyword">function</span> <span class="hljs-title function_">afterConvertRenameDir</span>(<span class="hljs-params">fileId, convertSuccess</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  <span class="hljs-keyword">const</span> <span class="hljs-title class_">GIFDirPath</span> = <span class="hljs-title function_">getGIFDir</span>(fileId);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">  <span class="hljs-keyword">const</span> newGIFDirPath = <span class="hljs-title class_">GIFDirPath</span>.<span class="hljs-title function_">replace</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    fileId,</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-string">`<span class="hljs-subst">${</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">      convertSuccess</span>
+<span class="code-block-extension-codeLine" data-line-num="20">        ? CONVERT_STATUS.convertFinish</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        : CONVERT_STATUS.convertFailed</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    }_<span class="hljs-subst">${fileId}</span>`</span>
+<span class="code-block-extension-codeLine" data-line-num="23">  );</span>
+<span class="code-block-extension-codeLine" data-line-num="24">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`renameGIFDir \nfrom:<span class="hljs-subst">${GIFDirPath}</span>\nto  :<span class="hljs-subst">${newGIFDirPath}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="25">  fs.<span class="hljs-title function_">renameSync</span>(<span class="hljs-title class_">GIFDirPath</span>, newGIFDirPath);</span>
+<span class="code-block-extension-codeLine" data-line-num="26">}</span>
+<span class="code-block-extension-codeLine" data-line-num="27"></span>
+<span class="code-block-extension-codeLine" data-line-num="28"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">startGIF2Video</span>(<span class="hljs-params">fileId, file</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="29">  <span class="hljs-title function_">saveFile</span>(fileId, file);</span>
+<span class="code-block-extension-codeLine" data-line-num="30">  <span class="hljs-keyword">const</span> convertSuccess = <span class="hljs-keyword">await</span> <span class="hljs-title function_">runConvertFile</span>(fileId);</span>
+<span class="code-block-extension-codeLine" data-line-num="31">  <span class="hljs-title function_">afterConvertRenameDir</span>(fileId, convertSuccess)</span>
+<span class="code-block-extension-codeLine" data-line-num="32">  <span class="hljs-comment">// TODO 上传到 CDN</span></span>
+<span class="code-block-extension-codeLine" data-line-num="33">}</span>
+</code></pre>
+<p>最终生成的转换后文件会统一存放在项目根目录下的<code>/materials/convertFinish_${fileID}</code>文件夹中，我们可以根据项目的架构决定使用方式，常见的使用方式，可以考虑：</p>
+<ol>
+<li>统一上传到CDN上的相同路径，供前端项目方便地转换格式，例如：</li>
+</ol>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">-   https<span class="hljs-punctuation">:</span><span class="hljs-comment">//cdn.com/GIF2video/${fileID}/dynamic.GIF</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">-   https<span class="hljs-punctuation">:</span><span class="hljs-comment">//cdn.com/GIF2video/${fileID}/dynamic.webm</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">-   https<span class="hljs-punctuation">:</span><span class="hljs-comment">//cdn.com/GIF2video/${fileID}/dynamic.mp4</span></span>
+</code></pre>
+<ol>
+<li>提供专用HTTP接口，响应包含GIF和视频对应URL的JSON格式数据，供前端获取GIF及视频资源URL</li>
+</ol>
+<blockquote>
+<p>GIF2Video 项目 GitHub 仓库：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2FGIF2video-node-server" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/GIF2video-node-server" ref="nofollow noopener noreferrer">github.com/JuniorTour/…</a></p>
+</blockquote>
+<p>GIF转视频后端服务，为我们提供了<code>MP4</code>和<code>Webm</code>2种格式作为候选项，我们通过本节开头的对比也了解到，同样的视频内容，Webm的体积一般只有MP4的50%左右，比MP4格式体积更小。</p>
+<p>但是Webm格式在Safari浏览器中兼容性较差，2022年发布的Safari 16才完全支持播放Webm视频。再次遇到了兼容性和节省体积不可兼得的问题。</p>
+<p>别担心，我们也有解决方案！</p>
+<h2 data-id="heading-12">4. 自适应选择最优视频格式</h2>
+<p>类似上文第9节介绍的《自适应选择最优<strong>图片</strong>格式》解决方案，浏览器平台的视频资源，也有根据浏览器兼容性自适应加载视频格式的API，请看示例代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-tag">&lt;<span class="hljs-name">video</span> <span class="hljs-attr">muted</span> <span class="hljs-attr">autoplay</span> <span class="hljs-attr">loop</span> <span class="hljs-attr">playsinline</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"GIF-demo.webm"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"video/webm"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"GIF-demo.mp4"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"video/mp4"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-tag">&lt;/<span class="hljs-name">video</span>&gt;</span></span>
+</code></pre>
+<p>这段代码中，首先，我们为Video元素声明了4项属性，用于模仿GIF图片的特性：</p>
+<ul>
+<li><code>muted</code>：静音播放，是浏览器允许自动播放的前提条件。</li>
+<li><code>autoplay</code>：加载完成后，自动开始播放。</li>
+<li><code>loop</code>：循环播放。</li>
+<li><code>playsinline</code>：用于控制视频是否在行内播放。在移动端 Safari 浏览器上常见视频播放后，自动全屏这一特性，设置<code>playsinline=true</code>就会禁用该自动全屏特性。</li>
+</ul>
+<p>其次，我们在<code>video</code>元素中声明了2个<code>source</code>元素，分别设置了MP4和Webm 2种格式的视频作为<code>src</code>属性值及<code>type</code>属性值。</p>
+<blockquote>
+<p><strong>注意：</strong></p>
+<p>与<code>&lt;picture&gt;</code>元素<strong>不同</strong>，<code>&lt;video&gt;</code>元素中的<code>source</code>使用的是<code>src</code>属性，而非<code>&lt;picture&gt;</code>中的<code>srcset</code>。</p>
+<p><code>type</code>属性<strong>相同</strong>，都是格式对应的<a href="https://link.juejin.cn/?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FHTTP%2FBasics_of_HTTP%2FMIME_types%23image_types" title="https://link.juejin.cn/?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FHTTP%2FBasics_of_HTTP%2FMIME_types%23image_types" target="_blank">MIME类型</a></p>
+</blockquote>
+<p>这样浏览器就能像<code>&lt;picture&gt;</code>元素一样，按<strong>从上到下的顺序</strong>解析，根据浏览器自身的兼容性，决定播放某一个兼容格式的<code>source</code>元素对应的视频源。</p>
+<p>我们将Webm格式<strong>先于</strong>MP4格式声明，从而实现<strong>优先</strong>播放Webm格式视频，减少加载视频文件体积的优化效果。</p>
+<p>如果用户的浏览器不支持播放Webm格式，就会忽略其对应的<code>source</code>元素，降级到使用下一个MP4格式的视频作为播放源。</p>
+<p>这样我们就实现了自适应选择最优视频格式的目标，优先加载体积较小的Webm格式视频，加快内容播放，节省CDN流量开销，兼容性和节省体积一举两得。</p>
+<h2 data-id="heading-13">5. 验证、量化和评估</h2>
+<h3 data-id="heading-14">1. 验证</h3>
+<h4 data-id="heading-15">1. 统计用户UA，验证视频格式兼容性</h4>
+<p>因为Webm格式的视频，在浏览器平台的兼容性一般，所以建议优化上线前，提前统计用户的浏览器版本，系统版本等用户代理信息，用来验证Webm格式上线后的使用量。</p>
+<p>推荐使用<a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fua-parser-js" target="_blank" rel="nofollow noopener noreferrer" title="https://www.npmjs.com/package/ua-parser-js" ref="nofollow noopener noreferrer">ua-parser-js</a>开源库获取用户代理信息，Gzip压缩后仅有7KB，体积较小，但功能完善，且有千万下载量，维护长达十年，久经考验。</p>
+<p>获取用户代理数据示例代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> <span class="hljs-title class_">UAParser</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'ua-parser-js'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">reportCount</span>(<span class="hljs-params">{ name, labels, help, sampleRate = <span class="hljs-number">1</span> }</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() &gt; sampleRate) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-keyword">await</span> <span class="hljs-title function_">fetch</span>(<span class="hljs-string">'http://localhost:4001/counter-metric'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">headers</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">body</span>: <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">strinGIFy</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      name,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      help,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      labels,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    }),</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="18">}</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">reportUAInfo</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">  <span class="hljs-keyword">const</span> parser = <span class="hljs-keyword">new</span> <span class="hljs-title class_">UAParser</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="22">  <span class="hljs-keyword">const</span> ret = parser.<span class="hljs-title function_">getResult</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="23">  <span class="hljs-comment">// console.log(`getUAInfo ret=${JSON.strinGIFy(ret)}`);</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">  <span class="hljs-title function_">reportCount</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-attr">name</span>: <span class="hljs-string">'UAInfo'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    <span class="hljs-attr">help</span>: <span class="hljs-string">'User Agent Info of fe-optimizaion-demo'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="27">    <span class="hljs-attr">labels</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="28">      <span class="hljs-attr">browser</span>: <span class="hljs-string">`<span class="hljs-subst">${ret.browser.name}</span>_<span class="hljs-subst">${ret.browser.major}</span>`</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="29">      <span class="hljs-attr">os</span>: <span class="hljs-string">`<span class="hljs-subst">${ret.os.name}</span>_<span class="hljs-subst">${ret.os.version}</span>`</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-attr">sampleRate</span>: <span class="hljs-number">0.01</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-comment">// sampleRate: 1,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="33">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="34">}</span>
+</code></pre>
+<p>上报这些数据到Grafana后，我们就可以创建出多张可视化图表，包括：</p>
+<ul>
+<li>各浏览器版本访问量（Pege View）</li>
+<li>各系统版本访问量（Pege View）</li>
+<li>各浏览器版本占比</li>
+<li>各系统版本占比</li>
+</ul>
+<p>示例图如下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c69e33b5b8af4013a73f841bb0cb18a4~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1903&amp;h=724&amp;s=56242&amp;e=webp&amp;b=191b1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<details> 
+    <summary>▶点击展开：《各浏览器版本访问量（Pege View）》Grafana 图表配置JSON</summary> 
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"timeseries"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">"title"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"各浏览器版本访问量（Pege View）"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">"gridPos"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">"x"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">"y"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">"w"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">12</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">"h"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">8</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"grafanacloud-prom"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"prometheus"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">41</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">  <span class="hljs-attr">"targets"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"prometheus"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"grafanacloud-prom"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">      <span class="hljs-attr">"refId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"A"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-attr">"expr"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"sum by(browser) (increase(UAInfo[$__rate_interval]))"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">      <span class="hljs-attr">"range"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">      <span class="hljs-attr">"instant"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">      <span class="hljs-attr">"editorMode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"builder"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">      <span class="hljs-attr">"legendFormat"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__auto"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">      <span class="hljs-attr">"useBackend"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">      <span class="hljs-attr">"disableTextWrap"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29">      <span class="hljs-attr">"fullMetaSearch"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30">      <span class="hljs-attr">"includeNullMetadata"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">      <span class="hljs-attr">"format"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"time_series"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="33">  <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="34">  <span class="hljs-attr">"options"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="35">    <span class="hljs-attr">"tooltip"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="36">      <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"multi"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="37">      <span class="hljs-attr">"sort"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"none"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="38">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="39">    <span class="hljs-attr">"legend"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="40">      <span class="hljs-attr">"showLegend"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="41">      <span class="hljs-attr">"displayMode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"table"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="42">      <span class="hljs-attr">"placement"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"right"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="43">      <span class="hljs-attr">"calcs"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="44">        <span class="hljs-string">"min"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="45">        <span class="hljs-string">"max"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="46">        <span class="hljs-string">"sum"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="47">      <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="48">    <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="49">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="50">  <span class="hljs-attr">"fieldConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="51">    <span class="hljs-attr">"defaults"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="52">      <span class="hljs-attr">"custom"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="53">        <span class="hljs-attr">"drawStyle"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"line"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="54">        <span class="hljs-attr">"lineInterpolation"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"linear"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="55">        <span class="hljs-attr">"barAlignment"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="56">        <span class="hljs-attr">"lineWidth"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="57">        <span class="hljs-attr">"fillOpacity"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="58">        <span class="hljs-attr">"gradientMode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"none"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="59">        <span class="hljs-attr">"spanNulls"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="60">        <span class="hljs-attr">"insertNulls"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="61">        <span class="hljs-attr">"showPoints"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"auto"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="62">        <span class="hljs-attr">"pointSize"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="63">        <span class="hljs-attr">"stacking"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="64">          <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"none"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="65">          <span class="hljs-attr">"group"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"A"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="66">        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="67">        <span class="hljs-attr">"axisPlacement"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"auto"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="68">        <span class="hljs-attr">"axisLabel"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">""</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="69">        <span class="hljs-attr">"axisColorMode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"text"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="70">        <span class="hljs-attr">"axisBorderShow"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="71">        <span class="hljs-attr">"scaleDistribution"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="72">          <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"linear"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="73">        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="74">        <span class="hljs-attr">"axisCenteredZero"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="75">        <span class="hljs-attr">"hideFrom"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="76">          <span class="hljs-attr">"tooltip"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="77">          <span class="hljs-attr">"viz"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="78">          <span class="hljs-attr">"legend"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span></span>
+<span class="code-block-extension-codeLine" data-line-num="79">        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="80">        <span class="hljs-attr">"thresholdsStyle"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="81">          <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"off"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="82">        <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="83">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="84">      <span class="hljs-attr">"color"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="85">        <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"palette-classic"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="86">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="87">      <span class="hljs-attr">"mappings"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="88">      <span class="hljs-attr">"thresholds"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="89">        <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"absolute"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="90">        <span class="hljs-attr">"steps"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="91">          <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="92">            <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">null</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="93">            <span class="hljs-attr">"color"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"green"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="94">          <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="95">          <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="96">            <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">80</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="97">            <span class="hljs-attr">"color"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"red"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="98">          <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="99">        <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="100">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="101">      <span class="hljs-attr">"unit"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"short"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="102">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="103">    <span class="hljs-attr">"overrides"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="104">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="105">  <span class="hljs-attr">"interval"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">null</span></span>
+<span class="code-block-extension-codeLine" data-line-num="106"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+</details>
+<details>
+<summary>▶点击展开：《各浏览器版本占比》Grafana 图表配置JSON</summary>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"piechart"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">"title"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"各浏览器版本占比"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">"gridPos"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">"x"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">12</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">"y"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">"w"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">12</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">"h"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">8</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"grafanacloud-prom"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"prometheus"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">43</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">  <span class="hljs-attr">"targets"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-attr">"refId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"A"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-attr">"expr"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"sum by(browser) (UAInfo)"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-attr">"range"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-attr">"instant"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">      <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"prometheus"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"grafanacloud-prom"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">      <span class="hljs-attr">"editorMode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"builder"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">      <span class="hljs-attr">"legendFormat"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__auto"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">      <span class="hljs-attr">"useBackend"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">      <span class="hljs-attr">"disableTextWrap"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29">      <span class="hljs-attr">"fullMetaSearch"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30">      <span class="hljs-attr">"includeNullMetadata"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">  <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="33">  <span class="hljs-attr">"options"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="34">    <span class="hljs-attr">"reduceOptions"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="35">      <span class="hljs-attr">"values"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="36">      <span class="hljs-attr">"calcs"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="37">        <span class="hljs-string">"sum"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="38">      <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="39">      <span class="hljs-attr">"fields"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">""</span></span>
+<span class="code-block-extension-codeLine" data-line-num="40">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="41">    <span class="hljs-attr">"pieType"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"pie"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="42">    <span class="hljs-attr">"tooltip"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="43">      <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"single"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="44">      <span class="hljs-attr">"sort"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"none"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="45">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="46">    <span class="hljs-attr">"legend"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="47">      <span class="hljs-attr">"showLegend"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="48">      <span class="hljs-attr">"displayMode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"table"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="49">      <span class="hljs-attr">"placement"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"right"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="50">      <span class="hljs-attr">"values"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="51">        <span class="hljs-string">"percent"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="52">        <span class="hljs-string">"value"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="53">      <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="54">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="55">    <span class="hljs-attr">"displayLabels"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="56">      <span class="hljs-string">"percent"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="57">      <span class="hljs-string">"name"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="58">    <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="59">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="60">  <span class="hljs-attr">"fieldConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="61">    <span class="hljs-attr">"defaults"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="62">      <span class="hljs-attr">"custom"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="63">        <span class="hljs-attr">"hideFrom"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="64">          <span class="hljs-attr">"tooltip"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="65">          <span class="hljs-attr">"viz"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="66">          <span class="hljs-attr">"legend"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span></span>
+<span class="code-block-extension-codeLine" data-line-num="67">        <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="68">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="69">      <span class="hljs-attr">"color"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="70">        <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"palette-classic"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="71">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="72">      <span class="hljs-attr">"mappings"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="73">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="74">    <span class="hljs-attr">"overrides"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="75">  <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="76"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+</details>
+<h4 data-id="heading-16">2. 验证GIF转视频后帧数，分辨率，体积变化</h4>
+<p>优化上线前，推荐先在本地用上文的<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Fgif2video-node-server" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/gif2video-node-server" ref="nofollow noopener noreferrer">GIF2video-node-server</a>服务，用多个站内的GIF图文件转换格式后，对比体积，初步验证体积优化效果。</p>
+<p>GIF转视频后分辨率，帧数可能都会有所变化，建议大量测试后，充分验证。</p>
+<p>如果视觉上有肉眼可见的显著变化，建议检查FFMpeg的参数配置，例如：</p>
+<ol>
+<li><code>-crf</code>视频质量：值越小，产物质量越高、体积越大。调整<code>crf</code>值，控制转换后的视频质量。例如<code>-crf 28</code>，表示将产物视频质量调整到28分（最大最小分值、）。</li>
+<li><code>-s</code>视频分辨率：指定产物视频的宽度和高度。例如<code>-s 1280x720</code>表示将产物视频调整为1280x720的分辨率。</li>
+</ol>
+<h3 data-id="heading-17">2. 量化</h3>
+<h4 data-id="heading-18">1. 开始播放耗时指标</h4>
+<p>这一节开头我们学习过3种格式的<strong>开始播放时间时机</strong>不同，</p>
+<ul>
+<li>GIF图片：在完全加载GIF图片后，<code>onload</code>事件触发后，开始播放。</li>
+<li>视频（MP4和Webm）：第一帧加载后，<code>onloadeddata</code>事件触发后，开始播放。</li>
+</ul>
+<p>相对来说，视频类开始播放的时间要显著早于GIF图片，因为：</p>
+<ul>
+<li>视频的完整体积远远小于GIF</li>
+<li>加载视频第一帧的体积和耗时更是远远小于完全加载GIF图片</li>
+</ul>
+<p>这一区别会进一步导致GIF图片开始播放的耗时会比视频更<strong>多</strong>，也就意味着用户看到GIF图片开始播放要等待更长的时间，用户体验更差。</p>
+<p>所以，我们可以统计<strong>开始播放时间点</strong>这一数据，作为量化优化效果的方式。</p>
+<p>具体来说，就是分别监听GIF的<code>onload</code>事件和视频的<code>onloadeddata</code>事件，统计其触发耗时，请看示例代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width"</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>GIF和视频对比加载耗时DEMO<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-selector-class">.box</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attribute">width</span>: <span class="hljs-number">450px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attribute">height</span>: <span class="hljs-number">450px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attribute">font-size</span>: <span class="hljs-number">60px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attribute">display</span>: flex;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attribute">align-items</span>: center;</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>GIF Example<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://github.com/JuniorTour/blog/issues/13"</span> </span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">         <span class="hljs-attr">target</span>=<span class="hljs-string">"_blank"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">        &gt;《现代前端工程体验优化》DEMO<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">"handleClickLoad('GIF')"</span>&gt;</span>加载GIF<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">"handleClickLoad('mp4')"</span>&gt;</span>加载MP4<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">"handleClickLoad('webm')"</span>&gt;</span>加载Webm<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29"></span>
+<span class="code-block-extension-codeLine" data-line-num="30">    <span class="hljs-tag">&lt;<span class="hljs-name">h4</span>&gt;</span>data: <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"data"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31"></span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"player"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="33"></span>
+<span class="code-block-extension-codeLine" data-line-num="34">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="35">      <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">reportGauge</span>(<span class="hljs-params">{ name, help, labels, value, sampleRate }</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="36">        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() &gt; sampleRate) {</span>
+<span class="code-block-extension-codeLine" data-line-num="37">          <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="38">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="39">        <span class="hljs-keyword">await</span> <span class="hljs-title function_">fetch</span>(<span class="hljs-string">'http://localhost:4001/gauge-metric'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="40">          <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="41">          <span class="hljs-attr">headers</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="42">            <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="43">          },</span>
+<span class="code-block-extension-codeLine" data-line-num="44">          <span class="hljs-attr">body</span>: <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">strinGIFy</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="45">            name,</span>
+<span class="code-block-extension-codeLine" data-line-num="46">            help,</span>
+<span class="code-block-extension-codeLine" data-line-num="47">            labels,</span>
+<span class="code-block-extension-codeLine" data-line-num="48">            value,</span>
+<span class="code-block-extension-codeLine" data-line-num="49">          }),</span>
+<span class="code-block-extension-codeLine" data-line-num="50">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="51">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="52"></span>
+<span class="code-block-extension-codeLine" data-line-num="53">      <span class="hljs-keyword">const</span> player = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">'#player'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="54">      <span class="hljs-keyword">function</span> <span class="hljs-title function_">initLoad</span>(<span class="hljs-params">loadType</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="55">        <span class="hljs-keyword">if</span> (loadType === <span class="hljs-string">'GIF'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="56">          html = <span class="hljs-string">`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="57">  &lt;div class="box"&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="58">    &lt;img src="https://colinbendell.github.io/webperf/animated-GIF-decode/1.GIF" </span>
+<span class="code-block-extension-codeLine" data-line-num="59">         onload="onLoad('GIF_onload')"/&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="60">    &lt;div&gt;GIF&lt;/div&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="61">  &lt;/div&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="62">            `;</span>
+<span class="code-block-extension-codeLine" data-line-num="63">        } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="64">          html = <span class="hljs-string">`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="65">  &lt;div class="box"&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="66">    &lt;video src="https://colinbendell.github.io/webperf/animated-GIF-decode/1.<span class="hljs-subst">${loadType}</span>"</span>
+<span class="code-block-extension-codeLine" data-line-num="67">           muted autoplay loop </span>
+<span class="code-block-extension-codeLine" data-line-num="68">           onloadeddata="onLoad('<span class="hljs-subst">${loadType}</span>_onloadeddata')"</span>
+<span class="code-block-extension-codeLine" data-line-num="69">           &gt;&lt;/video&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="70">    &lt;div&gt;<span class="hljs-subst">${loadType}</span>&lt;/div&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="71">  &lt;/div&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="72">            `;</span>
+<span class="code-block-extension-codeLine" data-line-num="73">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="74">        player.<span class="hljs-property">innerHTML</span> = html;</span>
+<span class="code-block-extension-codeLine" data-line-num="75">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="76"></span>
+<span class="code-block-extension-codeLine" data-line-num="77">      <span class="hljs-keyword">const</span> query = <span class="hljs-keyword">new</span> <span class="hljs-title class_">URLSearchParams</span>(location.<span class="hljs-property">search</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="78">      <span class="hljs-keyword">const</span> loadType = query.<span class="hljs-title function_">get</span>(<span class="hljs-string">'type'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="79">      <span class="hljs-title function_">initLoad</span>(loadType);</span>
+<span class="code-block-extension-codeLine" data-line-num="80"></span>
+<span class="code-block-extension-codeLine" data-line-num="81">      <span class="hljs-keyword">function</span> <span class="hljs-title function_">handleClickLoad</span>(<span class="hljs-params">type</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="82">        location.<span class="hljs-property">search</span> = <span class="hljs-string">`type=<span class="hljs-subst">${type}</span>`</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="83">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="84"></span>
+<span class="code-block-extension-codeLine" data-line-num="85">      <span class="hljs-comment">// 视频素材：</span></span>
+<span class="code-block-extension-codeLine" data-line-num="86">      <span class="hljs-comment">// https://colinbendell.github.io/webperf/animated-GIF-decode/1.avif</span></span>
+<span class="code-block-extension-codeLine" data-line-num="87">      <span class="hljs-comment">// https://colinbendell.github.io/webperf/animated-GIF-decode/1.webm</span></span>
+<span class="code-block-extension-codeLine" data-line-num="88">      <span class="hljs-comment">// https://colinbendell.github.io/webperf/animated-GIF-decode/1.GIF</span></span>
+<span class="code-block-extension-codeLine" data-line-num="89">      <span class="hljs-keyword">let</span> data = {};</span>
+<span class="code-block-extension-codeLine" data-line-num="90">      <span class="hljs-keyword">const</span> ele = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">'#data'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="91">      <span class="hljs-keyword">function</span> <span class="hljs-title function_">printData</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="92">        <span class="hljs-keyword">if</span> (ele) {</span>
+<span class="code-block-extension-codeLine" data-line-num="93">          ele.<span class="hljs-property">innerHTML</span> = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">strinGIFy</span>(data, <span class="hljs-literal">null</span>, <span class="hljs-number">2</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="94">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="95">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="96"></span>
+<span class="code-block-extension-codeLine" data-line-num="97">      <span class="hljs-keyword">function</span> <span class="hljs-title function_">onLoad</span>(<span class="hljs-params">type</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="98">        <span class="hljs-keyword">const</span> time = performance.<span class="hljs-title function_">now</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="99">        data[type] = time;</span>
+<span class="code-block-extension-codeLine" data-line-num="100">        <span class="hljs-title function_">printData</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="101"></span>
+<span class="code-block-extension-codeLine" data-line-num="102">        <span class="hljs-title function_">reportGauge</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="103">          {</span>
+<span class="code-block-extension-codeLine" data-line-num="104">            <span class="hljs-attr">name</span>: <span class="hljs-string">`GIF2VideoPlayTime`</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="105">            <span class="hljs-attr">help</span>: <span class="hljs-string">`start to play time for GIF2Video optimization`</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="106">            <span class="hljs-attr">labels</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="107">              type,</span>
+<span class="code-block-extension-codeLine" data-line-num="108">            },</span>
+<span class="code-block-extension-codeLine" data-line-num="109">            <span class="hljs-attr">value</span>: time,</span>
+<span class="code-block-extension-codeLine" data-line-num="110">            <span class="hljs-attr">sampleRate</span>: <span class="hljs-number">1</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="111">          },</span>
+<span class="code-block-extension-codeLine" data-line-num="112">        );</span>
+<span class="code-block-extension-codeLine" data-line-num="113">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="114">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="115">  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="116"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>在这段HTML代码中，我们对加载视频的<code>video</code>和加载GIF图片的<code>img</code>元素分别监听了<code>onloadeddata</code>和<code>onload</code>事件，并在事件回调<code>function onLoad(type)</code>中统计了其触发耗时<code>const time = performance.now();</code>，</p>
+<p>最后使用<code>function reportGauge(name, help, labels, value)</code>，将类型（<code>type</code>）和耗时（<code>time</code>），通过我们的老朋友数据收集服务的HTTP接口<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Fnode-prometheus-grafana-demo" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/node-prometheus-grafana-demo" ref="nofollow noopener noreferrer">/gauge-metric</a>，都上报到了Grafana。</p>
+<p>有了这些数据，我们就可以创建一张可视化图表，用于分析对比GIF和视频文件<strong>开始播放耗时指标</strong>的差异，用来帮助我们量化GIF转视频优化的收益。</p>
+<p>在具体实践中，推荐在优化上线之前，<strong>预先</strong>上线开始播放耗时指标，统计优化前GIF图片的播放耗时数据。等优化上线后，和之前的GIF数据对比，分析优化效果。</p>
+<h4 data-id="heading-19">2. GIF图片和视频体积指标</h4>
+<p>GIF转视频优化的直接收益就是加载体积显著减少，所以量化GIF图片和视频体积指标也必不可少。</p>
+<p>推荐在转视频的后端项目中，使用Node.js的<code>fs</code>模块，计算并上报体积数据，</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">function</span> <span class="hljs-title function_">getFileSize</span>(<span class="hljs-params">type, files, targetDir</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-keyword">const</span> fileName = files.<span class="hljs-title function_">find</span>(<span class="hljs-function">(<span class="hljs-params">fileNmae</span>) =&gt;</span> fileNmae.<span class="hljs-title function_">includes</span>(<span class="hljs-string">`.<span class="hljs-subst">${type}</span>`</span>));</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-keyword">return</span> fs.<span class="hljs-title function_">statSync</span>(path.<span class="hljs-title function_">resolve</span>(targetDir, fileName)).<span class="hljs-property">size</span>; <span class="hljs-comment">// unit: byte</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-comment">// ...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">const</span> <span class="hljs-title class_">GIFFileSize</span> = <span class="hljs-title function_">getFileSize</span>(<span class="hljs-string">'GIF'</span>, files, targetDir);</span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">const</span> webmFileSize = <span class="hljs-title function_">getFileSize</span>(<span class="hljs-string">'webm'</span>, files, targetDir);</span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-keyword">const</span> mp4FileSize = <span class="hljs-title function_">getFileSize</span>(<span class="hljs-string">'mp4'</span>, files, targetDir);</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-title function_">reportSizeRatio</span>(<span class="hljs-string">'Webm'</span>, webmFileSize / <span class="hljs-title class_">GIFFileSize</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-title function_">reportSizeRatio</span>(<span class="hljs-string">'MP4'</span>, mp4FileSize / <span class="hljs-title class_">GIFFileSize</span>);</span>
+</code></pre>
+<p>上报数据继续复用我们久经考验的Node.js数据收集服务HTTP接口：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Fnode-prometheus-grafana-demo" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/node-prometheus-grafana-demo" ref="nofollow noopener noreferrer">/gauge-metric</a>&nbsp;及其封装函数：<code>function reportGauge()&nbsp;</code>，上传到Grafana用于制作可视化图表。</p>
+<blockquote>
+<p>《GIF2Video feat: 增加体积数据统计》完整代码Commit：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2FGIF2video-node-server%2Fcommit%2Fcc27be71ac6759e0aeb981bb81dc06f90393910c" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/GIF2video-node-server/commit/cc27be71ac6759e0aeb981bb81dc06f90393910c" ref="nofollow noopener noreferrer">github.com/JuniorTour/…</a>)</p>
+</blockquote>
+<h3 data-id="heading-20">3. 评估</h3>
+<h4 data-id="heading-21">1. 开始播放耗时下降50%</h4>
+<p>基于我们在GIF转视频优化上线前，提前创建好的Grafana可视化图表：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/662780f1ab794a37bb2a20d68ce02cf9~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1356&amp;h=483&amp;s=18262&amp;e=webp&amp;b=181c1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在优化上线后，应该能观察到视频的<strong>开始播放耗时</strong>显著低于GIF图片，有50%以上的降幅，具体数据如下：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>对比项 / 开始播放耗时（单位：毫秒 ms）</th><th>优化前（<strong>仅GIF图片</strong>）</th><th>优化后（<strong>Webm视频</strong>）</th><th>差异</th></tr></thead><tbody><tr><td>平均值</td><td>70.9</td><td>31.9</td><td>-39ms (-55.0%)</td></tr><tr><td>最大值</td><td>95.3</td><td>38.8</td><td>-56.5ms (-59.3%)</td></tr><tr><td>最小值</td><td>59.5</td><td>25.8</td><td>-33.7ms (-56.6%)</td></tr></tbody></table>
+<h4 data-id="heading-22">2. GIF图片和视频体积比例指标仅20%左右</h4>
+<p>此外，优化上线后，我们应该能看到 GIF2Video 服务上报的体积比例指标，长期保持在20%左右较低的水平，表示我们的优化让用户加载的资源体积大幅了减少80%，取得了显著的优化收益。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2db97be9158e4ee082493fe68cefdbb8~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=948&amp;h=434&amp;s=10558&amp;e=webp&amp;b=191b1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h2 data-id="heading-23">6. 小结</h2>
+<p>这一节中，我们首先了解了GIF、MP4和Webm格式的异同。</p>
+<p>接下来，为了解决GIF图片格式体积大、加载播放慢的痛点，我们学习了用FFMpeg实现GIF图片转视频的解决方案，以及用Node.js服务器应用实现GIF图片转视频的代码逻辑。</p>
+<p>最后，介绍了使用<code>&lt;video&gt;</code>和<code>&lt;source&gt;</code>元素，自适应选择最优视频格式的细节。</p></div>

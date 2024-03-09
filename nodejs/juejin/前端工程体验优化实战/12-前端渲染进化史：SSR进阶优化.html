@@ -1,0 +1,712 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><h2 data-id="heading-0">4. Node.js服务端渲染进阶优化：</h2>
+<h3 data-id="heading-1">1. 服务端静态站点生成 Static Site Generation (SSG)</h3>
+<p>SSR架构的应用中或多或少会有一些内容长期不变的<strong>纯静态</strong>页面，例如博客文章页、活动页和规则条例页等等。</p>
+<p>对于这些千人一面的静态页面，每次用户的请求时都消耗服务端资源进行SSR渲染，生成<strong>重复</strong>的HTML字符串，显然是一种对计算资源的浪费，因此就有了服务端静态站点生成 （Static Site Generation SSG）这项优化技术。</p>
+<p>SSG允许开发者指定部分页面，在项目打包编译时，就提前生成静态页面HTML文件，随服务端应用部署后，直接将HTML文件作为响应返回给用户。</p>
+<p>从而避免执行服务端渲染，减少运行开销，节省服务器硬件资源，减少金钱开销。</p>
+<p>在SSR的基础上实现SSG并不复杂，下面我们在上文SSR示例项目的基础上，继续演示如何为其实现SSG，将这一博客项目的指定文章页通过SSG处理成静态页面。</p>
+<blockquote>
+<p>完整示例请参考《feat: SSR to SSG》：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo%2Fpull%2F5" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo/pull/5" ref="nofollow noopener noreferrer">github.com/JuniorTour/…</a></p>
+</blockquote>
+<h4 data-id="heading-2">1. 生成静态页面 staticGenerator</h4>
+<p>首先，我们需要编写核心的生成静态页面逻辑，原理是利用<code>renderToString</code>API 和Node.js的文件读写能力<code>fs</code>模块，将单次渲染的结果，保存为独立HTML文件，供后续用户响应复用：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// server\staticGenerator.tsx</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { renderToString } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom/server'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">App</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'../src/app/ui/app/app'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { history } <span class="hljs-keyword">from</span> <span class="hljs-string">'../src/shared/router'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">import</span> { staticPages } <span class="hljs-keyword">from</span> <span class="hljs-string">'./staticPagesConfig'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">import</span> { getIndexHTMLTemplate, saveToFile, urlToFileName } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">staticGenerator</span>(<span class="hljs-params">{ url, getStaticData }</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-comment">// eslint-disable-next-line no-console</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`staticGenerator start for <span class="hljs-subst">${url}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  history.<span class="hljs-title function_">push</span>(url);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-comment">// 参考 Next.js 的 getStaticProps：https://nextjs.org/docs/pages/building-your-application/rendering/static-site-generation</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-keyword">await</span> <span class="hljs-title function_">getStaticData</span>({ url });</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  <span class="hljs-comment">// eslint-disable-next-line no-console</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`staticGenerator getStaticData finish for <span class="hljs-subst">${url}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">  <span class="hljs-keyword">const</span> markup = <span class="hljs-title function_">renderToString</span>(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span></span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">  <span class="hljs-keyword">const</span> fileName = <span class="hljs-title function_">urlToFileName</span>(url);</span>
+<span class="code-block-extension-codeLine" data-line-num="21">  <span class="hljs-title function_">saveToFile</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    fileName,</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-title function_">getIndexHTMLTemplate</span>().<span class="hljs-title function_">replace</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="24">      <span class="hljs-string">'&lt;div id="root"&gt;&lt;/div&gt;'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">      <span class="hljs-string">`&lt;div id="root"&gt;<span class="hljs-subst">${markup}</span>&lt;/div&gt;`</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    ),</span>
+<span class="code-block-extension-codeLine" data-line-num="27">  );</span>
+<span class="code-block-extension-codeLine" data-line-num="28">  <span class="hljs-comment">// eslint-disable-next-line no-console</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`staticGenerator finish for <span class="hljs-subst">${fileName}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="30">}</span>
+<span class="code-block-extension-codeLine" data-line-num="31"></span>
+<span class="code-block-extension-codeLine" data-line-num="32"><span class="hljs-comment">// staticGenerator('article/example', async () =&gt; {</span></span>
+<span class="code-block-extension-codeLine" data-line-num="33"><span class="hljs-comment">//   // 取回异步数据，供渲染DOM</span></span>
+<span class="code-block-extension-codeLine" data-line-num="34"><span class="hljs-comment">// });</span></span>
+</code></pre>
+<p>这段代码中，我们声明了<code>staticGenerator</code>函数，接收一个对象作为参数，从中获取2个属性：</p>
+<ul>
+<li>
+<p><code>url</code>：需要生成静态页面的URL，例如某一篇文章<code>article/If-we-quantify-the-alarm...</code>。</p>
+</li>
+<li>
+<p><code>getStaticData</code>：为静态页面获取异步数据，例如文章页的文章内容，以便完整渲染DOM。</p>
+</li>
+</ul>
+<p>另外，为了独立运行SSG的逻辑，我们也要为其配置独立的Webpack配置和<code>package.json</code>脚本命令，有了上文中SSR的基础，我们的配置并不复杂，代码如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// webpack\server-static-generation.config.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> { merge } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'webpack-merge'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> serverConfig = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./server.config'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = <span class="hljs-title function_">merge</span>(serverConfig, {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">entry</span>: path.<span class="hljs-title function_">resolve</span>(__dirname, <span class="hljs-string">'../server/staticGenerator.tsx'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-attr">output</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">filename</span>: <span class="hljs-string">'staticGenerator.js'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="11">});</span>
+</code></pre>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">"scripts"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">"build-ssg"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"cross-env NODE_ENV=production BUILD_SERVER=true webpack --config ./webpack/server-static-generation.config.js"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">"run-ssg"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"node ./dist/staticGenerator.js"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">"build-run-ssg"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"npm run build-ssg &amp;&amp; npm run run-ssg"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-punctuation">}</span>    </span>
+</code></pre>
+<h4 data-id="heading-3">2. 处理服务端客户端状态同步问题</h4>
+<p>SSG 的一大难点就是如何处理好服务端客户端数据同步问题。</p>
+<p>具体来说，我们想要实现对博客文章页进行SGG处理，那就需要我们能在服务端获取到文章页所需的各类数据，以便渲染出包括文章页内容文字在内的完整DOM。</p>
+<p>通常的解决方案是，配合前端应用的状态管理工具，在服务端加载所需数据，供<code>renderToString</code>时获取并渲染。</p>
+<p>对于我们的示例项目来说，我们只需要在服务端<code>renderToString</code>运行前，调用前端更新状态用的<code>getArticleFx</code>方法，提前获取到文章页所需的文章内容数据即可。</p>
+<p>我们通过<code>staticGenerator()</code>接受的<code>getStaticData</code>方法来实现这一逻辑，在指定的SSG页面配置<code>staticPages</code>中，我们将<code>getStaticData</code>赋值为调用<code>await getArticleFx()</code>的异步函数。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// server\staticPagesConfig.ts</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { getArticleFx } <span class="hljs-keyword">from</span> <span class="hljs-string">'../src/pages/article/model/store'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> staticPagesURL = [</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-string">'/article/If-we-quantify-the-alarm-we-can-get-to-the-FTP-pixel-through-the-online-SSL-interface!-120863'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-string">'/article/You-cant-transmit-the-firewall-without-copying-the-1080p-SDD-interface!-120863'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">];</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">articlPageGetStaticData</span>(<span class="hljs-params">{ url }</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-keyword">await</span> <span class="hljs-title function_">getArticleFx</span>(url.<span class="hljs-title function_">split</span>(<span class="hljs-string">'article/'</span>)?.[<span class="hljs-number">1</span>]);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> staticPages = [</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">url</span>: staticPagesURL[<span class="hljs-number">0</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">getStaticData</span>: articlPageGetStaticData,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="18">  {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-attr">url</span>: staticPagesURL[<span class="hljs-number">1</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-attr">getStaticData</span>: articlPageGetStaticData,</span>
+<span class="code-block-extension-codeLine" data-line-num="21">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="22">];</span>
+</code></pre>
+<p>这样，当我们执行<code>npm run build-run-ssg</code>，服务端运行<code>staticGenerator({ url, getStaticData })</code>时，就能在<code>renderToString</code>执行渲染前，加载好文章页所需文章内容数据，最终渲染得到的DOM中，就会包含我们想要的文章内容DOM：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a1709137f4e40f1a91fa60027603fe3~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=1030&amp;s=345457&amp;e=png&amp;b=1c1c1c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h4 data-id="heading-4">3. 改造SSR逻辑跳过SSG页面渲染</h4>
+<p>最后，对于已经生成了静态HTML的页面，我们还要改造SSR逻辑，对这些页面跳过执行<code>renderToString</code>的逻辑，直接读取本地文件系统中的静态HTML，作为HTTP响应，返回给用户的请求。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// server\renderer.tsx</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">serverRenderer</span>(<span class="hljs-params">req, res</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-keyword">const</span> <span class="hljs-attr">context</span>: <span class="hljs-title class_">StaticRouterContext</span> = {};</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-keyword">const</span> reqUrl = req.<span class="hljs-property">url</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">if</span> (staticPagesURL.<span class="hljs-title function_">includes</span>(reqUrl)) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-comment">// eslint-disable-next-line no-console</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`SSG run for: (<span class="hljs-subst">${reqUrl}</span>)`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    res.<span class="hljs-title function_">send</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-title function_">getDistHTMLContent</span>(<span class="hljs-string">`./<span class="hljs-subst">${StaticPagesFolderName}</span>/<span class="hljs-subst">${urlToFileName(reqUrl)}</span>`</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    );</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">  history.<span class="hljs-title function_">push</span>(reqUrl);</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">  <span class="hljs-keyword">const</span> markup = <span class="hljs-title function_">renderToString</span>(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span></span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="20">  <span class="hljs-comment">// ...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">}</span>
+</code></pre>
+<p>通过这样的改造，每一次用户请求文章页时，服务器就不再需要重复执行<code>renderToString()</code>，可以节省服务器SSR运行耗时，减少服务器负担，从而节省服务器硬件资源，解决SSR的部分痛点。</p>
+<blockquote>
+<p>很多著名的静态站点生成工具，都是基于类似的代码逻辑实现的，例如：</p>
+<ul>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Ffacebook%2Fdocusaurus%2Fblob%2F791da2e4a1a53aa6309887059e3f112fcb35bec4%2Fpackages%2Fdocusaurus%2Fsrc%2Fclient%2FserverRenderer.tsx%23L12" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/facebook/docusaurus/blob/791da2e4a1a53aa6309887059e3f112fcb35bec4/packages/docusaurus/src/client/serverRenderer.tsx#L12" ref="nofollow noopener noreferrer">docusaurus 的 renderStaticApp()</a></li>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Fnextjs.org%2Fdocs%2Fpages%2Fbuilding-your-application%2Frendering%2Fstatic-site-generation" target="_blank" rel="nofollow noopener noreferrer" title="https://nextjs.org/docs/pages/building-your-application/rendering/static-site-generation" ref="nofollow noopener noreferrer">Next.js 的 SSG</a>：我们实现的<code>getStaticData</code>就类似其<code>getStaticProps</code>API。</li>
+</ul>
+</blockquote>
+<p>但是，SSG也有其痛点：</p>
+<ul>
+<li>
+<p>首先，SSG只适用于<strong>完全静态的页面</strong>，如果页面中一小部分需要在SSR时动态变化，SSG就难以实现。</p>
+</li>
+<li>
+<p>其次，对于有大量 SSG 页面的前端项目，每个页面都需要等待异步数据加载完成，并执行<code>renderToString</code>渲染，会导致项目的完整构建耗时相当漫长，开发体验较差。</p>
+</li>
+</ul>
+<h3 data-id="heading-5">2. 增量静态页面再生 ISR Incremental Static Regeneration</h3>
+<p>为了进一步解决SSG的这些痛点，<strong>增量静态页面再生(ISR，Incremental Static Regeneration)</strong> 技术应运而生。</p>
+<p>ISR通过将单次<code>renderToString()</code>渲染的结果<strong>缓存</strong>，并设置缓存有效期，来实现既减少重复渲染，节省服务端资源，又避免构建耗时太长的需求。</p>
+<p>简单来说，ISR的逻辑用这9行伪代码就可以说清：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">function</span> <span class="hljs-title function_">ISRRender</span>(<span class="hljs-params">context</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">let</span> ret</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">const</span> hasCache = <span class="hljs-title function_">validateCache</span>(context)</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">if</span> (hasCache) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        ret = <span class="hljs-title function_">getCache</span>(context)</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    } <span class="hljs-keyword">else</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        ret = <span class="hljs-title function_">doRender</span>(context)</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">return</span> ret</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+</code></pre>
+<p>ISR可以应用于内容更新的实时性不强，能接受一定时间更新延迟的<strong>非静态页面</strong> <strong>。</strong> 例如商品详情页、用户信息页、热门榜单页等，这些页面：</p>
+<ul>
+<li>
+<p>一定时间内，内容不会更新，处于相对静止状态，服务端渲染的结果可以被缓存下来复用。</p>
+</li>
+<li>
+<p>但也需要定时地更新内容，例如商品销量增加、热榜内容变化、用户信息修改时，那么服务端渲染就要再次执行，从而渲染出最新的页面DOM。</p>
+</li>
+</ul>
+<p>下面我们继续基于示例项目，演示实现ISR的主要流程和核心原理。</p>
+<blockquote>
+<p>完整代码示例《feat: SSR to ISR》：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo%2Fpull%2F6" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo/pull/6" ref="nofollow noopener noreferrer">github.com/JuniorTour/…</a></p>
+</blockquote>
+<h4 data-id="heading-6">1. LRU缓存</h4>
+<p>首先我们要基于LRU缓存实现一套高效的缓存系统，用于读写SSR的渲染结果。</p>
+<blockquote>
+<p>注：LRU缓存（Least Recently Used Cache）是一种致力于提高缓存命中率、并节省读写缓存成本的缓存算法策略。</p>
+</blockquote>
+<p>示例代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// server\IncrementalStaticRegeneration\cache.ts</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { log } <span class="hljs-keyword">from</span> <span class="hljs-string">'console'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> <span class="hljs-title class_">LRUCache</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'lru-cache'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">interface <span class="hljs-title class_">Cache</span>&lt;<span class="hljs-title class_">CacheVal</span>&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">lruCache</span>: <span class="hljs-title class_">LRUCache</span>&lt;string, <span class="hljs-title class_">CacheVal</span>&gt;;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Cache</span>&lt;<span class="hljs-title class_">CacheVal</span>&gt; implements <span class="hljs-title class_">Cache</span>&lt;<span class="hljs-title class_">CacheVal</span>&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">{ max }: { max: number }</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lruCache</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LRUCache</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-attr">noDisposeOnSet</span>: <span class="hljs-literal">true</span>, <span class="hljs-comment">// 只在超过 max 时，触发 dispose</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">      max,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-attr">dispose</span>: <span class="hljs-function">(<span class="hljs-params">key: string</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-title function_">log</span>(<span class="hljs-string">`ISR cache <span class="hljs-subst">${key}</span> dispose`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="18">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">  <span class="hljs-title function_">remove</span>(<span class="hljs-params">key: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lruCache</span>.<span class="hljs-title function_">del</span>(key);</span>
+<span class="code-block-extension-codeLine" data-line-num="22">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="23"></span>
+<span class="code-block-extension-codeLine" data-line-num="24">  <span class="hljs-comment">// maxAge unit: ms</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">  <span class="hljs-title function_">set</span>(<span class="hljs-params">path: string, data: CacheVal, maxAge?: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    <span class="hljs-keyword">if</span> (!data) <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="27"></span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lruCache</span>.<span class="hljs-title function_">set</span>(path, data, maxAge);</span>
+<span class="code-block-extension-codeLine" data-line-num="29">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="30"></span>
+<span class="code-block-extension-codeLine" data-line-num="31">  <span class="hljs-title function_">get</span>(<span class="hljs-params">path: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-keyword">if</span> (!path) <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="33"></span>
+<span class="code-block-extension-codeLine" data-line-num="34">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">lruCache</span>.<span class="hljs-title function_">get</span>(path);</span>
+<span class="code-block-extension-codeLine" data-line-num="35">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="36"></span>
+<span class="code-block-extension-codeLine" data-line-num="37">  <span class="hljs-title function_">size</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="38">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">lruCache</span>.<span class="hljs-property">length</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="39">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="40">}</span>
+<span class="code-block-extension-codeLine" data-line-num="41"></span>
+<span class="code-block-extension-codeLine" data-line-num="42"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">Cache</span>;</span>
+</code></pre>
+<p>使用上述代码，我们以面向对象的模式，实现了一个<code>Cache</code>类，封装了开源库<code>lru-cache</code>的读（<code>get</code>）写（<code>set</code>）逻辑，并利用其自带的<code>maxAge</code>参数来实现ISR对服务端渲染结果定期更新的需求。</p>
+<blockquote>
+<p>注：<code>lru-cache</code>默认将缓存数据保存在内存中，用占据内存空间换取节省CPU运行时间。</p>
+<p>如果担心内存占用太多，我们可以自行修改缓存读写实现逻辑，替换LRU的保存在内存中的形式。</p>
+<p>例如，基于Node.js的<code>fs</code>模块，改为缓存到本地文件系统中。</p>
+</blockquote>
+<h4 data-id="heading-7">2. 封装带缓存的ISR渲染器类</h4>
+<p>其次，为了方便地使用上述缓存类，我们继续封装一个ISR渲染器类，为SSR渲染接入提供方便的配置和方法，核心代码逻辑如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> <span class="hljs-title class_">Cache</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'./cache'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-comment">/**</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"> * 静态再生渲染器</span>
+<span class="code-block-extension-codeLine" data-line-num="5"> * 支持将「doRender()」参数的返回结果缓存到内存中，</span>
+<span class="code-block-extension-codeLine" data-line-num="6"> * 并指定缓存有效时长（revalidate）和缓存的key（staticPath）。</span>
+<span class="code-block-extension-codeLine" data-line-num="7"> *</span>
+<span class="code-block-extension-codeLine" data-line-num="8"> * 可用于缓存指定路由的 SSR 渲染结果，以节省服务端资源。</span>
+<span class="code-block-extension-codeLine" data-line-num="9"> *</span>
+<span class="code-block-extension-codeLine" data-line-num="10"> * RFC：TODO</span>
+<span class="code-block-extension-codeLine" data-line-num="11"> * 使用文档：TODO</span>
+<span class="code-block-extension-codeLine" data-line-num="12"> */</span>
+<span class="code-block-extension-codeLine" data-line-num="13"><span class="hljs-keyword">class</span> <span class="hljs-title class_">IncrementalStaticRegenerationRender</span>&lt;<span class="hljs-title class_">CacheVal</span> = string&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  cache;</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">  <span class="hljs-attr">doRender</span>: <span class="hljs-title class_">DoRender</span>&lt;<span class="hljs-title class_">CacheVal</span>&gt;;</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">  normalizeRenderResult?: <span class="hljs-title class_">NormalizeRenderResult</span>&lt;<span class="hljs-title class_">CacheVal</span>&gt;;</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">  <span class="hljs-attr">renderName</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    max,</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    doRender,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    normalizeRenderResult,</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    renderName,</span>
+<span class="code-block-extension-codeLine" data-line-num="27">  }: {</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    max: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    doRender: DoRender&lt;CacheVal&gt;;</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    normalizeRenderResult?: NormalizeRenderResult&lt;CacheVal&gt;;</span>
+<span class="code-block-extension-codeLine" data-line-num="31">    renderName: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="32">  }) {</span>
+<span class="code-block-extension-codeLine" data-line-num="33">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cache</span>&lt;<span class="hljs-title class_">CacheVal</span>&gt;({ max });</span>
+<span class="code-block-extension-codeLine" data-line-num="34">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">doRender</span> = doRender;</span>
+<span class="code-block-extension-codeLine" data-line-num="35">    <span class="hljs-keyword">if</span> (normalizeRenderResult) {</span>
+<span class="code-block-extension-codeLine" data-line-num="36">      <span class="hljs-variable language_">this</span>.<span class="hljs-property">normalizeRenderResult</span> = normalizeRenderResult;</span>
+<span class="code-block-extension-codeLine" data-line-num="37">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="38">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">renderName</span> = renderName || <span class="hljs-string">'Unknown'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="39">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="40"></span>
+<span class="code-block-extension-codeLine" data-line-num="41">  <span class="hljs-title function_">saveCache</span>(<span class="hljs-params"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="42">    data: RenderData&lt;CacheVal&gt;,</span>
+<span class="code-block-extension-codeLine" data-line-num="43">    staticPath: string,</span>
+<span class="code-block-extension-codeLine" data-line-num="44">    renderResult: CacheVal,</span>
+<span class="code-block-extension-codeLine" data-line-num="45">    revalidate: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="46">  ) {</span>
+<span class="code-block-extension-codeLine" data-line-num="47">    <span class="hljs-comment">// 使用 staticPath 作为缓存的 key</span></span>
+<span class="code-block-extension-codeLine" data-line-num="48">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-title function_">set</span>(staticPath, renderResult, revalidate);</span>
+<span class="code-block-extension-codeLine" data-line-num="49">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="50"></span>
+<span class="code-block-extension-codeLine" data-line-num="51">  <span class="hljs-comment">// eslint-disable-next-line class-methods-use-this</span></span>
+<span class="code-block-extension-codeLine" data-line-num="52">  <span class="hljs-title function_">getOptions</span>(<span class="hljs-params"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="53">    data: RenderData&lt;CacheVal&gt;,</span>
+<span class="code-block-extension-codeLine" data-line-num="54">    path: string,</span>
+<span class="code-block-extension-codeLine" data-line-num="55">    pathConfig: PathConfig&lt;CacheVal&gt; | <span class="hljs-literal">undefined</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="56">  ) {</span>
+<span class="code-block-extension-codeLine" data-line-num="57">    <span class="hljs-keyword">const</span> revalidate = pathConfig?.<span class="hljs-property">revalidate</span> || <span class="hljs-number">0</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="58">    <span class="hljs-keyword">const</span> getStaticPath = pathConfig?.<span class="hljs-property">getStaticPath</span> || (<span class="hljs-function">() =&gt;</span> path);</span>
+<span class="code-block-extension-codeLine" data-line-num="59">    <span class="hljs-keyword">const</span> staticPath = <span class="hljs-title function_">getStaticPath</span>(path, data);</span>
+<span class="code-block-extension-codeLine" data-line-num="60"></span>
+<span class="code-block-extension-codeLine" data-line-num="61">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="62">      staticPath,</span>
+<span class="code-block-extension-codeLine" data-line-num="63">      revalidate,</span>
+<span class="code-block-extension-codeLine" data-line-num="64">    };</span>
+<span class="code-block-extension-codeLine" data-line-num="65">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="66"></span>
+<span class="code-block-extension-codeLine" data-line-num="67">  <span class="hljs-title function_">cacheSize</span>(): number {</span>
+<span class="code-block-extension-codeLine" data-line-num="68">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-title function_">size</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="69">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="70"></span>
+<span class="code-block-extension-codeLine" data-line-num="71">  <span class="hljs-title function_">removeCache</span>(<span class="hljs-params">key: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="72">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-title function_">remove</span>(key);</span>
+<span class="code-block-extension-codeLine" data-line-num="73">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="74"></span>
+<span class="code-block-extension-codeLine" data-line-num="75">  <span class="hljs-title function_">render</span>(<span class="hljs-attr">data</span>: <span class="hljs-title class_">RenderData</span>&lt;<span class="hljs-title class_">CacheVal</span>&gt;): <span class="hljs-title class_">CacheVal</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="76">    <span class="hljs-keyword">const</span> { revalidate, staticPath } = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getOptions</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="77">      data,</span>
+<span class="code-block-extension-codeLine" data-line-num="78">      data.<span class="hljs-property">path</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="79">      data.<span class="hljs-property">pathConfig</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="80">    );</span>
+<span class="code-block-extension-codeLine" data-line-num="81"></span>
+<span class="code-block-extension-codeLine" data-line-num="82">    <span class="hljs-keyword">const</span> routeIsStatic = <span class="hljs-title class_">Boolean</span>(revalidate);</span>
+<span class="code-block-extension-codeLine" data-line-num="83">    <span class="hljs-keyword">const</span> cache = routeIsStatic ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-title function_">get</span>(staticPath) : <span class="hljs-literal">null</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="84">    <span class="hljs-keyword">const</span> hasCache = <span class="hljs-title class_">Boolean</span>(cache);</span>
+<span class="code-block-extension-codeLine" data-line-num="85">    <span class="hljs-comment">// eslint-disable-next-line no-param-reassign</span></span>
+<span class="code-block-extension-codeLine" data-line-num="86">    data.<span class="hljs-property">routeIsStatic</span> = routeIsStatic; <span class="hljs-comment">// 用于 normalizeRenderResult 内部判断</span></span>
+<span class="code-block-extension-codeLine" data-line-num="87"></span>
+<span class="code-block-extension-codeLine" data-line-num="88">    <span class="hljs-keyword">let</span> res = cache || <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">doRender</span>(data);</span>
+<span class="code-block-extension-codeLine" data-line-num="89"></span>
+<span class="code-block-extension-codeLine" data-line-num="90">    <span class="hljs-keyword">if</span> (routeIsStatic &amp;&amp; !hasCache) {</span>
+<span class="code-block-extension-codeLine" data-line-num="91">      <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">saveCache</span>(data, staticPath, res, revalidate);</span>
+<span class="code-block-extension-codeLine" data-line-num="92">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="93"></span>
+<span class="code-block-extension-codeLine" data-line-num="94">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">normalizeRenderResult</span> === <span class="hljs-string">'function'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="95">      <span class="hljs-comment">// eslint-disable-next-line no-param-reassign</span></span>
+<span class="code-block-extension-codeLine" data-line-num="96">      data.<span class="hljs-property">res</span> = res;</span>
+<span class="code-block-extension-codeLine" data-line-num="97">      res = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">normalizeRenderResult</span>(data);</span>
+<span class="code-block-extension-codeLine" data-line-num="98">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="99"></span>
+<span class="code-block-extension-codeLine" data-line-num="100">    <span class="hljs-keyword">return</span> res;</span>
+<span class="code-block-extension-codeLine" data-line-num="101">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="102">}</span>
+<span class="code-block-extension-codeLine" data-line-num="103"></span>
+<span class="code-block-extension-codeLine" data-line-num="104"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">IncrementalStaticRegenerationRender</span>;</span>
+</code></pre>
+<p>在这段代码中，我们把<code>LRU</code>缓存类声明成了ISR渲染器类的属性<code>this.cache = new Cache&lt;CacheVal&gt;({ max });</code>，并通过提供<code>render(data: RenderData&lt;CacheVal&gt;): CacheVal</code> 供SSR运行时调用，获取带有缓存的渲染结果。</p>
+<p>这个类的核心逻辑是：</p>
+<ul>
+<li><code>const cache = routeIsStatic ? this.cache.get(staticPath) : null;</code></li>
+<li><code>let res = cache || this.doRender(data);</code></li>
+</ul>
+<p>这2行代码，其判断SSR渲染的目标，是否已经有缓存，如果有，则直接读取返回缓存。如果没有，再执行渲染逻辑（<code>doRender</code>）。</p>
+<h4 data-id="heading-8">3. ISR引入SSR</h4>
+<p>最后，我们改造已有的SSR逻辑，引入ISR渲染器，并提供需要开启ISR的路由配置。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { renderToString } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom/server'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">StaticRouterContext</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-router'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { log } <span class="hljs-keyword">from</span> <span class="hljs-string">'console'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">import</span> { readFileSync } <span class="hljs-keyword">from</span> <span class="hljs-string">'fs'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">import</span> { resolve } <span class="hljs-keyword">from</span> <span class="hljs-string">'path'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">App</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'../src/app/ui/app/app'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">import</span> { history } <span class="hljs-keyword">from</span> <span class="hljs-string">'../src/shared/router'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">DIST</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'../webpack/constants'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-keyword">import</span> <span class="hljs-title class_">IncrementalStaticRegenerationRender</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-title class_">PathConfig</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">} <span class="hljs-keyword">from</span> <span class="hljs-string">'./IncrementalStaticRegeneration/renderer'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14"><span class="hljs-keyword">function</span> <span class="hljs-title function_">doRender</span>(<span class="hljs-params">{ ctx }</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  <span class="hljs-title function_">log</span>(<span class="hljs-string">`doRender run`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">  <span class="hljs-keyword">let</span> markup = <span class="hljs-string">''</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  <span class="hljs-keyword">try</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    markup = <span class="hljs-title function_">renderToString</span>(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span></span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">  } <span class="hljs-keyword">catch</span> (err) {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">'renderToString'</span>, err, ctx.<span class="hljs-property">url</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="21">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23">  <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-comment">// 如有需要，可以自由添加其他数据用于缓存，例如 react-helmet 的渲染结果</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    markup,</span>
+<span class="code-block-extension-codeLine" data-line-num="26">  };</span>
+<span class="code-block-extension-codeLine" data-line-num="27">}</span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> appRenderer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">IncrementalStaticRegenerationRender</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="30">  <span class="hljs-comment">// 如果「缓存数量超过最大值删除次数」：https://gf.in.zhihu.com/d/VyQnbK1nz/jing-tai-ye-mian-zai-sheng-isr?orgId=1&amp;var-app=heifetz-errorpage&amp;var-RouteName=NotFoundErrorPage&amp;from=now-15d&amp;to=now&amp;viewPanel=19</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">  <span class="hljs-comment">// 其中的 dispose.start.count 指标触发数量较高，就该考虑加大「缓存最大数量：max」了</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">  <span class="hljs-attr">max</span>: <span class="hljs-number">100</span> * <span class="hljs-number">1000</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="33">  doRender,</span>
+<span class="code-block-extension-codeLine" data-line-num="34">  <span class="hljs-attr">renderName</span>: <span class="hljs-string">'AppRender'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="35">});</span>
+<span class="code-block-extension-codeLine" data-line-num="36"></span>
+<span class="code-block-extension-codeLine" data-line-num="37"><span class="hljs-keyword">const</span> <span class="hljs-title class_">PathConfigs</span>: <span class="hljs-title class_">PathConfig</span>&lt;{ <span class="hljs-attr">markup</span>: string }&gt;[] = [</span>
+<span class="code-block-extension-codeLine" data-line-num="38">  {</span>
+<span class="code-block-extension-codeLine" data-line-num="39">    <span class="hljs-title function_">matchPath</span>(<span class="hljs-params">path</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="40">      <span class="hljs-keyword">return</span> <span class="hljs-regexp">/article/</span>(.*)/.<span class="hljs-title function_">test</span>(path);</span>
+<span class="code-block-extension-codeLine" data-line-num="41">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="42">    <span class="hljs-comment">// 对于文章页，我们期望每 10 秒，更新一次缓存，也即更新一次服务端渲染的结果：</span></span>
+<span class="code-block-extension-codeLine" data-line-num="43">    <span class="hljs-attr">revalidate</span>: <span class="hljs-number">10</span> * <span class="hljs-number">1000</span>, <span class="hljs-comment">// 10 seconds</span></span>
+<span class="code-block-extension-codeLine" data-line-num="44">    <span class="hljs-title function_">getStaticPath</span>(<span class="hljs-params">path <span class="hljs-comment">/* , renderData: RenderData&lt;string&gt; */</span></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="45">      <span class="hljs-comment">// 对于每一个文章页，都以其path作为缓存的 key</span></span>
+<span class="code-block-extension-codeLine" data-line-num="46">      <span class="hljs-keyword">return</span> path;</span>
+<span class="code-block-extension-codeLine" data-line-num="47">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="48">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="49">  {</span>
+<span class="code-block-extension-codeLine" data-line-num="50">    <span class="hljs-title function_">matchPath</span>(<span class="hljs-params">path</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="51">      <span class="hljs-keyword">return</span> <span class="hljs-regexp">/^/</span>login$/.<span class="hljs-title function_">test</span>(path);</span>
+<span class="code-block-extension-codeLine" data-line-num="52">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="53">    <span class="hljs-comment">// 对于登录页，我们期望每 180 秒，更新一次缓存，也即更新一次服务端渲染的结果：</span></span>
+<span class="code-block-extension-codeLine" data-line-num="54">    <span class="hljs-attr">revalidate</span>: <span class="hljs-number">180</span> * <span class="hljs-number">1000</span>, <span class="hljs-comment">// 180 seconds</span></span>
+<span class="code-block-extension-codeLine" data-line-num="55">    <span class="hljs-title function_">getStaticPath</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="56">      <span class="hljs-comment">// 对于登录页，将固定值 'login' 作为缓存的 key</span></span>
+<span class="code-block-extension-codeLine" data-line-num="57">      <span class="hljs-keyword">return</span> <span class="hljs-string">'login'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="58">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="59">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="60">  <span class="hljs-comment">// // 热门榜单页示例</span></span>
+<span class="code-block-extension-codeLine" data-line-num="61">  <span class="hljs-comment">// {</span></span>
+<span class="code-block-extension-codeLine" data-line-num="62">  <span class="hljs-comment">//   matchPath(path) {</span></span>
+<span class="code-block-extension-codeLine" data-line-num="63">  <span class="hljs-comment">//     return /hot/.test(path);</span></span>
+<span class="code-block-extension-codeLine" data-line-num="64">  <span class="hljs-comment">//   },</span></span>
+<span class="code-block-extension-codeLine" data-line-num="65">  <span class="hljs-comment">//   // 对于热门榜单页，我们期望每 1 秒，更新一次缓存，也即更新一次服务端渲染的结果：</span></span>
+<span class="code-block-extension-codeLine" data-line-num="66">  <span class="hljs-comment">//   revalidate: 1 * 1000, // 1 seconds</span></span>
+<span class="code-block-extension-codeLine" data-line-num="67">  <span class="hljs-comment">//   getStaticPath() {</span></span>
+<span class="code-block-extension-codeLine" data-line-num="68">  <span class="hljs-comment">//     return 'hot';</span></span>
+<span class="code-block-extension-codeLine" data-line-num="69">  <span class="hljs-comment">//   },</span></span>
+<span class="code-block-extension-codeLine" data-line-num="70">  <span class="hljs-comment">// },</span></span>
+<span class="code-block-extension-codeLine" data-line-num="71">];</span>
+<span class="code-block-extension-codeLine" data-line-num="72"></span>
+<span class="code-block-extension-codeLine" data-line-num="73"><span class="hljs-keyword">function</span> <span class="hljs-title function_">getPathConfig</span>(<span class="hljs-params">path</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="74">  <span class="hljs-keyword">return</span> <span class="hljs-title class_">PathConfigs</span>.<span class="hljs-title function_">find</span>(<span class="hljs-function">(<span class="hljs-params">config</span>) =&gt;</span> config.<span class="hljs-title function_">matchPath</span>(path));</span>
+<span class="code-block-extension-codeLine" data-line-num="75">}</span>
+<span class="code-block-extension-codeLine" data-line-num="76"></span>
+<span class="code-block-extension-codeLine" data-line-num="77"><span class="hljs-keyword">function</span> <span class="hljs-title function_">getISRRenderResult</span>(<span class="hljs-params">{ path, ctx }</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="78">  <span class="hljs-keyword">const</span> { markup } = appRenderer.<span class="hljs-title function_">render</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="79">    path,</span>
+<span class="code-block-extension-codeLine" data-line-num="80">    ctx,</span>
+<span class="code-block-extension-codeLine" data-line-num="81">    <span class="hljs-attr">pathConfig</span>: <span class="hljs-title function_">getPathConfig</span>(path),</span>
+<span class="code-block-extension-codeLine" data-line-num="82">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="83"></span>
+<span class="code-block-extension-codeLine" data-line-num="84">  <span class="hljs-keyword">return</span> markup;</span>
+<span class="code-block-extension-codeLine" data-line-num="85">}</span>
+<span class="code-block-extension-codeLine" data-line-num="86"></span>
+<span class="code-block-extension-codeLine" data-line-num="87"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">serverRenderer</span>(<span class="hljs-params">req, res</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="88">  <span class="hljs-keyword">const</span> <span class="hljs-attr">context</span>: <span class="hljs-title class_">StaticRouterContext</span> = {};</span>
+<span class="code-block-extension-codeLine" data-line-num="89"></span>
+<span class="code-block-extension-codeLine" data-line-num="90">  <span class="hljs-keyword">const</span> reqUrl = req.<span class="hljs-property">url</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="91">  history.<span class="hljs-title function_">push</span>(reqUrl);</span>
+<span class="code-block-extension-codeLine" data-line-num="92">  <span class="hljs-title function_">log</span>(<span class="hljs-string">`reqUrl=<span class="hljs-subst">${reqUrl}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="93"></span>
+<span class="code-block-extension-codeLine" data-line-num="94">  <span class="hljs-keyword">const</span> markup = <span class="hljs-title function_">getISRRenderResult</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="95">    <span class="hljs-attr">path</span>: reqUrl,</span>
+<span class="code-block-extension-codeLine" data-line-num="96">    <span class="hljs-attr">ctx</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="97">      history,</span>
+<span class="code-block-extension-codeLine" data-line-num="98">      <span class="hljs-title function_">redirect</span>(<span class="hljs-params">statusCode, url</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="99">        <span class="hljs-keyword">return</span> res.<span class="hljs-title function_">redirect</span>(statusCode, url);</span>
+<span class="code-block-extension-codeLine" data-line-num="100">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="101">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="102">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="103"> </span>
+<span class="code-block-extension-codeLine" data-line-num="104">  <span class="hljs-comment">// res.send(...)</span></span>
+<span class="code-block-extension-codeLine" data-line-num="105">}</span>
+</code></pre>
+<p>在对SSR的改造中，我们把调用<code>renderToString(&lt;App /&gt;)</code>的逻辑封装成了独立的方法<code>doRender({ ctx })</code>。</p>
+<p>并把这一方法作为了声明ISR渲染器的参数，得到了<code>appRenderer</code>这个ISR渲染器实例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> appRenderer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">IncrementalStaticRegenerationRender</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-comment">// 如果「缓存数量超过最大值删除次数」：https://gf.in.zhihu.com/d/VyQnbK1nz/jing-tai-ye-mian-zai-sheng-isr?orgId=1&amp;var-app=heifetz-errorpage&amp;var-RouteName=NotFoundErrorPage&amp;from=now-15d&amp;to=now&amp;viewPanel=19</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-comment">// 其中的 dispose.start.count 指标触发数量较高，就该考虑加大「缓存最大数量：max」了</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">max</span>: <span class="hljs-number">100</span> * <span class="hljs-number">1000</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  doRender,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">renderName</span>: <span class="hljs-string">'AppRender'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">});</span>
+</code></pre>
+<p>SSR服务器运行时，我们改为使用<code>appRenderer.render()</code>方法来获取渲染结果，当用户重复请求我们通过<code>PathConfigs</code>指定的有缓存页面时，<code>appRenderer.render()</code>方法会直接从内存中读取缓存，而不是再次重复执行<code>doRender()</code>。</p>
+<p>例如下面这段代码就是，我们在<code>PathConfigs</code>中对一个页面声明了开启ISR的配置：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">  {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-title function_">matchPath</span>(<span class="hljs-params">path</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-keyword">return</span> <span class="hljs-regexp">/article/</span>(.*)/.<span class="hljs-title function_">test</span>(path);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-comment">// 对于文章页，我们期望每 10 秒，更新一次缓存，也即更新一次服务端渲染的结果：</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">revalidate</span>: <span class="hljs-number">10</span> * <span class="hljs-number">1000</span>, <span class="hljs-comment">// 10 seconds</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-title function_">getStaticPath</span>(<span class="hljs-params">path <span class="hljs-comment">/* , renderData: RenderData&lt;string&gt; */</span></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-comment">// 对于每一个文章页，都以其path作为缓存的 key</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-keyword">return</span> path;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  },</span>
+</code></pre>
+<p>这段配置通过<code>matchPath</code>方法，判断用户请求页面的URL是否需要被ISR缓存，并通过<code>revalidate</code>属性指定缓存时长为10秒钟，即每10秒钟，通过再次执行<code>doRender()</code>更新一次缓存。</p>
+<p>并且，每个文章页的缓存用各自的URL作为key保存，每一篇文章都有各自的缓存，就避免了缓存重复或覆盖。</p>
+<blockquote>
+<p>ISR的配置还可以通过前端路由的属性配置，可以使用<code>react-router</code>自带的<code>match()</code>方法实现，例如：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// 404页面：固定 key cache</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">&lt;<span class="hljs-title class_">Route</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  revalidateTime={<span class="hljs-number">10</span> * <span class="hljs-number">1000</span>}</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  getStaticPath={<span class="hljs-function">() =&gt;</span> <span class="hljs-string">'NotFoundPage'</span>}</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  key=<span class="hljs-string">'/404'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">  name=<span class="hljs-string">'NotFoundErrorPage'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">  path=<span class="hljs-string">'/404'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  component={<span class="hljs-title class_">NotFoundPage</span>}</span>
+<span class="code-block-extension-codeLine" data-line-num="9">/&gt;</span>
+</code></pre>
+</blockquote>
+<p>基于以上代码逻辑，ISR在服务器<strong>运行时</strong>对SSR结果进行缓存，既避免了SSG项目构建时较长的打包编译耗时，又通过缓存避免重复执行<code>renderToString</code>，节省了服务器计算资源。</p>
+<h2 data-id="heading-9">5. 验证量化和评估</h2>
+
+<h3 data-id="heading-10">1. 验证</h3>
+
+<h4 data-id="heading-11">1. 确认功能逻辑正常</h4>
+<p>前端项目应用SSR、SSG、ISR等优化后，底层渲染方式有颠覆性的变化，所以验证要做的第一件事就是确保原有的功能逻辑正常，尤其是以下3方面：</p>
+<ul>
+<li>
+<p>前端路由：例如<code>react-router</code>、<code>vue-router</code>等前端路由库的跳转、重定向功能是否正常。</p>
+</li>
+<li>
+<p>前端状态管理：例如<code>redux</code>、<code>vuex</code>、<code>pinia</code>等前端状态管理库保存的登录状态是否在服务端和客户端保持一致。</p>
+</li>
+<li>
+<p>依赖前端组件生命周期的业务逻辑：例如<code>react</code>框架的<code>useEffect()</code>、<code>useLayoutEffect()</code>等基于组件渲染生命周期执行的逻辑。</p>
+</li>
+</ul>
+<h4 data-id="heading-12">2. 对比优化前后FCP、LCP值</h4>
+<p>本地环境的FCP变化可能不明显，因为静态资源加载的网络耗时在本地无法体现，导致SSR首屏内容不依赖JS执行，从而较快渲染的特性无法发挥。</p>
+<p>但是部署到生产环境后，SSR优化前后，FCP、LCP指标的差异将非常显著，为了便于准确评估对比优化前后的状态，我们选择使用指标的值，作为统计指标。</p>
+<p>另外，也可以通过在本地环境，给静态资源加载加上统一的延迟时间，来模拟生产环境CDN加载的状态。在此基础上进行10次以上的测量，统计FCP、LCP的值，预计能观察显著的变化。</p>
+<p>笔者基于上述验证方式，在本地环境，测量了示例项目首页的数据，观察到了显著的优化效果，FCP值减少了72%：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>对比项 / FCP值</th><th>优化前（<strong>CSR</strong>）（单位：秒）</th><th>优化后（<strong>SSR</strong>）</th><th>差异</th></tr></thead><tbody><tr><td>平均值</td><td>3.94</td><td>1.08</td><td>-2.86s (-72%)</td></tr><tr><td>最大值</td><td>4.11</td><td>1.14</td><td>-2.97s (-72%)</td></tr><tr><td>最小值</td><td>3.78</td><td>1.07</td><td>-2.71s (-71%)</td></tr><tr><td>数据来源</td><td><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/16b7fec80c2b41c7956d0164d4fccd8c~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=848&amp;h=317&amp;s=46211&amp;e=png&amp;b=171a1f" alt="" loading="lazy" class="medium-zoom-image"></td><td><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aa3f47b8d38d457f80c652e2122294c0~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=844&amp;h=311&amp;s=47026&amp;e=png&amp;b=181b20" alt="" loading="lazy" class="medium-zoom-image"></td><td></td></tr></tbody></table>
+<p>LCP 值也有38%以上显著的减少：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>对比项 / FCP值</th><th>优化前（<strong>CSR</strong>）（单位：秒）</th><th>优化后（<strong>SSR</strong>）</th><th>差异</th></tr></thead><tbody><tr><td>平均值</td><td>6.34</td><td>2.85</td><td>-3.39s (-55.0%)</td></tr><tr><td>最大值</td><td>8.23</td><td>5.03</td><td>-3.2s (-38.9%)</td></tr><tr><td>最小值</td><td>5.21</td><td>1.07</td><td>-4.14s (-79.5%)</td></tr><tr><td>数据来源</td><td><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bfb3542ed230451090e4c31a2c76617c~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=842&amp;h=311&amp;s=44750&amp;e=png&amp;b=181b20" alt="" loading="lazy" class="medium-zoom-image"></td><td><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1696fb167a7e4d4aa75fbd761ff1ee7d~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=841&amp;h=304&amp;s=49229&amp;e=png&amp;b=181b20" alt="" loading="lazy" class="medium-zoom-image"></td><td></td></tr></tbody></table>
+<p>当然这些数据来自于本地环境的单台设备，不足以代表生产环境中海量真实用户的体验，想要准确评估优化效果，还需要从生产环境中收集更多数据，并配合其他量化措施。</p>
+<h3 data-id="heading-13">2. 量化</h3>
+
+<h4 data-id="heading-14">1. FCP和LCP的评分指标</h4>
+<p>本节介绍到SSR相关优化，因为直接将渲染后的HTML作为响应返回用户，所以会使页面的初始化渲染显著变快，进而对FCP和LCP指标产生明显的优化效果。</p>
+<p>我们可以继续使用第2节《前端优化数据量化必备神器-用户体验数据收集与可视化》建立的<code>web-vitals</code>堆<strong>叠百分比图</strong>作为量化指标。</p>
+<h4 data-id="heading-15">2. 自定义服务端渲染耗时指标</h4>
+<p>我们还可以用之前章节介绍过的Performance API的<code>performance.measure()</code>方法，建立自定义指标，统计Node.js执行SSR的耗时，量化SSG、ISR优化的效果。</p>
+<p>首先我们声明3个辅助函数，分别创建开始<code>markStart()</code>、结束<code>markEnd()</code>、测量结果<code>measureSSRRenderDuration()</code>3类性能记录，并且在<code>reportGauge()</code>中复用我们的收集数据的HTTP接口，用来在服务端上报数据到Grafana。</p>
+<p>完整代码示例如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> fetch <span class="hljs-keyword">from</span> <span class="hljs-string">'node-fetch'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> <span class="hljs-title class_">SSRRenderMark</span> = <span class="hljs-string">'SSRRenderMarks'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> <span class="hljs-title class_">SSRRenderMarks</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attr">start</span>: <span class="hljs-string">`<span class="hljs-subst">${SSRRenderMark}</span>_start`</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">end</span>: <span class="hljs-string">`<span class="hljs-subst">${SSRRenderMark}</span>_end`</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">};</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-keyword">function</span> <span class="hljs-title function_">reportGauge</span>(<span class="hljs-params">name, help, labels, value</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-title function_">fetch</span>(<span class="hljs-string">'http://localhost:4001/gauge-metric'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">headers</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">body</span>: <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      name,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">      help,</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      labels,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      value,</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    }),</span>
+<span class="code-block-extension-codeLine" data-line-num="21">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="22">}</span>
+<span class="code-block-extension-codeLine" data-line-num="23"></span>
+<span class="code-block-extension-codeLine" data-line-num="24"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">markStart</span>(<span class="hljs-params">detail</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="25">  performance.<span class="hljs-title function_">mark</span>(<span class="hljs-title class_">SSRRenderMarks</span>.<span class="hljs-property">start</span>, { detail });</span>
+<span class="code-block-extension-codeLine" data-line-num="26">}</span>
+<span class="code-block-extension-codeLine" data-line-num="27"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">markEnd</span>(<span class="hljs-params">detail?</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="28">  performance.<span class="hljs-title function_">mark</span>(<span class="hljs-title class_">SSRRenderMarks</span>.<span class="hljs-property">end</span>, { detail });</span>
+<span class="code-block-extension-codeLine" data-line-num="29">}</span>
+<span class="code-block-extension-codeLine" data-line-num="30"></span>
+<span class="code-block-extension-codeLine" data-line-num="31"><span class="hljs-keyword">const</span> <span class="hljs-title class_">SSRRenderDurationName</span> = <span class="hljs-string">'ssr-render-duration'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="32"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">measureSSRRenderDuration</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="33">  <span class="hljs-keyword">const</span> ret = performance.<span class="hljs-title function_">measure</span>(<span class="hljs-title class_">SSRRenderDurationName</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="34">    <span class="hljs-attr">start</span>: <span class="hljs-title class_">SSRRenderMarks</span>.<span class="hljs-property">start</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="35">    <span class="hljs-attr">end</span>: <span class="hljs-title class_">SSRRenderMarks</span>.<span class="hljs-property">end</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="36">  });</span>
+<span class="code-block-extension-codeLine" data-line-num="37"></span>
+<span class="code-block-extension-codeLine" data-line-num="38">  <span class="hljs-comment">// 还可以通过 getEntriesByName 获取请求URL reqUrl</span></span>
+<span class="code-block-extension-codeLine" data-line-num="39">  <span class="hljs-comment">// performance.getEntriesByName(SSRRenderMarks.start)?.[0].detail.reqUrl</span></span>
+<span class="code-block-extension-codeLine" data-line-num="40"></span>
+<span class="code-block-extension-codeLine" data-line-num="41">  <span class="hljs-title function_">reportGauge</span>(<span class="hljs-title class_">SSRRenderDurationName</span>, <span class="hljs-string">`SSR render time cost`</span>, {}, ret.<span class="hljs-property">duration</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="42">}</span>
+</code></pre>
+<p>使用时，在任意模块的对应SSR开始、结束的代码逻辑中调用即可获取渲染耗时数据，示例代码如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">app.<span class="hljs-title function_">get</span>(<span class="hljs-string">'*'</span>, <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-comment">// 演示 performance.mark() 方法跨模块自由调用的特性</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-title function_">markSSRStart</span>({ <span class="hljs-attr">reqUrl</span>: req.<span class="hljs-property">url</span> });</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-title function_">serverRenderer</span>(req, res);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">});</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">serverRenderer</span>(<span class="hljs-params">req, res</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-comment">// const markup = getISRRenderResult({...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-title function_">markSSREnd</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  </span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-comment">// res.send(...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-title function_">measureSSRRenderDuration</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+</code></pre>
+<h3 data-id="heading-16">3. 评估</h3>
+
+<h4 data-id="heading-17">1. FCP和LCP评分显著改善</h4>
+<p>通过应用SSR相关优化，我们应该能观察到<code>web-vitals</code>堆<strong>叠百分比图</strong>中的FCP和LCP用户体验指标显著改善，表示用户在客户端访问页面时，页面渲染内容更快，用户体验更好。</p>
+<h4 data-id="heading-18">2. 服务端渲染耗时大幅减少</h4>
+<p>另外，通过<code>performance.measure()</code>统计的服务端渲染耗时指标，通过SSG和ISR优化，预期也会有显著的优化，笔者在本地开发环境观察到服务端渲染耗时，平均减少了34%左右，优化效果显著。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>对比项 / SSR 渲染耗时</th><th>优化前（<strong>仅SSR</strong>）（单位：秒）</th><th>优化后（<strong>ISR</strong>）</th><th>差异</th></tr></thead><tbody><tr><td>平均值</td><td>3.24</td><td>2.12</td><td>-1.12s (-34.6%)</td></tr><tr><td>最大值</td><td>5.05</td><td>4.38</td><td>-0.67s (-13.3%)</td></tr><tr><td>最小值</td><td>1.62</td><td>0.64</td><td>-0.98s (-60.5%)</td></tr><tr><td>数据来源</td><td><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4da585be72504e0f9fa93c9675f92792~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1456&amp;h=314&amp;s=55460&amp;e=jpg&amp;b=171a1f" alt="" loading="lazy" class="medium-zoom-image"></td><td><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/14a480cdedd04c8aba16cd924e5cc590~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1452&amp;h=317&amp;s=59756&amp;e=jpg&amp;b=181b20" alt="" loading="lazy" class="medium-zoom-image"></td><td></td></tr></tbody></table>
+<p>这一指标的减少，表示服务端优化后，在相同的时间内，能处理更多的用户请求，服务器的负载能力更高，相应地可以节省一部分的服务器硬件开销。</p>
+<h2 data-id="heading-19">小结</h2>
+<p>这2节《前端渲染进化史》中，我们首先回顾了前端应用渲染方式的简略历史。</p>
+<p>接下来就转向深入了解SSR的原理，并将示例的CSR项目重构成了SSR项目，讲解了其核心流程。</p>
+<p>又进一步介绍了SSG、ISR等服务端渲染进阶优化方案及其代码实现和改造示例。</p></div>

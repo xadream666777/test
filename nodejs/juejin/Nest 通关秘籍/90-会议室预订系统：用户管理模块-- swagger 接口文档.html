@@ -1,0 +1,420 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>后端写完接口，都会提供一份接口文档给前端。</p>
+<p>这节我们就来做下这件事情，通过 swagger 生成接口文档。</p>
+<p>安装 swagger 的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> <span class="hljs-keyword">@nestjs</span>/swagger</span>
+</code></pre>
+<p>在 main.ts 添加这段代码：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9cb79629ae02494a8f10ee0ba0d210c3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> config = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DocumentBuilder</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    .<span class="hljs-title function_">setTitle</span>(<span class="hljs-string">'会议室预订系统'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    .<span class="hljs-title function_">setDescription</span>(<span class="hljs-string">'api 接口文档'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    .<span class="hljs-title function_">setVersion</span>(<span class="hljs-string">'1.0'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    .<span class="hljs-title function_">build</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">const</span> <span class="hljs-variable language_">document</span> = <span class="hljs-title class_">SwaggerModule</span>.<span class="hljs-title function_">createDocument</span>(app, config);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-title class_">SwaggerModule</span>.<span class="hljs-title function_">setup</span>(<span class="hljs-string">'api-doc'</span>, app, <span class="hljs-variable language_">document</span>);</span>
+</code></pre>
+<p>用 SwaggerModule 生成接口文档，url 是 /api-doc</p>
+<p>访问下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fb0ec13a8f534454b21c93635207f038~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到所有接口都列出来了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2632002787d947f896e24819148cac6d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>还有用到的 schema，也就是对象的结构：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/422a5f7fc0074ab896e81c8a23ac8f3d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>只不过很多接口的文档是不对的：</p>
+<p>比如用户列表接口，这些参数都不是必选的，而且也没有响应相关的信息：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8db08cdb95824d03817172059cc059a5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>还有 schema 也没有具体的内容。</p>
+<p>这些需要我们加一些装饰器来告诉 swagger。</p>
+<p>在 UserController 添加一个 @ApiTags</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d230e072de054ef4be2972b2c50c78de~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样这个 cotroller 的接口会被单独分组：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/10fa746380f6435f9fc4e32c868999f2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们一个个接口来看：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6ed9e75309924374a97f66b08911680a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>先是 /user/register-captcha 接口</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ff4429ddfe634070b93ed382853ab6c1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">ApiQuery</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">name</span>: <span class="hljs-string">'address'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">String</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">description</span>: <span class="hljs-string">'邮箱地址'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">required</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">example</span>: <span class="hljs-string">'xxx@xx.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">})</span>
+<span class="code-block-extension-codeLine" data-line-num="8">@<span class="hljs-title class_">ApiResponse</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">status</span>: <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">OK</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">description</span>: <span class="hljs-string">'发送成功'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">String</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">})</span>
+</code></pre>
+<p>通过 @ApiQuery 描述 query 参数，通过 @ApiResponse 描述响应。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c226a2c226604c82b080bc06a776aa28~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后是 /user/register 接口：</p>
+<p>它一共有 2 种状态码，200 和 400：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2348b92ec922492bb9220b5141255cee~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1073f3ea16e14f3d9924a7aac2dbaa7a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">ApiBody</span>({<span class="hljs-attr">type</span>: <span class="hljs-title class_">RegisterUserDto</span>})</span>
+<span class="code-block-extension-codeLine" data-line-num="2">@<span class="hljs-title class_">ApiResponse</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">status</span>: <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">BAD_REQUEST</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">description</span>: <span class="hljs-string">'验证码已失效/验证码不正确/用户已存在'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">String</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">})</span>
+<span class="code-block-extension-codeLine" data-line-num="7">@<span class="hljs-title class_">ApiResponse</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">status</span>: <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">OK</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">description</span>: <span class="hljs-string">'注册成功/失败'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">String</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">})</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d7d3888d71464440bc6c4c08d8206055~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>请求体的属性需要去 dto 里标识：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e23b1103900f49c195545a8f211a2969~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7c904de33d354e11916f56d400d9e0f5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后接口文档里就可看到请求体的信息了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd9ae1fb9e054b62b36db1e11ff91592~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>下面的 schema 里的 RegisterUserDto 也有了内容：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/507510e54dca43c2a52a79abbec80b1e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>接下来是 /user/login 接口：</p>
+<p>它也是有 400 和 200 两种响应：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1938c62e487448dd847280e2565bb1be~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3138960114d142e793814edbfc206885~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">ApiBody</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">LoginUserDto</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">})</span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">ApiResponse</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">status</span>: <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">BAD_REQUEST</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">description</span>: <span class="hljs-string">'用户不存在/密码错误'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">String</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">})</span>
+<span class="code-block-extension-codeLine" data-line-num="9">@<span class="hljs-title class_">ApiResponse</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">status</span>: <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">OK</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">description</span>: <span class="hljs-string">'用户信息和 token'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">LoginUserVo</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">})</span>
+</code></pre>
+<p>通过 @ApiResponse 标识两种响应，通过 @ApiBody 标识请求体。</p>
+<p>然后在 LoginUserDto 和 LoginUserVo 里标识下属性：</p>
+<p>LoginUserDto：
+<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9e784199fc1447ffb5bdffee2d5b6ab8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>LoginuserVo：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ApiProperty</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"@nestjs/swagger"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserInfo</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @<span class="hljs-title class_">ApiProperty</span>({<span class="hljs-attr">example</span>: <span class="hljs-string">'zhangsan'</span>})</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">username</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    @<span class="hljs-title class_">ApiProperty</span>({<span class="hljs-attr">example</span>: <span class="hljs-string">'张三'</span>})</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">nickName</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    @<span class="hljs-title class_">ApiProperty</span>({<span class="hljs-attr">example</span>: <span class="hljs-string">'xx@xx.com'</span>})</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-attr">email</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    @<span class="hljs-title class_">ApiProperty</span>({<span class="hljs-attr">example</span>: <span class="hljs-string">'xxx.png'</span>})</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-attr">headPic</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    @<span class="hljs-title class_">ApiProperty</span>({<span class="hljs-attr">example</span>: <span class="hljs-string">'13233333333'</span>})</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-attr">phoneNumber</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-attr">isFrozen</span>: boolean;</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    <span class="hljs-attr">isAdmin</span>: boolean;</span>
+<span class="code-block-extension-codeLine" data-line-num="27"></span>
+<span class="code-block-extension-codeLine" data-line-num="28">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-attr">createTime</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="30"></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    @<span class="hljs-title class_">ApiProperty</span>({<span class="hljs-attr">example</span>: [<span class="hljs-string">'管理员'</span>]})</span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-attr">roles</span>: string[];</span>
+<span class="code-block-extension-codeLine" data-line-num="33"></span>
+<span class="code-block-extension-codeLine" data-line-num="34">    @<span class="hljs-title class_">ApiProperty</span>({<span class="hljs-attr">example</span>: <span class="hljs-string">'query_aaa'</span>})</span>
+<span class="code-block-extension-codeLine" data-line-num="35">    <span class="hljs-attr">permissions</span>: string[]</span>
+<span class="code-block-extension-codeLine" data-line-num="36">}</span>
+<span class="code-block-extension-codeLine" data-line-num="37"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LoginUserVo</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="38"></span>
+<span class="code-block-extension-codeLine" data-line-num="39">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="40">    <span class="hljs-attr">userInfo</span>: <span class="hljs-title class_">UserInfo</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="41"></span>
+<span class="code-block-extension-codeLine" data-line-num="42">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="43">    <span class="hljs-attr">accessToken</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="44"></span>
+<span class="code-block-extension-codeLine" data-line-num="45">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="46">    <span class="hljs-attr">refreshToken</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="47">}</span>
+</code></pre>
+<p>之前这里的 UserInfo 是 interface，这里要改成 class 才能加装饰器。</p>
+<p>测试下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4becc1d39cbc4a5dbe146986295b6896~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e6e1168f077343d4908e1616bbaa9a8b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>/user/admin/login 的 swagger 装饰器和 /user/login 一样。</p>
+<p>然后继续看 /user/refresh 接口：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c03e7389acd24c89aeaf92d1657ba9c3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">ApiQuery</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">name</span>: <span class="hljs-string">'refreshToken'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">String</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">description</span>: <span class="hljs-string">'刷新 token'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">required</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">example</span>: <span class="hljs-string">'xxxxxxxxyyyyyyyyzzzzz'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">})</span>
+<span class="code-block-extension-codeLine" data-line-num="8">@<span class="hljs-title class_">ApiResponse</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">status</span>: <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">UNAUTHORIZED</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">description</span>: <span class="hljs-string">'token 已失效，请重新登录'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">})</span>
+<span class="code-block-extension-codeLine" data-line-num="12">@<span class="hljs-title class_">ApiResponse</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">status</span>: <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">OK</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-attr">description</span>: <span class="hljs-string">'刷新成功'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">})</span>
+</code></pre>
+<p>用 @ApiQuery 标识 query 参数，用 @ApiResponse 标识两种响应。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cb5d7836c77d445482bd6e1d90414ab2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但现在刷新成功的 access_token 和 refresh_token 没有显示。</p>
+<p>所以我们也需要把这个返回值封装成 vo：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/027cb4c54b00432190bb3554dfa992d4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>新建 src/user/vo/refresh-token.vo.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ApiProperty</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"@nestjs/swagger"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RefreshTokenVo</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">access_token</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">refresh_token</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+</code></pre>
+<p>把返回的结果封装成 vo：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/29ee014300c440d4ab5ce5e322d42f0a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> vo = <span class="hljs-keyword">new</span> <span class="hljs-title class_">RefreshTokenVo</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">vo.<span class="hljs-property">access_token</span> = access_token;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">vo.<span class="hljs-property">refresh_token</span> = refresh_token;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">return</span> vo;</span>
+</code></pre>
+<p>在 @ApiResponse 里标识这个 type</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8d390166b24b4c33952a19651a1338b6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>刷新下页面，可以看到现在接口文档里就有了返回数据的结构：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8725ded96f484f40acc168a8526547e9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>/user/admin/login 的处理方式一样。</p>
+<p>接下来是 /user/info 接口：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1bdef74a687d4786ac2e4b483b1dffdd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>加一下返回的数据的标识 @ApiResponse。</p>
+<p>然后在 UserDetailVo 里加一下 @ApiProperty：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ApiProperty</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"@nestjs/swagger"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserDetailVo</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">username</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">nickName</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-attr">email</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-attr">headPic</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-attr">phoneNumber</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-attr">isFrozen</span>: boolean;</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    <span class="hljs-attr">createTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="27">}</span>
+</code></pre>
+<p>这样返回的数据结构就对了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a6967a10bb794b11b30b24575a73f97f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但这个接口是需要登录的，我们加一下标识：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/413d5a6bf0c945f4a7857742b53f524a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后在 main.ts 里加一下这种 bearer 的认证方式：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/586a90ae7d964291b21bedb0f75bcc62~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候这个接口就有了锁的标记，代表需要登录了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f872562f56c54288803535e014dff025~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击锁，填入 access_token，这样再测试接口的时候，会自动带上 token 标识：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4e90bb9dd2914fc7864dc067df8a3845~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>比如我输入 xxx，然后点击 authorize</p>
+<p>然后点击 try it out 和 execute，可以看到浏览器发送了这个请求，并且带上了 authorization 的 header</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/de975505b4374adc932e8980b8602ee7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以在 swagger 文档里测试这个接口。</p>
+<p>接下来是 /user/update_password</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7359a3f566124a72b8b601b8014a9314~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">ApiBearerAuth</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="2">@<span class="hljs-title class_">ApiBody</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">UpdateUserPasswordDto</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">})</span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">ApiResponse</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">String</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">description</span>: <span class="hljs-string">'验证码已失效/不正确'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">})</span>
+</code></pre>
+<p>在 UpdateUserPasswordDto 里加一下 @ApiProperty</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f620d8c3ee744c249c6364103c655e02~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image">
+接口文档没啥问题：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/70b6e7de3485400aacd615e947b5c5e5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>接下来是 /user/update_password/captcha 接口</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1926854b29ed408dbfe6cdb36ed3c3cb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个接口是需要登录的，当时为了测试方便没有加，现在加一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">ApiBearerAuth</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="2">@<span class="hljs-title class_">ApiQuery</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">name</span>: <span class="hljs-string">'address'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">description</span>: <span class="hljs-string">'邮箱地址'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">String</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">})</span>
+<span class="code-block-extension-codeLine" data-line-num="7">@<span class="hljs-title class_">ApiResponse</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">String</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">description</span>: <span class="hljs-string">'发送成功'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">})</span>
+<span class="code-block-extension-codeLine" data-line-num="11">@<span class="hljs-title class_">RequireLogin</span>()</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d2f4a7401c5849d79f3715bdc1e1c19e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后是 /user/update 接口：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c7dd319f321d46b4b9d13f1cc058d76a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">ApiBearerAuth</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="2">@<span class="hljs-title class_">ApiBody</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">UpdateUserDto</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">})</span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">ApiResponse</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">status</span>: <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">BAD_REQUEST</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">description</span>: <span class="hljs-string">'验证码已失效/不正确'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">})</span>
+<span class="code-block-extension-codeLine" data-line-num="9">@<span class="hljs-title class_">ApiResponse</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">status</span>: <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">OK</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">description</span>: <span class="hljs-string">'更新成功'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">String</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">})</span>
+</code></pre>
+<p>在 UpdateUserDto 里标识下 @ApiProperty</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7e1ff3f94f254dc4b6387bc0966104ed~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>刷新下，可以看到最新的接口文档：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6a4d3ead23cd499e9aab5fc18fd63def~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后是 /user/freeeze 接口</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee6adf9f9a2745eab7d181f23ae83d70~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">ApiBearerAuth</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="2">@<span class="hljs-title class_">ApiQuery</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">name</span>: <span class="hljs-string">'id'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">description</span>: <span class="hljs-string">'userId'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">Number</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">})</span>
+<span class="code-block-extension-codeLine" data-line-num="7">@<span class="hljs-title class_">ApiResponse</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">String</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">description</span>: <span class="hljs-string">'success'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">})</span>
+<span class="code-block-extension-codeLine" data-line-num="11">@<span class="hljs-title class_">RequireLogin</span>()</span>
+</code></pre>
+<p>刷新下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bc42883dc2c24c5e94c3c82af1982836~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没啥问题。</p>
+<p>最后，还剩下 /user/list 接口：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ac7c6fda80da4c1fa23381a93ecbee06~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">ApiBearerAuth</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="2">@<span class="hljs-title class_">ApiQuery</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">name</span>: <span class="hljs-string">'pageNo'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">description</span>: <span class="hljs-string">'第几页'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">Number</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">})</span>
+<span class="code-block-extension-codeLine" data-line-num="7">@<span class="hljs-title class_">ApiQuery</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">name</span>: <span class="hljs-string">'pageSize'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">description</span>: <span class="hljs-string">'每页多少条'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">Number</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">})</span>
+<span class="code-block-extension-codeLine" data-line-num="12">@<span class="hljs-title class_">ApiQuery</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">name</span>: <span class="hljs-string">'username'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-attr">description</span>: <span class="hljs-string">'用户名'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">Number</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">})</span>
+<span class="code-block-extension-codeLine" data-line-num="17">@<span class="hljs-title class_">ApiQuery</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-attr">name</span>: <span class="hljs-string">'nickName'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-attr">description</span>: <span class="hljs-string">'昵称'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">Number</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">})</span>
+<span class="code-block-extension-codeLine" data-line-num="22">@<span class="hljs-title class_">ApiQuery</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-attr">name</span>: <span class="hljs-string">'email'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-attr">description</span>: <span class="hljs-string">'邮箱地址'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">Number</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">})</span>
+<span class="code-block-extension-codeLine" data-line-num="27">@<span class="hljs-title class_">ApiResponse</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">String</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-attr">description</span>: <span class="hljs-string">'用户列表'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30">})</span>
+<span class="code-block-extension-codeLine" data-line-num="31">@<span class="hljs-title class_">RequireLogin</span>()</span>
+</code></pre>
+<p>这里的返回值需要封装个 vo：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dc5f0e83f0984c51be62858635595658~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>创建 src/user/vo/user-list.vo.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ApiProperty</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"@nestjs/swagger"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">class</span> <span class="hljs-title class_">User</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">username</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">nickName</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    </span>
+<span class="code-block-extension-codeLine" data-line-num="13">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-attr">email</span>: string; </span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-attr">phoneNumber</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-attr">isFrozen</span>: boolean;</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    </span>
+<span class="code-block-extension-codeLine" data-line-num="22">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-attr">headPic</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    <span class="hljs-attr">createTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="27">}</span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserListVo</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="30"></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    @<span class="hljs-title class_">ApiProperty</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="32">        <span class="hljs-attr">type</span>: [<span class="hljs-title class_">User</span>]</span>
+<span class="code-block-extension-codeLine" data-line-num="33">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="34">    <span class="hljs-attr">users</span>: <span class="hljs-title class_">User</span>[];</span>
+<span class="code-block-extension-codeLine" data-line-num="35"></span>
+<span class="code-block-extension-codeLine" data-line-num="36">    @<span class="hljs-title class_">ApiProperty</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="37">    <span class="hljs-attr">totalCount</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="38">}</span>
+</code></pre>
+<p>注意这里标识 User 数组要用 [User]</p>
+<p>然后把 findUsers 的返回值改为 UserListVo</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b61308edae734d78aa9518c0dcc3058a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> vo = <span class="hljs-keyword">new</span> <span class="hljs-title class_">UserListVo</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">vo.<span class="hljs-property">users</span> = users;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">vo.<span class="hljs-property">totalCount</span> = totalCount;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">return</span> vo;</span>
+</code></pre>
+<p>刷新下接口文档：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1bde29165e214d35b8fb42a9a3628a93~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b502e1a38ba4aff97c84993d23778cf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没啥问题。</p>
+<p>这样，我们就给所有的接口生成了 api 文档。</p>
+<p>代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fmeeting_room_booking_system_backend" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/meeting_room_booking_system_backend" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们用 swagger 生成了接口文档。</p>
+<p>在 main.ts 里调用 SwaggerModule.setup 来生成接口文档。</p>
+<p>然后用 @ApiQuery、@ApiBody、@ApiResponse、@ApiProperty 等来标识每个接口的参数和响应。</p>
+<p>并且通过 @ApiBearerAuth 标识需要 jwt 认证的接口。</p>
+<p>返回对象的接口需要把它封装成 vo，然后再添加 @ApiProperty。</p>
+<p>接口文档提供给前端之后，前端就可以基于这个来写页面了。</p></div>

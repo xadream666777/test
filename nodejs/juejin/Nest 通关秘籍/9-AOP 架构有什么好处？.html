@@ -1,0 +1,393 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>后端框架基本都是 MVC 的架构。</p>
+<p>MVC 是 Model View Controller 的简写。MVC 架构下，请求会先发送给 Controller，由它调度 Model 层的 Service 来完成业务逻辑，然后返回对应的 View。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/580375b654ac445cb2cd07784824104c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在这个流程中，Nest 还提供了 AOP （Aspect Oriented Programming）的能力，也就是面向切面编程的能力。</p>
+<p>AOP 是什么意思呢？什么是面向切面编程呢？</p>
+<p>一个请求过来，可能会经过 Controller（控制器）、Service（服务）、Repository（数据库访问） 的逻辑：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/109025024af543febb44ca2a70ca9f92~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果想在这个调用链路里加入一些通用逻辑该怎么加呢？比如日志记录、权限控制、异常处理等。</p>
+<p>容易想到的是直接改造 Controller 层代码，加入这段逻辑。</p>
+<p>这样可以，但是不优雅，因为这些通用的逻辑侵入到了业务逻辑里面。能不能透明的给这些业务逻辑加上日志、权限等处理呢？</p>
+<p>那是不是可以在调用 Controller 之前和之后加入一个执行通用逻辑的阶段呢？</p>
+<p>比如这样：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9f99087120e847eab901738bf8504d21~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>是不是就和切了一刀一样？</p>
+<p>这样的横向扩展点就叫做切面，这种透明的加入一些切面逻辑的编程方式就叫做 AOP （面向切面编程）。</p>
+<p><strong>AOP 的好处是可以把一些通用逻辑分离到切面中，保持业务逻辑的纯粹性，这样切面逻辑可以复用，还可以动态的增删。</strong></p>
+<p>其实 Express 的中间件的洋葱模型也是一种 AOP 的实现，因为你可以透明的在外面包一层，加入一些逻辑，内层感知不到。</p>
+<p>而 Nest 实现 AOP 的方式更多，一共有五种，包括 Middleware、Guard、Pipe、Interceptor、ExceptionFilter。</p>
+<p>新建个 nest 项目，我们挨个试一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> aop-test</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0b73ed377eb44e3f85ff0c818fa37e1a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=908&amp;h=736&amp;s=165169&amp;e=png&amp;b=020202" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h3 data-id="heading-0">中间件 Middleware</h3>
+<p>中间件是 Express 里的概念，Nest 的底层是 Express，所以自然也可以使用中间件，但是做了进一步的细分，分为了全局中间件和路由中间件。</p>
+<p>全局中间件就是这样：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a40c5a0eb6f842c2b0d340f8b5429e72~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1162&amp;h=622&amp;s=132458&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 main.ts 里通过 app.use 使用：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">app.<span class="hljs-title function_">use</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params">req: Request, res: Response, next: NextFunction</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'before'</span>, req.<span class="hljs-property">url</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-title function_">next</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'after'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">})</span>
+</code></pre>
+<p>在 AppController 里也加个打印：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e759bd9cbd0940cd89e1edbca857a0d5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=812&amp;h=570&amp;s=103057&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b589d298f1474daea4d38925314dd74c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1294&amp;h=396&amp;s=113266&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c935c5c674ce4705b73c3346d11a7885~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=610&amp;h=224&amp;s=18771&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/46864de7f8774585b6aab4f69e80f2bd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=826&amp;h=454&amp;s=89639&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，在调用 handler 前后，执行了中间件的逻辑。</p>
+<p>我们再添加几个路由：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e00869e6c6cf4874bff3e0f909f60131~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=738&amp;h=756&amp;s=101595&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'aaa'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-title function_">aaa</span>(): string {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'aaa...'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">return</span> <span class="hljs-string">'aaa'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'bbb'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-title function_">bbb</span>(): string {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'bbb...'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">return</span> <span class="hljs-string">'bbb'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+</code></pre>
+<p>然后浏览器访问下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/03cc9d2ca4904b1080cc075c2bb46378~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=672&amp;h=214&amp;s=17700&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8becc3e2244141ffaa105500987444af~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=650&amp;h=214&amp;s=18422&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，中间件逻辑都执行了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/96fa8ab016fc4ea4a26aa864db53ccf3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=682&amp;h=598&amp;s=89854&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也就是说，可以在多个 handler 之间复用中间件的逻辑：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c77913aa1f9f41d6b91c8b17d7a57b9a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=766&amp;h=652&amp;s=31772&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这种可以给在 handler 前后动态增加一些可复用的逻辑，就是 AOP 的切面编程的思想。</p>
+<p>除了全局中间件，Nest 还支持路由中间件。</p>
+<p>用 nest cli 创建一个路由中间件：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g middleware log <span class="hljs-attr">--no-spec</span> <span class="hljs-attr">--flat</span></span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6bbdcdc042b145439e636a287d861ffe~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=690&amp;h=88&amp;s=21460&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>--no-spec 是不生成测试文件，--flat 是平铺，不生成目录。</p>
+<p>生成的代码是这样的：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eae334091f4f47088100f3d95628c7ad~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1044&amp;h=374&amp;s=68220&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在前后打印下日志：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Injectable</span>, <span class="hljs-title class_">NestMiddleware</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Request</span>, <span class="hljs-title class_">Response</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LogMiddleware</span> implements <span class="hljs-title class_">NestMiddleware</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-title function_">use</span>(<span class="hljs-params">req: Request, res: Response, next: () =&gt; <span class="hljs-keyword">void</span></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'before2'</span>, req.<span class="hljs-property">url</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-title function_">next</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'after2'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+</code></pre>
+<p>然后在 AppModule 里启用：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/453edfc9fefa4d22b68c779dc7124c98~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=926&amp;h=672&amp;s=137172&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">MiddlewareConsumer</span>, <span class="hljs-title class_">Module</span>, <span class="hljs-title class_">NestModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppController</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.controller'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">LogMiddleware</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./log.middleware'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">@<span class="hljs-title class_">Module</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">imports</span>: [],</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-attr">controllers</span>: [<span class="hljs-title class_">AppController</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-attr">providers</span>: [<span class="hljs-title class_">AppService</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="10">})</span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppModule</span> implements <span class="hljs-title class_">NestModule</span>{</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-title function_">configure</span>(<span class="hljs-params">consumer: MiddlewareConsumer</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    consumer.<span class="hljs-title function_">apply</span>(<span class="hljs-title class_">LogMiddleware</span>).<span class="hljs-title function_">forRoutes</span>(<span class="hljs-string">'aaa*'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+</code></pre>
+<p>在 configure 方法里配置 LogMiddleware 在哪些路由生效。</p>
+<p>然后测试下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9c7525796b084291af2d270951e72101~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=590&amp;h=184&amp;s=16599&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bcd7ba91623481b899249a18ae9c467~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=640&amp;h=218&amp;s=18419&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/96405113ca3d43289b66d0527ab72dd2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=660&amp;h=628&amp;s=95335&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，只有 aaa 的路由，中间件生效了。</p>
+<p>这就是全局中间件和路由中间件的区别。</p>
+<h3 data-id="heading-1">Guard</h3>
+<p>Guard 是路由守卫的意思，可以用于在调用某个 Controller 之前判断权限，返回 true 或者 false 来决定是否放行：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9e9a9eee8aa74881b6789dd753916202~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1008&amp;h=270&amp;s=23833&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们创建个 Guard：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g guard login <span class="hljs-attr">--no-spec</span> <span class="hljs-attr">--flat</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/808e3f3b9907429a9b698079d93ef5d1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=660&amp;h=94&amp;s=22514&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>生成的 Guard 代码是这样的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/12dd5753fcfa428a94e558c85ae7eb82~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1106&amp;h=460&amp;s=88330&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Guard 要实现 CanActivate 接口，实现 canActivate 方法，可以从 context 拿到请求的信息，然后做一些权限验证等处理之后返回 true 或者 false。</p>
+<p>我们加个打印语句，然后返回 false：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CanActivate</span>, <span class="hljs-title class_">ExecutionContext</span>, <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Observable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LoginGuard</span> implements <span class="hljs-title class_">CanActivate</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-title function_">canActivate</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">context</span>: <span class="hljs-title class_">ExecutionContext</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  ): boolean | <span class="hljs-title class_">Promise</span>&lt;boolean&gt; | <span class="hljs-title class_">Observable</span>&lt;boolean&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'login check'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+</code></pre>
+<p>之后在 AppController 里启用：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4eed15d31e2f414db9e46e152955f06b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=784&amp;h=674&amp;s=103222&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再访问下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d3716f6a8d834deca1440d10bebe025c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=640&amp;h=172&amp;s=17667&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b41674805f44a4582d48493cad54f38~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=644&amp;h=330&amp;s=36399&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>aaa 没有权限，返回了 403。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7da3f4e4198e4cae95355c09d45b8243~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=294&amp;h=320&amp;s=31000&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Controller 本身不需要做啥修改，却透明的加上了权限判断的逻辑，这就是 AOP 架构的好处。</p>
+<p>而且，就像 Middleware 支持全局级别和路由级别一样，Guard 也可以全局启用：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36bef5bfec3e4fba9808ba10a9994b2b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=760&amp;h=678&amp;s=134490zhe&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样每个路由都会应用这个 Guard：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/942d0807b56d48dbb6db0bf36230bcac~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=634&amp;h=324&amp;s=36379&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>还有一种全局启用的方式，是在 AppModule 里这样声明：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fef40f8b899541838abd76616d545342~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=788&amp;h=694&amp;s=127717&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">{</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">provide</span>: <span class="hljs-variable constant_">APP_GUARD</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">useClass</span>: <span class="hljs-title class_">LoginGuard</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>把 main.ts 里的 useGlobalGuards 注释掉：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/85fedf11dc22461f8eb7760ccfc081a0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=884&amp;h=670&amp;s=132203&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再试下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/91145c2d73d343a9aca3acb385002e56~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=700&amp;h=356&amp;s=38399&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，Guard 依然是生效的。</p>
+<p>那为什么都是声明全局 Guard，需要有两种方式呢？</p>
+<p>因为之前这种方式是手动 new 的 Guard 实例，不在 IoC 容器里：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4cc1c76db00d43f4acd0838bbff1d131~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=690&amp;h=164&amp;s=23541&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而用 provider 的方式声明的 Guard 是在 IoC 容器里的，可以注入别的 provider：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/97d3ed989e59453d95e6bb2bdf6b55bc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=528&amp;h=408&amp;s=41843&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们注入下 AppService 试试：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7b2404dd9d894813addb09ffc22067fa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=994&amp;h=628&amp;s=132018&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">AppService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">private <span class="hljs-attr">appService</span>: <span class="hljs-title class_">AppService</span>;</span>
+</code></pre>
+<p>浏览器访问下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dae1a24e2dca4f80ac2e312ad89dfc13~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=582&amp;h=504&amp;s=85424&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，注入的 AppService 生效了。</p>
+<p>所以，当需要注入别的 provider 的时候，就要用第二种全局 Guard 的声明方式。</p>
+<h3 data-id="heading-2">Interceptor</h3>
+<p>Interceptor 是拦截器的意思，可以在目标 Controller 方法前后加入一些逻辑：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3a981ca0f64c4e37be0475d95366a0ef~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1042&amp;h=246&amp;s=27755&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>创建个 interceptor：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g interceptor <span class="hljs-selector-tag">time</span> <span class="hljs-attr">--no-spec</span> <span class="hljs-attr">--flat</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ed5ed0360afd47678bc0eae19d1239a1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=690&amp;h=86&amp;s=19684&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>生成的 interceptor 是这样的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f138dffc595045d594f8b2b0f9ca499d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1256&amp;h=432&amp;s=90354&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Interceptor 要实现 NestInterceptor 接口，实现 intercept 方法，调用 next.handle() 就会调用目标 Controller，可以在之前和之后加入一些处理逻辑。</p>
+<p>Controller 之前之后的处理逻辑可能是异步的。Nest 里通过 rxjs 来组织它们，所以可以使用 rxjs 的各种 operator。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CallHandler</span>, <span class="hljs-title class_">ExecutionContext</span>, <span class="hljs-title class_">Injectable</span>, <span class="hljs-title class_">NestInterceptor</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Observable</span>, tap } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TimeInterceptor</span> implements <span class="hljs-title class_">NestInterceptor</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-title function_">intercept</span>(<span class="hljs-attr">context</span>: <span class="hljs-title class_">ExecutionContext</span>, <span class="hljs-attr">next</span>: <span class="hljs-title class_">CallHandler</span>): <span class="hljs-title class_">Observable</span>&lt;any&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">const</span> startTime = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">return</span> next.<span class="hljs-title function_">handle</span>().<span class="hljs-title function_">pipe</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-title function_">tap</span>(<span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'time: '</span>, <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>() - startTime)</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      })</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    );</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="16">}</span>
+</code></pre>
+<p>把之前那个 LoginGuard 注掉：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c6e85a03911b4bbc84c82285e6b54a72~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=914&amp;h=692&amp;s=133600&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后启用这个 interceptor：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/749c757354c84c78a35ccd4f08fe3d6d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=774&amp;h=450&amp;s=62740&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>跑一下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bddd97309b42499cb0195f6bdd80c551~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=802&amp;h=530&amp;s=111292&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，interceptor 生效了。</p>
+<p>有的同学可能会觉得 Interceptor 和 Middleware 差不多，其实是有区别的，主要在于参数的不同。</p>
+<p>interceptor 可以拿到调用的 controller 和 handler：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3b5b5aff62d9414f980cc287ff3e4520~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1130&amp;h=706&amp;s=134358&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/68bb13a8c04e4a1f8d7366fd84da5639~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=710&amp;h=558&amp;s=98424&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>后面我们会在 controller 和 handler 上加一些 metadata，这种就只有 interceptor或者 guard 里可以取出来，middleware 不行。</p>
+<p>Interceptor 支持每个路由单独启用，只作用于某个 handler：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/78c08a9c7acd436ab99de78cc2dfbcd8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=536&amp;h=246&amp;s=32411&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也可以在 controller 级别启动，作用于下面的全部 handler：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c1d0256ca6244896a450b0e664df18ce~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=748&amp;h=398&amp;s=92507&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也同样支持全局启用，作用于全部 controller：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/002252e580c347dbb7d67cc36bb4e469~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=886&amp;h=526&amp;s=108431&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/602ab05e55754cd792fefe20c6c0c2f4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=756&amp;h=738&amp;s=113524&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>两种全局启用方式的区别和 guard 的一样，就不测试了。</p>
+<p>除了路由的权限控制、目标 Controller 之前之后的处理这些都是通用逻辑外，对参数的处理也是一个通用的逻辑，所以 Nest 也抽出了对应的切面，也就是 Pipe：</p>
+<h3 data-id="heading-3">Pipe</h3>
+<p>Pipe 是管道的意思，用来对参数做一些检验和转换：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f8625ebb4f3d457b9d6517a5ce053769~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用 nest cli 创建个 pipe：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g pipe validate <span class="hljs-attr">--no-spec</span> <span class="hljs-attr">--flat</span></span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d8a9e8f85ea14ea58da8a71313de7c5c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=658&amp;h=82&amp;s=21109&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>生成的代码是这样的：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5a505030f9284555a49e0cd2c17a3f86~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=968&amp;h=336&amp;s=64677&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Pipe 要实现 PipeTransform 接口，实现 transform 方法，里面可以对传入的参数值 value 做参数验证，比如格式、类型是否正确，不正确就抛出异常。也可以做转换，返回转换后的值。</p>
+<p>我们实现下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ArgumentMetadata</span>, <span class="hljs-title class_">BadRequestException</span>, <span class="hljs-title class_">Injectable</span>, <span class="hljs-title class_">PipeTransform</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ValidatePipe</span> implements <span class="hljs-title class_">PipeTransform</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-title function_">transform</span>(<span class="hljs-params">value: any, metadata: ArgumentMetadata</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">if</span>(<span class="hljs-title class_">Number</span>.<span class="hljs-built_in">isNaN</span>(<span class="hljs-built_in">parseInt</span>(value))) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">`参数<span class="hljs-subst">${metadata.data}</span>错误`</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">typeof</span> value === <span class="hljs-string">'number'</span> ? value * <span class="hljs-number">10</span> : <span class="hljs-built_in">parseInt</span>(value) * <span class="hljs-number">10</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+</code></pre>
+<p>这里的 value 就是传入的参数，如果不能转成数字，就返回参数错误，否则乘 10 再传入 handler：</p>
+<p>在 AppController 添加一个 handler，然后应用这个 pipe：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d9b8cf48d7a64eb68edb020ef5edd8a9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=870&amp;h=344&amp;s=49272&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'ccc'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-title function_">ccc</span>(<span class="hljs-params">@Query(<span class="hljs-string">'num'</span>, ValidatePipe) num: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> num + <span class="hljs-number">1</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>访问下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/993cc99ff218499f82cf63d4beee1ac2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=738&amp;h=206&amp;s=18991&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c0a9d78e7df54877a6a74de53f21ecc7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=726&amp;h=340&amp;s=44591&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，参数错误的时候返回了 400 响应，参数正确的时候也乘 10 传入了 handler。</p>
+<p>这就是 Pipe 的作用。</p>
+<p>Nest 内置了一些 Pipe，从名字就能看出它们的意思：</p>
+<ul>
+<li>ValidationPipe</li>
+<li>ParseIntPipe</li>
+<li>ParseBoolPipe</li>
+<li>ParseArrayPipe</li>
+<li>ParseUUIDPipe</li>
+<li>DefaultValuePipe</li>
+<li>ParseEnumPipe</li>
+<li>ParseFloatPipe</li>
+<li>ParseFilePipe</li>
+</ul>
+<p>同样，Pipe 可以只对某个参数生效，或者整个 Controller 都生效：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e6ea5b5ea0b34ef98e8e58d571991adf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=738&amp;h=168&amp;s=25290&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6b59ad26c89547ac9ac762c34f51f08a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=700&amp;h=346&amp;s=76324&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>或者全局生效：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6d414573c1c1497e8c4e74ae59a3d5b6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=824&amp;h=492&amp;s=99581&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/547c0fd51bef474c91f79c6c52e17939~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=692&amp;h=690&amp;s=93776&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>不管是 Pipe、Guard、Interceptor 还是最终调用的 Controller，过程中都可以抛出一些异常，如何对某种异常做出某种响应呢？</p>
+<p>这种异常到响应的映射也是一种通用逻辑，Nest 提供了 ExceptionFilter 来支持：</p>
+<h3 data-id="heading-4">ExceptionFilter</h3>
+<p>ExceptionFilter 可以对抛出的异常做处理，返回对应的响应：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/703ea24742a04ff08d0c244852e6212b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>其实我们刚刚在 pipe 里抛的这个错误，能够返回 400 的响应，就是 Exception Filter 做的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e7eaf5e16a744fdf83f30c4d059d63a1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1228&amp;h=488&amp;s=121930&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c0a9d78e7df54877a6a74de53f21ecc7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=726&amp;h=340&amp;s=44591&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>创建一个 filter：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g <span class="hljs-attribute">filter</span> test <span class="hljs-attr">--no-spec</span> <span class="hljs-attr">--flat</span></span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e0877c763dbf469085c742b7ffec129c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=684&amp;h=88&amp;s=19771&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>生成的代码是这样的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a75179a0606c4c6789c6965ed4a11ef9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=974&amp;h=276&amp;s=56511&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>改一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ArgumentsHost</span>, <span class="hljs-title class_">BadRequestException</span>, <span class="hljs-title class_">Catch</span>, <span class="hljs-title class_">ExceptionFilter</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Response</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Catch</span>(<span class="hljs-title class_">BadRequestException</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestFilter</span> implements <span class="hljs-title class_">ExceptionFilter</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">catch</span>(<span class="hljs-attr">exception</span>: <span class="hljs-title class_">BadRequestException</span>, <span class="hljs-attr">host</span>: <span class="hljs-title class_">ArgumentsHost</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">const</span> <span class="hljs-attr">response</span>: <span class="hljs-title class_">Response</span> = host.<span class="hljs-title function_">switchToHttp</span>().<span class="hljs-title function_">getResponse</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    response.<span class="hljs-title function_">status</span>(<span class="hljs-number">400</span>).<span class="hljs-title function_">json</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">statusCode</span>: <span class="hljs-number">400</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-attr">message</span>: <span class="hljs-string">'test: '</span> + exception.<span class="hljs-property">message</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<p>实现 ExceptionFilter 接口，实现 catch 方法，就可以拦截异常了。</p>
+<p>拦截什么异常用 @Catch 装饰器来声明，然后在 catch 方法返回对应的响应，给用户更友好的提示。</p>
+<p>用一下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cd94c4f4313c410b8e568b1458a7b9c1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=718&amp;h=220&amp;s=32376&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再次访问，异常返回的响应就变了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f4ddf9465a5f40e6817f4fbcf03e9aa7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=796&amp;h=308&amp;s=39321&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image">
+Nest 内置了很多 http 相关的异常，都是 HttpException 的子类：</p>
+<ul>
+<li>BadRequestException</li>
+<li>UnauthorizedException</li>
+<li>NotFoundException</li>
+<li>ForbiddenException</li>
+<li>NotAcceptableException</li>
+<li>RequestTimeoutException</li>
+<li>ConflictException</li>
+<li>GoneException</li>
+<li>PayloadTooLargeException</li>
+<li>UnsupportedMediaTypeException</li>
+<li>UnprocessableException</li>
+<li>InternalServerErrorException</li>
+<li>NotImplementedException</li>
+<li>BadGatewayException</li>
+<li>ServiceUnavailableException</li>
+<li>GatewayTimeoutException</li>
+</ul>
+<p>当然，也可以自己扩展：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cf0edb48c82c4e6fa744f8e32e19fcc3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><strong>Nest 通过这样的方式实现了异常到响应的对应关系，代码里只要抛出不同的异常，就会返回对应的响应，很方便。</strong></p>
+<p>同样，ExceptionFilter 也可以选择全局生效或者某个路由生效：</p>
+<p>某个 handler：
+<img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cd94c4f4313c410b8e568b1458a7b9c1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=718&amp;h=220&amp;s=32376&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>某个 controller：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/49772f6eaa7f4475a996cc2c5bc573a8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=786&amp;h=462&amp;s=101279&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>全局：
+<img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/412348dd82e241089a0891a7bf82a60d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1c15f9cfbc704752852f29d97eda0521~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=828&amp;h=350&amp;s=71895&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ca3e0a1af7c44fada7f5f5f774e6c38f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=688&amp;h=794&amp;s=108264&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image">
+我们了解了 Nest 提供的 AOP 的机制，但它们的顺序关系是怎样的呢？</p>
+<h3 data-id="heading-5">几种 AOP 机制的顺序</h3>
+<p>Middleware、Guard、Pipe、Interceptor、ExceptionFilter 都可以透明的添加某种处理逻辑到某个路由或者全部路由，这就是 AOP 的好处。</p>
+<p>但是它们之间的顺序关系是什么呢？</p>
+<p>调用关系这个得看源码了。</p>
+<p>对应的源码是这样的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1a6c3d7eebcc4d248bd8df8c1f71f7ed~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>很明显，进入这个路由的时候，会先调用 Guard，判断是否有权限等，如果没有权限，这里就抛异常了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f066097b408148f7aa96b301e4613ca9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>抛出的 ForbiddenException 会被 ExceptionFilter 处理，返回 403 状态码。</p>
+<p>如果有权限，就会调用到拦截器，拦截器组织了一个链条，一个个的调用，最后会调用的 controller 的方法：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/20d438fd167e438cb63307c10643308a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>调用 controller 方法之前，会使用 pipe 对参数做处理：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cc6133a5919044d29decd780253b7f6f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>会对每个参数做转换：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2017b403a0fb4bc6a41b261fd7cb2da0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>ExceptionFilter 的调用时机很容易想到，就是在响应之前对异常做一次处理。</p>
+<p>而 Middleware 是 express 中的概念，Nest 只是继承了下，那个是在最外层被调用。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a4d0291cafa9449ca4702617464c5979~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是这几种 AOP 机制的调用顺序。把这些理清楚，就知道什么逻辑放在什么切面里了。</p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Faop-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/aop-test" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-6">总结</h2>
+<p>Nest 基于 express 这种 http 平台做了一层封装，应用了 MVC、IOC、AOP 等架构思想。</p>
+<p>MVC 就是 Model、View Controller 的划分，请求先经过 Controller，然后调用 Model 层的 Service、Repository 完成业务逻辑，最后返回对应的 View。</p>
+<p>IOC 是指 Nest 会自动扫描带有 @Controller、@Injectable 装饰器的类，创建它们的对象，并根据依赖关系自动注入它依赖的对象，免去了手动创建和组装对象的麻烦。</p>
+<p>AOP 则是把通用逻辑抽离出来，通过切面的方式添加到某个地方，可以复用和动态增删切面逻辑。</p>
+<p>Nest 的 Middleware、Guard、Interceptor、Pipe、ExceptionFilter 都是 AOP 思想的实现，只不过是不同位置的切面，它们都可以灵活的作用在某个路由或者全部路由，这就是 AOP 的优势。</p>
+<p>我们通过源码来看了它们的调用顺序，Middleware 是 Express 的概念，在最外层，到了某个路由之后，会先调用 Guard，Guard 用于判断路由有没有权限访问，然后会调用 Interceptor，对 Contoller 前后扩展一些逻辑，在到达目标 Controller 之前，还会调用 Pipe 来对参数做检验和转换。所有的 HttpException 的异常都会被 ExceptionFilter 处理，返回不同的响应。</p>
+<p>Nest 就是通过这种 AOP 的架构方式，实现了松耦合、易于维护和扩展的架构。</p>
+<p>AOP 架构的好处，你感受到了么？</p></div>

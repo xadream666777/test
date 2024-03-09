@@ -1,0 +1,86 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>你可能经常听到 Nest，会觉得它和我的工作也没啥关系呀，为什么要学习 Nest 呢？</p>
+<p>这里给出 5 个学习 Nest 的理由：</p>
+<h2 data-id="heading-0">最流行的 Node 企业级框架</h2>
+<p>开发 node 应用有 3 个层次：</p>
+<ul>
+<li>直接用 http、https 包的 createServer api</li>
+<li>使用 express、koa 这种处理请求响应的库</li>
+<li>使用 nest、egg、midway 这类企业级框架</li>
+</ul>
+<p>直接用 createServer api 创建服务适合特别简单的场景，比如工具提供的开发服务。</p>
+<p>express、koa 这种处理请求响应的库并不能约束代码的写法，代码可以写的很随意，所以不适合开发大型项目。</p>
+<p>大型项目会用企业级开发框架，也就是规定了代码的写法，对很多功能都有开箱即用的解决方案的框架。</p>
+<p>比如 Nest 代码一般都是分了很多模块：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/549bc636a9a84b56bfde197d088f7ded~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>每个模块下都是 controller、service、guard、filter、interceptor、dto 等这些代码：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1a6e576d76aa4a0583ad40a183b6229c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>什么代码放在哪里都是有规范的。</p>
+<p>上面这个目录是一个 8.7k 的已经盈利的项目的服务端代码，感兴趣可以看一下：</p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fapitable%2Fapitable%2Ftree%2F35b05eb421d31a4e4b68ca0bacb1fb484186f4ea%2Fpackages%2Froom-server" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/apitable/apitable/tree/35b05eb421d31a4e4b68ca0bacb1fb484186f4ea/packages/room-server" ref="nofollow noopener noreferrer">github.com/apitable/ap…</a></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6c03ce098c634b8781fc03d5c68c6949~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那 egg 和 midway 呢？</p>
+<p>egg 的 ts 支持不行，在当下 ts 这么主流的情况下，已经不合适了。更何况它是阿里的项目，而阿里 egg 团队也被打包裁了。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/45ed098f827f4b348d434305d04e9f7d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>midway 呢？</p>
+<p>star 数差太多了，和 nest 不在一个量级。</p>
+<p>而且你能保证它不是下一个 egg 么？</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d9f81b4885744c6f98ba9bc03e851583~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/38212a2f2e0445b090868b6794c29522~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Nest 是在全世界都很火，在国内也越来越流行，找不到啥对手。</p>
+<p>如果你想学习 Node 框架，那 Nest 基本是唯一的选择了。</p>
+<h2 data-id="heading-1">学习各种后端中间件</h2>
+<p>后端有很多中间件，比如 mysql、redis、rabbitmq、nacos、elasticsearch 等等，学习 Nest 的过程会用到这些中间件。</p>
+<p>比如类似这种的后端架构：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/38a8aa18ae1a40e1ab83767b2558d84f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>所以我们学的并不只是 Nest，而是整个后端生态。</p>
+<p>这些东西就算换了 go 或者 java，也是一样要学的。</p>
+<h2 data-id="heading-2">可以找国外的全栈工作，或者接远程外包</h2>
+<p>国外远程工作这块，电鸭社区是最有发言权的。</p>
+<p>你逛一逛就会发现，很多创业公司都会用 Nest 做服务端：</p>
+<p>比如这个：</p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Feleduck.com%2Fposts%2FoQfOD7" target="_blank" rel="nofollow noopener noreferrer" title="https://eleduck.com/posts/oQfOD7" ref="nofollow noopener noreferrer">eleduck.com/posts/oQfOD…</a></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/003b04cad510485e8c9728e0d65b89c2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/88e83771b51d49da901e9ba4856f846a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p>这个：</p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Feleduck.com%2Ftposts%2FBaf0Dy" target="_blank" rel="nofollow noopener noreferrer" title="https://eleduck.com/tposts/Baf0Dy" ref="nofollow noopener noreferrer">eleduck.com/tposts/Baf0…</a></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/776effcee7ba4ccab9ad4d9fb9f019b0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>或者这个：</p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Feleduck.com%2Fposts%2FnjfbzD" target="_blank" rel="nofollow noopener noreferrer" title="https://eleduck.com/posts/njfbzD" ref="nofollow noopener noreferrer">eleduck.com/posts/njfbz…</a></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8af15eea44a345138f436fe5c9302be9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p>还有这个：</p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Feleduck.com%2Fposts%2FXNfBXN" target="_blank" rel="nofollow noopener noreferrer" title="https://eleduck.com/posts/XNfBXN" ref="nofollow noopener noreferrer">eleduck.com/posts/XNfBX…</a></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9fbdb09abe634dbfabf069040efbca6b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果你会 React + Nest 技术栈，找个远程全栈工作不也很香么。</p>
+<h2 data-id="heading-3">可以独立做自己的产品</h2>
+<p>如果你想做一个自己的产品，不管是网站、app、小程序还是游戏等应用，都得配上后端吧，如果你熟悉 js/ts，那 Nest 是最适合的选择了。</p>
+<p>比如刚才我们看到这个国外的这个盈利的产品，它就是用 Nest 做的后端：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5dad2ada4c884466b5604f4d5cdc8560~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>或者你是大学生，想做一个写在简历里的前端项目，那只写前端就可以了么？</p>
+<p>肯定不行呀，你得前后端都搞定，在简历上写一个完整的项目，这时候 Nest 就很合适了。因为如果你是想做前端工作，那用 java 并不咋加分。</p>
+<h2 data-id="heading-4">学习优秀的架构设计</h2>
+<p>Nest 的架构很优雅，因为它用了不少设计模式。</p>
+<p>比如 Nest 并不和 Express 耦合，你可以轻松切换到 Fastify。</p>
+<p>就是因为它用了适配器的设计模式：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/20b41feed8d54e8bb264e508cd55c9c3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>Nest 本身只依赖 HttpServer 接口，并不和具体的库耦合。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/237d45ff113a4fe1b7386d3dc7847355~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>你想换别的 http 处理的库，只要写一个新的适配器就好了。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/baeb2549d43c4ab79b65d8f3d717abd1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再比如 Nest 内构建复杂对象很多地方都用到了 builder 的设计模式：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3f6ccae877dc4078b115317f3c8d8c13~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/738ce1e89cdc438cbe6092b3d3aabe40~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>类似这样的设计有很多。</p>
+<p>当你把 Nest用熟之后，潜移默化中，你就知道了什么地方用什么模式是最好的，应该怎么设计。无形中就提升了架构设计能力。</p>
+<h2 data-id="heading-5">总结</h2>
+<p>不管是你想学 Node 框架，学习各种后端中间件，找国外的远程工作或远程外包，独立开发自己的产品，还是想学习优秀的设计，提升架构能力。Nest 都是一个非常好的选择。</p>
+<p>心动了么？赶紧上车。</p></div>

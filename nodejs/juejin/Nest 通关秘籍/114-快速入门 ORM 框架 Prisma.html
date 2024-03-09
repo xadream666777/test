@@ -1,0 +1,224 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>我们学习了 TypeORM，它是一个传统的 ORM 框架，也就是把表映射到 entity 类，把表的关联映射成 entity 类的属性关联。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a698288293c74bc09e0610f0b40f3ee7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1662&amp;h=632&amp;s=56056&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>完成 entity 和表的映射之后，你只要调用 userRepository 和 postRepository 的 find、delete、save 等 api，typeorm 会自动生成对应的 sql 语句并执行。</p>
+<p>这就是 Object Relational Mapping，也就是对象和关系型数据库的映射的含义。</p>
+<p>而 Prisma 不是这样的，它没有 entity 类的存在。</p>
+<p>那映射什么呢？</p>
+<p>Prisma 创造了一种 DSL（Domain Specific Language，领域特定语言）。</p>
+<p>类似这样：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b8bafec64a54cc6bb13548d5e74c060~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1108&amp;h=596&amp;s=108843&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它是把表映射成了 DSL 里的 model，然后编译这个 DSL 会生成 prismaClient 的代码，之后就可以调用它的 find、delete、create 等 api 来做 CRUD 了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/63dbcba51cca4de4b37da140ea4a5dd7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1666&amp;h=632&amp;s=58044&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>虽然多了一种 DSL 的语法，但整个流程其实和 typeorm 差不多的。</p>
+<p>我们来写下试试：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-built_in">mkdir</span> prisma-test</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-built_in">cd</span> prisma-test</span>
+<span class="code-block-extension-codeLine" data-line-num="3">npm init -y</span>
+</code></pre>
+<p>首先生成项目：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e6dec5117a0f49ecb2bb7266b6fe478d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=834&amp;h=638&amp;s=127128&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>安装 typescript 相关的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install typescript ts<span class="hljs-operator">-</span>node <span class="hljs-variable">@types</span><span class="hljs-operator">/</span>node <span class="hljs-comment">--save-dev</span></span>
+</code></pre>
+<p>typescript 是 tsc 编译器的包，ts-node 可以直接跑 ts 代码，而 @types/node 是 node api 的类型声明。</p>
+<p>然后创建 tsconfig.json</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">csharp</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-csharp code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx tsc --<span class="hljs-keyword">init</span></span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/45cf724166f1491698f7f9b88d069421~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=670&amp;h=374&amp;s=42563&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>安装 prisma：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install prisma <span class="hljs-attr">--save-dev</span></span>
+</code></pre>
+<p>之后就可以来写代码了。</p>
+<p>首先，我们要写 schema 层的代码：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/63dbcba51cca4de4b37da140ea4a5dd7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1666&amp;h=632&amp;s=58044&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个也是用命令生成：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">csharp</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-csharp code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx prisma <span class="hljs-keyword">init</span> --datasource-provider mysql</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/badf219d44184c7dac738193e223bb53~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1118&amp;h=432&amp;s=81961&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时你会发现项目目录下多了 schema 文件和 env 文件：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c7b66e678ffd4016ab2ed84da51c2067~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1126&amp;h=502&amp;s=101501&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>schema 文件里就是定义 model 的地方。</p>
+<p>这个文件可以安装 prisma 插件来添加语法高亮等支持：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6adddf3e1d8c4f21b84be5ff7129e5ce~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=786&amp;h=306&amp;s=39728&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而 .env 文件里存储着连接信息：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c38225c9c6d441ea88399f644035b4e2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1068&amp;h=378&amp;s=74936&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们先去 mysql workbench 里创建个数据库：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9cbe9be9ee4e4631be3d99f45f1de85b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1264&amp;h=752&amp;s=186420&amp;e=png&amp;b=e7e5e5" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>指定字符集为 utf8mb4，这个支持的字符集是最全的。</p>
+<p>或者执行这个 sql：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">CREATE</span> SCHEMA `prisma_test` <span class="hljs-keyword">DEFAULT</span> <span class="hljs-type">CHARACTER</span> <span class="hljs-keyword">SET</span> utf8mb4;</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f7b7d55d601d4658a4da7ed0ed1cb896~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=476&amp;h=254&amp;s=37328&amp;e=png&amp;b=e5e0df" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>创建完 database 后，我们改下连接信息：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3e397db8aa7e4920a562d29008ab01ea~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1006&amp;h=348&amp;s=69452&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">env</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-env code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">DATABASE_URL="mysql://root:guang@localhost:3306/prisma_test"</span>
+</code></pre>
+<p>改下用户名、密码、连接的数据库。</p>
+<p>然后来定义 model：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d6c6e0ba468b4379b55aaa55caf89bba~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1114&amp;h=852&amp;s=140113&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">prisma</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-prisma code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">model User {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  id    Int     @id @default(autoincrement())</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  email String  @unique</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  name  String?</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  posts Post[]</span>
+<span class="code-block-extension-codeLine" data-line-num="6">}</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">model Post {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  id        Int     @id @default(autoincrement())</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  title     String</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  content   String?</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  published Boolean @default(false)</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  author    User    @relation(fields: [authorId], references: [id])</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  authorId  Int</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<p>有了 mysql 和 typeorm 的基础后，这些很容易能看懂。</p>
+<p>@id 是主键</p>
+<p>@default(autoincrement()) 是指定默认值是自增的数字</p>
+<p>@unique 是添加唯一约束</p>
+<p>@relation 是指定多对一的关联关系，通过 authorId 关联 User 的 id</p>
+<p>然后只要基于它生成 client 的代码，就可以来 crud 了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx prisma migrate dev <span class="hljs-attr">--name</span> aaa</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b6e5db92339141d4ba89c278855ae6f4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1166&amp;h=484&amp;s=77481&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>执行 prisma migrate dev，会生成并执行建表 sql 文件，而且在 node_modules 下生成了 client 代码。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2c683432eda74c1ea50f1fdcc568e1c4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1576&amp;h=1062&amp;s=273442&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 mysql workbench 里可以看到生成了 2 个表：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/24662a1290aa4e478a927adf9f300706~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1098&amp;h=442&amp;s=129826&amp;e=png&amp;b=eeebeb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5acc0cad3ba54e7a92e7755cc3ee8cad~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1102&amp;h=580&amp;s=184182&amp;e=png&amp;b=eeebeb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/14fbed8200d64b1c903efcc088464e5e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1600&amp;h=482&amp;s=99384&amp;e=png&amp;b=f7f6f6" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 node_modules/.prisma/client 下生成的代码也包含了 user 和 post 的信息：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ce58f0bdb4854f4286e2095facc77745~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1132&amp;h=636&amp;s=142091&amp;e=png&amp;b=1c1c1c" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后就可以用 @prisma/client 来做 CRUD 了。</p>
+<p>创建 src/index.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">PrismaClient</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@prisma/client'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> prisma = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PrismaClient</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test1</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">user</span>.<span class="hljs-title function_">create</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-attr">data</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">            <span class="hljs-attr">name</span>: <span class="hljs-string">'guang'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-attr">email</span>: <span class="hljs-string">'111@gaung.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">user</span>.<span class="hljs-title function_">create</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">data</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            <span class="hljs-attr">name</span>: <span class="hljs-string">'dong'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-attr">email</span>: <span class="hljs-string">'222@dong.com'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-keyword">const</span> users = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">user</span>.<span class="hljs-title function_">findMany</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(users);</span>
+<span class="code-block-extension-codeLine" data-line-num="22">}</span>
+<span class="code-block-extension-codeLine" data-line-num="23"></span>
+<span class="code-block-extension-codeLine" data-line-num="24"><span class="hljs-title function_">test1</span>();</span>
+</code></pre>
+<p>创建 PrismaClient，用 create 方法创建了 2 个 user，然后查询出来。</p>
+<p>跑一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx ts-node ./src/index.ts</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/308e5f46852a424f898e27a70d865a47~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=758&amp;h=160&amp;s=29609&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，user 表确实插入了 2 条记录：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0127e313b7e5480abe0dbfab7445a61a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1050&amp;h=408&amp;s=125597&amp;e=png&amp;b=ece9e8" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们再来插入一个新的 user 和它的两个 post：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">PrismaClient</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@prisma/client'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">const</span> prisma = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PrismaClient</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">log</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">emit</span>: <span class="hljs-string">'stdout'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-attr">level</span>: <span class="hljs-string">'query'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="10">});</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test2</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">user</span>.<span class="hljs-title function_">create</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">data</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            <span class="hljs-attr">name</span>: <span class="hljs-string">'东东东'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-attr">email</span>: <span class="hljs-string">'dongdong@dong.com'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">            <span class="hljs-attr">posts</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">                <span class="hljs-attr">create</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="19">                    {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">                        <span class="hljs-attr">title</span>: <span class="hljs-string">'aaa'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="21">                        <span class="hljs-attr">content</span>: <span class="hljs-string">'aaaa'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">                    },</span>
+<span class="code-block-extension-codeLine" data-line-num="23">                    {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">                        <span class="hljs-attr">title</span>: <span class="hljs-string">'bbb'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">                        <span class="hljs-attr">content</span>: <span class="hljs-string">'bbbb'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">                    }</span>
+<span class="code-block-extension-codeLine" data-line-num="27">                ]</span>
+<span class="code-block-extension-codeLine" data-line-num="28">            },</span>
+<span class="code-block-extension-codeLine" data-line-num="29">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(user)</span>
+<span class="code-block-extension-codeLine" data-line-num="32">}</span>
+<span class="code-block-extension-codeLine" data-line-num="33"></span>
+<span class="code-block-extension-codeLine" data-line-num="34"><span class="hljs-title function_">test2</span>();</span>
+</code></pre>
+<p>这里开启了 prisma 的 log，会打印 sql。</p>
+<p>然后用 create 方法创建了 user，并且 create 了两个关联的 post。</p>
+<p>执行下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx ts-node ./src/index.ts</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/984b490b399044068950a07cdae94cd2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1314&amp;h=330&amp;s=92682&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到被事务包裹的三条 insert 语句。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/79527c6e92f0409eaaab44a99187dee5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1034&amp;h=400&amp;s=132137&amp;e=png&amp;b=ece9e8" alt="" loading="lazy" class="medium-zoom-image">
+<img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1a702cb205ff45eab22c4da71fb4e192~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1064&amp;h=332&amp;s=108189&amp;e=png&amp;b=ebe8e7" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>数据也都插入成功了。</p>
+<p>然后是再来试下更新和删除：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test3</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">post</span>.<span class="hljs-title function_">update</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            <span class="hljs-attr">id</span>: <span class="hljs-number">2</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">data</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">            <span class="hljs-attr">content</span>: <span class="hljs-string">'xxx'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="10">}</span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-title function_">test3</span>();</span>
+</code></pre>
+<p>更新 id 为 2 的 post 的内容为 xxx：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/97c275fee3dd45adbb90f208517a62c5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1316&amp;h=286&amp;s=80407&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/74df2e460a6e4b77957d8197bcdcd4a4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=592&amp;h=252&amp;s=56477&amp;e=png&amp;b=fafafa" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后把它删掉：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">test4</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">await</span> prisma.<span class="hljs-property">post</span>.<span class="hljs-title function_">delete</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            <span class="hljs-attr">id</span>: <span class="hljs-number">2</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-title function_">test4</span>();</span>
+</code></pre>
+<p>执行下：
+<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/58f9c0b6df584b00ac8dde3569c687f9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1258&amp;h=266&amp;s=61733&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/34337e18216745aeacbe507b644d43a5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=622&amp;h=208&amp;s=47905&amp;e=png&amp;b=fafafa" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，基于 prisma 的 model 定义还有 CRUD 我们就都完成了。</p>
+<p>回顾下整个流程：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/63dbcba51cca4de4b37da140ea4a5dd7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1666&amp;h=632&amp;s=58044&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>只是把 entity 类变成了 DSL 语法里的 model，然后通过编译的方式生成 client 的代码，之后进行 CRUD。</p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fprisma-test" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/prisma-test" ref="nofollow noopener noreferrer">小册仓库</a></p>
+<h2 data-id="heading-0">总结</h2>
+<p>我们学习了 ORM 框架 prisma，它和 typeorm 大同小异。</p>
+<p>typeorm 是把表映射成 entity 类，然后调用 repository 的 api 来做 CRUD。</p>
+<p>prisma 是把条映射成 schema 的 model，然后编译生成 client 代码，之后进行 crud。</p>
+<p>用到这两个命令：</p>
+<p>primsa init 创建 schema 文件</p>
+<p>prisma migrate dev 根据 schema 文件生成 sql 并执行，还会生成 client 代码。</p>
+<p>之后就是 CRUD 了，涉及到 findMany、create、delete、update 等 api。</p>
+<p>这节只是入了个门，下节来更全面的掌握 prisma。</p></div>

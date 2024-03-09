@@ -1,0 +1,518 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>代码分割是前端优化中最常用的手段之一，所有的前端优化文章都会介绍<code>vendors、common</code>之类的代码分割方案，但是这种陈旧的解决方案，健壮性不强，优化效果也不好。</p>
+<p>所以我们不再赘述这种方案，而是一起学习一种近年新发明的代码分割最佳实践——<strong>细粒度代码分割(Granular Code Split)</strong>，解决代码分割长久以来的三大痛点。</p>
+<p>首先我们先复习一下代码分割的基本原理。</p>
+<h2 data-id="heading-0">1. 代码分割原理和配置</h2>
+<p>代码分割是利用现代前端打包构建工具的能力，将单个构建产物文件主动拆分为多个文件，从而提高缓存命中率、改善用户体验的优化。</p>
+<p>以<code>Webpack@5</code>为例，代码分割的配置项主要有：</p>
+<h3 data-id="heading-1">1. <code>chunks</code></h3>
+<p>值类型：<code>String | function (chunks) =&gt; string</code></p>
+<p>功能：指定哪些类型的区块可以被纳入分割出的新区块。</p>
+<blockquote>
+<p>注：区块（Chunk）是 Webpack 的概念，有三种产生途径：</p>
+<ol>
+<li>每个入口<code>entry</code>对应一个区块；</li>
+<li>动态加载（Dynamic Import），即<code>import('module-path')</code> 语法引入的模块，会生成独立的chunk；</li>
+<li>代码分割会产生新区块；</li>
+</ol>
+<p>在打包产物中，每个区块通常会对应一个独立的文件。</p>
+</blockquote>
+<p><code>chunks</code>有4种值：</p>
+<ul>
+<li><code>'async'</code>：分割出的新区块只允许包含动态加载的区块。</li>
+<li><code>'initial'</code>：分割出的新区块只允许包含<strong>非</strong>动态加载的区块。</li>
+<li><code>'all'</code>：分割出的新区块可以包含动态加载和<strong>非</strong>动态加载的区块。</li>
+<li><code>函数</code>：配置一个函数，接收目标区块的数据作为参数，返回布尔值，表示目标区块能否被纳入分割出的新区块，例如：</li>
+</ul>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">optimization</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">splitChunks</span>: { </span>
+<span class="code-block-extension-codeLine" data-line-num="4">      <span class="hljs-title function_">chunks</span>(<span class="hljs-params">chunk</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-comment">// 分割出的新区块排除 name 为 `excluded-chunk` 的区块</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-keyword">return</span> chunk.<span class="hljs-property">name</span> !== <span class="hljs-string">'excluded-chunk'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="10">};</span>
+</code></pre>
+<p><code>chunks</code>配置示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">optimization</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">splitChunks</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">      <span class="hljs-comment">// 分割出的新区块可以包含动态加载和非动态加载2种类型的区块。</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-attr">chunks</span>: <span class="hljs-string">'all'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">     },</span>
+<span class="code-block-extension-codeLine" data-line-num="7">   },</span>
+<span class="code-block-extension-codeLine" data-line-num="8"> };</span>
+</code></pre>
+<blockquote>
+<p>注：第6节《懒加载》中，我们介绍过，懒加载不生效的常见原因之一就是被<code>splitChunks.chunks</code>配置干扰。</p>
+</blockquote>
+<h3 data-id="heading-2">2. <code>minSize</code></h3>
+<blockquote>
+<p>值类型：<code>Number</code></p>
+</blockquote>
+<p>功能：指定分割所产生的新区块的最小体积，单位为字节（byte），小于<code>minSize</code>字节的新区块，将不会被创建，也就不会产生对应的打包产物文件。</p>
+<p><code>minSize</code>和 <code>maxSize</code>衡量的都是组成区块的<strong>未压缩前的源码体积</strong>，不一定等于构建产物文件的体积。</p>
+<p>未压缩前的源码体积可以参考<code>webpack-bundle-analyzer-plugin</code>中的<code>Stat</code>体积，打包产物文件的体积则是<code>Parsed</code>体积。</p>
+<p>配置示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">optimization</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">splitChunks</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">       <span class="hljs-comment">// 如果新区块未压缩前源码体积小于 100 KB，</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">       <span class="hljs-comment">// 将不会被创建，也就不会产生独立的构建产物文件。</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">       <span class="hljs-attr">minSize</span>: <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">0.1</span>, <span class="hljs-comment">// 100 KB</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">     },</span>
+<span class="code-block-extension-codeLine" data-line-num="8">   },</span>
+<span class="code-block-extension-codeLine" data-line-num="9"> };</span>
+</code></pre>
+<h3 data-id="heading-3">3. <code>maxSize</code></h3>
+<blockquote>
+<p>值类型：<code>Number</code></p>
+</blockquote>
+<p>功能：指定新区块的最大体积，单位为字节（byte），大于<code>maxSize</code>字节的新区块，将被拆分为多个更小的新区块。</p>
+<p>配置示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">optimization</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">splitChunks</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">       <span class="hljs-comment">// 如果新区块未压缩前源码体积大于 1 MB，</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">       <span class="hljs-comment">// 新区块将会被拆分为多个体积较小的区块，</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">       <span class="hljs-comment">// 相应的产生多个构建产物文件。</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">       <span class="hljs-attr">maxSize</span>: <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">1</span>, <span class="hljs-comment">// 1 MB</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">     },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">   },</span>
+<span class="code-block-extension-codeLine" data-line-num="10"> };</span>
+</code></pre>
+<h3 data-id="heading-4">4. <code>minChunks</code></h3>
+<blockquote>
+<p>值类型：<code>Number</code></p>
+</blockquote>
+<p>功能：指定模块最少被多少个区块共同引用，才能被纳入分割出的新区块。</p>
+<p>例如如下3个文件及其代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// common-module.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">export</span> n = <span class="hljs-number">1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-comment">// a.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">import</span> { n } <span class="hljs-keyword">from</span> <span class="hljs-string">'common-module.js'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-comment">// b.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">import</span> { n } <span class="hljs-keyword">from</span> <span class="hljs-string">'common-module.js'</span></span>
+</code></pre>
+<p>上述代码中，<code>common-module.js</code> 被<code>a.js</code>和<code>b.js</code>2个区块同时引入，当我们在 Webpack 配置中指定<code>splitChunk.minChunks</code>值：</p>
+<ul>
+<li>为 2 时，<code>common-module.js</code>就会被纳入分割出的新区块。</li>
+<li>为 3 时，<code>common-module.js</code>就<strong>不会</strong>被纳入分割出的新区块，因为<code>common-module.js</code>不满足我们指定的 <strong>“模块最少被3个区块共同引用”</strong> 的配置规则。</li>
+</ul>
+<p>配置示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">    <span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">      <span class="hljs-attr">optimization</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">splitChunks</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">          <span class="hljs-attr">minChunks</span>: <span class="hljs-number">2</span>, </span>
+<span class="code-block-extension-codeLine" data-line-num="5">         },</span>
+<span class="code-block-extension-codeLine" data-line-num="6">       },</span>
+<span class="code-block-extension-codeLine" data-line-num="7">     };</span>
+</code></pre>
+<h3 data-id="heading-5">5. <code>maxInitialRequests</code></h3>
+<blockquote>
+<p>值类型：<code>Number</code></p>
+</blockquote>
+<p>功能：指定最多可以拆分为多少个<strong>同步</strong>加载的新区块，常用于和<code>maxAsyncRequests</code>配合，控制代码分割产生的最大文件数量。</p>
+<p>配置示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-comment">//...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">optimization</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">splitChunks</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-attr">maxInitialRequests</span>: <span class="hljs-number">20</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">     },</span>
+<span class="code-block-extension-codeLine" data-line-num="7">   },</span>
+<span class="code-block-extension-codeLine" data-line-num="8"> };</span>
+</code></pre>
+<h3 data-id="heading-6">6. <code>maxAsyncRequests</code></h3>
+<blockquote>
+<p>值类型：<code>Number</code></p>
+</blockquote>
+<p>功能：指定最多可以分割出多少个<strong>异步</strong>加载（即动态加载<code>import()</code>）的新区块，常用于和<code>maxInitialRequests</code>配合控制代码分割产生的最大文件数量。</p>
+<p>配置示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">optimization</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">splitChunks</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">      <span class="hljs-attr">maxAsyncRequests</span>: <span class="hljs-number">10</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">     },</span>
+<span class="code-block-extension-codeLine" data-line-num="6">   },</span>
+<span class="code-block-extension-codeLine" data-line-num="7"> };</span>
+</code></pre>
+<h3 data-id="heading-7">7. <code>name</code></h3>
+<blockquote>
+<p>值类型：<code>String | Boolean | function (module, chunks, cacheGroupKey) =&gt; string</code></p>
+</blockquote>
+<p>功能：指定分割出的区块名，区块名是Webpack运行时内部用来区分不同区块的id。</p>
+<p>区块名不一定等于打包产物的文件名，当没有指定<code>cacheGroup.filename</code>时，区块名才会被用作产物文件名。</p>
+<p>推荐使用下文介绍的<code>cacheGroup.filename</code>指定文件名，因为功能更强大。</p>
+<p>另外，对多个新区块或多个<code>cacheGroup[i]</code>配置<strong>相同</strong>的<code>name</code>，会使这些区块被合并，最终会被打包进同一产物文件中。</p>
+<p>相反地，对多个区块配置<strong>不同</strong>的<code>name</code>，会使这些区块各自独立，最终多个独立的产物文件。</p>
+<p>配置示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">optimization</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">splitChunks</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">      <span class="hljs-title function_">name</span>(<span class="hljs-params"><span class="hljs-variable language_">module</span>, chunks, cacheGroupKey</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-keyword">const</span> moduleFileName = <span class="hljs-variable language_">module</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">              .<span class="hljs-title function_">identifier</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7">              .<span class="hljs-title function_">split</span>(<span class="hljs-string">'/'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="8">              .<span class="hljs-title function_">reduceRight</span>(<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> item);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-keyword">const</span> allChunksNames = </span>
+<span class="code-block-extension-codeLine" data-line-num="10">          chunks.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> item.<span class="hljs-property">name</span>).<span class="hljs-title function_">join</span>(<span class="hljs-string">'~'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${cacheGroupKey}</span>-<span class="hljs-subst">${allChunksNames}</span>-<span class="hljs-subst">${moduleFileName}</span>`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="13">     },</span>
+<span class="code-block-extension-codeLine" data-line-num="14">   },</span>
+<span class="code-block-extension-codeLine" data-line-num="15"> };</span>
+</code></pre>
+<h3 data-id="heading-8">8. <code>cacheGroups</code></h3>
+<blockquote>
+<p>值类型：<code>Object</code></p>
+</blockquote>
+<p>功能：指定有独立配置的区块，既可以继承上述<code>splitChunks</code>的配置，也可以指定专属当前区块的独立配置。下文中会进一步详细介绍。</p>
+<p>可以理解为继承自<code>splitChunks</code>的<strong>子类</strong>，一方面继承了父类<code>splitChunks</code>分割区块的能力和配置属性，另一方面也有自己的私有属性。</p>
+<p>配置示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">optimization</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">splitChunks</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">      <span class="hljs-attr">cacheGroups</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-comment">// 指定一个独立的 vendor 区块分组，</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-comment">// 包含独立的内容（test）</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">        <span class="hljs-comment">// 有指定的名称（name）</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-comment">// 可以包含动态加载和非动态加载的区块（chunks: 'all'）</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">vendor</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">          <span class="hljs-attr">test</span>: <span class="hljs-regexp">/[\/]node_modules[\/]/</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">          <span class="hljs-attr">name</span>: <span class="hljs-string">'vendors'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">          <span class="hljs-attr">chunks</span>: <span class="hljs-string">'all'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="15">     },</span>
+<span class="code-block-extension-codeLine" data-line-num="16">   },</span>
+<span class="code-block-extension-codeLine" data-line-num="17"> };</span>
+</code></pre>
+<blockquote>
+<p>注：不同属性的<strong>优先级</strong>有所不同，当多个属性冲突时，会按照优先级生效。</p>
+<p>例如当同时设置<code>maxSize: 10000</code>导致新区块被拆分的数量大于<code>maxInitialRequest: 5</code>时，<code>maxSize</code>会使<code>maxInitialRequest</code>失效，使最终的初始化请求数量大于指定的5个。</p>
+<p>属性的优先级是：<code>minSize</code> &gt; <code>maxSize</code> &gt; <code>maxInitialRequest/maxAsyncRequests</code></p>
+<p>上述<code>splitChunks</code>配置以Webpack@5版本为例：<a href="https://link.juejin.cn?target=https%3A%2F%2Fwebpack.js.org%2Fplugins%2Fsplit-chunks-plugin%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://webpack.js.org/plugins/split-chunks-plugin/" ref="nofollow noopener noreferrer">webpack.js.org/plugins/spl…</a></p>
+</blockquote>
+<p>上述配置既可以声明在<code>optimization.splitChunks</code>，作用于<strong>所有</strong><code>cacheGroup[name]</code>。也可以声明在某一个<code>cacheGroup[name]</code>中，单独作用于所在的<code>cacheGroup[name]</code>。</p>
+<p>但是下面几项配置项则<strong>只能</strong>声明在<code>optimization.splitChunks.cacheGroup[i]</code>中：</p>
+<h3 data-id="heading-9">9. <code>test</code></h3>
+<p>指定当前缓存组<code>cacheGroup</code>区块包含模块的匹配规则。</p>
+<blockquote>
+<p>值类型：<code>Regex | String | function (module, { chunkGraph,moduleGraph }) =&gt; boolean</code></p>
+</blockquote>
+<p>其值有3种类型：</p>
+<ul>
+<li>正则表达式：用于对模块文件的<strong>绝对路径</strong>，调用<code>regExp.test(modulePath)</code>方法，判断当前缓存组区块是否包含目标模块文件。</li>
+<li>函数：接收<code>(module, { chunkGraph, moduleGraph })</code>作为参数，返回布尔值表示当前缓存组区块是否包含目标模块文件。</li>
+<li>字符串：用于对模块文件的<strong>绝对路径</strong>，调用<code>modulePath.startsWith(str)</code>方法，判断当前缓存组区块是否包含目标模块文件。</li>
+</ul>
+<blockquote>
+<p>注：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack%2Fblob%2F6a8b3044cbe308bed3a1270c08cca4152f983ad9%2Flib%2Foptimize%2FSplitChunksPlugin.js%23LL520C11-L520C11" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/webpack/webpack/blob/6a8b3044cbe308bed3a1270c08cca4152f983ad9/lib/optimize/SplitChunksPlugin.js#LL520C11-L520C11" ref="nofollow noopener noreferrer">Webpack SplitChunkPlugin cacheGroup[name].test 源码链接</a></p>
+<p>模块文件绝对路径示例：/Users/nn/Desktop/Programing/front-end-app/node_modules/axios/lib/helpers/combineURLs.js</p>
+</blockquote>
+<p>配置示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">splitChunks</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">cacheGroups</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">svgGroup</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">      <span class="hljs-title function_">test</span>(<span class="hljs-params"><span class="hljs-variable language_">module</span></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">module</span>.<span class="hljs-property">resource</span>?.<span class="hljs-title function_">endsWith</span>(<span class="hljs-string">'.svg'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">vendors</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-attr">test</span>: <span class="hljs-regexp">/[\/]node_modules[\/]/</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">lodash</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-attr">test</span>: <span class="hljs-string">'lodash'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<h3 data-id="heading-10">10. <code>priority</code></h3>
+<p>指定当前缓存组区块的优先级，当一个模块文件满足多个缓存组区块的匹配规则（<code>.test</code>属性）时，最终会将模块文件分割进<code>priority</code> 值更大的那个缓存组区块。</p>
+<blockquote>
+<p>值类型：<code>Number</code></p>
+</blockquote>
+<p>配置示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">splitChunks</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">cacheGroups</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">vendors</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">      <span class="hljs-attr">test</span>: <span class="hljs-regexp">/[\/]node_modules[\/]/</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-attr">priority</span>: <span class="hljs-number">1</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">vendorsVIP</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-attr">test</span>: <span class="hljs-regexp">/[\/]node_modules[\/]/</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-comment">// 因为 vendorsVIP 的 priority 为 2，</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-comment">// 大于 vendors 的 1，且两者匹配规则相同，</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-comment">// 所以打包产物文件将只有 vendorsVIP.js，</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-comment">// 不会有vendors.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-attr">priority</span>: <span class="hljs-number">2</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="15">}</span>
+</code></pre>
+<h3 data-id="heading-11">11. <code>filename</code></h3>
+<p>指定区块对应打包产物文件的文件名，支持：</p>
+<ul>
+<li>使用<code>[contenthash]</code>等文件名替换符</li>
+<li>指定文件类型，即文件的后缀名</li>
+</ul>
+<blockquote>
+<p>值类型：<code>String | Boolean | function (pathData, assetInfo) =&gt; string</code></p>
+</blockquote>
+<blockquote>
+<p><code>splitChunks.name</code>功能相对较少，既不支持<code>[contenthash]</code>特殊替换符，也无法指定文件的后缀类型。</p>
+<p>例如，指定<code>name: 'vendor.[chunkhash].ts',</code>，构建的产出文件会是 <code>vendor.[chunkhash].ts.js</code>。</p>
+</blockquote>
+<p>配置示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">splitChunks</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">cacheGroups</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-attr">vendor</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-attr">test</span>: <span class="hljs-regexp">/[\/]node_modules[\/]/</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-attr">filename</span>: <span class="hljs-string">'vendor.[chunkhash].js'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">chunks</span>: <span class="hljs-string">'all'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+</code></pre>
+<h3 data-id="heading-12">12. <code>enforce</code></h3>
+<blockquote>
+<p>值类型：<code>Boolean</code></p>
+</blockquote>
+<p>指定是否忽略<code>maxSize, minSize, maxAsyncRequests, maxInitialRequests</code>等配置项的限制，强制生成当前缓存组对应的区块。</p>
+<p>例如，缓存组匹配规则匹配到代码的体积小于<code>minSize</code>，默认将不会产生对应区块。但如果对缓存组指定<code>enforce: true</code>，就会忽略<code>minSize</code>的限制，仍然分割出体积小于<code>minSize</code>的区块。</p>
+<p>配置示例：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">splitChunks</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">cacheGroups</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">minSize</span>: <span class="hljs-number">20000</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">vendors</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-attr">test</span>: <span class="hljs-regexp">/[\/]node_modules[\/]/</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">enforce</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+</code></pre>
+<ol start="13">
+<li><strong>默认</strong><code>splitChunks</code>配置</li>
+</ol>
+<p>此外，<code>Webpack</code>有一套<strong>默认</strong>的<code>splitChunks</code>配置如下：</p>
+<blockquote>
+<p>Webpack 源码：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack%2Fblob%2F2dc8755dc40e24e3ba5760e96738b74990116711%2Flib%2Fconfig%2Fdefaults.js%23L1380" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/webpack/webpack/blob/2dc8755dc40e24e3ba5760e96738b74990116711/lib/config/defaults.js#L1380" ref="nofollow noopener noreferrer">github.com/webpack/web…</a></p>
+</blockquote>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">    <span class="hljs-comment">// ...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">NODE_MODULES_REGEXP</span> = <span class="hljs-regexp">/[\/]node_modules[\/]/i</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">if</span> (splitChunks) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-title function_">A</span>(splitChunks, <span class="hljs-string">"defaultSizeTypes"</span>, <span class="hljs-function">() =&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">                css ? [<span class="hljs-string">"javascript"</span>, <span class="hljs-string">"css"</span>, <span class="hljs-string">"unknown"</span>] : [<span class="hljs-string">"javascript"</span>, <span class="hljs-string">"unknown"</span>]</span>
+<span class="code-block-extension-codeLine" data-line-num="7">        );</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-title function_">D</span>(splitChunks, <span class="hljs-string">"hidePathInfo"</span>, production);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-title function_">D</span>(splitChunks, <span class="hljs-string">"chunks"</span>, <span class="hljs-string">"async"</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-title function_">D</span>(splitChunks, <span class="hljs-string">"usedExports"</span>, optimization.<span class="hljs-property">usedExports</span> === <span class="hljs-literal">true</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-title function_">D</span>(splitChunks, <span class="hljs-string">"minChunks"</span>, <span class="hljs-number">1</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-title function_">F</span>(splitChunks, <span class="hljs-string">"minSize"</span>, <span class="hljs-function">() =&gt;</span> (production ? <span class="hljs-number">20000</span> : <span class="hljs-number">10000</span>));</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-title function_">F</span>(splitChunks, <span class="hljs-string">"minRemainingSize"</span>, <span class="hljs-function">() =&gt;</span> (development ? <span class="hljs-number">0</span> : <span class="hljs-literal">undefined</span>));</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-title function_">F</span>(splitChunks, <span class="hljs-string">"enforceSizeThreshold"</span>, <span class="hljs-function">() =&gt;</span> (production ? <span class="hljs-number">50000</span> : <span class="hljs-number">30000</span>));</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-title function_">F</span>(splitChunks, <span class="hljs-string">"maxAsyncRequests"</span>, <span class="hljs-function">() =&gt;</span> (production ? <span class="hljs-number">30</span> : <span class="hljs-title class_">Infinity</span>));</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-title function_">F</span>(splitChunks, <span class="hljs-string">"maxInitialRequests"</span>, <span class="hljs-function">() =&gt;</span> (production ? <span class="hljs-number">30</span> : <span class="hljs-title class_">Infinity</span>));</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-title function_">D</span>(splitChunks, <span class="hljs-string">"automaticNameDelimiter"</span>, <span class="hljs-string">"-"</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-keyword">const</span> cacheGroups =</span>
+<span class="code-block-extension-codeLine" data-line-num="19">                <span class="hljs-comment">/** <span class="hljs-doctag">@type</span> {<span class="hljs-type">NonNullable&lt;OptimizationSplitChunksOptions["cacheGroups"]&gt;</span>} */</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">                (splitChunks.<span class="hljs-property">cacheGroups</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        <span class="hljs-title function_">F</span>(cacheGroups, <span class="hljs-string">"default"</span>, <span class="hljs-function">() =&gt;</span> ({</span>
+<span class="code-block-extension-codeLine" data-line-num="22">                <span class="hljs-attr">idHint</span>: <span class="hljs-string">""</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="23">                <span class="hljs-attr">reuseExistingChunk</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="24">                <span class="hljs-attr">minChunks</span>: <span class="hljs-number">2</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">                <span class="hljs-attr">priority</span>: -<span class="hljs-number">20</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">        }));</span>
+<span class="code-block-extension-codeLine" data-line-num="27">        <span class="hljs-title function_">F</span>(cacheGroups, <span class="hljs-string">"defaultVendors"</span>, <span class="hljs-function">() =&gt;</span> ({</span>
+<span class="code-block-extension-codeLine" data-line-num="28">                <span class="hljs-attr">idHint</span>: <span class="hljs-string">"vendors"</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="29">                <span class="hljs-attr">reuseExistingChunk</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="30">                <span class="hljs-attr">test</span>: <span class="hljs-variable constant_">NODE_MODULES_REGEXP</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="31">                <span class="hljs-attr">priority</span>: -<span class="hljs-number">10</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">        }));</span>
+<span class="code-block-extension-codeLine" data-line-num="33">    }</span>
+</code></pre>
+<p>这套默认配置有几点值得关注：</p>
+<ul>
+<li>
+<p>区分了<code>production</code>和<code>development</code>环境，有不同的配置；</p>
+</li>
+<li>
+<p>指定了<code>minSize</code>为，在<code>production</code>环境为20KB，在<code>development</code>环境为10KB，小于这一体积的模块，将不会被分割为新区块，也就不会产生独立构建产物文件。</p>
+</li>
+<li>
+<p>自带2个缓存组：</p>
+<ul>
+<li><code>default</code>包含所有共同引用大于2个区块的模块：<code>minChunks: 2</code></li>
+<li><code>defaultVendors</code>包含所有来自<code>/node_modules/</code>目录的模块：<code>test: NODE_MODULES_REGEXP</code>,</li>
+</ul>
+</li>
+</ul>
+<p>有时我们的自定义配置不生效，往往就是因为和这套默认配置有所冲突，需要通过覆盖默认配置，避免冲突。</p>
+<p>下面的代码示例，演示的就是关闭默认缓存组的配置方式：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">splitChunks</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">cacheGroups</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">default</span>: <span class="hljs-literal">false</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">defaultVendors</span>: <span class="hljs-literal">false</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="6">},</span>
+</code></pre>
+<h2 data-id="heading-13">2. 痛点</h2>
+<p>Webpack的代码分割功能非常灵活，但也导致我们在使用时会遇到许多痛点，主要有：</p>
+<ul>
+<li><strong>配置复杂，开发体验不佳</strong>：各类繁杂的配置项令开发者困惑，难以确定拆分目标模块；</li>
+<li><strong>配置方案健壮性不强，可维护性不好</strong>：拆分配置方案无法适应项目的快速迭代变化，需要经常调整；</li>
+<li><strong>用户体验不好</strong>：拆分效果不好，拆分出的模块每次打包上线都会变化，不便于配合<strong>增量构建</strong>进行缓存，没有实现最优缓存效果，甚至使用户体验恶化；</li>
+</ul>
+<p>那么如何解决这些痛点？代码分割的最佳实践是什么？</p>
+<h2 data-id="heading-14">3. 最佳实践：细粒度代码分割</h2>
+<p><strong>细粒度代码分割（Granular Code Split）</strong> 是近年来发明的代码分割通用解决方案，其经过 Next.js, Gastby 等前端SSR框架多年的实践验证，能有效解决上述痛点，显著改善开发体验和用户体验。</p>
+<p>其核心思路是通过拆分出更多的区块、更多产物文件，让每个产物文件拥有自己的哈希版本号文件名，对产物文件的缓存有效性做<strong>细粒度</strong>的控制，让前端项目在多次打包上线后，仍然能复用之前的产物文件，不必重新下载静态资源。</p>
+<blockquote>
+<ul>
+<li>
+<p>Next.js 实现MR：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Fpull%2F7696" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/vercel/next.js/pull/7696" ref="nofollow noopener noreferrer">github.com/vercel/next…</a></p>
+</li>
+<li>
+<p>Gastby 实现MR：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fgatsbyjs%2Fgatsby%2Fpull%2F22253" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/gatsbyjs/gatsby/pull/22253" ref="nofollow noopener noreferrer">github.com/gatsbyjs/ga…</a></p>
+</li>
+</ul>
+</blockquote>
+<h3 data-id="heading-15">1. 核心配置</h3>
+<p>细粒度代码分割的核心Webpack配置如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// webpack.production.config.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> crypto = <span class="hljs-built_in">require</span>(<span class="hljs-string">'crypto'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">MAX_REQUEST_NUM</span> = <span class="hljs-number">20</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-comment">// 指定一个 module 可以被拆分为独立 区块（chunk） 的最小源码体积（单位：byte）</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">MIN_LIB_CHUNK_SIZE</span> = <span class="hljs-number">10</span> * <span class="hljs-number">1000</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">const</span> <span class="hljs-title function_">isModuleCSS</span> = (<span class="hljs-params"><span class="hljs-variable language_">module</span></span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-comment">// ...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">};</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  <span class="hljs-attr">mode</span>: <span class="hljs-string">'production'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  <span class="hljs-attr">optimization</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">splitChunks</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-attr">maxInitialRequests</span>: <span class="hljs-variable constant_">MAX_REQUEST_NUM</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-attr">maxAsyncRequests</span>: <span class="hljs-variable constant_">MAX_REQUEST_NUM</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-attr">minSize</span>: <span class="hljs-variable constant_">MIN_LIB_CHUNK_SIZE</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-attr">cacheGroups</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">        <span class="hljs-attr">defaultVendors</span>: <span class="hljs-literal">false</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        <span class="hljs-attr">default</span>: <span class="hljs-literal">false</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-attr">lib</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">          <span class="hljs-attr">chunks</span>: <span class="hljs-string">'all'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="24">          <span class="hljs-title function_">test</span>(<span class="hljs-params"><span class="hljs-variable language_">module</span></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="25">            <span class="hljs-keyword">return</span> (</span>
+<span class="code-block-extension-codeLine" data-line-num="26">              <span class="hljs-variable language_">module</span>.<span class="hljs-title function_">size</span>() &gt; <span class="hljs-variable constant_">MIN_LIB_CHUNK_SIZE</span> &amp;&amp;</span>
+<span class="code-block-extension-codeLine" data-line-num="27">              <span class="hljs-regexp">/node_modules[/\]/.test(module.identifier())</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">            );</span>
+<span class="code-block-extension-codeLine" data-line-num="29">          },</span>
+<span class="code-block-extension-codeLine" data-line-num="30">          name(module) {</span>
+<span class="code-block-extension-codeLine" data-line-num="31">            const hash = crypto.createHash('sha1');</span>
+<span class="code-block-extension-codeLine" data-line-num="32">            // ...</span>
+<span class="code-block-extension-codeLine" data-line-num="33">            return `lib.${hash.digest('hex').substring(0, 8)}`;</span>
+<span class="code-block-extension-codeLine" data-line-num="34">          },</span>
+<span class="code-block-extension-codeLine" data-line-num="35">          priority: 3,</span>
+<span class="code-block-extension-codeLine" data-line-num="36">          minChunks: 1,</span>
+<span class="code-block-extension-codeLine" data-line-num="37">          reuseExistingChunk: true,</span>
+<span class="code-block-extension-codeLine" data-line-num="38">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="39">        shared: {</span>
+<span class="code-block-extension-codeLine" data-line-num="40">          chunks: 'all',</span>
+<span class="code-block-extension-codeLine" data-line-num="41">          name(module, chunks) {</span>
+<span class="code-block-extension-codeLine" data-line-num="42">            return `shared.${crypto</span>
+<span class="code-block-extension-codeLine" data-line-num="43">              .createHash('sha1')</span>
+<span class="code-block-extension-codeLine" data-line-num="44">              .update(</span>
+<span class="code-block-extension-codeLine" data-line-num="45">                chunks.reduce((acc, chunk) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="46">                  return acc + chunk.name;</span>
+<span class="code-block-extension-codeLine" data-line-num="47">                }, ''),</span>
+<span class="code-block-extension-codeLine" data-line-num="48">              )</span>
+<span class="code-block-extension-codeLine" data-line-num="49">              .digest('hex')</span>
+<span class="code-block-extension-codeLine" data-line-num="50">              .substring(0, 8)}${isModuleCSS(module) ? '.CSS' : ''}`;</span>
+<span class="code-block-extension-codeLine" data-line-num="51">          },</span>
+<span class="code-block-extension-codeLine" data-line-num="52">          priority: 1,</span>
+<span class="code-block-extension-codeLine" data-line-num="53">          minChunks: 2,</span>
+<span class="code-block-extension-codeLine" data-line-num="54">          reuseExistingChunk: true,</span>
+<span class="code-block-extension-codeLine" data-line-num="55">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="56">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="57">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="58">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="59">  // ...</span>
+<span class="code-block-extension-codeLine" data-line-num="60">};</span>
+<span class="code-block-extension-codeLine" data-line-num="61"></span>
+</code></pre>
+<p>这份代码分割配置分割出了2类区块：</p>
+<ul>
+<li><code>lib</code>：主要匹配规则为<code>test(module)</code>，指定<code>lib</code>缓存组包含来自<code>node_modules</code>目录，源码体积大于<code>MIN_LIB_CHUNK_SIZE</code>的模块。</li>
+</ul>
+<p><code>lib</code>缓存组用于把<strong>体积较大</strong>的NPM包模块，拆分为独立区块，产生独立产物文件，从而在多次打包发版、更新哈希版本号文件名的同时，避免让用户再次下载这些大体积模块，提高缓存命中率，减少资源下载体积，改善用户体验。</p>
+<ul>
+<li><code>shared</code>: 主要匹配规则为<code>minChunks: 2</code>，指定<code>shared</code>缓存组包含被2个及以上区块共用的模块代码。</li>
+</ul>
+<p>例如<code>module-a</code>在前端页面A和页面B都有引用，<code>module-a</code>就会被拆分为一个名为<code>shared.[hash]</code>的区块，最终生成一个独立的JS文件，并保持独立的哈希版本号文件名，以便于在页面A和页面B之间复用，既能减少2个页面的JS体积，又能提高多次打包发版后的缓存命中率。</p>
+<blockquote>
+<p>注：Next和Gatsby都有额外的<code>framework</code>缓存组，但笔者实测，大多数情况下<code>lib</code>缓存组可以替代<code>framework</code>，发挥相同的分割作用。</p>
+<p>故上述示例并不包含<code>framework</code>缓存组，不过欢迎各位微调配置，尝试增加其他缓存组，追求更极致的代码分割优化效果。</p>
+</blockquote>
+<h3 data-id="heading-16">2. 优点</h3>
+<p>配合在文件名中用哈希字符串控制版本的长期缓存，细粒度代码分割有显著的优点：</p>
+<ul>
+<li>
+<p><strong>开发体验好</strong>：配置统一通用，自动选择拆分目标模块，不必人工判断哪些模块需要拆分，降低了代码分割的使用门槛；</p>
+</li>
+<li>
+<p><strong>健壮性强</strong>：以不变应万变，用这套不变的代码分割配置可以应对不断更新迭代的各类型前端项目，不必经常更新配置，便于维护；</p>
+</li>
+<li>
+<p><strong>用户体验好</strong>：分割颗粒度较细，产物文件稳定，多次构建部署后，仍有较多文件名称内容不变，缓存命中率高，缓存效果好，有利于改善用户体验。</p>
+</li>
+</ul>
+<p>我们通过一个例子，来具体的理解：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>代码改动</th><th>版本 \ 方案</th><th>传统粗粒度代码分割<code>vendors</code>&amp;&amp; <code>common</code> <br>前端应用加载产物文件：<br></th><th>细粒度代码分割<code>lib</code>&amp;&amp; <code>shared</code>：<br>前端应用加载产物文件： <br></th><th>差异</th></tr></thead><tbody><tr><td>无</td><td>第1次打包后，：</td><td>1. bundle.1.js <br>2.  vendors.1.js（包含<code>axios</code>库）<br>3.  common.1.js（包含<code>lodash</code>库）<br></td><td>1. bundle.1.js <br>2.  vendors.1.js <br>3.  common.1.js <br>4.  lib.1.js（包含<code>axios</code>库）<br>5.  shared.1.js（包含<code>lodash</code>库）<br></td><td>优化后，细粒度代码分割会把<code>axios</code>库和<code>lodash</code>库，拆分为独立的产物文件。</td></tr><tr><td>更新<code>lodash</code>版本</td><td>第2次打包后：</td><td>1.  bundle.1.js <br>2.  vendors.1.js（包含<code>axios</code>库）<br>3.  因为包含<code>lodash</code>库，文件名中的哈希版本号更新为：common.<strong>2</strong>.js，用户需要<strong>重新下载</strong>体积达<strong>100KB</strong>的文件。</td><td>1. bundle.1.js <br>3.  vendors.1.js <br>3.  common.1.js <br>4.  lib.1.js（包含<code>axios</code>库）<br>5.  shared.<strong>2</strong>.js（包含<code>lodash</code>库）<br> <br>重新下载文件体积：<strong>10KB</strong></td><td>优化前，用户需要下载<strong>100KB体积巨大</strong>的<code>common.2.js</code>。<br>优化后，用户只需要下载<strong>15KB体积较小</strong>的<code>shared.2.js</code>一个文件。<br><strong>优化后，其他静态资源文件都可以复用上一版本的缓存，加载资源更少，用户体验更好。</strong></td></tr><tr><td>更新<code>axios</code>版本</td><td>第3次打包后：</td><td>1.  bundle.1.js <br>2.  因为包含<code>axios</code>库，文件名中的哈希版本号更新为：vendors.<strong>2</strong>.js，用户需要<strong>重新下载</strong>体积达<strong>500KB</strong>的文件。<br>3.  common.<strong>2</strong>.js</td><td>1.  bundle.1.js<br>2.  vendors.1.js<br>3.  common.1.js<br>4.  lib.<strong>2</strong>.js（包含<code>axios</code>库）<br>5.  shared.2.js（包含<code>lodash</code>库）<br> <br>重新下载文件体积：<strong>20KB</strong></td><td>优化前，用户需要下载<strong>500KB体积巨大</strong>的<code>vendors.2.js</code>。<br>优化后，用户只需要下载<strong>20KB体积较小</strong>的<code>lib.2.js</code>一个文件。</td></tr></tbody></table>
+<p>下一节，我们将一起学习实现细粒度代码分割的代码改造示例。</p></div>

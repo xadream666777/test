@@ -1,0 +1,135 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>前面我们学过如何调试 Nest 项目，那如何调试 Nest 源码呢？</p>
+<p>有的同学说，调试 Nest 项目的时候，调用栈里不就有源码部分么？</p>
+<p>其实不是的，这部分是编译后的代码：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dc2bacca10b44fabb6a48e83ae6636fb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1200&amp;h=650&amp;s=130898&amp;e=png&amp;b=29292a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bf49198bf7242a09fd50641f901ec2a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2316&amp;h=1060&amp;s=447155&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们新建个 Nest 项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> debug-nest-source</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9d41d5bfd38849aab63b4924548e298d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=896&amp;h=636&amp;s=269487&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击 debug 面板的 create a launch.json file按钮：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/29487c1eaef442cabe547842ee396993~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=722&amp;h=618&amp;s=70481&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>输入 npm，选择 launch via npm，创建一个调试 npm scripts 的配置：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a58c3a71d99f4627b5d046366dffad52~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1146&amp;h=774&amp;s=411894&amp;e=gif&amp;f=27&amp;b=222222" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>改为这样：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Launch via NPM"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">"request"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"launch"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">"runtimeArgs"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-string">"run-script"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-string">"start:dev"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">"runtimeExecutable"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"npm"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">"console"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"integratedTerminal"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">"skipFiles"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-string">"&lt;node_internals&gt;/**"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"node"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<p>这个就是跑 npm run start:dev 的调试配置。</p>
+<p>指定 console 为 integratedTerminal，这样日志会输出在 terminal。</p>
+<p>不然，日志会输出在 debug console。颜色等都不一样：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7ca1d191d02a4a038e1f0f8a0ac7ace1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=898&amp;h=306&amp;s=45124&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 AppController 的 getHello 打个断点：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/174028b51d744df5b0b7ddd2a54486b2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=908&amp;h=582&amp;s=102402&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击 debug 启动：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/766932185fd94fa5ba6c15afd69ece47~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2088&amp;h=1334&amp;s=585171&amp;e=gif&amp;f=34&amp;b=1b1b1b" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后浏览器重新访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000" ref="nofollow noopener noreferrer">http://localhost:3000</a></p>
+<p>这时候代码就会在断点处断住：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f967d940585c4b14a9a2831babc1e1bb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1936&amp;h=1120&amp;s=350562&amp;e=png&amp;b=1b1b1b" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样就可以断点调试 Nest 项目了。</p>
+<p>但如果想调试源码，还需要再做一步：</p>
+<p>因为现在调用栈里的 Nest 源码部分都是编译后的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dc2bacca10b44fabb6a48e83ae6636fb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1200&amp;h=650&amp;s=130898&amp;e=png&amp;b=29292a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bf49198bf7242a09fd50641f901ec2a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2316&amp;h=1060&amp;s=447155&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们想调试 Nest 的 ts 源码，这就需要用到 sourcemap 了。</p>
+<p>用 npm install 下载的包没有 sourcemap 的代码，想要 sourcemap，需要自己 build 源码。</p>
+<p>把 Nest 项目下载下来，并安装依赖（加个 --depth=1 是下载单 commit，--single-branch 是下载单个分支，这样速度会快很多）：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">git <span class="hljs-built_in">clone</span> --depth=1 --single-branch https://github.com/nestjs/nest</span>
+</code></pre>
+<p>执行 npm run build，就会在 node_modules/@nestjs 下生成编译后的代码。</p>
+<p>看下 npm scripts：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0d489d0306b648aba18e3cb3a5bb4d84~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/74e417c52bd849bc86bed2bcf9277dde~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到它做的事情就是 tsc 编译代码，然后把编译后的文件移动到 node_modules/@nestjs 目录下。</p>
+<p>move 的具体实现可以看 tools/gulp/tasks/move.ts 的代码：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bfedccfc74e3406fae4b16bed4e6c2c4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>所以，执行 npm run build，你就会在 node_modules/@nestjs 下看到这样的代码：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f4d8cee11f2c43bfa2c1ef43309d1f26~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>只包含了 js 和 ts，没有 sourcemap：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/79e9d0095df14da5a87825a47863a9d6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>生成 sourcemap 需要改下 tsc 编译配置，也就是 packages/tsconfig.build.json 文件：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/be584d47dc08439989bcb5a168ebeefe~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>设置 sourceMap 为 true 也就是生成 sourcemap，但默认的 sourcemap 里不包含内联的源码，也就是 sourcesContent 部分，需要设置 inlineSources 来包含。</p>
+<p>再次执行 npm run build，就会生成带有 sourcemap 的代码：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d988797ac7ea4b028eab5101fe79da36~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>并且 sourcemap 是内联了源码的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ea66020f83e34f03ae1325b6a94d05a1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们跑一下 Nest 的项目，直接跑 samples 目录下的项目即可，这是 Nest 内置的一些案例项目：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/903e5b83481846d883771b742d7d6160~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>创建一个调试配置：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/29487c1eaef442cabe547842ee396993~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=722&amp;h=618&amp;s=70481&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>改成这样：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0afe8030d89546d9866d5c4d9cebf7ac~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=970&amp;h=816&amp;s=113822&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"调试 nest 源码"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">"request"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"launch"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">"runtimeArgs"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-string">"run-script"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-string">"start:dev"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">"runtimeExecutable"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"npm"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">"console"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"integratedTerminal"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">"cwd"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"${workspaceFolder}/sample/01-cats-app/"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">"resolveSourceMapLocations"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-string">"${workspaceFolder}/**"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-comment">// "!**/node_modules/**"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">"skipFiles"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-string">"&lt;node_internals&gt;/**"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"node"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<p>指定 cwd 为那个项目的目录，也就是在那个目录下执行 npm run start:dev。</p>
+<p>resolveSourceMapLocations 是从哪里找 sourcemap，默认排除掉了 node_modules，我们把它去掉。</p>
+<p>在 sample/01-cats-app 的 src/cats/cats.controller.ts 打个断点：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b5811867a9348a4b4ebc7215467ec53~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1476&amp;h=748&amp;s=193932&amp;e=png&amp;b=1d1d1d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后点击 debug 调试：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8948726d03ee4de49cfe09848a069ca4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1888&amp;h=1476&amp;s=474869&amp;e=png&amp;b=1a1a1a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果提示端口被占用，你需要先 kill 掉之前的进程再跑：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/999f5d949a5346e7bcd09aeca3f934e2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1334&amp;h=184&amp;s=57323&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba62f9b397944abab96f8d539a7d1a5b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=646&amp;h=466&amp;s=79681&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000%2Fcats" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000/cats" ref="nofollow noopener noreferrer">http://localhost:3000/cats</a></p>
+<p>断住之后你看下调用栈：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/215301ff39224b57a11c4f7956292b1c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2104&amp;h=1198&amp;s=558249&amp;e=png&amp;b=1a1a1a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候 sourcemap 就生效了，可以看到调用栈中的就是 Nest 的 ts 源码。</p>
+<p>这样就可以调试 Nest 源码了。</p>
+<p>比如我们看下 Nest 的 AOP 部分的源码：</p>
+<p>点击这个调用栈：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/16875e97dd234dad83f4e704b5889638~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=2318&amp;h=844&amp;s=432529&amp;e=png&amp;b=1d1d1d" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到它先创建了所有的 pipes、interceptors、guards 的实例，然后封装了调用 pipe 和 guard 的函数：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3d0ee28fc8bc44d7a79c782afa0feba7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1012&amp;h=1062&amp;s=143708&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>下面调用 hander 的时候，先调用 guard、再调用 interceptor，然后调用 handler，并且 handler 里会先用 pipe 处理参数：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aa5b7dd0493342e19b16c114b74e91f3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1110&amp;h=828&amp;s=163438&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/448b1b43372f4c9890b845d0a8c56305~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=990&amp;h=400&amp;s=74698&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是 AOP 机制的源码。</p>
+<p>而如果你想在你的项目里调试 Nest 源码，只要把 node_modules/@nestjs 覆盖你项目下那个就好了。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们学习了如何调试 Nest 源码。</p>
+<p>vscode 里创建 npm scripts 的调试配置，就可以调试 npm run start:dev 的服务。</p>
+<p>但如果想调试源码，需要把 Nest  源码下载下来，build 出一份带有 sourcemap 版本的代码。</p>
+<p>同时还要设置 resolveSourcemapLocations 去掉排除 node_modules 的配置。</p>
+<p>然后再调试，就可以直接调试 Nest 的 ts 源码了。</p>
+<p>我们调试了下 AOP 部分的源码，以后你对哪部分的实现原理感兴趣，也可以自己调试源码了。</p></div>

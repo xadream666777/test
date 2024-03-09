@@ -1,0 +1,611 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>对运行在浏览器中的前端应用来说，JS、CSS等各类静态资源加载的耗时，直接决定了页面的渲染速度，进而深刻影响着用户体验。所以这本书介绍的第一类优化方案，就是以优化静态资源加载耗时为目标的——资源优先级提示。</p>
+<p>在介绍开始前，我们先看一下优化的预期效果：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/867363cb3da84970baef3b5d466046fa~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=1080&amp;s=215321&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>通过<strong>资源优先级提示</strong>，仅需2行代码，就能实现上图中的优化效果，让JS文件的加载耗时从1.4秒减少到0.4秒，<strong>大幅减少951ms（-67%）</strong> ，代码实现非常简单方便，让我们一起学起来吧~</p>
+<p>资源优先级提示是浏览器平台为控制资源加载时机而设计的一系列API，主要包括：</p>
+<ol>
+<li>预取回 Prefetch</li>
+<li>预加载 Preload</li>
+<li>预连接 Preconnect</li>
+<li>DNS预取回 DNS-Prefetch</li>
+</ol>
+<p>共4类，下面我们一起来详细了解其功能和细节。</p>
+<h1 data-id="heading-0">1. 四类资源优先级提示</h1>
+
+<h2 data-id="heading-1">1.  预取回 Prefetch</h2>
+<p>预取回提示用于提示浏览器在CPU和网络带宽空闲时，预先下载指定URL的JS，图片等各类资源，存储到浏览器本地缓存中，从而减少该资源文件后续加载的耗时，从而优化用户体验。</p>
+<p>具体使用方式是将<code>link</code>标签的<code>rel</code>属性设为<code>prefetch</code>，并将<code>href</code>属性设为<strong>目标资源URL</strong>，例如 <code>&lt;link rel="prefetch" href="https://github.com/JuniorTour/juniortour.js" /&gt;</code>。</p>
+<p>该标签插入DOM后，将触发一次<code>href</code>属性值对应URL的HTTP请求，并将响应保存到本地的<code>prefetch cache</code>中，但是并不会进一步解析、运行该资源。</p>
+<p>可以预取回的资源有很多：JS、CSS、各种格式的图片、音频、WASM文件、字体文件、甚至HTML文档本身都可实施 prefetch，预先缓存。</p>
+<p>命中预取回缓存的请求，在开发者工具中的<code>Network</code>标签中的<code>Size</code>列，会有独特的<code>(prefetch cache)</code>标记：</p>
+<blockquote>
+<p>DEMO：<a href="https://link.juejin.cn?target=https%3A%2F%2Foutput.jsbin.com%2Fcuxerej" target="_blank" rel="nofollow noopener noreferrer" title="https://output.jsbin.com/cuxerej" ref="nofollow noopener noreferrer">output.jsbin.com/cuxerej</a></p>
+</blockquote>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/69cc078389514ead826132e564a31b69~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=1030&amp;s=114595&amp;e=jpg&amp;b=25262a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h3 data-id="heading-2"><code>crossorigin</code>属性简介</h3>
+<p><code>crossorigin</code>属性是浏览器同源策略的相关API，用于对<code>link</code>、<code>script</code>和<code>img</code>等元素指定以何种<code>跨域资源共享模式</code>加载目标资源。</p>
+<p>默认情况下，JS脚本、图片等部分静态资源不受同源策略的限制，可以从任何跨域域名加载第三方JS文件、图片文件。</p>
+<p>这样的规则有明显的<strong>安全风险</strong>，例如：</p>
+<ul>
+<li>第三方JS文件可以访问第一方网站的错误上下文，从而获取内部信息。</li>
+<li>第三方资源的源服务器可以在HTTP请求过程中通过SSL握手验证、<code>cookies</code>等手段获取用户身份信息。</li>
+</ul>
+<p>为了缓解这些安全风险，浏览器引入了可用于<code>link</code>、<code>script</code>和<code>img</code>元素的<code>crossorigin</code>属性，对于这些元素加载的资源指定3类<code>跨域资源共享模式</code>，分别是：</p>
+<ul>
+<li>没有<code>crossorigin</code>属性：无法获取 JS 的错误上下文，也不会在SSL握手阶段附带Cookies等用户身份相关的信息。</li>
+<li>将<code>crossorigin</code>值设置为<code>"anonymous"</code>：可以访问JavaScript的错误上下文，但在请求过程中的SSL握手阶段不会携带cookies或其他用户凭据。</li>
+<li>将<code>crossorigin</code>值设置为<code>"use-credentials"</code>：既可以访问JavaScript的错误上下文，也可以在请求过程中的SSL握手阶段携带Cookies或用户凭据。</li>
+</ul>
+<p>此外，Chrome浏览器的<strong>HTTP缓存</strong>以及相应的Prefetch、Preconnect资源优先级提示效果也会受到<code>crossorigin</code>属性的影响。</p>
+<p>对于跨域资源，则其资源优先级提示也需要设置为跨域，即<code>crossorigin="anonymous"</code>，例如：<code>&lt;link rel="prefetch" href="https://github.com/JuniorTour/juniortour.js" crossorigin="anonymous" /&gt;</code></p>
+<p>资源是否跨域，可以依据浏览器自动附带的<code>Sec-Fetch-Mode</code>请求头判断：</p>
+<ul>
+<li>值为<code>no-cors</code>，表示当前资源加载的模式并<strong>非</strong>跨域资源共享模式。其对应的资源优先级提示<strong>不</strong>需要设置为跨域<code>crossorigin="anonymous"</code>，<strong>就能</strong>命中Prefetch等专用缓存。</li>
+<li>值为<code>cors</code>，表示当前资源加载的模式<strong>是</strong>跨域资源共享模式。其对应的资源优先级提示<strong>需要</strong>设置为跨域<code>crossorigin="anonymous"</code>或<code>"use-credentials"</code>，<strong>才能</strong>命中Prefetch等专用缓存。</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2951fc04de664e00b95cebb75f87a011~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1074&amp;h=613&amp;s=111947&amp;e=png&amp;b=26272a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h2 data-id="heading-3">2.  预加载 Preload</h2>
+<p>与预取回不同，预加载用于提高<strong>当前</strong>页面中资源加载的优先级，确保关键资源优先加载完成。</p>
+<p>预加载最常见的用法是用于字体文件，减少因字体加载较慢导致的文字字体闪烁变化。例如：<code>&lt;link rel="preload" as="font" href="/main.woff" /&gt;</code></p>
+<p>应用了<code>preload</code>提示的资源，通常会以较高的优先级<strong>率先</strong>在网页中加载，例如下图中的<code>nato-sans.woff2</code>请求，<code>Priority</code>列的值为<code>High</code>，加载顺序仅次于<code>Document</code>本身，能让字体较早在页面中渲染生效。</p>
+<blockquote>
+<p><code>as</code>属性是必填属性，是<code>link</code>标签带有<code>rel="preload"</code>属性时，确定不同类型资源优先级的依据。</p>
+<p>完整可选值请参考<a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FHTML%2FElement%2Flink%23attributes%3A~%3Atext%3Dglobal%2520attributes.-%2Cas%2C-This%2520attribute%2520is" target="_blank" rel="nofollow noopener noreferrer" title="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attributes:~:text=global%20attributes.-,as,-This%20attribute%20is" ref="nofollow noopener noreferrer">MDN：link attribute as</a></p>
+</blockquote>
+<blockquote>
+<p>Preload 在线 DEMO：<a href="https://link.juejin.cn?target=https%3A%2F%2Foutput.jsbin.com%2Fcuxerej" target="_blank" rel="nofollow noopener noreferrer" title="https://output.jsbin.com/cuxerej" ref="nofollow noopener noreferrer">output.jsbin.com/cuxerej</a></p>
+</blockquote>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c94bdd877b6b41d1a0556c73071eb81c~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=1030&amp;s=163747&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<h2 data-id="heading-4">3. 预连接 Preconnect</h2>
+<p>预连接提示用于提前与目标域名握手，完成DNS寻址，并建立TCP和TLS链接。</p>
+<p>具体使用方式是将<code>link</code>标签的<code>rel</code>属性设为<code>preconnect</code>，并将<code>href</code>属性设为目标<strong>域名</strong>，例如 <code>&lt;link rel="preconnect" href="https://github.com" /&gt;</code>。</p>
+<p>优化效果是通过提前完成DNS寻址、建立TCP链接和完成TLS握手，从而减少后续访问目标域名时的连接耗时，改善用户体验。</p>
+<p><strong>注意！</strong> 强烈建议只对<strong>重要域名</strong>进行<code>Preconnect</code>优化，数量不要超过 6 个。</p>
+<p>因为<code>Preconnect</code>生效后，会与目标域名的保持至少10秒钟的网络连接，占用设备的网络和内存资源，甚至阻碍其他资源的加载。</p>
+<h2 data-id="heading-5">4.  DNS预取回 DNS-Prefetch</h2>
+<p>与上文的预取回Prefetch不同，DNS预取回用于对<strong>目标域名</strong>提前进行DNS寻址，取回并缓存域名对应的IP地址，而非像预取回Prefetch那样缓存文件资源。</p>
+<p>具体使用方式是将<code>link</code>标签的<code>rel</code>属性设为<code>dns-prefetch</code>，并将<code>href</code>属性值设为<strong>目标域名</strong>，例如 <code>&lt;link rel="dns-prefetch" href="https://github.com" /&gt;</code>。</p>
+<p>优化效果是通过提前解析出目标域名的IP地址，从而减少后续从目标域名加载资源的耗时，加快页面加载速度，改善用户体验。</p>
+<p>通常来说，解析DNS的耗时往往有几十甚至几百毫秒，对资源加载耗时有直接影响。</p>
+<blockquote>
+<p>DNS预取回的能力与预连接Preconnect有所重合，这是因为以往<code>dns-prefetch的浏览器兼容性</code>略好于<code>preconnect</code>，往往两者一同使用。</p>
+<p>但近年来，IE被废弃，用户大都已使用更新版本的现代浏览器，兼容性不再重要，单独使用<code>preconnect</code>即可替代<code>dns-prefetch</code>。</p>
+</blockquote>
+<p>例如，我们的静态资源部署在域名为<code>static.zhihu.com</code>的CDN上，那么添加如下2行HTML代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"preconnect"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"static.zhihu.com"</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"dns-prefetch"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"static.zhihu.com"</span> /&gt;</span></span>
+</code></pre>
+<p>就能观察到CDN上的JS、CSS等资源加载耗时显著减少，因为preconnect的生效使得资源加载时的DNS寻址、SSL握手等阶段得以提前进行，各个资源加载是其耗时就大幅减少，产生了显著的优化效果。</p>
+<p>具体的优化效果可以参考这份数据：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>优化前（无Preconnect &amp;&amp; DNS-Prefetch）</th><th>优化后（有Preconnect &amp;&amp; DNS-Prefetch）</th><th>差异</th></tr></thead><tbody><tr><td>加载耗时</td><td>1400 ms</td><td>451 ms</td><td>-949 ms (-67%)</td></tr><tr><td>开发者工具计时截图</td><td><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7dadeaea6edf4ab78c07e8d9642e8f7f~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1444&amp;h=420&amp;s=134073&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></td><td><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/38ec68b1333544eeb04c2507a453811b~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1446&amp;h=367&amp;s=117788&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></td><td>在DevTool - Network - 资源 - 计时（Timing）面板中可以看到，因为Preconnect &amp;&amp; DNS-Prefetch优化生效，连接开始阶段的耗时从950ms降低到了1ms，使得资源的整体加载耗时大幅减少。</td></tr><tr><td>在线DEMO</td><td><a href="https://link.juejin.cn?target=https%3A%2F%2Fjsbin.com%2Fpanorej%2Fedit%3Fhtml" target="_blank" rel="nofollow noopener noreferrer" title="https://jsbin.com/panorej/edit?html" ref="nofollow noopener noreferrer">jsbin.com/panorej/edi…</a></td><td><a href="https://link.juejin.cn?target=https%3A%2F%2Fjsbin.com%2Fharagis%2Fedit%3Fhtml" target="_blank" rel="nofollow noopener noreferrer" title="https://jsbin.com/haragis/edit?html" ref="nofollow noopener noreferrer">jsbin.com/haragis/edi…</a></td><td></td></tr></tbody></table>
+<h2 data-id="heading-6">5.  四类资源优先级提示对比</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>类型</th><th>优化目标</th><th>示例</th><th>注意事项</th></tr></thead><tbody><tr><td>预取回 Prefetch</td><td>- 加载优先级较低的资源 <br>- 后续页面浏览需要加载的资源</td><td><code>&lt;link rel="prefetch" href="/juniortour.js" /&gt;</code></td><td>1. Prefetch 预取回的资源并不会被立刻解析、运行：例如预取回JS文件时，JS文件内的代码逻辑并不会执行，只是文件保存到了浏览器缓存中。<br>这也是Prefetch与普通 link 标签（<code>&lt;link href="/static/main.3da2f.css" rel="stylesheet"&gt;</code>）的核心区别。 <br>2. Prefetch 的触发时机不固定，会由浏览器相机决定，浏览器通常会在网络带宽、CPU运算都空闲时触发下载。</td></tr><tr><td>预加载 Preload</td><td>- 当前页面需要优先加载的静态资源</td><td><code>&lt;link rel="preload" as="font" href="/main.woff" /&gt;</code></td><td>- 优化目标为当前页面所需资源，而非后续加载。</td></tr><tr><td>预连接 Preconnect</td><td>- 加载优先级较低的域名 <br>- 后续页面浏览需要连接的域名</td><td><code>&lt;link rel="preconnect" href="&lt;https://juniortour.net&gt;" /&gt;</code></td><td>- 用于跨域域名，同源域名不需要 - 控制只对关键域名应用，避免数量超过6个</td></tr><tr><td>DNS预取回 DNS-Prefetch</td><td>- 后续页面浏览需要连接的域名</td><td><code>&lt;link rel="dns-prefetch" href="&lt;https://juniortour.net&gt;" /&gt;</code></td><td>（同预连接 Preconnect）</td></tr></tbody></table>
+<blockquote>
+<p>注：在2022年初，Chrome 102 新增了<code>fetch-priority</code>属性，可用来更精细地控制资源加载的优先级，目前仍处于实验阶段，未来可能会更加完善，示例如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"important.jpg"</span> <span class="hljs-attr">fetchpriority</span>=<span class="hljs-string">"high"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"small-avatar.jpg"</span> <span class="hljs-attr">fetchpriority</span>=<span class="hljs-string">"low"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"low-priority.js"</span> <span class="hljs-attr">fetchpriority</span>=<span class="hljs-string">"low"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">// 只对 preload link 标签生效</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"main.css"</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"preload"</span> <span class="hljs-attr">as</span>=<span class="hljs-string">"image"</span> <span class="hljs-attr">fetchpriority</span>=<span class="hljs-string">"high"</span>&gt;</span> </span>
+</code></pre>
+</blockquote>
+<h1 data-id="heading-7">2.  示例：快速增加资源优先级提示</h1>
+<p>笔者基于多年实践经验，制作了一套方便实用的资源优先级提示生成工具，目前已发布为开源NPM包：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Fresource-hint-generator" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/resource-hint-generator" ref="nofollow noopener noreferrer">resource-hint-generator</a>，支持根据构建产物，自动生成资源优先级提示代码。</p>
+<p>下面我们以本书配套的示例项目：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo" ref="nofollow noopener noreferrer">fe-optimization-demo</a> 为例，演示如何接入该库，为我们的前端项目方便快捷地增加各类资源优先级提示。</p>
+<blockquote>
+<p>《接入<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Fresource-hint-generator" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/resource-hint-generator" ref="nofollow noopener noreferrer">resource-hint-generator</a>》完整示例代码 Merge Request 请参考：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo%2Fpull%2F1" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo/pull/1" ref="nofollow noopener noreferrer">github.com/JuniorTour/…</a></p>
+</blockquote>
+<h2 data-id="heading-8">1.  安装及配置<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Fresource-hint-generator" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/resource-hint-generator" ref="nofollow noopener noreferrer">resource-hint-generator</a></h2>
+<p>首先，我们需要安装NPM包，并添加运行命令及参数：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install resource-hint-generator --save-dev</span>
+</code></pre>
+<p>并在项目根目录，新建配置文件<code>resource-hint-generator-config.js</code>：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// resource-hint-generator-config.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">distPath</span>: <span class="hljs-string">`./dist`</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">projectRootPath</span>: __dirname,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attr">resourceHintFileName</span>: <span class="hljs-string">`resource-hint.js`</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">includeFileTestFunc</span>: <span class="hljs-function">(<span class="hljs-params">fileName</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">return</span> <span class="hljs-regexp">/(main.*js)|(main.*css)/g</span>.<span class="hljs-title function_">test</span>(fileName);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-attr">crossOriginValue</span>: <span class="hljs-string">''</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-attr">publicPath</span>: <span class="hljs-string">'https://github.com/JuniorTour'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-attr">preconnectDomains</span>: [<span class="hljs-string">'https://preconnect-example.com'</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="12">};</span>
+</code></pre>
+<p>主要参数说明：</p>
+<ul>
+<li><code>distPath</code>：打包产物路径，也是生成的resource-hint.js输出路径；</li>
+<li><code>includeFileTestFunc</code>：指定一个函数，返回布尔值，表示遍历<code>distPath</code>所找到的<code>fileName</code>，是否会被作为prefetch的目标，即<code>&lt;link rel="prefetch"&gt;</code>的<code>href</code>属性值；</li>
+<li><code>publicPath</code>：部署目标环境的CDN域名，用于和<code>includeFileTestFunc</code>、<code>includeFileNames</code>匹配到的文件名，拼接出<code>&lt;link rel="prefetch"&gt;</code>标签的完整<code>href</code>属性值；</li>
+<li><code>preconnectDomains</code>：指定一个数组，数组中的每个字符串元素，都将产生2个<code>href</code>属性值为当前字符串的<code>&lt;link rel="preconnect"&gt;</code>标签和<code>&lt;link rel="dns-prefetch"&gt;</code>标签；</li>
+</ul>
+<h2 data-id="heading-9">2. 运行生成工具</h2>
+<p>我们的目标是在项目打包编译完成后，遍历产物文件，生成对应的资源优先级提示。因此我们需要在项目构建完成后，运行<code>resource-hint-generator</code>。</p>
+<p>例如，我们的前端项目通过调用 <code>npm run build</code> 运行打包构建，那只需要在这条命令中追加运行<code>resource-hint-generator</code>的逻辑即可实现我们的目标。</p>
+<p>具体做法是，在<code>package.json</code>的<code>scripts</code>中添加<code>generate-resource-hint</code>命令，运行<code>resource-hint-generator</code>，并将<code>&amp;&amp; npm run generate-resource-hint</code>补充到原来的<code>build</code>命令中，代码示例请参考：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// package.json </span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-attr">"scripts"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>     </span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">"generate-resource-hint"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"resource-hint-generator"</span><span class="hljs-punctuation">,</span>     </span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">"build"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"cross-env NODE_ENV=production webpack &amp;&amp; npm run generate-resource-hint"</span><span class="hljs-punctuation">,</span> </span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<p>测试运行构建后，如果在打包产物文件夹（<code>./dist</code>）中找到了生成的<code>resource-hint.js</code>文件，并且其中包含我们配置的 <code>prefetch</code>，<code>preconnect</code>目标数据，就说明配置完成了。</p>
+<h4 data-id="heading-10"><code>resource-hint.js</code>内容示例</h4>
+<blockquote>
+<p>注：生产环境中下列代码会被压缩成1行，并去除空格。</p>
+</blockquote>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">/*</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">Add resource hint link element, eg: &lt;link rel="prefetch" href="${targetPath}"&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">*/</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">try</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  (<span class="hljs-keyword">function</span> (<span class="hljs-params">prefetchFilesPath, preconnectDomains</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">const</span> crossOriginAttrVal = <span class="hljs-string">''</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">CDN_HOST</span> = <span class="hljs-string">'https://github.com/JuniorTour'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">if</span> (!prefetchFilesPath || !prefetchFilesPath.<span class="hljs-property">length</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-keyword">return</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">function</span> <span class="hljs-title function_">addLinkTag</span>(<span class="hljs-params">src, { rel, crossoriginVal }</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-keyword">const</span> tag = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">'link'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      tag.<span class="hljs-property">rel</span> = rel;</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      tag.<span class="hljs-property">href</span> = src;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-keyword">if</span> (crossoriginVal !== <span class="hljs-literal">undefined</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        tag.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">'crossorigin'</span>, crossoriginVal);</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-keyword">const</span> head = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">'head'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-keyword">if</span> (head &amp;&amp; head.<span class="hljs-property">appendChild</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        head.<span class="hljs-title function_">appendChild</span>(tag);</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-keyword">function</span> <span class="hljs-title function_">addPrefetchDNSTag</span>(<span class="hljs-params">src</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="26">      <span class="hljs-title function_">addLinkTag</span>(src, {</span>
+<span class="code-block-extension-codeLine" data-line-num="27">        <span class="hljs-attr">rel</span>: <span class="hljs-string">'dns-prefetch'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="28">        <span class="hljs-attr">crossoriginVal</span>: crossOriginAttrVal,</span>
+<span class="code-block-extension-codeLine" data-line-num="29">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="31"></span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-keyword">function</span> <span class="hljs-title function_">addPreconnectTag</span>(<span class="hljs-params">src</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="33">      <span class="hljs-title function_">addLinkTag</span>(src, {</span>
+<span class="code-block-extension-codeLine" data-line-num="34">        <span class="hljs-attr">rel</span>: <span class="hljs-string">'preconnect'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="35">        <span class="hljs-attr">crossoriginVal</span>: crossOriginAttrVal,</span>
+<span class="code-block-extension-codeLine" data-line-num="36">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="37">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="38"></span>
+<span class="code-block-extension-codeLine" data-line-num="39">    <span class="hljs-keyword">function</span> <span class="hljs-title function_">addPrefetchTag</span>(<span class="hljs-params">src</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="40">      <span class="hljs-title function_">addLinkTag</span>(src, { <span class="hljs-attr">rel</span>: <span class="hljs-string">'prefetch'</span>, <span class="hljs-attr">crossoriginVal</span>: crossOriginAttrVal });</span>
+<span class="code-block-extension-codeLine" data-line-num="41">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="42"></span>
+<span class="code-block-extension-codeLine" data-line-num="43">    <span class="hljs-keyword">if</span> (prefetchFilesPath &amp;&amp; prefetchFilesPath.<span class="hljs-property">forEach</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="44">      prefetchFilesPath.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">path</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="45">        <span class="hljs-keyword">if</span> (path) {</span>
+<span class="code-block-extension-codeLine" data-line-num="46">          <span class="hljs-title function_">addPrefetchTag</span>(<span class="hljs-variable constant_">CDN_HOST</span> + path);</span>
+<span class="code-block-extension-codeLine" data-line-num="47">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="48">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="49">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="50">    <span class="hljs-keyword">if</span> (preconnectDomains &amp;&amp; preconnectDomains.<span class="hljs-property">forEach</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="51">      preconnectDomains.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">domain</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="52">        <span class="hljs-keyword">if</span> (domain) {</span>
+<span class="code-block-extension-codeLine" data-line-num="53">          <span class="hljs-title function_">addPreconnectTag</span>(domain);</span>
+<span class="code-block-extension-codeLine" data-line-num="54">          <span class="hljs-title function_">addPrefetchDNSTag</span>(domain);</span>
+<span class="code-block-extension-codeLine" data-line-num="55">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="56">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="57">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="58">  })([</span>
+<span class="code-block-extension-codeLine" data-line-num="59">      <span class="hljs-string">'/main.68eda6edda2178b7abfc.css'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="60">      <span class="hljs-string">'/main.a45a5ff47f82fd159b80.js'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="61">  ], </span>
+<span class="code-block-extension-codeLine" data-line-num="62">  [</span>
+<span class="code-block-extension-codeLine" data-line-num="63">      <span class="hljs-string">'https://preconnect-example.com'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="64">  ]</span>
+<span class="code-block-extension-codeLine" data-line-num="65">  );</span>
+<span class="code-block-extension-codeLine" data-line-num="66">} <span class="hljs-keyword">catch</span> (err) {</span>
+<span class="code-block-extension-codeLine" data-line-num="67">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`[resource-hint.js] ERROR: err=<span class="hljs-subst">${err}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="68">}</span>
+</code></pre>
+<p>上述代码就是我们运行<code>resource-hint-generator</code>后生成的内容，自动包含了我们项目构建生成的<code>main.${hash}.css, main.${hash}.js</code>和期望建立预连接的域名<code>https://preconnect-example.com</code>。</p>
+<h2 data-id="heading-11">3.  加载生成的<code>resource-hint.js</code></h2>
+<p>推荐在登录页，活动页，官网首页等<strong>前端项目外</strong>页面<strong>提前加载运行</strong><code>resource-hint.js</code> ，从而在项目正式加载渲染时，充分利用这些提前下载的Prefetch缓存和提前建立的Preconnect HTTP连接。</p>
+<blockquote>
+<p>《接入<a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fresource-hint-generator" target="_blank" rel="nofollow noopener noreferrer" title="https://www.npmjs.com/package/resource-hint-generator" ref="nofollow noopener noreferrer">resource-hint-generator</a>》完整示例 请参考 Merge Request：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo%2Fpull%2F1" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo/pull/1" ref="nofollow noopener noreferrer">github.com/JuniorTour/…</a></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b5edb71480594a27a0ada3c9b40d00f9~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1919&amp;h=994&amp;s=191225&amp;e=png&amp;b=0d1218" alt="" loading="lazy" class="medium-zoom-image"></p>
+</blockquote>
+<h1 data-id="heading-12">3.  验证，量化与评估</h1>
+<h2 data-id="heading-13">1.  上线前验证</h2>
+<p>优化上线前，在本地开发环境或设法直接到生产环境验证优化效果必不可少。</p>
+<p>各类资源优先级提示是否生效，可以通过开发者工具中的网络 Network 面板判断。
+我们主要使用<strong>优先级列（Priority）</strong>，<strong>体积列（Size）</strong> 和 <strong>加载时间序标签页（Timing）</strong> 的内容判断。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>类型</th><th>验证测试方式</th><th>生效依据</th></tr></thead><tbody><tr><td>预取回 Prefetch</td><td>在页面中添加prefetch目标资源的link标签，检查Network面板。 <br>例如，在生产环境中的页面上，打开浏览器控制台直接运行下列代码验证测试： <br><code>function addLinkTag(src, { rel, crossoriginVal }) { const tag = document.createElement('link'); tag.rel = rel; tag.href = src; // enable crossorigin so that prefetch cache works for // Cross Origin Isolation status. if (crossoriginVal !== undefined) { tag.setAttribute('crossorigin', crossoriginVal); } const head = document.querySelector('head'); if (head &amp;&amp; head.appendChild) { head.appendChild(tag); } } addLinkTag('&lt;https://your-domain.com/static/main.h1712oidw.js&gt;', { rel: 'preferch', });</code></td><td>优化目标资源加载后在Network面板中的Size列，值为独特的(prefetch cache)标记，且加载耗时极短，一般小于50毫秒：<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8250fff4f3ab4db5bc37ce82a2cdf8f4~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=830&amp;h=447&amp;s=141591&amp;e=png&amp;b=292a2e" alt="" loading="lazy" class="medium-zoom-image">  <br> <strong>不生效解决方案：</strong> <br>- 检查请求资源是否为跨域资源，添加对应的crossorigin属性值 <br>- 确认prefetch请求和优化目标资源请求的先后顺序，确保prefetch请求率先完成。</td></tr><tr><td>预加载 Preload</td><td>preload往往需要在较早的时机插入DOM，从而确保资源优先加载，如果在浏览器控制台执行脚本时机太晚，也可以考虑用Charles等代理工具拦截、替换响应体，插入preload标签</td><td>优化目标请求的Priority列的值为High，且加载时间较早，仅次于Document本身，例如：<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/01d875882ba646b49de60d864e6dbf4a~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1019&amp;h=938&amp;s=134221&amp;e=png&amp;b=272727" alt="" loading="lazy" class="medium-zoom-image"></td></tr><tr><td>预连接 Preconnect 和DNS预取回 DNS-Prefetch</td><td>也可通过浏览器控制台直接运行下列代码验证测试： <code>addLinkTag('&lt;https://your-domain.com&gt;', { rel: 'preconnect', }); addLinkTag('&lt;https://your-domain.com&gt;', { rel: 'dns-prefetch', }); </code></td><td>在浏览器开发者工具中的 Network - 资源 - 计时（Timing）面板中可以看到，如果Preconnect &amp;&amp; DNS-Prefetch优化生效，目标优化资源连接开始阶段的耗时会大幅减少到接近1ms，例如：<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/309927ba680c4c36b3addf903446aa94~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1446&amp;h=367&amp;s=103853&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></td></tr></tbody></table>
+<h2 data-id="heading-14">2.  建立量化监控指标</h2>
+<p>基于前文介绍的优化效果，我们可以通过对比2类监控指标在优化前后的变化来评估优化效果。</p>
+<h3 data-id="heading-15">1.  <code>FCP</code> 和 <code>LCP</code></h3>
+<p>JS、CSS等各类静态资源更快的加载，更多的命中本地缓存，可以显著减少页面渲染耗时，预期也能改善我们在第1节介绍的<code>web-vitals</code>首次内容绘制指标<code>FCP</code>和最大内容绘制<code>LCP</code>2项用户体验指标。</p>
+<h3 data-id="heading-16">2.  缓存命中率指标</h3>
+<p>收集优化前后生产环境中用户资源请求是否命中缓存数据，也可以更直接地判断优化效果。</p>
+<p>我们可以基于<code>Performance API</code>的<code>entry.duration</code>属性来实现缓存命中率指标，请看示例代码：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"zh"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>上报缓存命中率指标示例<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">link</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-attr">rel</span>=<span class="hljs-string">"prefetch"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">href</span>=<span class="hljs-string">"https://static.zhihu.com/heifetz/6116.216a26f4.7e059bd26c25b9e701c1.css"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    /&gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-comment">// 上报 counter 计数类型 数据到 Grafana</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">report</span>(<span class="hljs-params">name, labels, help = <span class="hljs-string">'default help'</span></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-keyword">await</span> <span class="hljs-title function_">fetch</span>(<span class="hljs-string">'http://localhost:4001/counter-metric'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">          <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="18">          <span class="hljs-attr">headers</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">            <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="20">          },</span>
+<span class="code-block-extension-codeLine" data-line-num="21">          <span class="hljs-attr">body</span>: <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="22">            name,</span>
+<span class="code-block-extension-codeLine" data-line-num="23">            help,</span>
+<span class="code-block-extension-codeLine" data-line-num="24">            labels,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">          }),</span>
+<span class="code-block-extension-codeLine" data-line-num="26">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="27">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29">      <span class="hljs-comment">// 检查资源加载是否命中缓存</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30">      <span class="hljs-keyword">function</span> <span class="hljs-title function_">checkResourceCacheHit</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="31">        <span class="hljs-comment">// 获取页面加载性能信息</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">        <span class="hljs-keyword">const</span> perfEntries = performance.<span class="hljs-title function_">getEntriesByType</span>(<span class="hljs-string">'resource'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="33"></span>
+<span class="code-block-extension-codeLine" data-line-num="34">        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> entry <span class="hljs-keyword">of</span> perfEntries) {</span>
+<span class="code-block-extension-codeLine" data-line-num="35">          <span class="hljs-comment">// 选项1：</span></span>
+<span class="code-block-extension-codeLine" data-line-num="36">          <span class="hljs-comment">// 使用 transferSize &lt;=0 判断是否命中缓存，但是跨域域名需要配置响应头Timing-Allow-Origin</span></span>
+<span class="code-block-extension-codeLine" data-line-num="37">          <span class="hljs-comment">// let hitCache = entry.transferSize &lt;= 0;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="38">          <span class="hljs-comment">// 选项2：</span></span>
+<span class="code-block-extension-codeLine" data-line-num="39">          <span class="hljs-comment">// 判断资源的加载时间 duration是否小于50毫秒</span></span>
+<span class="code-block-extension-codeLine" data-line-num="40">          <span class="hljs-comment">// 50ms 来自于经验总结，可以根据实际情况调整</span></span>
+<span class="code-block-extension-codeLine" data-line-num="41">          <span class="hljs-keyword">let</span> hitCache = entry.<span class="hljs-property">duration</span> &lt; <span class="hljs-number">50</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="42">          <span class="hljs-title function_">report</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="43">            <span class="hljs-string">'cacheHiteRate'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="44">            { </span>
+<span class="code-block-extension-codeLine" data-line-num="45">                hitCache, </span>
+<span class="code-block-extension-codeLine" data-line-num="46">                <span class="hljs-attr">name</span>: entry.<span class="hljs-property">name</span></span>
+<span class="code-block-extension-codeLine" data-line-num="47">            },</span>
+<span class="code-block-extension-codeLine" data-line-num="48">            <span class="hljs-string">'缓存命中率计数指标'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="49">          );</span>
+<span class="code-block-extension-codeLine" data-line-num="50">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="51">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="52"></span>
+<span class="code-block-extension-codeLine" data-line-num="53">      <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="54">        <span class="hljs-title function_">checkResourceCacheHit</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="55">      }, <span class="hljs-number">3000</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="56">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="57">  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="58"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<blockquote>
+<p>注：如果担心用<code>entry.duration</code>小于50毫秒，判断不够准确，也可以考虑使用<code>entry.transferSize</code>（传输体积，单位：字节 byte）小于<code>0</code>来作为判断依据。</p>
+<p>但是，对于跨域域名，获取<code>transferSize</code>需要配置专门的<a href="https://juejin.cn/book/7306163555449962533/section/7310567914266951695#:~:text=%E5%93%8D%E5%BA%94%E5%A4%B4Timing%2DAllow%2DOrigin%3A%20*" target="_blank" title="https://juejin.cn/book/7306163555449962533/section/7310567914266951695#:~:text=%E5%93%8D%E5%BA%94%E5%A4%B4Timing%2DAllow%2DOrigin%3A%20*">响应头Timing-Allow-Origin: *</a> ，有一定额外成本。</p>
+</blockquote>
+<p>在上述示例中，我们将收集到的缓存命中率计数数据，通过<a href="https://juejin.cn/book/7306163555449962533/section/7310260645843173428" target="_blank" title="https://juejin.cn/book/7306163555449962533/section/7310260645843173428">第2节</a>介绍的<code>Node.js 数据收集应用</code>的HTTP接口<code>/counter-metric</code>，上报到了Grafana，再加以格式化，我们就可以做出如下图所示的缓存命中率可视化图表：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f0f9d873f47c48a38d113efd6734f562~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=960&amp;h=352&amp;s=51236&amp;e=png&amp;b=181b1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<details>
+  <summary>▶点击展开：缓存命中率可视化图表 Grafana 配置JSON</summary>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"grafanacloud-prom"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"prometheus"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">"fieldConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">"defaults"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-attr">"custom"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">"drawStyle"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"line"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">"lineInterpolation"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"linear"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-attr">"barAlignment"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">"lineWidth"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">"fillOpacity"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">76</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">"gradientMode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"hue"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-attr">"spanNulls"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">"insertNulls"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-attr">"showPoints"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"auto"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-attr">"pointSize"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-attr">"stacking"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">          <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"normal"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">          <span class="hljs-attr">"group"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"A"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-attr">"axisPlacement"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"auto"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">        <span class="hljs-attr">"axisLabel"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">""</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">        <span class="hljs-attr">"axisColorMode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"text"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">        <span class="hljs-attr">"axisBorderShow"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">        <span class="hljs-attr">"scaleDistribution"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">          <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"linear"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29">        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30">        <span class="hljs-attr">"axisCenteredZero"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">        <span class="hljs-attr">"hideFrom"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">          <span class="hljs-attr">"tooltip"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="33">          <span class="hljs-attr">"viz"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="34">          <span class="hljs-attr">"legend"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span></span>
+<span class="code-block-extension-codeLine" data-line-num="35">        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="36">        <span class="hljs-attr">"thresholdsStyle"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="37">          <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"off"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="38">        <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="39">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="40">      <span class="hljs-attr">"color"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="41">        <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"palette-classic"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="42">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="43">      <span class="hljs-attr">"mappings"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="44">      <span class="hljs-attr">"thresholds"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="45">        <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"absolute"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="46">        <span class="hljs-attr">"steps"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="47">          <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="48">            <span class="hljs-attr">"color"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"green"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="49">            <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">null</span></span>
+<span class="code-block-extension-codeLine" data-line-num="50">          <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="51">          <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="52">            <span class="hljs-attr">"color"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"red"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="53">            <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">80</span></span>
+<span class="code-block-extension-codeLine" data-line-num="54">          <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="55">        <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="56">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="57">      <span class="hljs-attr">"min"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="58">      <span class="hljs-attr">"unit"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"percentunit"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="59">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="60">    <span class="hljs-attr">"overrides"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="61">      <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="62">        <span class="hljs-attr">"matcher"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="63">          <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"byName"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="64">          <span class="hljs-attr">"options"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"未命中"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="65">        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="66">        <span class="hljs-attr">"properties"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="67">          <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="68">            <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"color"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="69">            <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="70">              <span class="hljs-attr">"fixedColor"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"dark-red"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="71">              <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"fixed"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="72">            <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="73">          <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="74">        <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="75">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="76">      <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="77">        <span class="hljs-attr">"matcher"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="78">          <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"byName"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="79">          <span class="hljs-attr">"options"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"命中缓存 {__name__="</span>cacheHiteRate<span class="hljs-string">", hitCache="</span><span class="hljs-keyword">true</span><span class="hljs-string">", instance="</span>localhost<span class="hljs-punctuation">:</span><span class="hljs-number">4001</span><span class="hljs-string">", job="</span>integrations/nodejs<span class="hljs-string">"}"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="80">        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="81">        <span class="hljs-attr">"properties"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="82">          <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="83">            <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"displayName"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="84">            <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"命中缓存"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="85">          <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="86">        <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="87">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="88">      <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="89">        <span class="hljs-attr">"matcher"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="90">          <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"byName"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="91">          <span class="hljs-attr">"options"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"未命中 {__name__="</span>cacheHiteRate<span class="hljs-string">", hitCache="</span><span class="hljs-keyword">false</span><span class="hljs-string">", instance="</span>localhost<span class="hljs-punctuation">:</span><span class="hljs-number">4001</span><span class="hljs-string">", job="</span>integrations/nodejs<span class="hljs-string">"}"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="92">        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="93">        <span class="hljs-attr">"properties"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="94">          <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="95">            <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"displayName"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="96">            <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"未命中缓存"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="97">          <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="98">        <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="99">      <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="100">    <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="101">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="102">  <span class="hljs-attr">"gridPos"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="103">    <span class="hljs-attr">"h"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">8</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="104">    <span class="hljs-attr">"w"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">12</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="105">    <span class="hljs-attr">"x"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="106">    <span class="hljs-attr">"y"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="107">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="108">  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">27</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="109">  <span class="hljs-attr">"interval"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"1m"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="110">  <span class="hljs-attr">"options"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="111">    <span class="hljs-attr">"tooltip"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="112">      <span class="hljs-attr">"mode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"multi"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="113">      <span class="hljs-attr">"sort"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"none"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="114">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="115">    <span class="hljs-attr">"legend"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="116">      <span class="hljs-attr">"showLegend"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="117">      <span class="hljs-attr">"displayMode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"table"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="118">      <span class="hljs-attr">"placement"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"right"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="119">      <span class="hljs-attr">"calcs"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="120">        <span class="hljs-string">"min"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="121">        <span class="hljs-string">"max"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="122">      <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="123">    <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="124">  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="125">  <span class="hljs-attr">"targets"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="126">    <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="127">      <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="128">        <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"prometheus"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="129">        <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"grafanacloud-prom"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="130">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="131">      <span class="hljs-attr">"refId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"A"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="132">      <span class="hljs-attr">"expr"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"cacheHiteRate{hitCache="</span><span class="hljs-keyword">true</span><span class="hljs-string">"}"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="133">      <span class="hljs-attr">"range"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="134">      <span class="hljs-attr">"instant"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="135">      <span class="hljs-attr">"editorMode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"builder"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="136">      <span class="hljs-attr">"legendFormat"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__auto"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="137">      <span class="hljs-attr">"useBackend"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="138">      <span class="hljs-attr">"disableTextWrap"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="139">      <span class="hljs-attr">"fullMetaSearch"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="140">      <span class="hljs-attr">"includeNullMetadata"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="141">      <span class="hljs-attr">"hide"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="142">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="143">    <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="144">      <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="145">        <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"prometheus"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="146">        <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"grafanacloud-prom"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="147">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="148">      <span class="hljs-attr">"refId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"B"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="149">      <span class="hljs-attr">"expr"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"cacheHiteRate{hitCache="</span><span class="hljs-keyword">false</span><span class="hljs-string">"}"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="150">      <span class="hljs-attr">"range"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="151">      <span class="hljs-attr">"instant"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="152">      <span class="hljs-attr">"editorMode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"builder"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="153">      <span class="hljs-attr">"legendFormat"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__auto"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="154">      <span class="hljs-attr">"useBackend"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="155">      <span class="hljs-attr">"disableTextWrap"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="156">      <span class="hljs-attr">"fullMetaSearch"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="157">      <span class="hljs-attr">"includeNullMetadata"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="158">      <span class="hljs-attr">"hide"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="159">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="160">    <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="161">      <span class="hljs-attr">"refId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"C"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="162">      <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="163">        <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__expr__"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="164">        <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__expr__"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="165">        <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Expression"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="166">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="167">      <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"math"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="168">      <span class="hljs-attr">"hide"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="169">      <span class="hljs-attr">"expression"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"$A + $B"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="170">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="171">    <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="172">      <span class="hljs-attr">"refId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"命中缓存"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="173">      <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"math"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="174">      <span class="hljs-attr">"hide"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="175">      <span class="hljs-attr">"expression"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"$A / $C"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="176">    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="177">    <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="178">      <span class="hljs-attr">"refId"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"未命中"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="179">      <span class="hljs-attr">"datasource"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="180">        <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__expr__"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="181">        <span class="hljs-attr">"uid"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"__expr__"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="182">        <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Expression"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="183">      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="184">      <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"math"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="185">      <span class="hljs-attr">"hide"</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="186">      <span class="hljs-attr">"expression"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"$B / $C"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="187">    <span class="hljs-punctuation">}</span></span>
+<span class="code-block-extension-codeLine" data-line-num="188">  <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="189">  <span class="hljs-attr">"title"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"缓存命中率"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="190">  <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"timeseries"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="191"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+</details>
+<h2 data-id="heading-17">3.  评估优化效果</h2>
+<p>为了评估优化效果，首先，我们要记录优化前的状态，在优化上线前提前上线监控指标，并收集一段时间的指标数据。</p>
+<p>同时建议在优化上线前持续观察7至15天，从而避免来自生产环境用户的指标数据受到工作日和节假日影响所产生的异常波动。</p>
+<blockquote>
+<p>注：Grafana Cloud 的免费用户自带 14 天数据保存时长，超过这一时长的数据会被删除。</p>
+</blockquote>
+<p>其次，建议在优化上线1至3个月后回归优化效果，确保优化稳定。</p>
+<p>如果资源优先级提示这一优化生效，我们应该能观察到 首次内容绘制<code>FCP</code>和最大内容绘制<code>LCP</code>指标有明显的改善，例如下图：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4018f0d7dad4474fa01171746734e18c~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1306&amp;h=725&amp;s=77454&amp;e=png&amp;b=16181d" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>观察FCP的评分百分比可视化图，在4月30日优化上线后，评分为优的用户占比从优化前的约50%，大幅提升到了优化后的90%。</p>
+<p>再观察一段时间这一指标，如果评分优的占比都能稳定在90%，那我们就有理由判定<strong>资源优先级优化显著地加快了页面渲染，改善了用户体验！</strong></p>
+<p>同样的，我们也可以观察<strong>缓存命中率指标</strong>来判断优化效果，例如下图：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/75583fe1e4de499b8206fd4d83f6205b~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=951&amp;h=345&amp;s=37773&amp;e=png&amp;b=191c20" alt="" loading="lazy" class="medium-zoom-image">
+观察上述缓存命中率可视化图，在4月30日优化上线后，缓存命中率从优化前的约40%，大幅提升到了约70%，同样可以佐证我们的优化产生了显著的正向收益。</p>
+<p>此外，上述指标的变化，也应该能从<strong>页面的加载耗时</strong>等直观表现上观察到显著的变化。我们也可以通过录制优化前后前端应用加载的视频，对比评估优化效果。</p>
+<h2 data-id="heading-18">小结</h2>
+<p>这一节中，我们首先介绍了四类资源优先级提示的功能和细节：</p>
+<ol>
+<li>预取回 Prefetch</li>
+<li>预加载 Preload</li>
+<li>预连接 Preconnect</li>
+<li>DNS预取回 DNS-Prefetch</li>
+</ol>
+<p>其次，用<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Fresource-hint-generator" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/resource-hint-generator" ref="nofollow noopener noreferrer">resource-hint-generator</a>作为示例，演示了快速生成资源优先级提示的代码逻辑。</p>
+<p>最后，我们学习了使用Grafana可视化图表，验证和评估资源优先级优化效果具体方式。</p></div>

@@ -1,0 +1,239 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>数据库中会有很多的表，分别存储不同的信息，比如学生表存学生的信息、老师表存老师的信息，班级表存班级的信息。</p>
+<p>这些表之间不是孤立的，有着一定的关系。</p>
+<p>比如班级和学生之间是一对多的关系，也就是一个班级可以有多个学生。</p>
+<p>班级和老师之间是多对多的关系，也就是一个班级可以有多个老师，一个老师也可以教多个班级。</p>
+<p>如果存储一对一、一对多、多对多这些关系呢？</p>
+<p>这就涉及到外键了。</p>
+<p>比如一对一的关系，一个用户只能有一个身份证。</p>
+<p>这样两个表，分别存储用户信息，还有身份证信息：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b7ac9f4ac6fa4e93b2c51b66d9757b9c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它们之间是一对一的关系，这时就可以用外键来表示。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/520ee3961ce045fd8dae99388f04821d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>user 表的主键是 id、可以通过 id 来唯一标识一个 user。</p>
+<p>那 id_card 想查找 user，自然也是通过 id 来查找，多一个列来存储 user id 就可以实现这种一对一的关联。</p>
+<p>这个 user_id 的列就是外键。</p>
+<p>user 表叫主表，使用外键引用它的 id_card 表是从表。</p>
+<p>我们建个表来试试看：</p>
+<p>选中 hello-mysql 数据库，点击建表按钮：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c7057a83d1824e18af6e798da0120281~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>分别添加 id、name 列：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/72b3b3f6baa447d185a4c4df8ea2a8b0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p>点击 apply，建表 sql 如下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/65a3a93170424521a193b2c303b6bfc2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>你也可以直接用这个 sql 来建表：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `hello<span class="hljs-operator">-</span>mysql`.`<span class="hljs-keyword">user</span>` (</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  `id` <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="hljs-string">'id'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  `name` <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">45</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">'名字'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-keyword">PRIMARY</span> KEY (`id`)</span>
+<span class="code-block-extension-codeLine" data-line-num="5">);</span>
+</code></pre>
+<p>然后再建个 id_card 表：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/65592844feda4d7f808aa44e9e610791~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>id 为 INT 类型，设置 primary key、not null 的约束，然后设置 auto increment。</p>
+<p>card_name 为 VARCHAR(45) 类型，设置 not null 的约束</p>
+<p>user_id 为 INT 类型。</p>
+<p>然后添加外键：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fb36a6531bff4f9eb99d1bd6d7194e0c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>指定外键 user_id 关联 user 表的 id。</p>
+<p>这里还要选择主表数据 update 或者 delete 的时候，从表怎么办：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/56073e48339c461a8dac495f096f71f3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们先用默认的。</p>
+<p>点击 apply，生成的建表 sql 是这样的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2579cd003f0a4b58aef966455cee8961~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `id_card` (</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  `id` <span class="hljs-type">int</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="hljs-string">'id'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  `card_name` <span class="hljs-type">varchar</span>(<span class="hljs-number">45</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">'身份证号'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  `user_id` <span class="hljs-type">int</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">'用户 id'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-keyword">PRIMARY</span> KEY (`id`),</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  INDEX `card_id_idx` (`user_id`),</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-keyword">CONSTRAINT</span> `user_id` <span class="hljs-keyword">FOREIGN</span> KEY (`user_id`) <span class="hljs-keyword">REFERENCES</span> `<span class="hljs-keyword">user</span>` (`id`)</span>
+<span class="code-block-extension-codeLine" data-line-num="8">)  CHARSET<span class="hljs-operator">=</span>utf8mb4</span>
+</code></pre>
+<p><strong>这些建表 sql 的语法了解即可，一般不会自己写。</strong></p>
+<p>前面的三行都比较好理解，就是指定每一列的类型、约束、注释。</p>
+<p>PRIMARY KEY 是指定 id 为主键。</p>
+<p>INDEX 是建立索引，索引名是 card_id_idex，这个是用于加速 user_id 的访问的。</p>
+<p>CONSTRINT user_id FOREIGN KEY 是给 user_id 添加一个外键约束，然后 user_id REFERENCES user id 则是指定 user_id 引用这 user 表的 id 列。</p>
+<p>然后就可以看到 user 和 id_card 表了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e4f50e3b75404fbdb9ecbe1796f9ca61~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36c8133bcdc0463f956c39d24a38521c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们插入几条数据：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `<span class="hljs-keyword">user</span>` (`name`)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">	<span class="hljs-keyword">VALUES</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">		(<span class="hljs-string">'张三'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="4">		(<span class="hljs-string">'李四'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="5">		(<span class="hljs-string">'王五'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="6">		(<span class="hljs-string">'赵六'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="7">		(<span class="hljs-string">'孙七'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="8">		(<span class="hljs-string">'周八'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="9">		(<span class="hljs-string">'吴九'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="10">		(<span class="hljs-string">'郑十'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="11">		(<span class="hljs-string">'钱十一'</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="12">		(<span class="hljs-string">'陈十二'</span>); </span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd7df24a9d3541e189f20fe390689ecc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>查询一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> <span class="hljs-keyword">user</span>;</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/72b370030a3f4fb38443d1cc21e7f357~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用户表数据成功插入了。</p>
+<p>再插入 id_card 表的数据：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> id_card (card_name, user_id) </span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">VALUES</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">        (<span class="hljs-string">'110101199001011234'</span>,<span class="hljs-number">1</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="4">	(<span class="hljs-string">'310101199002022345'</span>,<span class="hljs-number">2</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="5">	(<span class="hljs-string">'440101199003033456'</span>,<span class="hljs-number">3</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="6">	(<span class="hljs-string">'440301199004044567'</span>,<span class="hljs-number">4</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="7">	(<span class="hljs-string">'510101199005055678'</span>,<span class="hljs-number">5</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="8">	(<span class="hljs-string">'330101199006066789'</span>,<span class="hljs-number">6</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="9">	(<span class="hljs-string">'320101199007077890'</span>,<span class="hljs-number">7</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="10">	(<span class="hljs-string">'500101199008088901'</span>,<span class="hljs-number">8</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="11">	(<span class="hljs-string">'420101199009099012'</span>,<span class="hljs-number">9</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="12">	(<span class="hljs-string">'610101199010101023'</span>,<span class="hljs-number">10</span>);</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/38421eabe50d418585e0ecce78195352~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>查询一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> id_card;</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e2eedd5e4bb341288dfac40eb154fb28~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，一对一关系的数据就插入成功了。</p>
+<p>那怎么关联查出来呢？</p>
+<p>这样：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">JOIN</span> id_card <span class="hljs-keyword">ON</span> user.id <span class="hljs-operator">=</span> id_card.user_id;</span>
+</code></pre>
+<p>这里用到了 JOIN ON，也就是连接 user 和 id_card 表，关联方式是 user.id = id_card.user_id，也就是 id_card 表中的外键关联 user 表的主键。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/520ee3961ce045fd8dae99388f04821d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击左上角按钮，新建一条 sql：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/09826ae8450342d39f1649a1e4b7648b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>查询的结果是这样的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7ec86f4db396478b8561852175421b43~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里的两个 id 分别是 user 和 card 的 id，而且后面的 user_id 也没必要展示。</p>
+<p>我们改下 sql：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">SELECT</span> user.id, name, id_card.id <span class="hljs-keyword">as</span> card_id, card_name </span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">FROM</span> <span class="hljs-keyword">user</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">JOIN</span> id_card <span class="hljs-keyword">ON</span> user.id <span class="hljs-operator">=</span> id_card.user_id;</span>
+</code></pre>
+<p>指定显示的列，并给 id_card 表的 id 起个 card_id 的别名。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c680ece661bf4157b02913f5479f43a0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是多表关联查询，语法是 JOIN ON。</p>
+<p>有同学可能问了，那如果 id_card 表里有的没有关联 user 呢？</p>
+<p>比如这样：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c75226700d694130a11039f6ca2e718e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>选中单元格，点击 delete 就可以把它置为 null。</p>
+<p>我们把 id_card 表的最后两条记录的 user_id 删掉，点击 apply。</p>
+<p>这时候再执行上面那条 sql 来查询，就可以看到少了两条记录：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9960fb6c72374da09f8b5977aab243e1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>因为 JOIN ON 其实默认是 INNER JOIN ON，相当于这么写：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">SELECT</span> user.id, name, id_card.id <span class="hljs-keyword">as</span> card_id, card_name </span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">FROM</span> <span class="hljs-keyword">user</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">INNER</span> <span class="hljs-keyword">JOIN</span> id_card <span class="hljs-keyword">ON</span> user.id <span class="hljs-operator">=</span> id_card.user_id;</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3cc40772e66742e19e0ab1a97961173a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>INNER JOIN 是只返回两个表中能关联上的数据。</p>
+<p>你还可以指定其余 2 种 join 类型：</p>
+<p>LEFT JOIN 是额外返回左表中没有关联上的数据。</p>
+<p>RIGHT JOIN 是额外返回右表中没有关联上的数据。</p>
+<p><strong>在 FROM 后的是左表，JOIN 后的表是右表。</strong></p>
+<p>我们来试一下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">SELECT</span> user.id, name, id_card.id <span class="hljs-keyword">as</span> card_id, card_name </span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">FROM</span> <span class="hljs-keyword">user</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">RIGHT</span> <span class="hljs-keyword">JOIN</span> id_card <span class="hljs-keyword">ON</span> user.id <span class="hljs-operator">=</span> id_card.user_id;</span>
+</code></pre>
+<p>当使用 RIGHT JOIN 时，会额外返回右表中没有关联的数据：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/de446edf08e04ef0af975b87d5bdd0fc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到返回了所有 id_card 的数据，没有关联 user 的记录 user 信息为 null。</p>
+<p>当时用 LEFT JOIN 时，正好相反：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">SELECT</span> user.id, name, id_card.id <span class="hljs-keyword">as</span> card_id, card_name </span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">FROM</span> <span class="hljs-keyword">user</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">JOIN</span> id_card <span class="hljs-keyword">ON</span> user.id <span class="hljs-operator">=</span> id_card.user_id;</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1cf88544235e462d8c3ea2d34e9a5077~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>一般情况，还是用默认的 JOIN ON 比较多，也就是 INNER JOIN。</p>
+<p>前面还讲到了删除和更新时的级联操作。</p>
+<p>也就是当 user 删除的时候，关联的 id_card 要不要删除？</p>
+<p>当 user 的 id 修改的时候，关联的 id_card 要不要改 user_id？</p>
+<p>我们之前设置的是默认的 RESTICT：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2134c6a4b35a43fc86935a968942810a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>其实可选的值有 4 种：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2f5ab0aabb994bf99731137c9475d804~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<ul>
+<li>
+<p>CASCADE： 主表主键更新，从表关联记录的外键跟着更新，主表记录删除，从表关联记录删除</p>
+</li>
+<li>
+<p>SET NULL：主表主键更新或者主表记录删除，从表关联记录的外键设置为 null</p>
+</li>
+<li>
+<p>RESTRICT：只有没有从表的关联记录时，才允许删除主表记录或者更新主表记录的主键 id</p>
+</li>
+<li>
+<p>NO ACTION： 同 RESTRICT，只是 sql 标准里分了 4 种，但 mysql 里 NO ACTION 等同于 RESTRICT。</p>
+</li>
+</ul>
+<p>这里不理解不要紧，我们试一下：</p>
+<p>现在 user 表是这样的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25ebae1ab06b4097a745c443fda34359~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>右键选择 delete row：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d6a77afd4f704c56849a1cd8150197c3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候会提示你更新失败，因为有外键的约束。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7f91da3522b949c684beab76fe7b6ecf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击 revert，回到之前的状态：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e4f8b0cfd8244a67a29a3d616fdcaac6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后更新 id 为 11，点击 apply：
+<img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d889df506c704bc0904933f2cf5857d0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>同样会提示你更新失败，因为有外键的约束：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b6186789b3a447c6b8ab327a1e5b1d67~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是 <strong>RESTIRCT 和 NO ACTION 的处理逻辑：只要从表有关联记录，就不能更新 id 或者删除记录。</strong></p>
+<p>我们手动把从表记录的关联去掉，也就是删除第一条记录的外键（按 delete 键）：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eb9535d02ee544368a49d8d69a5b3377~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>点击 apply 应用这次改动。</p>
+<p>然后再试下主表的更新：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/32d11bccbbe14d9e996415f0573feb1c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这次就更新成功了！</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9536fecbfb6b4b1a8efd34aa23a462f0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再来试下删除：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d7e5128b7cfd46d7a8a553c46afa0a44~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>同样也成功了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b6a81c40fb7a486cab97c966b59f4f32~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是 RESTRICT 或者 NO ACTION，只有当从表没有关联的记录的时候，才能更新主表记录的 id 或者删除它。</p>
+<p>我们再来试试 CASCADE：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e7357d1bb3a1466c987c58905178e481~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>修改外键级联方式为 CASCADE，点击 apply。</p>
+<p>先看一下现在 id_card 表的数据：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a85c3956e9a44336b58a4c13861d9c0c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把 id 为 2 的 user 的 id 改为 22，点击 apply：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/42c706c63fa04056a8374adbe6d30bc3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再看下 id_card 表的数据，你会发现 user_id 跟着改了。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2dedfb9e04484069970d2efa76bdc6fb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后把 id 为 22 的 user 删除掉，点击 apply：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cb22b69d3f774ab1846093ff1d97a924~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>再看下 id_card 表会发现那条 user_id 为 22 的记录也没了。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/26d293ab656f406db2a4204f673764d2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是级联方式为 <strong>CASCADE 的处理逻辑：主表删除，从表关联记录也级联删除，主表 id 更新，从表关联记录也跟着更新。</strong></p>
+<p>然后再试下 set null：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/66cda20b31a34821a2f3778fc0ccf47d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>修改之后点击 apply。</p>
+<p>查询下现在的 id_card 表的数据：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1ec6ad89254d42a79a0326f506266493~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把 user 表中 id 为 5 的记录 id 改为 55，点击 apply：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6477a549c9024a42b5b6e90b2d779660~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候 id_card 中那条记录的外键被置为 null 了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dfbe2579e22c4d749de268738df1a8f5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是 <strong>set null 的处理逻辑：主表记录删除或者修改 id，从表关联记录外键置为 null。</strong></p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们学习了一对一的数据表设计，在从表里通过外键来关联主表的主键。</p>
+<p>查询的时候需要使用 join on，默认是 inner join 也就是只返回有关联的记录，也可以用 left join、right join 来额外返回没有关联记录的左表或右表的记录。</p>
+<p>from 后的是左表，join 后的是右表。</p>
+<p>此外，外键还可以设置级联方式，也就是主表修改 id 或者删除的时候，从表怎么做。</p>
+<p>有 3 种级联方式：CASCADE（关联删除或更新），SET NULL（关联外键设置为 null），RESTRICT 或者 NO ACTION（没有从表的关联记录才可以删除或更新）</p>
+<p>多表的连接是非常常用的操作，下节我们继续学习一对多和多对多的数据表设计。</p></div>

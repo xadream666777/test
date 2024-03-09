@@ -1,0 +1,428 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>用户管理模块我们实现了登录、注册、认证鉴权，还剩下一些列表、更新等接口：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3a58b258db9d4449913d0194cbbc1006~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这节把修改密码、修改信息的接口写完。</p>
+<p>在那之前，我们先加一个修改响应内容的拦截器。把响应的格式改成 {code、message、data} 这种。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">lua</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-lua code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g interceptor <span class="hljs-built_in">format</span>-response <span class="hljs-comment">--flat</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8a8b8759fb744a7e8ee24bf6ec478b15~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>使用 map 操作符来修改响应：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CallHandler</span>, <span class="hljs-title class_">ExecutionContext</span>, <span class="hljs-title class_">Injectable</span>, <span class="hljs-title class_">NestInterceptor</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Response</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { map, <span class="hljs-title class_">Observable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FormatResponseInterceptor</span> implements <span class="hljs-title class_">NestInterceptor</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-title function_">intercept</span>(<span class="hljs-attr">context</span>: <span class="hljs-title class_">ExecutionContext</span>, <span class="hljs-attr">next</span>: <span class="hljs-title class_">CallHandler</span>): <span class="hljs-title class_">Observable</span>&lt;any&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">const</span> response = context.<span class="hljs-title function_">switchToHttp</span>().<span class="hljs-property">getResponse</span>&lt;<span class="hljs-title class_">Response</span>&gt;();</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">return</span> next.<span class="hljs-title function_">handle</span>().<span class="hljs-title function_">pipe</span>(<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">code</span>: response.<span class="hljs-property">statusCode</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">message</span>: <span class="hljs-string">'success'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        data</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    }));</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="18">}</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+</code></pre>
+<p>全局启用它：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/01b6e7aaca854229826e588d46a0914c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000" ref="nofollow noopener noreferrer">http://localhost:3000</a> ，可以看到响应格式变了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/574ea5d4ef8642aabe863b9769b86fd2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里我用了一个 <a href="https://link.juejin.cn?target=https%3A%2F%2Fchrome.google.com%2Fwebstore%2Fdetail%2Fjson-formatter%2Fbcjindcccaagfpapjjmafapmmgkkhgoa%3Futm_source%3Dext_sidebar%26hl%3Dzh-CN" target="_blank" rel="nofollow noopener noreferrer" title="https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa?utm_source=ext_sidebar&amp;hl=zh-CN" ref="nofollow noopener noreferrer">JSON Formatter</a> 的 chrome 插件来格式化。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6370ba96078440649a1f49a43890c2b6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再试下其它接口：</p>
+<p>响应格式确实变了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/df4ff7c8076a493395775ae6fbb8d224~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>抛出的异常还是由内置的 Exception Filter 来处理，返回响应：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1d017ea629bf4d47b512070949b1313f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再加一个接口访问记录的 interceptor：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">csharp</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-csharp code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g interceptor invoke-<span class="hljs-keyword">record</span> --<span class="hljs-title">flat</span></span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9a2ccc8cfa2945c1b32171ffc48acb69~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>记录下访问的 ip、user agent、请求的 controller、method，接口耗时、响应内容，当前登录用户等信息。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CallHandler</span>, <span class="hljs-title class_">ExecutionContext</span>, <span class="hljs-title class_">Injectable</span>, <span class="hljs-title class_">Logger</span>, <span class="hljs-title class_">NestInterceptor</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Response</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Request</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Observable</span>, tap } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">@<span class="hljs-title class_">Injectable</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">InvokeRecordInterceptor</span> implements <span class="hljs-title class_">NestInterceptor</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  private readonly logger = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Logger</span>(<span class="hljs-title class_">InvokeRecordInterceptor</span>.<span class="hljs-property">name</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-title function_">intercept</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">context</span>: <span class="hljs-title class_">ExecutionContext</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">next</span>: <span class="hljs-title class_">CallHandler</span>&lt;any&gt;,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  ): <span class="hljs-title class_">Observable</span>&lt;any&gt; | <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-title class_">Observable</span>&lt;any&gt;&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">const</span> request = context.<span class="hljs-title function_">switchToHttp</span>().<span class="hljs-property">getRequest</span>&lt;<span class="hljs-title class_">Request</span>&gt;();</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">const</span> response = context.<span class="hljs-title function_">switchToHttp</span>().<span class="hljs-property">getResponse</span>&lt;<span class="hljs-title class_">Response</span>&gt;();</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-keyword">const</span> userAgent = request.<span class="hljs-property">headers</span>[<span class="hljs-string">'user-agent'</span>];</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-keyword">const</span> { ip, method, path } = request;</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">debug</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-string">`<span class="hljs-subst">${method}</span> <span class="hljs-subst">${path}</span> <span class="hljs-subst">${ip}</span> <span class="hljs-subst">${userAgent}</span>: <span class="hljs-subst">${</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">        context.getClass().name</span>
+<span class="code-block-extension-codeLine" data-line-num="24">      } <span class="hljs-subst">${</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">        context.getHandler().name</span>
+<span class="code-block-extension-codeLine" data-line-num="26">      } invoked...`,</span>
+<span class="code-block-extension-codeLine" data-line-num="27">    );</span>
+<span class="code-block-extension-codeLine" data-line-num="28">  </span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">debug</span>(<span class="hljs-string">`user: <span class="hljs-subst">${request.user?.userId}</span>, <span class="hljs-subst">${request.user?.username}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="30"></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-keyword">const</span> now = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="32"></span>
+<span class="code-block-extension-codeLine" data-line-num="33">    <span class="hljs-keyword">return</span> next.<span class="hljs-title function_">handle</span>().<span class="hljs-title function_">pipe</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="34">      <span class="hljs-title function_">tap</span>(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="35">        <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">debug</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="36">          <span class="hljs-string">`<span class="hljs-subst">${method}</span> <span class="hljs-subst">${path}</span> <span class="hljs-subst">${ip}</span> <span class="hljs-subst">${userAgent}</span>: <span class="hljs-subst">${response.statusCode}</span>: <span class="hljs-subst">${<span class="hljs-built_in">Date</span>.now() - now}</span>ms`</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="37">        );</span>
+<span class="code-block-extension-codeLine" data-line-num="38">        <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">debug</span>(<span class="hljs-string">`Response: <span class="hljs-subst">${<span class="hljs-built_in">JSON</span>.stringify(res)}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="39">      }),</span>
+<span class="code-block-extension-codeLine" data-line-num="40">    );</span>
+<span class="code-block-extension-codeLine" data-line-num="41">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="42">}</span>
+<span class="code-block-extension-codeLine" data-line-num="43"></span>
+</code></pre>
+<p>全局启用这个 interceptor：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f9d34854adda4076979d96f9e26c3a87~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>试一下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b01861d339ca4ae2a7069f61569d5192~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>访问管理员的登录的接口。</p>
+<p>可以看到控制台打印了请求的路径、请求方法、controller、handler 等信息：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/399a1cf537cc4a929c99df71f26b6592~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里因为是本地访问，所以是 ::1 的 ip，相当于 localhost。</p>
+<p>user 因为当前还没有，所以是 undefined</p>
+<p>响应之后打印了接口耗时以及接口返回的数据：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bb637af933ec421dbd69f2c6b5f0084c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们拿着个 access_token 放在 header 来访问 /aaa 接口试下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a4930687fa5841a284335de8a03b4cf1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，请求之前打印了访问的 controller、handler、user等信息：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6ab9cb388bb84a6aa6b351489aa9c2ba~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>响应之后打印了接口耗时和响应内容等信息：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d41fc558b07845c39485d3ad8851422e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>为什么 interceptor 里能拿到 user 信息呢？</p>
+<p>因为这是在 LoginGuard 里从 jwt 取出来放到  request.user 的，而 Guard 在 interceptor 之前调用：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/24060e0f32204907887ede38c1aa018c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后实现普通用户和管理员修改密码、修改信息的接口。</p>
+<p>涉及到这 4 个页面：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c114411bf1274e2a9f202d5188ebf55a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba086b9a407b469fbc79517adeb22ce1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ed7c126be9bb4a8ba9283af6d2974331~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9e41292a1b954faaa343a2bf166500d5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>分别是 /user/update_password 和 /user/admin/update_password、/user/update、/user/admin/update</p>
+<p>不过在修改信息之前，需要先实现查询用户信息的接口，用来回显数据。</p>
+<p>在 UserController 添加一个 /user/info 接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'info'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">@<span class="hljs-title class_">RequireLogin</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">async</span> <span class="hljs-title function_">info</span>(<span class="hljs-params">@UserInfo(<span class="hljs-string">'userId'</span>) userId: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>.<span class="hljs-title function_">findUserDetailById</span>(userId);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>用前面封装的自定义装饰器 @UserInfo 从 reqeust.user 取 userId 注入 handler。</p>
+<p>加上 @RequireLogin 装饰，这样 LoginGuard 就会对 /user/info 的请求做登录检查。</p>
+<p>在 UserService  实现 findUserDetailById 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">findUserDetailById</span>(<span class="hljs-params">userId: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> user =  <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userRepository</span>.<span class="hljs-title function_">findOne</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">            <span class="hljs-attr">id</span>: userId</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">return</span> user;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+</code></pre>
+<p>我们测试下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/966a6657688d4a6fa6791451b66cf3ea~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>登录用户端，拿到 access_token。</p>
+<p>然后加到 header 里访问 /user/info</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1cdd9f904865481d9c38f29e15d90c45~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>成功拿到了 user 的信息。</p>
+<p>但这些信息并不是全都需要，比如密码就不需要返回。</p>
+<p>我们创建个 vo 来封装返回的结果：</p>
+<p>创建 /user/vo/user-info.vo.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserDetailVo</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">username</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">nickName</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">email</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">headPic</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-attr">phoneNumber</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-attr">isFrozen</span>: boolean;</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">createTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+</code></pre>
+<p>然后把 controller 里的返回值封装成 vo：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'info'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">@<span class="hljs-title class_">RequireLogin</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">async</span> <span class="hljs-title function_">info</span>(<span class="hljs-params">@UserInfo(<span class="hljs-string">'userId'</span>) userId: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>.<span class="hljs-title function_">findUserDetailById</span>(userId);</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">const</span> vo = <span class="hljs-keyword">new</span> <span class="hljs-title class_">UserDetailVo</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  vo.<span class="hljs-property">id</span> = user.<span class="hljs-property">id</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  vo.<span class="hljs-property">email</span> = user.<span class="hljs-property">email</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  vo.<span class="hljs-property">username</span> = user.<span class="hljs-property">username</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  vo.<span class="hljs-property">headPic</span> = user.<span class="hljs-property">headPic</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">  vo.<span class="hljs-property">phoneNumber</span> = user.<span class="hljs-property">phoneNumber</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">  vo.<span class="hljs-property">nickName</span> = user.<span class="hljs-property">nickName</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">  vo.<span class="hljs-property">createTime</span> = user.<span class="hljs-property">createTime</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  vo.<span class="hljs-property">isFrozen</span> = user.<span class="hljs-property">isFrozen</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">  <span class="hljs-keyword">return</span> vo;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c49feb281701423baa0616962971bd20~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在返回的内容就是合理的了。</p>
+<p>然后实现修改密码的接口：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a65f846d206a403087fad09b01e1d934~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/19a290b2c22f4fe680469d6487f9c462~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>管理员和用户修改密码的页面是一样的，我们就用一个接口就好了。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Post</span>([<span class="hljs-string">'update_password'</span>, <span class="hljs-string">'admin/update_password'</span>])</span>
+<span class="code-block-extension-codeLine" data-line-num="2">@<span class="hljs-title class_">RequireLogin</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">async</span> <span class="hljs-title function_">updatePassword</span>(<span class="hljs-params">@UserInfo(<span class="hljs-string">'userId'</span>) userId: number, @Body() passwordDto: UpdateUserPasswordDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(passwordDto);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">}</span>
+</code></pre>
+<p>@Post 写个数组，就代表数组里的这两个路由是同一个 handler 处理。</p>
+<p>这个接口同样是需要登录的，所以加上 @RequireLogin 的装饰器。</p>
+<p>用 @UserInfo 从 request.user 取 userId，其余的通过 dto 传。</p>
+<p>创建 src/user/dto/update-user-password.dto.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">IsEmail</span>, <span class="hljs-title class_">IsNotEmpty</span>, <span class="hljs-title class_">MinLength</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"class-validator"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UpdateUserPasswordDto</span> {    </span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @<span class="hljs-title class_">IsNotEmpty</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-attr">message</span>: <span class="hljs-string">'密码不能为空'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @<span class="hljs-title class_">MinLength</span>(<span class="hljs-number">6</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">message</span>: <span class="hljs-string">'密码不能少于 6 位'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">password</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    </span>
+<span class="code-block-extension-codeLine" data-line-num="12">    @<span class="hljs-title class_">IsNotEmpty</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">message</span>: <span class="hljs-string">'邮箱不能为空'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    @<span class="hljs-title class_">IsEmail</span>({}, {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">message</span>: <span class="hljs-string">'不是合法的邮箱格式'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-attr">email</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    </span>
+<span class="code-block-extension-codeLine" data-line-num="20">    @<span class="hljs-title class_">IsNotEmpty</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        <span class="hljs-attr">message</span>: <span class="hljs-string">'验证码不能为空'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-attr">captcha</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="24">}</span>
+</code></pre>
+<p>需要传的是邮箱、密码、验证码。</p>
+<p>确认密码在前端和密码对比就行，不需要传到后端。</p>
+<p>测试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e2d55bf2cbdb4f67b9e25f3f4249aac3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>登录用户端，拿到 access_token，然后访问 /user/update_password 和 /user/admin/update_password 接口：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cafdf225f1384f118de02dafb7f06ec6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/72e52666915b4ad482a685a8e7b41a42~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3292d88ef3a648a8bf4285ce6e0c9234~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b67e1b0442614ec68ef0e765a4b7ecfa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>都能正常接收到数据。</p>
+<p>然后实现下具体的更新密码的逻辑：</p>
+<p>先查询 redis 中有没有邮箱对应的验证码，没有的话就返回验证码不存在或者不正确。</p>
+<p>查到的话再调用 Repository 去更新数据库中的用户密码。</p>
+<p>也就是这样的：</p>
+<p>在 UserController 里调用 UserService 的方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Post</span>([<span class="hljs-string">'update_password'</span>, <span class="hljs-string">'admin/update_password'</span>])</span>
+<span class="code-block-extension-codeLine" data-line-num="2">@<span class="hljs-title class_">RequireLogin</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">async</span> <span class="hljs-title function_">updatePassword</span>(<span class="hljs-params">@UserInfo(<span class="hljs-string">'userId'</span>) userId: number, @Body() passwordDto: UpdateUserPasswordDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>.<span class="hljs-title function_">updatePassword</span>(userId, passwordDto);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>UserService 实现具体的逻辑：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">updatePassword</span>(<span class="hljs-params">userId: number, passwordDto: UpdateUserPasswordDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> captcha = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">`update_password_captcha_<span class="hljs-subst">${passwordDto.email}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">if</span>(!captcha) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HttpException</span>(<span class="hljs-string">'验证码已失效'</span>, <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">BAD_REQUEST</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">if</span>(passwordDto.<span class="hljs-property">captcha</span> !== captcha) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HttpException</span>(<span class="hljs-string">'验证码不正确'</span>, <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">BAD_REQUEST</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">const</span> foundUser = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userRepository</span>.<span class="hljs-title function_">findOneBy</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-attr">id</span>: userId</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    foundUser.<span class="hljs-property">password</span> = <span class="hljs-title function_">md5</span>(passwordDto.<span class="hljs-property">password</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-keyword">try</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userRepository</span>.<span class="hljs-title function_">save</span>(foundUser);</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-keyword">return</span> <span class="hljs-string">'密码修改成功'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    } <span class="hljs-keyword">catch</span>(e) {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">error</span>(e, <span class="hljs-title class_">UserService</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="23">      <span class="hljs-keyword">return</span> <span class="hljs-string">'密码修改失败'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">}</span>
+</code></pre>
+<p>先查询 redis 中有相对应的验证码，检查通过之后根据 id 查询用户信息，修改密码之后 save。</p>
+<p>测试下：</p>
+<p>登录 lisi 账号，拿到 access_token</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e319f1f1a75649e7a0bd17ffc6127bb2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>数据库中可以查到 lisi 的邮箱：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25c7bb113f8547b8883790c9ed3b2a3d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>带上 access_token 访问更新密码接口：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c65750439d5a40058510dafcd5b6f494~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>先手动去 redis 里添加 <a href="https://link.juejin.cn?target=mailto%3Aupdate_password_captcha_yy%40yy.com" target="_blank" title="mailto:update_password_captcha_yy@yy.com" ref="nofollow noopener noreferrer">update_password_captcha_yy@yy.com</a> 的 key，值为 123123（注意，我们现在用的是 redis 的 db1）</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/933ce5b5ab3b4bf782583aa2cf362334~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>半小时过期。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1ef5d9c41ccd4de189dd47bf002f26b3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再试下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4c06ef3cd4ae4293bc9e76dfb2036261~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>修改成功。</p>
+<p>数据库里看不到具体的密码，但也能看出确实变了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0712607079b34a3997aee3ee4a484ea0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>之前是这样的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25c7bb113f8547b8883790c9ed3b2a3d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们登录下试试就知道了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a67c4ee5c824ecaa059abc98bcbbb2d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用之前的密码登录，会提示密码错误。</p>
+<p>换成新密码就好了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6f38faa8921947adb024ad8384d146db~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再加上这个发送邮箱验证码的接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'update_password/captcha'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">updatePasswordCaptcha</span>(<span class="hljs-params">@Query(<span class="hljs-string">'address'</span>) address: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">const</span> code = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>().<span class="hljs-title function_">toString</span>().<span class="hljs-title function_">slice</span>(<span class="hljs-number">2</span>,<span class="hljs-number">8</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">set</span>(<span class="hljs-string">`update_password_captcha_<span class="hljs-subst">${address}</span>`</span>, code, <span class="hljs-number">10</span> * <span class="hljs-number">60</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">emailService</span>.<span class="hljs-title function_">sendMail</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-attr">to</span>: address,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">subject</span>: <span class="hljs-string">'更改密码验证码'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-attr">html</span>: <span class="hljs-string">`&lt;p&gt;你的更改密码验证码是 <span class="hljs-subst">${code}</span>&lt;/p&gt;`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">return</span> <span class="hljs-string">'发送成功'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+</code></pre>
+<p>和之前注册验证码的逻辑一样。</p>
+<p>然后还有修改个人信息的：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ed7c126be9bb4a8ba9283af6d2974331~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9e41292a1b954faaa343a2bf166500d5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>对应 /user/udpate 和 /user/admin/update 接口。</p>
+<p>回显数据的接口就用 /user/info 这个。</p>
+<p>实现流程和修改密码的差不多：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Post</span>([<span class="hljs-string">'update'</span>, <span class="hljs-string">'admin/update'</span>])</span>
+<span class="code-block-extension-codeLine" data-line-num="2">@<span class="hljs-title class_">RequireLogin</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">async</span> <span class="hljs-title function_">update</span>(<span class="hljs-params">@UserInfo(<span class="hljs-string">'userId'</span>) userId: number, @Body() updateUserDto: UpdateUserDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userService</span>.<span class="hljs-title function_">update</span>(userId, updateUserDto); </span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>在 UserController 定义两个 post 接口。</p>
+<p>创建 src/user/dto/udpate-user.dto.ts</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">IsEmail</span>, <span class="hljs-title class_">IsNotEmpty</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"class-validator"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UpdateUserDto</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">headPic</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">nickName</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    </span>
+<span class="code-block-extension-codeLine" data-line-num="9">    @<span class="hljs-title class_">IsNotEmpty</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-attr">message</span>: <span class="hljs-string">'邮箱不能为空'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    @<span class="hljs-title class_">IsEmail</span>({}, {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">message</span>: <span class="hljs-string">'不是合法的邮箱格式'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-attr">email</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    </span>
+<span class="code-block-extension-codeLine" data-line-num="17">    @<span class="hljs-title class_">IsNotEmpty</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-attr">message</span>: <span class="hljs-string">'验证码不能为空'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-attr">captcha</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="21">}</span>
+</code></pre>
+<p>这里 headPic 和 nickName 就不做非空约束了，也就是说可以不改。</p>
+<p>对应的 UserService 里的逻辑和修改密码的差不多：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">update</span>(<span class="hljs-params">userId: number, updateUserDto: UpdateUserDto</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> captcha = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">`update_user_captcha_<span class="hljs-subst">${updateUserDto.email}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">if</span>(!captcha) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HttpException</span>(<span class="hljs-string">'验证码已失效'</span>, <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">BAD_REQUEST</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">if</span>(updateUserDto.<span class="hljs-property">captcha</span> !== captcha) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HttpException</span>(<span class="hljs-string">'验证码不正确'</span>, <span class="hljs-title class_">HttpStatus</span>.<span class="hljs-property">BAD_REQUEST</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">const</span> foundUser = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userRepository</span>.<span class="hljs-title function_">findOneBy</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-attr">id</span>: userId</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-keyword">if</span>(updateUserDto.<span class="hljs-property">nickName</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        foundUser.<span class="hljs-property">nickName</span> = updateUserDto.<span class="hljs-property">nickName</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-keyword">if</span>(updateUserDto.<span class="hljs-property">headPic</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">        foundUser.<span class="hljs-property">headPic</span> = updateUserDto.<span class="hljs-property">headPic</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-keyword">try</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">userRepository</span>.<span class="hljs-title function_">save</span>(foundUser);</span>
+<span class="code-block-extension-codeLine" data-line-num="25">      <span class="hljs-keyword">return</span> <span class="hljs-string">'用户信息修改成功'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    } <span class="hljs-keyword">catch</span>(e) {</span>
+<span class="code-block-extension-codeLine" data-line-num="27">      <span class="hljs-variable language_">this</span>.<span class="hljs-property">logger</span>.<span class="hljs-title function_">error</span>(e, <span class="hljs-title class_">UserService</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="28">      <span class="hljs-keyword">return</span> <span class="hljs-string">'用户信息修改成功'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="30">}</span>
+</code></pre>
+<p>只不过现在是传了的属性才会修改，没传的不修改。</p>
+<p>测试下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e71ec42689634a16babd5168267d07e9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>登录 lisi 账号拿到 token</p>
+<p>带上 token 访问 /user/update 接口：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/541a3999e234491e934cca29000332c4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>提示验证码失效，在 redis 里添加 <a href="https://link.juejin.cn?target=mailto%3Aupdate_user_captcha_yy%40yy.com" target="_blank" title="mailto:update_user_captcha_yy@yy.com" ref="nofollow noopener noreferrer">update_user_captcha_yy@yy.com</a> 的 key，值为 123456</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5c8cff2e7c6149dfb6222f7cea7661f4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/43ca8c083d7b4b168d954870f0f647c6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用户信息修改成功了，在数据库里也可以看到确实修改了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/57a1d28fd08d44abaea93fa7ee562e9e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，修改接口就完成了。</p>
+<p>然后还要加一个发验证码的接口，这个和别的发验证码的逻辑一样：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'update/captcha'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">updateCaptcha</span>(<span class="hljs-params">@Query(<span class="hljs-string">'address'</span>) address: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">const</span> code = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>().<span class="hljs-title function_">toString</span>().<span class="hljs-title function_">slice</span>(<span class="hljs-number">2</span>,<span class="hljs-number">8</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">set</span>(<span class="hljs-string">`update_user_captcha_<span class="hljs-subst">${address}</span>`</span>, code, <span class="hljs-number">10</span> * <span class="hljs-number">60</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">emailService</span>.<span class="hljs-title function_">sendMail</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-attr">to</span>: address,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">subject</span>: <span class="hljs-string">'更改用户信息验证码'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-attr">html</span>: <span class="hljs-string">`&lt;p&gt;你的验证码是 <span class="hljs-subst">${code}</span>&lt;/p&gt;`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">return</span> <span class="hljs-string">'发送成功'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+</code></pre>
+<p>代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fmeeting_room_booking_system_backend" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/meeting_room_booking_system_backend" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们添加了 interceptor 用来对响应格式做转换，改成 {code、message、data} 的格式，用到了 map 操作符。</p>
+<p>并且还用 interceptor 实现了接口访问的日志记录，用到 tap 操作符。</p>
+<p>然后实现了修改信息、修改密码的接口。</p>
+<p>这些流程都差不多，首先实现一个查询的接口用来回显数据，通过 vo 封装返回的数据。</p>
+<p>然后提交数据进行更新，用到的 userId 通过之前封装的 @UserInfo 装饰从 request.user 来取。</p>
+<p>还剩个列表接口，我们下节再写。</p></div>

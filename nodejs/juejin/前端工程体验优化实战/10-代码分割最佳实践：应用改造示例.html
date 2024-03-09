@@ -1,0 +1,419 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>在了解了细粒度代码分割方案的优点后，下面我们将以老朋友前端优化示例项目为例，来完整演示增加细粒度代码分割的流程和具体代码改动。</p>
+<h2 data-id="heading-0">4. 示例：为前端项目增加细粒度代码分割</h2>
+<h3 data-id="heading-1">1. 确认优化前状态</h3>
+<p>优化开始前，我们先通过<code>webpack-bundle-analyzer</code>插件，确认前端工程项目当前的编译打包产物的状况，例如下图就是配套示例项目<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo" ref="nofollow noopener noreferrer">fe-optimization-demo</a> 在模块懒加载优化后的分析图：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fe1c8478469f4991a7de8d0da55f2578~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=369715&amp;e=png&amp;b=faf2f0" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，<code>vendors.${hash}.js</code>包含了许多模块，体积非常大。</p>
+<p>每次编译打包，<code>vendors</code>区块中任何一个模块变化，都会导致<code>vendors</code>区块的产物文件名称中的哈希字符串更新。进而导致生产环境用户需要重新下载<code>vendors.${hash}.js</code>，使缓存命中率降低。</p>
+<p>细粒度代码分割正是为了解决上述痛点而发明的。</p>
+<h3 data-id="heading-2">2. 增加细粒度代码分割缓存组</h3>
+<p>具体做法是，在Webpack配置中增加<code>lib</code>，<code>shared</code>2个缓存组（<code>cacheGroup</code>），将<code>vendors</code>这样体积较大的模块进一步合理、精细地分割。</p>
+<p>具体的改动主要有3步：</p>
+<ol>
+<li>删除原有的<code>vendors</code>缓存组：释放其包含的模块。</li>
+<li>禁用默认缓存组：避免干扰细粒度代码分割。</li>
+<li>新增<code>lib</code>，<code>shared</code>2个缓存组配置</li>
+</ol>
+<blockquote>
+<p>《细粒度代码分割》完整改造代码示例MR：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo%2Fpull%2F3" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo/pull/3" ref="nofollow noopener noreferrer">github.com/JuniorTour/…</a></p>
+</blockquote>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> crypto = <span class="hljs-built_in">require</span>(<span class="hljs-string">'crypto'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">MAX_REQUEST_NUM</span> = <span class="hljs-number">20</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-comment">// 指定一个 module 可以被拆分为独立 区块（chunk） 的最小源码体积（单位：byte）</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">MIN_LIB_CHUNK_SIZE</span> = <span class="hljs-number">10</span> * <span class="hljs-number">1000</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">const</span> <span class="hljs-title function_">isModuleCSS</span> = (<span class="hljs-params"><span class="hljs-variable language_">module</span></span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-keyword">return</span> (</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-comment">// mini-css-extract-plugin</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-variable language_">module</span>.<span class="hljs-property">type</span> === <span class="hljs-string">`css/mini-extract`</span> ||</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-comment">// extract-css-chunks-webpack-plugin (old)</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-variable language_">module</span>.<span class="hljs-property">type</span> === <span class="hljs-string">`css/extract-chunks`</span> ||</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-comment">// extract-css-chunks-webpack-plugin (new)</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-variable language_">module</span>.<span class="hljs-property">type</span> === <span class="hljs-string">`css/extract-css-chunks`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">  );</span>
+<span class="code-block-extension-codeLine" data-line-num="17">};</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">  <span class="hljs-attr">optimization</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-comment">// https://webpack.js.org/configuration/optimization/#optimizationruntimechunk</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-comment">// 指定是否将Webpack的运行时（每个文件中重复的、用于加载的函数）拆分为独立文件，能减少重复代码。</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-attr">runtimeChunk</span>: <span class="hljs-string">'single'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-attr">splitChunks</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="25">      <span class="hljs-attr">maxInitialRequests</span>: <span class="hljs-variable constant_">MAX_REQUEST_NUM</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="26">      <span class="hljs-attr">maxAsyncRequests</span>: <span class="hljs-variable constant_">MAX_REQUEST_NUM</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="27">      <span class="hljs-attr">minSize</span>: <span class="hljs-variable constant_">MIN_LIB_CHUNK_SIZE</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="28">      <span class="hljs-attr">cacheGroups</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="29">        <span class="hljs-attr">defaultVendors</span>: <span class="hljs-literal">false</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="30">        <span class="hljs-attr">default</span>: <span class="hljs-literal">false</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="31">        <span class="hljs-attr">lib</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="32">          <span class="hljs-attr">chunks</span>: <span class="hljs-string">'all'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="33">          <span class="hljs-title function_">test</span>(<span class="hljs-params"><span class="hljs-variable language_">module</span></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="34">            <span class="hljs-keyword">return</span> (</span>
+<span class="code-block-extension-codeLine" data-line-num="35">              <span class="hljs-variable language_">module</span>.<span class="hljs-title function_">size</span>() &gt; <span class="hljs-variable constant_">MIN_LIB_CHUNK_SIZE</span> &amp;&amp;</span>
+<span class="code-block-extension-codeLine" data-line-num="36">              <span class="hljs-regexp">/node_modules[/\]/.test(module.identifier())</span></span>
+<span class="code-block-extension-codeLine" data-line-num="37">            );</span>
+<span class="code-block-extension-codeLine" data-line-num="38">          },</span>
+<span class="code-block-extension-codeLine" data-line-num="39">          name(module) {</span>
+<span class="code-block-extension-codeLine" data-line-num="40">            const hash = crypto.createHash('sha1');</span>
+<span class="code-block-extension-codeLine" data-line-num="41">            if (isModuleCSS(module)) {</span>
+<span class="code-block-extension-codeLine" data-line-num="42">              module.updateHash(hash);</span>
+<span class="code-block-extension-codeLine" data-line-num="43">            } else {</span>
+<span class="code-block-extension-codeLine" data-line-num="44">              if (!module.libIdent) {</span>
+<span class="code-block-extension-codeLine" data-line-num="45">                throw new Error(</span>
+<span class="code-block-extension-codeLine" data-line-num="46">                  `Encountered unknown module type: ${module.type}. Please check webpack/prod.client.config.js.`,</span>
+<span class="code-block-extension-codeLine" data-line-num="47">                );</span>
+<span class="code-block-extension-codeLine" data-line-num="48">              }</span>
+<span class="code-block-extension-codeLine" data-line-num="49">              hash.update(</span>
+<span class="code-block-extension-codeLine" data-line-num="50">                module.libIdent({ context: path.join(__dirname, '../') }),</span>
+<span class="code-block-extension-codeLine" data-line-num="51">              );</span>
+<span class="code-block-extension-codeLine" data-line-num="52">            }</span>
+<span class="code-block-extension-codeLine" data-line-num="53"></span>
+<span class="code-block-extension-codeLine" data-line-num="54">            return `lib.${hash.digest('hex').substring(0, 8)}`;</span>
+<span class="code-block-extension-codeLine" data-line-num="55">          },</span>
+<span class="code-block-extension-codeLine" data-line-num="56">          priority: 3,</span>
+<span class="code-block-extension-codeLine" data-line-num="57">          minChunks: 1,</span>
+<span class="code-block-extension-codeLine" data-line-num="58">          reuseExistingChunk: true,</span>
+<span class="code-block-extension-codeLine" data-line-num="59">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="60">        shared: {</span>
+<span class="code-block-extension-codeLine" data-line-num="61">          chunks: 'all',</span>
+<span class="code-block-extension-codeLine" data-line-num="62">          name(module, chunks) {</span>
+<span class="code-block-extension-codeLine" data-line-num="63">            return `shared.${crypto</span>
+<span class="code-block-extension-codeLine" data-line-num="64">              .createHash('sha1')</span>
+<span class="code-block-extension-codeLine" data-line-num="65">              .update(</span>
+<span class="code-block-extension-codeLine" data-line-num="66">                chunks.reduce((acc, chunk) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="67">                  return acc + chunk.name;</span>
+<span class="code-block-extension-codeLine" data-line-num="68">                }, ''),</span>
+<span class="code-block-extension-codeLine" data-line-num="69">              )</span>
+<span class="code-block-extension-codeLine" data-line-num="70">              .digest('hex')</span>
+<span class="code-block-extension-codeLine" data-line-num="71">              .substring(0, 8)}${isModuleCSS(module) ? '.CSS' : ''}`;</span>
+<span class="code-block-extension-codeLine" data-line-num="72">          },</span>
+<span class="code-block-extension-codeLine" data-line-num="73">          priority: 1,</span>
+<span class="code-block-extension-codeLine" data-line-num="74">          minChunks: 2,</span>
+<span class="code-block-extension-codeLine" data-line-num="75">          reuseExistingChunk: true,</span>
+<span class="code-block-extension-codeLine" data-line-num="76">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="77">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="78">    },</span>
+<span class="code-block-extension-codeLine" data-line-num="79">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="80">};</span>
+<span class="code-block-extension-codeLine" data-line-num="81"></span>
+</code></pre>
+<p>这份配置中，值得注意的细节是：</p>
+<ul>
+<li>
+<p>限制了最大产物文件数量：声明了<code>maxInitialRequests: MAX_REQUEST_NUM, maxAsyncRequests: MAX_REQUEST_NUM</code>，避免数量过多，超过HTTP/2协议的并发数量，导致页面资源加载阻塞，用户体验受损，通常建议不要超过20。</p>
+</li>
+<li>
+<p>指定了<code>minSize</code>，避免拆分出的模块体积太小，缓存优化效果不明显。</p>
+</li>
+<li>
+<p>2个缓存组的<code>name</code>都包含基于内容的哈希值，类似Webpack自带的<a href="https://link.juejin.cn?target=https%3A%2F%2Fwebpack.js.org%2Fconcepts%2Funder-the-hood%2F%23output" target="_blank" rel="nofollow noopener noreferrer" title="https://webpack.js.org/concepts/under-the-hood/#output" ref="nofollow noopener noreferrer">contentHash</a>。同时也有通过模块内容，拆分模块的作用。</p>
+</li>
+<li>
+<p><code>lib</code>的优先级（<code>priority</code>）要比<code>shared</code>高，目的是为了优先拆分出独立性较强的模块。</p>
+</li>
+</ul>
+<h3 data-id="heading-3">3. 确认分割效果</h3>
+<p>完成上述配置后，即可再次编译打包，通过<code>bundle-analyzer-plugin</code>确认分割后的模块：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/18fdc1db4e7d49eb884acd0250321ef0~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=355681&amp;e=png&amp;b=61d3d7" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>从上图中，我们可以看到显著的变化：</p>
+<ul>
+<li>多个模块被拆分为了独立的<code>lib.${hash}.js</code>，例如<code>@hot-loader/react-dom</code>、<code>react-hook-form</code>、<code>markdown-to-jsx</code>。</li>
+<li>产生了一个<code>shared.${hash}.js</code>，包含了<code>article-preview.tsx</code>、<code>shared/row.tsx</code>等模块，自动把多个组件间共用的模块进行了分割处理。</li>
+</ul>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/485b87773c0e42329b82bf468844b2ef~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=277187&amp;e=png&amp;b=bcda6a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这些新增的产物文件，独立性较强，代码更新后，多次打包构建，仍然能保持文件名中的哈希不变，部署到生产环境后，能长期复用本地缓存，缓存命中率更高。</p>
+<p>这样的变化完美地解决了我们之前提到的痛点：</p>
+<ul>
+<li><strong>配置复杂，开发体验不佳</strong>：这套配置普适性极强，不必改造即可适用于大多数前端项目，避免了复杂配置影响开发体验。</li>
+<li><strong>配置方案健壮性不强，可维护性不好</strong>：这套配置能适应项目的快速迭代变化，长时间不需要调整，仍然能保持较好的分割效果、缓存命中率，可维护性极佳；</li>
+<li><strong>用户体验不好</strong>：缓存命中率更高，相应的使页面加载渲染更快，用户体验更好。</li>
+</ul>
+<p>开发体验好、健壮性强、用户体验好正是这套细粒度代码分割方案的优势所在。</p>
+<h3 data-id="heading-4">4. 健壮性证明：共用（shared）模块示例</h3>
+<p>为了进一步演示细粒度代码分割的优点，我们再主动增加一个多组件共用模块，来看看这套分割方案是否需要手动调整，会如何应对。</p>
+<p>我们以近年来因体积庞大（源码700+KB）而在前端界臭名昭著的<code>moment.js</code>库为例，将其引入我们的项目中，并在2个组件间复用：</p>
+<blockquote>
+<p>《添加moment.js作为共用（shared）模块示例》完整代码示例：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo%2Fpull%2F3%2Fcommits%2F050a34943d0955fc016d71f4a945715eee572fdd" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo/pull/3/commits/050a34943d0955fc016d71f4a945715eee572fdd" ref="nofollow noopener noreferrer">github.com/JuniorTour/…</a></p>
+</blockquote>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">    <span class="hljs-comment">// src\shared\temp-shared-chunk-example.ts</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">import</span> moment <span class="hljs-keyword">from</span> <span class="hljs-string">'moment'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">getTime</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-keyword">return</span> <span class="hljs-title function_">moment</span>().<span class="hljs-title function_">format</span>(<span class="hljs-string">'MMMM Do YYYY, h:mm:ss a'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-comment">// 导入模块 1. src\pages\home\index.tsx</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">import</span> { getTime } <span class="hljs-keyword">from</span> <span class="hljs-string">'@/shared/temp-shared-chunk-example'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-title function_">getTime</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-comment">// 导入模块 2. src\pages\login\index.tsx</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">import</span> { getTime } <span class="hljs-keyword">from</span> <span class="hljs-string">'@/shared/temp-shared-chunk-example'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-title function_">getTime</span>();</span>
+</code></pre>
+<p>代码修改完成后，再次运行<code>bundle-analyzer-plugin</code>，确认状况，可见下图：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7fd58b80732b4e9395912fdd5df36995~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=311142&amp;e=png&amp;b=f9f1ec" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，<code>moment.js</code>新引入的代码被<strong>自动拆分</strong>成了2个产物文件，各自有独立的带哈希文件名，只要<code>moment.js</code>版本号不更新，生产环境的缓存就可以一直复用，缓存效率极高。</p>
+<p>这也进一步证明了这套细粒度代码分割方案的健壮性。</p>
+<blockquote>
+<p>注：<code>shared</code>和<code>lib</code>缓存组的辨析：</p>
+<p><strong>共性</strong>：shared缓存组和lib缓存组的目标都是通过细粒度地分割代码模块，提高缓存的命中率，优化用户体验。</p>
+<p><strong>特性</strong>：shared缓存组的特有目标是将多个区块间共用的代码进行拆分，避免模块被<strong>重复打包</strong>进多个区块。</p>
+<p>此外，shared缓存组优先级是<code>priority: 1</code>，比lib缓存组要低。</p>
+<p>示例图-无shared，只有lib，导致<code>moment/local</code>模块被重复打包：
+<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7b80b67a076949fca062792d84056007~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1420&amp;h=992&amp;s=673596&amp;e=jpg&amp;b=f8efe6" alt="3447e6fe-4bae-4c35-99eb-4a3e4362151c.jpeg" loading="lazy" class="medium-zoom-image"></p>
+</blockquote>
+<h3 data-id="heading-5">5. 获取全部产物清单</h3>
+<p>细粒度代码分割后的产物数量较多，如果需要完整清单，可以使用<code>webpack-manifest-plugin</code>随编译打包生成一份JSON格式的产物清单文件，用于服务端渲染时加载、生产环境部署。</p>
+<p>请看代码示例：</p>
+<blockquote>
+<p>《以使用<code>webpack-manifest-plugin</code>生成产物清单》完整代码示例：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo%2Fpull%2F3%2Fcommits%2F788bbd580455295a4541b608db8eee6c015796f2" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo/pull/3/commits/788bbd580455295a4541b608db8eee6c015796f2" ref="nofollow noopener noreferrer">github.com/JuniorTour/…</a></p>
+</blockquote>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-comment">// webpack\production.config.js</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">const</span> { <span class="hljs-title class_">WebpackManifestPlugin</span> } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'webpack-manifest-plugin'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">PUBLIC_PATH</span> = <span class="hljs-string">'http://localhost:3000/'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">mode</span>: <span class="hljs-string">'production'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-comment">// ...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-attr">plugins</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">new</span> <span class="hljs-title class_">WebpackManifestPlugin</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">fileName</span>: <span class="hljs-string">'assets-manifest.json'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-attr">generate</span>: <span class="hljs-function">(<span class="hljs-params">seed, files</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-keyword">const</span> entrypoints = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        files.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">file</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">          <span class="hljs-keyword">const</span> chunkGroups = file?.<span class="hljs-property">chunk</span>?.<span class="hljs-property">_groups</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">          <span class="hljs-keyword">if</span> (chunkGroups) {</span>
+<span class="code-block-extension-codeLine" data-line-num="17">            chunkGroups.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">group</span>) =&gt;</span> entrypoints.<span class="hljs-title function_">add</span>(group));</span>
+<span class="code-block-extension-codeLine" data-line-num="18">          }</span>
+<span class="code-block-extension-codeLine" data-line-num="19">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="20">        <span class="hljs-keyword">const</span> entries = [...entrypoints];</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        <span class="hljs-keyword">const</span> entryArrayManifest = entries.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">acc, entry</span>) =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">          <span class="hljs-keyword">const</span> name = entry?.<span class="hljs-property">options</span>.<span class="hljs-property">name</span> || entry?.<span class="hljs-property">runtimeChunk</span>.<span class="hljs-property">name</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="23">          <span class="hljs-keyword">const</span> chunks =</span>
+<span class="code-block-extension-codeLine" data-line-num="24">            entry?.<span class="hljs-property">chunks</span>?.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">chunk</span>) =&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">              chunk.<span class="hljs-property">files</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">file</span>) =&gt;</span> <span class="hljs-variable constant_">PUBLIC_PATH</span> + file),</span>
+<span class="code-block-extension-codeLine" data-line-num="26">            ) || [];</span>
+<span class="code-block-extension-codeLine" data-line-num="27">          <span class="hljs-keyword">const</span> allFiles = [].<span class="hljs-title function_">concat</span>(...chunks).<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29">          <span class="hljs-keyword">return</span> name ? { ...acc, [name]: allFiles } : acc;</span>
+<span class="code-block-extension-codeLine" data-line-num="30">        }, seed);</span>
+<span class="code-block-extension-codeLine" data-line-num="31"></span>
+<span class="code-block-extension-codeLine" data-line-num="32">        <span class="hljs-keyword">return</span> entryArrayManifest;</span>
+<span class="code-block-extension-codeLine" data-line-num="33">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="34">    }),</span>
+<span class="code-block-extension-codeLine" data-line-num="35">  ],</span>
+<span class="code-block-extension-codeLine" data-line-num="36">}</span>
+</code></pre>
+<p>这段代码中，我们利用<code>WebpackManifestPlugin</code>获取Webpack打包的产物数据（<code>files</code>），遍历每个产物文件，找到其对应的区块（chunk），将属于相同区块的文件拼接起来，作为清单文件的内容。</p>
+<p>运行编译打包后，就会在dist目录中额外生成一个名为<code>assets-manifest.json</code>的文件，其内容就是每个区块加载所需的静态资源文件，并且因为我们已经做了路由懒加载优化，所以这里生成的就是前端路由对应的产物文件，例如：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">    <span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">      <span class="hljs-attr">"main"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">        <span class="hljs-string">"http://localhost:3000/runtime.8d50d2f1d0dbd9f95dd0.js"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-string">"http://localhost:3000/lib.a284c5a4.0e5840fc8fe0545c7b7f.js"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-string">"http://localhost:3000/main.030bb00c221b2a80e00e.css"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-string">"http://localhost:3000/main.f6360d0de4d842c6d6bc.js"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-attr">"login"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-string">"http://localhost:3000/lib.75fc9c18.d2b04d932876328ce671.js"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">        <span class="hljs-string">"http://localhost:3000/shared.cc020c28.91c44f0c97414e03e3ae.js"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">        <span class="hljs-string">"http://localhost:3000/login.18c40a63634cb8fc0422.css"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-string">"http://localhost:3000/login.2dd91b1f4cd8a0beecaa.js"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-attr">"profile"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-string">"http://localhost:3000/shared.183ce61f.1c528f06dcefa66a9d45.js"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-string">"http://localhost:3000/profile.16c4eba5c2e58679bc5b.css"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-string">"http://localhost:3000/profile.d4bf82924e65660a99b7.js"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-attr">"article"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">        <span class="hljs-string">"http://localhost:3000/lib.3ca6b8d4.7ec6d611f235619f5eae.js"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="21">        <span class="hljs-string">"http://localhost:3000/article.9803c033314d2ed0ca8e.css"</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-string">"http://localhost:3000/article.0386d08bf2f2bd099618.js"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">      <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">      <span class="hljs-attr">"markdown-to-jsx"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">        <span class="hljs-string">"http://localhost:3000/lib.f15b848c.4611e1690d48799809e1.js"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">      <span class="hljs-punctuation">]</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">    <span class="hljs-punctuation">}</span></span>
+</code></pre>
+<h2 data-id="heading-6">5. 验证，量化与评估</h2>
+
+<h3 data-id="heading-7">1. 验证</h3>
+
+<h4 data-id="heading-8">1. CDN需要使用HTTP/2版本</h4>
+<p><strong>注意！</strong></p>
+<p>细粒度代码分割往往会产生20个以上的产物文件，需配合<strong>HTTP/2协议的多路复用特性</strong>，对多个产物文件复用同一TCP连接，才能避免同时下载文件过多，阻塞页面加载渲染。</p>
+<p>所以上线前务必为CDN开启<strong>HTTP/2协议</strong>，详细介绍请参考上文第5节《CDN最佳实践》</p>
+<blockquote>
+<p>注：HTTP协议同时链接数量限制</p>
+<p>HTTP/1.1 及之前的HTTP版本，对单个域名只能建立不超过6个TCP链接，所以如果一次性加载6个以上的资源，会导致资源排队阻塞。</p>
+<p>但是基于HTTP/2协议，根据<a href="https://link.juejin.cn?target=https%3A%2F%2Fweb.dev%2Farticles%2Fgranular-chunking-nextjs%3Fhl%3Dzh-cn%23more_http_requests%3A~%3Atext%3D%25E7%259A%2584%25E6%2598%25AF%25EF%25BC%258C%25E6%2588%2591%25E4%25BB%25AC%25E6%25B3%25A8%25E6%2584%258F%25E5%2588%25B0%25EF%25BC%258C-%2C%25E5%258F%25AA%25E6%259C%2589%25E5%259C%25A8%25E7%25A7%25AF%25E6%259E%2581%25E6%258B%2586%25E5%2588%2586%25E4%25B8%25BA%25E6%2595%25B0%25E7%2599%25BE%25E4%25B8%25AA%25E8%25AF%25B7%25E6%25B1%2582%25E5%2590%258E%25EF%25BC%258C%25E6%2589%258D%25E4%25BC%259A%25E4%25BA%25A7%25E7%2594%259F%25E8%25BD%25BB%25E5%25BE%25AE%25E7%259A%2584%25E6%2580%25A7%25E8%2583%25BD%25E5%25BC%2580%25E9%2594%2580%25E3%2580%2582%2C-%25E8%25BF%2599%25E8%25A1%25A8%25E6%2598%258E%25EF%25BC%258C%25E5%25A7%258B%25E7%25BB%2588" target="_blank" rel="nofollow noopener noreferrer" title="https://web.dev/articles/granular-chunking-nextjs?hl=zh-cn#more_http_requests:~:text=%E7%9A%84%E6%98%AF%EF%BC%8C%E6%88%91%E4%BB%AC%E6%B3%A8%E6%84%8F%E5%88%B0%EF%BC%8C-,%E5%8F%AA%E6%9C%89%E5%9C%A8%E7%A7%AF%E6%9E%81%E6%8B%86%E5%88%86%E4%B8%BA%E6%95%B0%E7%99%BE%E4%B8%AA%E8%AF%B7%E6%B1%82%E5%90%8E%EF%BC%8C%E6%89%8D%E4%BC%9A%E4%BA%A7%E7%94%9F%E8%BD%BB%E5%BE%AE%E7%9A%84%E6%80%A7%E8%83%BD%E5%BC%80%E9%94%80%E3%80%82,-%E8%BF%99%E8%A1%A8%E6%98%8E%EF%BC%8C%E5%A7%8B%E7%BB%88" ref="nofollow noopener noreferrer">Chrome官方的测算</a>，初始请求资源数小于100个，对用户体验的负面影响都微乎其微。</p>
+<p>所以使用基于HTTP/2协议的CDN，就可以放心大胆地使用细粒度代码分割了。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b1a44951b78a40ee910a7ecd5836ca91~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1200&amp;h=742&amp;s=53703&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+</blockquote>
+<h4 data-id="heading-9">2. 基于<code>webpack-bundle-analyzer</code>分析产物文件组成模块</h4>
+<p>打包相关的优化，分析验证产物文件组成模块都是必不可少的环节。</p>
+<p>推荐做法是用<code>webpack-bundle-analyzer</code>分别在优化前、后生成一份报告HTML文件，保存下来，并相互对比。</p>
+<p>分析验证的要点是：</p>
+<ul>
+<li><code>lib</code>类型的产物文件有哪些，是否都是长期不变、内容稳定的模块，体积大小如何。</li>
+<li><code>shared</code>类型的产物文件，被哪些区块共用，是否符合预期。</li>
+<li>有没有遗留下体积较大的模块，期望被分割为独立文件，但最终没有被拆分。</li>
+<li>项目总体积、各文件体积的变化。</li>
+</ul>
+<h4 data-id="heading-10">3. CSS分割后的样式覆盖问题</h4>
+<p>代码分割后，有时会出现CSS文件数量变多、CSS样式覆盖错乱的问题。</p>
+<p>例如：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">// 1. 代码分割优化前</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/main.css"</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text/css"</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"btn confirm-btn"</span>&gt;</span>Confirm<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>    // 最终前景色为红色（red）</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">// main.css</span>
+<span class="code-block-extension-codeLine" data-line-num="6">.btn {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    color: blue;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">// main.css</span>
+<span class="code-block-extension-codeLine" data-line-num="11">.confirm-btn {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    color: red;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+<span class="code-block-extension-codeLine" data-line-num="14"></span>
+<span class="code-block-extension-codeLine" data-line-num="15">// 2. 代码分割优化后 </span>
+<span class="code-block-extension-codeLine" data-line-num="16"><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/main.css"</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text/css"</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17"><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/btn.css"</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text/css"</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"btn confirm-btn"</span>&gt;</span>Confirm<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>    // 最终前景色为蓝色（blue）</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">// btn.css</span>
+<span class="code-block-extension-codeLine" data-line-num="21">.btn {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    color: blue;</span>
+<span class="code-block-extension-codeLine" data-line-num="23">}</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">// main.css</span>
+<span class="code-block-extension-codeLine" data-line-num="26">.confirm-btn {</span>
+<span class="code-block-extension-codeLine" data-line-num="27">    color: red;</span>
+<span class="code-block-extension-codeLine" data-line-num="28">}</span>
+</code></pre>
+<p>上述示例中，<code>class</code>为<code>"btn confirm-btn"</code>的<code>button</code>元素，在代码分割优化前，前景色为红色。而代码分割后，产物文件多了一个<code>btn.css</code>，加载后的颜色，就会变成蓝色。</p>
+<p>原因是：代码分割也会分割CSS模块，分割后多了一个<code>btn.css</code>，加载顺序<strong>后于</strong><code>mian.css</code>。会因为同样优先级（specifity）的CSS 选择符，<strong>后</strong>声明的覆盖<strong>先</strong>声明的规则，这条CSS的隐式特性，导致<code>.confirm-btn</code>被<code>.btn</code>覆盖，样式随之变化。</p>
+<p>解决方案可以考虑：</p>
+<ol>
+<li>手动增加<code>class</code>优先级，例如把<code>.confirm-btn {}</code>改成<code>div.confirm-btn {}</code>，多一级选择符，从而实现样式覆盖，规避CSS加载顺序文件。但是如果样式错乱的元素较多，定位、修改会非常麻烦，这个解决方案不太实用。</li>
+<li>使用CSS in JS方案，规避CSS“<strong>后</strong>声明规则覆盖<strong>先</strong>声明规则”的隐式特性。详情请见后文的第13小节《用CSS in JS 解决CSS痛点》</li>
+<li>增加一个缓存组，将所有CSS都合并为一个文件，避免先后加载导致样式错乱，例如<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fgatsbyjs%2Fgatsby%2Fpull%2F22253%2Ffiles%23diff-2e138e460e250687879a19f1bfe02bec6b9d8b1e07bf2093c8df9b2cc9ae47edR556" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/gatsbyjs/gatsby/pull/22253/files#diff-2e138e460e250687879a19f1bfe02bec6b9d8b1e07bf2093c8df9b2cc9ae47edR556" ref="nofollow noopener noreferrer">Gatsby 框架源码中的styles缓存组</a>：</li>
+</ol>
+
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-attr">styles</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-title function_">test</span>(<span class="hljs-params"><span class="hljs-variable language_">module</span></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-title function_">isCssModule</span>(<span class="hljs-variable language_">module</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  },</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  <span class="hljs-attr">name</span>: <span class="hljs-string">`styles`</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-attr">priority</span>: <span class="hljs-number">40</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  <span class="hljs-attr">enforce</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">},</span>
+</code></pre>
+<h4 data-id="heading-11">4. 各路由加载资源体积变化</h4>
+<p>代码分割优化效果，可以通过对比各路由加载资源体积变化，在本地开发环境初步确认。</p>
+<p>通常来说，细粒度代码分割不会对产物总体积有显著影响，其主要优化目标是提高多次部署更新后的缓存命中率。</p>
+<h3 data-id="heading-12">2. 建立量化指标</h3>
+
+<h4 data-id="heading-13">1. JS资源缓存命中率指标</h4>
+<p>细粒度代码分割会直接影响JS加载是否命中了浏览器的本地缓存，我们可以继续复用懒加载中建立的缓存命中率指标，并通过上报资源的类型过滤出JS类型的缓存命中率。</p>
+<p>例如：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">js</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-js code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> resourceTypes = {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">document</span>: <span class="hljs-string">'Document'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">script</span>: <span class="hljs-string">'Script'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">link</span>: <span class="hljs-string">'Link'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">stylesheet</span>: <span class="hljs-string">'Stylesheet'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">img</span>: <span class="hljs-string">'Image'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">media</span>: <span class="hljs-string">'Media'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-attr">font</span>: <span class="hljs-string">'Font'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">xhr</span>: <span class="hljs-string">'XHR'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">fetch</span>: <span class="hljs-string">'Fetch'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-attr">other</span>: <span class="hljs-string">'Other'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="12">};</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14"><span class="hljs-keyword">function</span> <span class="hljs-title function_">checkResourceCacheHit</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-comment">// ...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-keyword">const</span> perfEntries = performance.<span class="hljs-title function_">getEntriesByType</span>(<span class="hljs-string">'resource'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> entry <span class="hljs-keyword">of</span> perfEntries) {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-comment">// ...</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-keyword">let</span> hitCache = entry.<span class="hljs-property">duration</span> &lt; <span class="hljs-number">50</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="21">      <span class="hljs-comment">// 新增 type 变量</span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-keyword">const</span> type =</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        resourceTypes[resource.<span class="hljs-property">initiatorType</span>] || resourceTypes[<span class="hljs-string">'other'</span>];  </span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">      <span class="hljs-title function_">report</span>(</span>
+<span class="code-block-extension-codeLine" data-line-num="26">        <span class="hljs-string">'cacheHiteRate'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="27">        { </span>
+<span class="code-block-extension-codeLine" data-line-num="28">            hitCache, </span>
+<span class="code-block-extension-codeLine" data-line-num="29">            <span class="hljs-attr">name</span>: entry.<span class="hljs-property">name</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="30">            type,    <span class="hljs-comment">// 作为新增的 label 上报到 Grafana</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="32">        <span class="hljs-string">'缓存命中率计数指标'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="33">      );</span>
+<span class="code-block-extension-codeLine" data-line-num="34">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="35">}</span>
+</code></pre>
+<p>在上述代码中，我们新增了<code>type</code>变量，取自<code>PerformanceResourceTiming</code>的<code>initiatorType</code>资源类型字段，作为新增的label上报到 Grafana。</p>
+<p>同时在Grafana中进行可视化图表数据查询时，增加<code>label</code>作为查询参数即可筛选出我们想要关注的JS类型资源，查询语句示例：<code>cacheHiteRate{hitCache="true", type="Script"}</code>。</p>
+<h4 data-id="heading-14">2. FCP 和LCP</h4>
+<p>细粒度代码分割提高静态资源的缓存命中率后，预计可以减少页面加载、解析资源的体积，加快页面渲染，从而优化FCP和LCP用户体验指标的状况。</p>
+<p>所以继续复用基于<code>web-vitals</code>库建立的FCP和LCP指标，也可以量化优化效果。</p>
+<h3 data-id="heading-15">3. 评估优化效果</h3>
+<p>如果<strong>FCP和LCP指标评分为优的样本占比</strong>或是<strong>缓存命中率指标</strong>，在优化后，有所提高，并且保持长期稳定，那就说明我们的细粒度代码分割产生了优化效果，改善了用户体验。</p>
+<ol>
+<li>例如下图中的<strong>缓存命中率指标</strong>在10-04优化上线后，有了显著的提高：</li>
+</ol>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8718484908604a449e64144fa7ce0f42~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=850&amp;h=310&amp;s=97615&amp;e=png&amp;b=191c20" alt="image.png" loading="lazy" class="medium-zoom-image"></p>
+<p>对于加载静态资源总体积指标，只要确认加载的静态资源体积没有1%以上的大幅异常增加，即可说明优化没有产生负面影响，例如下表是<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo" ref="nofollow noopener noreferrer">fe-optimization-demo</a> 应用细粒度代码分割后，各路由的体积变化：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>加载JS体积（单位：KB）</th><th>优化前（仅懒加载）</th><th>优化后(懒加载 &amp;&amp; 细粒度代码分割)</th><th>差异</th></tr></thead><tbody><tr><td>首页（/home ）</td><td>85.0<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c9d2ae827e8949fa93903994491926d5~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=228070&amp;e=png&amp;b=272727" alt="" loading="lazy" class="medium-zoom-image"></td><td>86.0<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2419e954bc534e218ded95fb6e5f1cb7~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=231813&amp;e=png&amp;b=282828" alt="" loading="lazy" class="medium-zoom-image"></td><td>+1 KB (+<strong>1%</strong> )</td></tr><tr><td>文章页（/article）加载JS体积</td><td>98.1<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4a24b4520d4e4c488678beb5b3e7a94d~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=220691&amp;e=png&amp;b=2c2c2c" alt="" loading="lazy" class="medium-zoom-image"></td><td>98.3<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9439148a82fd4a248bdba70e6e82607e~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=221739&amp;e=png&amp;b=2c2c2c" alt="" loading="lazy" class="medium-zoom-image"></td><td>+0.2 KB（+0.2%）</td></tr><tr><td>登录页（/signin）加载JS体积</td><td>82.8<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cdb1d33bb47f4fddab2f402943440de4~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=176087&amp;e=png&amp;b=2a2a2a" alt="" loading="lazy" class="medium-zoom-image"></td><td>83.0<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d19f0c17e706449c8e399be4df7fe258~tplv-k3u1fbpfcp-jj-mark:1512:0:0:0:q75.awebp#?w=1920&amp;h=934&amp;s=178561&amp;e=png&amp;b=272727" alt="" loading="lazy" class="medium-zoom-image"></td><td>+1 KB (+<strong>1%</strong> )</td></tr></tbody></table>
+<p>虽然让前端应用加载静态资源的体积增加了1%，但因为幅度较小，所以不必过于关注。</p>
+<p>这点变化，相较于缓存命中率指标的改善和FCP，LCP的优化，几乎可以忽略不计。</p>
+<h2 data-id="heading-16">小结</h2>
+<p>在这2节《代码分割最佳实践：细粒度代码分割》中，我们首先一起学习了Webpack的代码分割原理和12项核心配置逻辑。</p>
+<p>接下来，又针对传统代码分割的痛点，介绍了更加先进、体验更好的细粒度代码分割方案。</p>
+<p>同时以<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FJuniorTour%2Ffe-optimization-demo" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/JuniorTour/fe-optimization-demo" ref="nofollow noopener noreferrer">fe-optimization-demo</a>项目为例演示了实施优化的具体过程和潜在问题，验证了这一优化方案的健壮性和优化效果。</p></div>

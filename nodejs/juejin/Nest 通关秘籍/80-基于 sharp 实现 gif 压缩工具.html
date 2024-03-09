@@ -1,0 +1,339 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>不知道大家有没有场景会需要 GIF 压缩，我是经常会用到。</p>
+<p>因为公众号的图片最大支持 10M，但是我录制出来的 GIF 经常超过 10M。</p>
+<p>比如这样一个图片：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/534f62e9f98a4d89ab5074b33e355b03~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在编辑器上传会提示超过 10 M 了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6488ca24bfc548f2a9d12be840328983~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候就需要 GIF 压缩，不然文章发不了。</p>
+<p>于是我在百度搜素 GIF 压缩，就找到了一个工具：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5a77546139604ab99b174650a17d3c89~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它确实能解决我的问题：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d9f0958bf3004e5f929067bc8930bbf9~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但是要花钱：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/abfb01d8086a400f923bdf9b5ca94ce5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>一年 148 呢，对一个小工具来说还是挺贵的。</p>
+<p>但没办法，这对我是刚需，总不能不发文章了吧。</p>
+<p>于是去年年底我就开了一年的会员：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ecb82df4b2464e58ac0003323c68bd4d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但最近发现有 npm 包可以做这个，没必要买这种网站的会员。。。</p>
+<p>当时我的心情是这样的：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/56098a7eaefc43488e4917f3e5d6fd5a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个 npm 包就是 sharp，它是用来处理各种图片的：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fbb3d4cb491247b9a341561383cdded4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/006b0a681c464318849f695afefd71be~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>它可以用来调整图片的大小，对图片做旋转、颜色调整、合成图片等。</p>
+<p>这些功能我用不到，我就关心它的 gif 压缩功能。</p>
+<p>看了下文档，大概这样用：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> sharp = <span class="hljs-built_in">require</span>(<span class="hljs-string">'sharp'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-title function_">sharp</span>(<span class="hljs-string">'1.image.gif'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">animated</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">limitInputPixels</span>: <span class="hljs-literal">false</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">}).<span class="hljs-title function_">gif</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-attr">colours</span>: <span class="hljs-number">10</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">}).<span class="hljs-title function_">toFile</span>(<span class="hljs-string">'2.image.gif'</span>)</span>
+</code></pre>
+<p>我们先试试看：</p>
+<p>node 执行这个文件，可以看到产生了 2.image.gif，只有 2.7 M</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/969d2190fe7b4b1282d6d2ed4d77e9d8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>要知道之前的 1.image.gif 可是有 21M 啊：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba702430da5a414bba766f271a3ddf82~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后打开它看看：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/558424b82d2d4f1b8211f6ce34139e6a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没啥问题。</p>
+<p>回过头来，我们再来看看这段代码：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/26b6de2e70e2465c95e205c55773edfd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>animated 设为 true 是读取所有的帧，不然默认只会读取 gif 的第一帧。</p>
+<p>limitInputPixels 设为 false 是不限制大小，默认太大的图片是会报错的。</p>
+<p>然后是输出参数：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fe371950ef354b7eb302e86e00540b51~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>colours 是颜色的数量，默认是 256。</p>
+<p>一般色彩不丰富的图片，可以把 colours 设置的小一点。</p>
+<p>当把 colours 设置为 2，图片就变成这样了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/035a108ea6e941728632fc5f42002ab1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>图片也更小了一些：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cf5e6418996f435c8c237e97de3cb87f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>具体怎么设置压缩级别和颜色数量，还是看需求。</p>
+<p>总之，我们完全可以用 sharp 来自己做 gif 压缩，没必要买这种工具网站的会员。。。</p>
+<p>不过体验上还是网页更好一点，我们也来写个这种网页：</p>
+<p>用 create-react-app 创建个项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">lua</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-lua code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npx <span class="hljs-built_in">create</span>-react-app gif-compression-frontend</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ab409f4fc3724b30ad962140239eab2d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>进入项目目录，安装 antd：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> antd</span>
+</code></pre>
+<p>修改下 App.js</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">DatePicker</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'antd'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-keyword">return</span> (</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-tag">&lt;<span class="hljs-name">DatePicker</span>/&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  );</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">App</span>;</span>
+</code></pre>
+<p>然后把开发服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start</span>
+</code></pre>
+<p>浏览器访问下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f3a83edc815544e28ec8795f8352b9b2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>antd 引入成功了。</p>
+<p>然后我们来写下上传文件的 UI：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">InboxOutlined</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@ant-design/icons'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { message, <span class="hljs-title class_">Upload</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'antd'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">const</span> { <span class="hljs-title class_">Dragger</span> } = <span class="hljs-title class_">Upload</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">const</span> props = {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-attr">name</span>: <span class="hljs-string">'file'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-attr">action</span>: <span class="hljs-string">'http://localhost:3005'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-title function_">onChange</span>(<span class="hljs-params">info</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">const</span> { status } = info.<span class="hljs-property">file</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">if</span> (status === <span class="hljs-string">'done'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      message.<span class="hljs-title function_">success</span>(<span class="hljs-string">`<span class="hljs-subst">${info.file.name}</span> 文件上传成功`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (status === <span class="hljs-string">'error'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      message.<span class="hljs-title function_">error</span>(<span class="hljs-string">`<span class="hljs-subst">${info.file.name}</span> 文件上传失败`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="18">};</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20"><span class="hljs-keyword">const</span> <span class="hljs-title function_">App</span> = (<span class="hljs-params"></span>) =&gt; (</span>
+<span class="code-block-extension-codeLine" data-line-num="21">  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Dragger</span> {<span class="hljs-attr">...props</span>}&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"ant-upload-drag-icon"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">      <span class="hljs-tag">&lt;<span class="hljs-name">InboxOutlined</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"ant-upload-text"</span>&gt;</span>点击或拖拽文件到这个区域来上传<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">  <span class="hljs-tag">&lt;/<span class="hljs-name">Dragger</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">);</span>
+<span class="code-block-extension-codeLine" data-line-num="28"></span>
+<span class="code-block-extension-codeLine" data-line-num="29"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">App</span>;</span>
+</code></pre>
+<p>大概是这样的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cd025c87d4eb44db962c184e6a7d2da0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>antd 会 post 方式请求 action 对应的接口，带上上传的文件：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e619fef32305427f988e5c2f95a90d43~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们再用 nest 写个后端服务接收下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> gif-compression-backend</span>
+</code></pre>
+<p>创建个 nest 项目：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bd29629beee140a7832279cf86d9d409~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>修改 main.ts，启用跨域支持，并修改启动端口为 3005</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4a0938ccf5e241659acbfda47b9b9e7b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把它跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7fafdf617a144d24abc95c2aca3fbf94~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3005" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3005" ref="nofollow noopener noreferrer">http://localhost:3005</a> 可以看到 hello world，说明 nest 服务跑成功了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e57f1de80ce843d19453c223eb3bd111~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们来添加下文章上传的接口：</p>
+<p>安装需要的 ts 类型的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install -D @types/multer</span>
+</code></pre>
+<p>在 AppController 里添加这样一个路由：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d728bcdb0f0486bb6453b89a2c8b914~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Post</span>(<span class="hljs-string">'upload'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">@<span class="hljs-title class_">UseInterceptors</span>(<span class="hljs-title class_">FileInterceptor</span>(<span class="hljs-string">'file'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">  <span class="hljs-attr">dest</span>: <span class="hljs-string">'uploads'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">}))</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-title function_">uploadFile</span>(<span class="hljs-params">@UploadedFile() file: Express.Multer.File</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'file'</span>, file);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">}</span>
+</code></pre>
+<p>这段代码是提取 file 参数的内容，保存到 dest 目录下，然后把文件对象传入该方法。</p>
+<p>然后我们改下前端代码的上传接口：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1956716d40b84b81b8fc46d74717b753~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>测试下上传：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/85560f4437134a878f38d6c5870d4896~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>提示文件上传成功了，然后在服务端控制台也打印了文件信息，并且在 uploads 目录下可以看到这个文件：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dd39a9a51a554bbea2148e7fe52468cc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这些文件在浏览器打开，可以看到就是上传的 gif：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/530b9987a7d9417792668927fc61fd4e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们把文件路径返回就好了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0eea12b4a6584b7bb887b7aa5496daa1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>现在上传文件成功之后就可以拿到这个文件在服务端的路径了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7179b1164b514fcd8c5f192d410ba3c0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们再实现下压缩，在 AppController 增加一个接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'compression'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-title function_">compression</span>(@<span class="hljs-title class_">Query</span>(<span class="hljs-string">'path'</span>) <span class="hljs-attr">filePath</span>: string, @<span class="hljs-title class_">Query</span>(<span class="hljs-string">'color'</span>, <span class="hljs-title class_">ParseIntPipe</span>) <span class="hljs-attr">color</span>:number) <span class="hljs-attr">level</span>: number) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(filePath, color);</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">if</span>(!<span class="hljs-title function_">existsSync</span>(filePath)) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'文件不存在'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+</code></pre>
+<p>接收 path、color 的 query 参数，分别是文件路径、颜色数量、压缩级别的意思。</p>
+<p>其中 color  要使用 ParseIntPipe 转成 int 类型。</p>
+<p>测试下：</p>
+<p>访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3005%2Fcompression%3Fpath%3Duploads%2Fxxx%26color%3D10" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3005/compression?path=uploads/xxx&amp;color=10" ref="nofollow noopener noreferrer">http://localhost:3005/compression?path=uploads/xxx&amp;color=10</a></p>
+<p>提示文件不存在：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/260fce890e1749a19d65ccdf676dc953~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>服务端接收到了传过来的参数：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/28ee09d44a1f4d148cbaeb529788e28b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后换一个真实存在的路径，返回 success：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a8d438617d364fd1857dced1be249a26~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>说明服务端找到了这个路径的文件：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/87e16f47a1ed4d7b92a0afbd6c2bf26b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>接下来安装 sharp 来实现压缩：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> sharp</span>
+</code></pre>
+<p>修改下 compression 方法：</p>
+<p>调用 sharp 来压缩 gif 图片，并注入 response 对象来返回文件下载响应：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/afb256bd73dc479c8978477a4dbe607f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'compression'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">compression</span>(<span class="hljs-params"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    @Query(<span class="hljs-string">'path'</span>) filePath: string,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @Query(<span class="hljs-string">'color'</span>, ParseIntPipe) color:number,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @Res() res: Response</span>
+<span class="code-block-extension-codeLine" data-line-num="6">) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">if</span>(!<span class="hljs-title function_">existsSync</span>(filePath)) {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'文件不存在'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">const</span> data = <span class="hljs-keyword">await</span> <span class="hljs-title function_">sharp</span>(filePath, {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">animated</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">limitInputPixels</span>: <span class="hljs-literal">false</span></span>
+<span class="code-block-extension-codeLine" data-line-num="15">    }).<span class="hljs-title function_">gif</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">compressionLevel</span>: level,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-attr">colours</span>: color</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    }).<span class="hljs-title function_">toBuffer</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    res.<span class="hljs-title function_">set</span>(<span class="hljs-string">'Content-Disposition'</span>, <span class="hljs-string">`attachment; filename="dest.gif"`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="21"></span>
+<span class="code-block-extension-codeLine" data-line-num="22">    res.<span class="hljs-title function_">send</span>(data);</span>
+<span class="code-block-extension-codeLine" data-line-num="23">}</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5a3d7046afee4724b453590ed269928e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>访问这个接口，带上文件路径和压缩的参数，会返回压缩后的文件：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/96ede0c962514ba086287a3cfde2d17b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们在前端页面上加一个表单来填参数，然后访问这个接口压缩文件：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6d394163b762486cbdebc2ae5dc4f4fa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>代码如下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useState } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">InboxOutlined</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@ant-design/icons'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { message, <span class="hljs-title class_">Upload</span>, <span class="hljs-title class_">Form</span>, <span class="hljs-title class_">Input</span>, <span class="hljs-title class_">Button</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'antd'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">const</span> { <span class="hljs-title class_">Dragger</span> } = <span class="hljs-title class_">Upload</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">const</span> <span class="hljs-title function_">App</span> = (<span class="hljs-params"></span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-keyword">const</span> [form] = <span class="hljs-title class_">Form</span>.<span class="hljs-title function_">useForm</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-keyword">const</span> [filePath, setFilePath] = <span class="hljs-title function_">useState</span>(<span class="hljs-string">''</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-keyword">const</span> [fileName, setFileName] = <span class="hljs-title function_">useState</span>(<span class="hljs-string">''</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">  <span class="hljs-keyword">const</span> <span class="hljs-title function_">compress</span> = <span class="hljs-keyword">async</span> (<span class="hljs-params">values</span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(values);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(filePath);</span>
+<span class="code-block-extension-codeLine" data-line-num="15">  };</span>
+<span class="code-block-extension-codeLine" data-line-num="16"></span>
+<span class="code-block-extension-codeLine" data-line-num="17">  <span class="hljs-keyword">const</span> props = {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-attr">name</span>: <span class="hljs-string">'file'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-attr">action</span>: <span class="hljs-string">'http://localhost:3005/upload'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-title function_">onChange</span>(<span class="hljs-params">info</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">      <span class="hljs-keyword">const</span> { status } = info.<span class="hljs-property">file</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-keyword">if</span> (status === <span class="hljs-string">'done'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-title function_">setFilePath</span>(info.<span class="hljs-property">file</span>.<span class="hljs-property">response</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        <span class="hljs-title function_">setFileName</span>(info.<span class="hljs-property">file</span>.<span class="hljs-property">name</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="25">        message.<span class="hljs-title function_">success</span>(<span class="hljs-string">`<span class="hljs-subst">${info.file.name}</span> 文件上传成功`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="26">      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (status === <span class="hljs-string">'error'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="27">        message.<span class="hljs-title function_">error</span>(<span class="hljs-string">`<span class="hljs-subst">${info.file.name}</span> 文件上传失败`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="28">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="30">  };</span>
+<span class="code-block-extension-codeLine" data-line-num="31"></span>
+<span class="code-block-extension-codeLine" data-line-num="32">  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="33">    <span class="hljs-tag">&lt;<span class="hljs-name">Form</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{{width:</span> <span class="hljs-attr">500</span>, <span class="hljs-attr">margin:</span> '<span class="hljs-attr">50px</span> <span class="hljs-attr">auto</span>'}}<span class="hljs-attr">form</span>=<span class="hljs-string">{form}</span> <span class="hljs-attr">onFinish</span>=<span class="hljs-string">{compress}</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="34">      <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span></span></span>
+<span class="code-block-extension-codeLine" data-line-num="35">        <span class="hljs-attr">label</span>=<span class="hljs-string">"颜色数量"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="36">        <span class="hljs-attr">name</span>=<span class="hljs-string">"color"</span></span>
+<span class="code-block-extension-codeLine" data-line-num="37">      &gt;</span>
+<span class="code-block-extension-codeLine" data-line-num="38">        <span class="hljs-tag">&lt;<span class="hljs-name">Input</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="39">      <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="40"></span>
+<span class="code-block-extension-codeLine" data-line-num="41">      <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="42">        <span class="hljs-tag">&lt;<span class="hljs-name">Dragger</span> {<span class="hljs-attr">...props</span>}&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="43">          <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"ant-upload-drag-icon"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="44">            <span class="hljs-tag">&lt;<span class="hljs-name">InboxOutlined</span> /&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="45">          <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="46">          <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"ant-upload-text"</span>&gt;</span>点击或拖拽文件到这个区域来上传<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="47">        <span class="hljs-tag">&lt;/<span class="hljs-name">Dragger</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="48">      <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="49"></span>
+<span class="code-block-extension-codeLine" data-line-num="50">      <span class="hljs-tag">&lt;<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="51">        <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"primary"</span> <span class="hljs-attr">htmlType</span>=<span class="hljs-string">"submit"</span>&gt;</span>压缩<span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="52">      <span class="hljs-tag">&lt;/<span class="hljs-name">Form.Item</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="53">    <span class="hljs-tag">&lt;/<span class="hljs-name">Form</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="54">  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="55">}</span>
+<span class="code-block-extension-codeLine" data-line-num="56"></span>
+<span class="code-block-extension-codeLine" data-line-num="57"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">App</span>;</span>
+</code></pre>
+<p>用 filePath 的 state 来保存上传后的文件路径，用 fileName 保存文件名。</p>
+<p>在点击登录的时候打印下表单的值和 filePath。</p>
+<p>我们试试看：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1faf57685f884ac0a38e4ccf9db97bce~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>3 个参数都拿到了，然后调用下压缩接口。</p>
+<p>安装 axios：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install <span class="hljs-attr">--save</span> axios</span>
+</code></pre>
+<p>修改下 compress 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> <span class="hljs-title function_">compress</span> = <span class="hljs-keyword">async</span> (<span class="hljs-params">values</span>) =&gt; {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'http://localhost:3005/compression'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-attr">params</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">        <span class="hljs-attr">color</span>: values.<span class="hljs-property">color</span> || <span class="hljs-number">256</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-attr">level</span>: values.<span class="hljs-property">level</span> || <span class="hljs-number">9</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">path</span>: filePath</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-attr">responseType</span>: <span class="hljs-string">'arraybuffer'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">const</span> blob = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Blob</span>([res.<span class="hljs-property">data</span>], { <span class="hljs-attr">type</span>: <span class="hljs-string">'image/jpeg'</span> });</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">const</span> url = <span class="hljs-variable constant_">URL</span>.<span class="hljs-title function_">createObjectURL</span>(blob);</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">const</span> link = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">'a'</span>); </span>
+<span class="code-block-extension-codeLine" data-line-num="14">    link.<span class="hljs-property">href</span> = url; </span>
+<span class="code-block-extension-codeLine" data-line-num="15">    link.<span class="hljs-property">download</span> = fileName;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    link.<span class="hljs-title function_">click</span>(); </span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    message.<span class="hljs-title function_">success</span>(<span class="hljs-string">'压缩成功'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">};</span>
+</code></pre>
+<p>访问 comporession 接口，传入参数，指定返回数据的类型为 arraybuffer。</p>
+<p>然后用 URL.createObjectURL 创建 blob 的 url，设置为 a 标签的 src，指定 download 属性的值也就是文件名，然后触发点击。</p>
+<p>这样，就能把返回的 arraybuffer 作为文件下载了。</p>
+<p>我们试试看：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2ddffc405b3d48808f43b0e7512a5c1d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>整个流程都跑通了！</p>
+<p>我们试下刚开始那个 21M 的文件，压缩之后下载的是 2.7M。</p>
+<p>和用这个网站压缩的差不多：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5b2acf5de1f34d89bfade7eb3da7516a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>更重要的是不用每年 138 的会员费。</p>
+<p>案例代码在小册仓库：</p>
+<p>前端代码：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fgif-compression-frontend" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/gif-compression-frontend" ref="nofollow noopener noreferrer">github.com/QuarkGluonP…</a></p>
+<p>后端代码：<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fgif-compression-backend" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/gif-compression-backend" ref="nofollow noopener noreferrer">github.com/QuarkGluonP…</a></p>
+<h2 data-id="heading-0">总结</h2>
+<p>压缩 gif 图片是我的刚需，之前都是买某网站的 138 的年度会员，直到我发现了 sharp 这个包。</p>
+<p>它是用来处理各种图片的，调整大小、旋转等等，我们只用它的 gif 压缩的功能。</p>
+<p>然后我们也做了一个网站，前端 react + antd，后端 nest + sharp。</p>
+<p>后端提供一个 /upload 接口用于上传文件，返回文件路径。</p>
+<p>又提供了一个 /compression 接口用来压缩 gif，返回压缩后的文件。</p>
+<p>整个流程如下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/03dc4ab868a04400a8f7e0aa1a8cccf5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>其实最好再做一步: 把这个应用通过 dockerfile 来 build 成 docker 镜像，随时用，随时跑。</p>
+<p>再需要压缩图片的时候，不用花钱买会员了，直接用自己的压缩工具就好了。</p></div>

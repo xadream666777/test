@@ -1,0 +1,752 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>这节我们来实现预定管理模块的后端。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/042ccf36141a473f868e40c115db73c4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1010&amp;h=1012&amp;s=145901&amp;e=png&amp;b=fefcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1f9ef4e312e941b0bc7ab4ea9f7e1d59~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=932&amp;h=1014&amp;s=128397&amp;e=png&amp;b=fdf5f4" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>涉及到这些接口：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>接口路径</th><th>请求方式</th><th>描述</th></tr></thead><tbody><tr><td>/booking/list</td><td>GET</td><td>预订列表</td></tr><tr><td>/booking/approve</td><td>POST</td><td>审批预订申请</td></tr><tr><td>/booking/add</td><td>POST</td><td>申请预订</td></tr><tr><td>/booking/apply/:id</td><td>GET</td><td>通过预订</td></tr><tr><td>/booking/reject/:id</td><td>GET</td><td>取消预订</td></tr><tr><td>/booking/unbind/:id</td><td>GET</td><td>解除预订</td></tr><tr><td>/booking/history</td><td>GET</td><td>预订历史</td></tr><tr><td>/booking/urge</td><td>GET</td><td>催办</td></tr></tbody></table>
+<p>我们来写一下。</p>
+<p>先创建 Booking 的 entity。</p>
+<p>在后端项目下创建一个 meeting-room 模块：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g resource booking</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c86e5a75b22e49f4a82b7d8afc2e7f5f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=800&amp;h=282&amp;s=77313&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后修改 booking.entity.ts</p>
+<p>根据当时设计的表来写：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>字段名</th><th>数据类型</th><th>描述</th></tr></thead><tbody><tr><td>id</td><td>INT</td><td>预订ID</td></tr><tr><td>user_id</td><td>INT</td><td>预订用户ID</td></tr><tr><td>room_id</td><td>INT</td><td>会议室ID</td></tr><tr><td>start_time</td><td>DATETIME</td><td>会议开始时间</td></tr><tr><td>end_time</td><td>DATETIME</td><td>会议结束时间</td></tr><tr><td>status</td><td>VARCHAR(20)</td><td>状态（申请中、审批通过、审批驳回、已解除）</td></tr><tr><td>note</td><td>VARCHAR(100)</td><td>备注</td></tr><tr><td>create_time</td><td>DATETIME</td><td>创建时间</td></tr><tr><td>update_time</td><td>DATETIME</td><td>更新时间</td></tr></tbody></table>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">MeetingRoom</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"src/meeting-room/entities/meeting-room.entity"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">User</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"src/user/entities/user.entity"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">CreateDateColumn</span>, <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">JoinColumn</span>, <span class="hljs-title class_">ManyToOne</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span>, <span class="hljs-title class_">UpdateDateColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"typeorm"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Entity</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Booking</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @<span class="hljs-title class_">PrimaryGeneratedColumn</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-attr">id</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'会议开始时间'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-attr">startTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'会议结束时间'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-attr">endTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-attr">length</span>: <span class="hljs-number">20</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'状态（申请中、审批通过、审批驳回、已解除）'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        <span class="hljs-attr">default</span>: <span class="hljs-string">'申请中'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    <span class="hljs-attr">status</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="27"></span>
+<span class="code-block-extension-codeLine" data-line-num="28">    @<span class="hljs-title class_">Column</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="29">        <span class="hljs-attr">length</span>: <span class="hljs-number">100</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="30">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'备注'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="31">        <span class="hljs-attr">default</span>: <span class="hljs-string">''</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="33">    <span class="hljs-attr">note</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="34"></span>
+<span class="code-block-extension-codeLine" data-line-num="35">    @<span class="hljs-title class_">ManyToOne</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title class_">User</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="36">    <span class="hljs-attr">user</span>: <span class="hljs-title class_">User</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="37"></span>
+<span class="code-block-extension-codeLine" data-line-num="38">    @<span class="hljs-title class_">ManyToOne</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title class_">MeetingRoom</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="39">    <span class="hljs-attr">room</span>: <span class="hljs-title class_">MeetingRoom</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="40"></span>
+<span class="code-block-extension-codeLine" data-line-num="41">    @<span class="hljs-title class_">CreateDateColumn</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="42">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'创建时间'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="43">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="44">    <span class="hljs-attr">createTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="45"></span>
+<span class="code-block-extension-codeLine" data-line-num="46">    @<span class="hljs-title class_">UpdateDateColumn</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="47">        <span class="hljs-attr">comment</span>: <span class="hljs-string">'更新时间'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="48">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="49">    <span class="hljs-attr">updateTime</span>: <span class="hljs-title class_">Date</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="50">}</span>
+</code></pre>
+<p>这里 Booking 和 User、MeetingRoom 是多对一的关系：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0ce5525d99274999b65f24e9aafe8658~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1076&amp;h=926&amp;s=117455&amp;e=png&amp;b=fcf8f8" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们在 entities 引入：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/23764ebbdca246b391385c0097757285~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1122&amp;h=928&amp;s=208639&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>typeorm 会自动建表和创建外键：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bb7ed06f9e6d4d7bb85fd5e5ce93f855~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1426&amp;h=334&amp;s=136162&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 mysql workbench 里可以看到这个表：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25a051cae54e4f0db0e36de5ee857ebb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1268&amp;h=664&amp;s=273300&amp;e=png&amp;b=f2efee" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这两个外键都是 restrict 的约束：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b0ef7d08a86b49ea8ac4ae3c84fae41e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1650&amp;h=532&amp;s=148042&amp;e=png&amp;b=f9f8f8" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>restrict 是只有从表没有相关记录，才可以删除主表记录。</p>
+<p>但我们会议室是支持删除的，怎么办呢？</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/faca1dd8a66c4ada88748a4b6af44ac7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=534&amp;h=242&amp;s=54380&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以在删除失败时提示有预定记录，然后手动取消预订后再删除。</p>
+<p>这个后面再处理。</p>
+<p>我们先插入一些数据：</p>
+<p>在 BookingService 增加一个 initData 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">InjectEntityManager</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="2">private <span class="hljs-attr">entityManager</span>: <span class="hljs-title class_">EntityManager</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4"><span class="hljs-keyword">async</span> <span class="hljs-title function_">initData</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">const</span> user1 = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOneBy</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">id</span>: <span class="hljs-number">1</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">const</span> user2 = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOneBy</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      <span class="hljs-attr">id</span>: <span class="hljs-number">2</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">const</span> room1 = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOneBy</span>(<span class="hljs-title class_">MeetingRoom</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      <span class="hljs-attr">id</span>: <span class="hljs-number">3</span></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    <span class="hljs-keyword">const</span> room2 = <span class="hljs-keyword">await</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOneBy</span>(<span class="hljs-title class_">MeetingRoom</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">      <span class="hljs-attr">id</span>: <span class="hljs-number">6</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-keyword">const</span> booking1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Booking</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    booking1.<span class="hljs-property">room</span> = room1;</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    booking1.<span class="hljs-property">user</span> = user1;</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    booking1.<span class="hljs-property">startTime</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    booking1.<span class="hljs-property">endTime</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>() + <span class="hljs-number">1000</span> * <span class="hljs-number">60</span> * <span class="hljs-number">60</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">Booking</span>, booking1);</span>
+<span class="code-block-extension-codeLine" data-line-num="26"></span>
+<span class="code-block-extension-codeLine" data-line-num="27">    <span class="hljs-keyword">const</span> booking2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Booking</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    booking2.<span class="hljs-property">room</span> = room2;</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    booking2.<span class="hljs-property">user</span> = user2;</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    booking2.<span class="hljs-property">startTime</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="31">    booking2.<span class="hljs-property">endTime</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>() + <span class="hljs-number">1000</span> * <span class="hljs-number">60</span> * <span class="hljs-number">60</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="32"></span>
+<span class="code-block-extension-codeLine" data-line-num="33">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">Booking</span>, booking2);</span>
+<span class="code-block-extension-codeLine" data-line-num="34"></span>
+<span class="code-block-extension-codeLine" data-line-num="35">    <span class="hljs-keyword">const</span> booking3 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Booking</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="36">    booking3.<span class="hljs-property">room</span> = room1;</span>
+<span class="code-block-extension-codeLine" data-line-num="37">    booking3.<span class="hljs-property">user</span> = user2;</span>
+<span class="code-block-extension-codeLine" data-line-num="38">    booking3.<span class="hljs-property">startTime</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="39">    booking3.<span class="hljs-property">endTime</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>() + <span class="hljs-number">1000</span> * <span class="hljs-number">60</span> * <span class="hljs-number">60</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="40"></span>
+<span class="code-block-extension-codeLine" data-line-num="41">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">Booking</span>, booking3);</span>
+<span class="code-block-extension-codeLine" data-line-num="42"></span>
+<span class="code-block-extension-codeLine" data-line-num="43">    <span class="hljs-keyword">const</span> booking4 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Booking</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="44">    booking4.<span class="hljs-property">room</span> = room2;</span>
+<span class="code-block-extension-codeLine" data-line-num="45">    booking4.<span class="hljs-property">user</span> = user1;</span>
+<span class="code-block-extension-codeLine" data-line-num="46">    booking4.<span class="hljs-property">startTime</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="47">    booking4.<span class="hljs-property">endTime</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>() + <span class="hljs-number">1000</span> * <span class="hljs-number">60</span> * <span class="hljs-number">60</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="48"></span>
+<span class="code-block-extension-codeLine" data-line-num="49">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">Booking</span>, booking4);</span>
+<span class="code-block-extension-codeLine" data-line-num="50">}</span>
+</code></pre>
+<p>我们先查询出 2 个 User ，2 个 MeetingRoom，然后创建 4 个 Booking。</p>
+<p>用 save 把 4 条记录保存到数据库。</p>
+<p>用 repl 的方式跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run repl</span>
+</code></pre>
+<p>调用 initData 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">scss</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-scss code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">await <span class="hljs-built_in">get</span>(BookingService)<span class="hljs-selector-class">.initData</span>()</span>
+</code></pre>
+<p>会有一系列 insert 语句：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6873b0d2476047758201688b78025212~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1434&amp;h=1158&amp;s=322145&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在数据库的 booking 表可以看到插入了 4 条记录：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/843cfb4558e441549b88d708fc480718~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1812&amp;h=372&amp;s=213892&amp;e=png&amp;b=f0eeed" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后来写 booking 模块的接口：</p>
+<p>首先是 list 接口。</p>
+<p>它支持根据条件搜索，并且可以分页：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b6228a200f64202b0203a6f779a71a7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1628&amp;h=1126&amp;s=174963&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们来写一下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/53ab55853c58452e807a9c92a9b261af~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1416&amp;h=732&amp;s=235976&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'list'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">list</span>(<span class="hljs-params"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    @Query(<span class="hljs-string">'pageNo'</span>, <span class="hljs-keyword">new</span> DefaultValuePipe(<span class="hljs-number">1</span>), generateParseIntPipe(<span class="hljs-string">'pageNo'</span>)) pageNo: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @Query(<span class="hljs-string">'pageSize'</span>, <span class="hljs-keyword">new</span> DefaultValuePipe(<span class="hljs-number">10</span>), generateParseIntPipe(<span class="hljs-string">'pageSize'</span>)) pageSize: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @Query(<span class="hljs-string">'username'</span>) username: string,</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    @Query(<span class="hljs-string">'meetingRoomName'</span>) meetingRoomName: string,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @Query(<span class="hljs-string">'meetingRoomPosition'</span>) meetingRoomPosition: string,</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @Query(<span class="hljs-string">'bookingTimeRangeStart'</span>) bookingTimeRangeStart: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    @Query(<span class="hljs-string">'bookingTimeRangeEnd'</span>) bookingTimeRangeEnd: number,</span>
+<span class="code-block-extension-codeLine" data-line-num="10">) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">bookingService</span>.<span class="hljs-title function_">find</span>(pageNo, pageSize, username, meetingRoomName, meetingRoomPosition, bookingTimeRangeStart, bookingTimeRangeEnd);</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+</code></pre>
+<p>这种列表接口我们写过，就是传入分页参数、搜索参数，然后在 service 里把它们查出来返回。</p>
+<p>这里的时间用 number 来接收。</p>
+<p>我们去 BookingService 里实现下这个方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">find</span>(<span class="hljs-params">pageNo: number, pageSize: number, username: string, meetingRoomName: string, meetingRoomPosition: string, bookingTimeRangeStart: number, bookingTimeRangeEnd: number </span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> skipCount = (pageNo - <span class="hljs-number">1</span>) * pageSize;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">const</span> [bookings, totalCount] = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findAndCount</span>(<span class="hljs-title class_">Booking</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">        <span class="hljs-attr">user</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">          <span class="hljs-attr">username</span>: <span class="hljs-title class_">Like</span>(<span class="hljs-string">`%<span class="hljs-subst">${username}</span>%`</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-attr">room</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">          <span class="hljs-attr">name</span>: <span class="hljs-title class_">Like</span>(<span class="hljs-string">`%<span class="hljs-subst">${meetingRoomName}</span>%`</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="11">          <span class="hljs-attr">location</span>: <span class="hljs-title class_">Like</span>(<span class="hljs-string">`%<span class="hljs-subst">${meetingRoomPosition}</span>%`</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        <span class="hljs-attr">startTime</span>: <span class="hljs-title class_">Between</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(bookingTimeRangeStart), <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(bookingTimeRangeEnd))</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-attr">relations</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        <span class="hljs-attr">user</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-attr">room</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-attr">skip</span>: skipCount,</span>
+<span class="code-block-extension-codeLine" data-line-num="20">      <span class="hljs-attr">take</span>: pageSize</span>
+<span class="code-block-extension-codeLine" data-line-num="21">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="24">      bookings,</span>
+<span class="code-block-extension-codeLine" data-line-num="25">      totalCount</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="27">}</span>
+</code></pre>
+<p>很容易看懂，就是接个 where 条件，还有分页。</p>
+<p>要注意下日期的范围查询使用 between and 语法，这里使用 Between 操作符。</p>
+<p>先测试下。</p>
+<p>停掉服务，我们用 repl 的方式测：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run repl</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/88c0b199130a49159048e6f249688373~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1178&amp;h=810&amp;s=193210&amp;e=png&amp;b=191919" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>先看下有啥数据：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2f0745b3aa334c13bd7e825185e90a8f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1808&amp;h=500&amp;s=250575&amp;e=png&amp;b=f3f1f0" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/17c6d4c0efca4b9a9d7adc470fce4768~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1596&amp;h=506&amp;s=289766&amp;e=png&amp;b=ebe9e8" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/56e4d750cc6e408f8fb30d74146da8dc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1370&amp;h=526&amp;s=199313&amp;e=png&amp;b=f1efee" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后测试下：</p>
+<p>在 repl 拿到两个时间戳：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-string">'2023-09-29'</span>).<span class="hljs-title function_">getTime</span>()</span>
+</code></pre>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-string">'2023-09-30'</span>).<span class="hljs-title function_">getTime</span>()</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9c0a9c7af4794c979a84fce5acfb1706~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=550&amp;h=172&amp;s=22866&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>调用下这个方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">await</span> <span class="hljs-title function_">get</span>(<span class="hljs-title class_">BookingService</span>).<span class="hljs-title function_">find</span>(<span class="hljs-number">1</span>, <span class="hljs-number">10</span>, <span class="hljs-string">'guang'</span>, <span class="hljs-string">'天王'</span>, <span class="hljs-string">'三层'</span>, <span class="hljs-number">1695945600000</span>, <span class="hljs-number">1696032000000</span>)</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4b18ee8e248343cfb529d0a17a78e90a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1462&amp;h=644&amp;s=192491&amp;e=png&amp;b=1a1a1a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>打印了一堆 sql，下面有查询的结果：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/10cbfd103e7744f6b1d7886b2c0ad2ca~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=862&amp;h=944&amp;s=148203&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>查询出来的是 id 为 1 和 3 的记录。</p>
+<p>因为条件是 user.name 包含 guang：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0ec8364a4fa44ae5bc5f633f944dd4f0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=964&amp;h=212&amp;s=99906&amp;e=png&amp;b=f8f8f8" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>room.name 包含天王：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/19e492b053b74f84b0cc655397ff7ca7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=966&amp;h=238&amp;s=85084&amp;e=png&amp;b=f9f9f9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>所以查出这两条是对的：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5c458434016047c09cb7cb998d13d740~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1222&amp;h=256&amp;s=112303&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>查询逻辑写完了，我们还得优化下。</p>
+<p>因为这些参数是可选的，我们要处理下没有传入的情况：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">find</span>(<span class="hljs-params">pageNo: number, pageSize: number, username: string, meetingRoomName: string, meetingRoomPosition: string, bookingTimeRangeStart: number, bookingTimeRangeEnd: number </span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> skipCount = (pageNo - <span class="hljs-number">1</span>) * pageSize;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">const</span> <span class="hljs-attr">condition</span>: <span class="hljs-title class_">Record</span>&lt;string, any&gt; = {};</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">if</span>(username) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      condition.<span class="hljs-property">user</span> = {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-attr">username</span>: <span class="hljs-title class_">Like</span>(<span class="hljs-string">`%<span class="hljs-subst">${username}</span>%`</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="9">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">if</span>(meetingRoomName) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">      condition.<span class="hljs-property">room</span> =  {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-attr">name</span>: <span class="hljs-title class_">Like</span>(<span class="hljs-string">`%<span class="hljs-subst">${meetingRoomName}</span>%`</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="17"></span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-keyword">if</span>(meetingRoomPosition) {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-keyword">if</span> (!condition.<span class="hljs-property">room</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">        condition.<span class="hljs-property">room</span> = {}</span>
+<span class="code-block-extension-codeLine" data-line-num="21">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      condition.<span class="hljs-property">room</span>.<span class="hljs-property">location</span> = <span class="hljs-title class_">Like</span>(<span class="hljs-string">`%<span class="hljs-subst">${meetingRoomPosition}</span>%`</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="24"></span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-keyword">if</span>(bookingTimeRangeStart) {</span>
+<span class="code-block-extension-codeLine" data-line-num="26">      <span class="hljs-keyword">if</span>(!bookingTimeRangeEnd) {</span>
+<span class="code-block-extension-codeLine" data-line-num="27">        bookingTimeRangeEnd = bookingTimeRangeStart + <span class="hljs-number">60</span> * <span class="hljs-number">60</span> * <span class="hljs-number">1000</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">      }</span>
+<span class="code-block-extension-codeLine" data-line-num="29">      condition.<span class="hljs-property">startTime</span> = <span class="hljs-title class_">Between</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(bookingTimeRangeStart), <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(bookingTimeRangeEnd))</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="31"></span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-keyword">const</span> [bookings, totalCount] = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findAndCount</span>(<span class="hljs-title class_">Booking</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="33">      <span class="hljs-attr">where</span>: condition,</span>
+<span class="code-block-extension-codeLine" data-line-num="34">      <span class="hljs-attr">relations</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="35">        <span class="hljs-attr">user</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="36">        <span class="hljs-attr">room</span>: <span class="hljs-literal">true</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="37">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="38">      <span class="hljs-attr">skip</span>: skipCount,</span>
+<span class="code-block-extension-codeLine" data-line-num="39">      <span class="hljs-attr">take</span>: pageSize</span>
+<span class="code-block-extension-codeLine" data-line-num="40">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="41"></span>
+<span class="code-block-extension-codeLine" data-line-num="42">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="43">      bookings,</span>
+<span class="code-block-extension-codeLine" data-line-num="44">      totalCount</span>
+<span class="code-block-extension-codeLine" data-line-num="45">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="46">}</span>
+</code></pre>
+<p>就是如果传入了，就加到 condition 上。</p>
+<p>其中，如果 endTime 没传入，那就用 startTime + 一小时 来搜索。</p>
+<p>此外，这里查询出来 user 信息是包含密码的，其实应该把它去掉：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/13ec75ba46ee4028ab8cda12ddc01104~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=620&amp;h=320&amp;s=47688&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以在这里指定 select 的字段：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a0454d125eb488dbc819af1fad47e82~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=696&amp;h=394&amp;s=42350&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>但这样有点麻烦。</p>
+<p>我们直接查出来之后把它删掉就好了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a0b84c310fa24d4c844f005527a8e72d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=672&amp;h=644&amp;s=71783&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">bookings.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">delete</span> item.<span class="hljs-property">user</span>.<span class="hljs-property">password</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> item;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">})</span>
+</code></pre>
+<p>把 repl 停掉，把服务跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p>我们在 postman 里测试下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">http://localhost:3005/booking/list?meetingRoomName=天王&amp;username=guang</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b594883ca9614d5dbdb4e598aa6ed477~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1196&amp;h=1248&amp;s=188012&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>没啥问题。</p>
+<p>接下来是申请预定的接口</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>接口路径</th><th>请求方式</th><th>描述</th></tr></thead><tbody><tr><td>/booking/list</td><td>GET</td><td>预订列表</td></tr><tr><td>/booking/add</td><td>POST</td><td>申请预订</td></tr></tbody></table>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/436d2d7f602845598785593260ad4742~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1368&amp;h=968&amp;s=74070&amp;e=png&amp;b=d7d7d7" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 BookingController 添加一个接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Post</span>(<span class="hljs-string">'add'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">@Body() booking: CreateBookingDto, @UserInfo(<span class="hljs-string">'userId'</span>) userId: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">bookingService</span>.<span class="hljs-title function_">add</span>(booking, userId);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">}</span>
+</code></pre>
+<p>这里需要用 @UserInfo 拿到 userId。</p>
+<p>创建用到的 dto：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">IsNotEmpty</span>, <span class="hljs-title class_">IsNumber</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"class-validator"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CreateBookingDto</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    @<span class="hljs-title class_">IsNotEmpty</span>({ <span class="hljs-attr">message</span>: <span class="hljs-string">'会议室名称不能为空'</span>})</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    @<span class="hljs-title class_">IsNumber</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">meetingRoomId</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    @<span class="hljs-title class_">IsNotEmpty</span>({ <span class="hljs-attr">message</span>: <span class="hljs-string">'开始时间不能为空'</span> })</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    @<span class="hljs-title class_">IsNumber</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">startTime</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    @<span class="hljs-title class_">IsNotEmpty</span>({ <span class="hljs-attr">message</span>: <span class="hljs-string">'结束时间不能为空'</span> })</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    @<span class="hljs-title class_">IsNumber</span>()</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-attr">endTime</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-attr">note</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+</code></pre>
+<p>然后在 BookingService 实现下 add 方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">bookingDto: CreateBookingDto, userId: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> meetingRoom = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOneBy</span>(<span class="hljs-title class_">MeetingRoom</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-attr">id</span>: bookingDto.<span class="hljs-property">meetingRoomId</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">if</span>(!meetingRoom) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'会议室不存在'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOneBy</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">id</span>: userId</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">const</span> booking = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Booking</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    booking.<span class="hljs-property">room</span> = meetingRoom;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    booking.<span class="hljs-property">user</span> = user;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    booking.<span class="hljs-property">startTime</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(bookingDto.<span class="hljs-property">startTime</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    booking.<span class="hljs-property">endTime</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(bookingDto.<span class="hljs-property">endTime</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">Booking</span>, booking);</span>
+<span class="code-block-extension-codeLine" data-line-num="21">}</span>
+</code></pre>
+<p>就是根据 id 查询出 meeetingRoom 和 user，然后创建 booking，保存。</p>
+<p>测试下：</p>
+<p>先登录拿到 token：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/429fd7f4eed94ca295c4cb61dc3843ec~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1130&amp;h=1110&amp;s=179496&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>带在 Aothrization 的 header 上访问 add 接口：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6bd96c8f23244ce4b25f0d8ecfff3437~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1416&amp;h=496&amp;s=74638&amp;e=png&amp;b=f9f9f9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/48feddfb140f41a58d9a086d44a3ad59~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=850&amp;h=854&amp;s=93099&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">"meetingRoomId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">"startTime"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1703986859333</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">"endTime"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1703987859333</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<p>在 mysql workbench 查询下，可以看到记录成功插入了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ebdd0963347447f684a66ae7e05330db~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1440&amp;h=470&amp;s=299324&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然，现在的接口还是有问题的，我们得限制下，同一个会议室一段时间内只能被预定一次。</p>
+<p>那怎么保证预定的时间不会冲突呢？</p>
+<p>其实一般的会议室预订系统都是这样做的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/53461a04dd6a4c7b9f29aa729e09c050~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1744&amp;h=1198&amp;s=205957&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在右边列出来会议室在一天之内哪些时间可用，哪些时间被预定了。</p>
+<p>然后只能在没有被预定的时间内选择。</p>
+<p>这里我们就简化一下，查询下已经预定的记录里有没有包含这段时间的就好了。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bccdacb437e3480cb9d8cf79c9f387bb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1086&amp;h=1150&amp;s=270729&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">bookingDto: CreateBookingDto, userId: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">const</span> meetingRoom = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOneBy</span>(<span class="hljs-title class_">MeetingRoom</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      <span class="hljs-attr">id</span>: bookingDto.<span class="hljs-property">meetingRoomId</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-keyword">if</span>(!meetingRoom) {</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'会议室不存在'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOneBy</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">id</span>: userId</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">const</span> booking = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Booking</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="15">    booking.<span class="hljs-property">room</span> = meetingRoom;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    booking.<span class="hljs-property">user</span> = user;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    booking.<span class="hljs-property">startTime</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(bookingDto.<span class="hljs-property">startTime</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    booking.<span class="hljs-property">endTime</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(bookingDto.<span class="hljs-property">endTime</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="19"></span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOneBy</span>(<span class="hljs-title class_">Booking</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">      <span class="hljs-attr">room</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-attr">id</span>: meetingRoom.<span class="hljs-property">id</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">      },</span>
+<span class="code-block-extension-codeLine" data-line-num="24">      <span class="hljs-attr">startTime</span>: <span class="hljs-title class_">LessThanOrEqual</span>(booking.<span class="hljs-property">startTime</span>),</span>
+<span class="code-block-extension-codeLine" data-line-num="25">      <span class="hljs-attr">endTime</span>: <span class="hljs-title class_">MoreThanOrEqual</span>(booking.<span class="hljs-property">endTime</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="27"></span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-keyword">if</span>(res) {</span>
+<span class="code-block-extension-codeLine" data-line-num="29">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'该时间段已被预定'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="31">    </span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">Booking</span>, booking);</span>
+<span class="code-block-extension-codeLine" data-line-num="33">  }</span>
+</code></pre>
+<p>测试下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e7d4fd3a8cde41a0a83dbdb173bf4dd4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=716&amp;h=788&amp;s=88366&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">json</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-json code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-punctuation">{</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-attr">"meetingRoomId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-attr">"startTime"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1703986959333</span><span class="hljs-punctuation">,</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">"endTime"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1703986859333</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-punctuation">}</span></span>
+</code></pre>
+<p>当预定一个已经被预定的时间段时，会提示已被预定。</p>
+<p>然后继续写后面接口：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>接口路径</th><th>请求方式</th><th>描述</th></tr></thead><tbody><tr><td>/booking/list</td><td>GET</td><td>预订列表</td></tr><tr><td>/booking/add</td><td>POST</td><td>申请预订</td></tr><tr><td>/booking/apply/:id</td><td>GET</td><td>通过预订</td></tr><tr><td>/booking/reject/:id</td><td>GET</td><td>取消预订</td></tr><tr><td>/booking/unbind/:id</td><td>GET</td><td>解除预订</td></tr></tbody></table>
+<p>接下来写修改预定状态的这三个接口。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/593bc2412c174809b19888fefe54554f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1024&amp;h=700&amp;s=116315&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>状态有这 4 种：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d0f0af1a9654811a5868a55c3db2ee7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=946&amp;h=472&amp;s=74897&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 BookingController 添加三个路由：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">"apply/:id"</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">apply</span>(<span class="hljs-params">@Param(<span class="hljs-string">'id'</span>) id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">bookingService</span>.<span class="hljs-title function_">apply</span>(id);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+<span class="code-block-extension-codeLine" data-line-num="5"></span>
+<span class="code-block-extension-codeLine" data-line-num="6">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">"reject/:id"</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">async</span> <span class="hljs-title function_">reject</span>(<span class="hljs-params">@Param(<span class="hljs-string">'id'</span>) id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">bookingService</span>.<span class="hljs-title function_">reject</span>(id);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">"unbind/:id"</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-keyword">async</span> <span class="hljs-title function_">unbind</span>(<span class="hljs-params">@Param(<span class="hljs-string">'id'</span>) id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">bookingService</span>.<span class="hljs-title function_">unbind</span>(id);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+</code></pre>
+<p>然后在 BookingService 里实现这三个方法：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">async</span> <span class="hljs-title function_">apply</span>(<span class="hljs-params">id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">update</span>(<span class="hljs-title class_">Booking</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">      id</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    }, {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-attr">status</span>: <span class="hljs-string">'审批通过'</span>      </span>
+<span class="code-block-extension-codeLine" data-line-num="6">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-keyword">async</span> <span class="hljs-title function_">reject</span>(<span class="hljs-params">id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">update</span>(<span class="hljs-title class_">Booking</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      id</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    }, {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">      <span class="hljs-attr">status</span>: <span class="hljs-string">'审批驳回'</span>      </span>
+<span class="code-block-extension-codeLine" data-line-num="15">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17">}</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19"><span class="hljs-keyword">async</span> <span class="hljs-title function_">unbind</span>(<span class="hljs-params">id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">update</span>(<span class="hljs-title class_">Booking</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">      id</span>
+<span class="code-block-extension-codeLine" data-line-num="22">    }, {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">      <span class="hljs-attr">status</span>: <span class="hljs-string">'已解除'</span>      </span>
+<span class="code-block-extension-codeLine" data-line-num="24">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26">}</span>
+</code></pre>
+<p>postman 里测试下：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">http://localhost:3005/booking/apply/1</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0612aeebd6c442d49b1a5d78680f56e2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=846&amp;h=704&amp;s=63886&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">http://localhost:3005/booking/reject/2</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eb615fe172d341578ff636ed48a0f7c7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=792&amp;h=652&amp;s=59278&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">http://localhost:3005/booking/reject/3</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1d195e2cd06f4784bf5fb6bfd3e300aa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=790&amp;h=622&amp;s=58757&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 mysql workbench 里可以看到状态成功被修改了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cf2ce3b8cce641d0b89c7c196d6d6f28~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1202&amp;h=322&amp;s=140258&amp;e=png&amp;b=f6f6f6" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>接下来是催办的接口：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>接口路径</th><th>请求方式</th><th>描述</th></tr></thead><tbody><tr><td>/booking/list</td><td>GET</td><td>预订列表</td></tr><tr><td>/booking/apply/:id</td><td>GET</td><td>通过预订</td></tr><tr><td>/booking/reject/:id</td><td>GET</td><td>取消预订</td></tr><tr><td>/booking/unbind/:id</td><td>GET</td><td>解除预订</td></tr><tr><td>/booking/urge</td><td>GET</td><td>催办</td></tr></tbody></table>
+<p>按当时的设计，催办要发送邮件和短信，不过我们没买短信服务，这里就发邮件好了。</p>
+<p>但也不是每次催办都会发邮件，我们在 redis 里加个标识，半小时内只发一次邮件。</p>
+<p>我们在 BookingController 添加一个 urge 接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'urge/:id'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">urge</span>(<span class="hljs-params">@Param(<span class="hljs-string">'id'</span>) id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">bookingService</span>.<span class="hljs-title function_">urge</span>(id);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>然后在 BookingService 添加实现逻辑：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">RedisService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">private <span class="hljs-attr">redisService</span>: <span class="hljs-title class_">RedisService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">EmailService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5">private <span class="hljs-attr">emailService</span>: <span class="hljs-title class_">EmailService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-keyword">async</span> <span class="hljs-title function_">urge</span>(<span class="hljs-params">id: number</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">const</span> flag = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">'urge_'</span> + id);</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-keyword">if</span>(flag) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-keyword">return</span> <span class="hljs-string">'半小时内只能催办一次，请耐心等待'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">let</span> email = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">'admin_email'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-keyword">if</span>(!email) { </span>
+<span class="code-block-extension-codeLine" data-line-num="17">      <span class="hljs-keyword">const</span> admin = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">entityManager</span>.<span class="hljs-title function_">findOne</span>(<span class="hljs-title class_">User</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">        <span class="hljs-attr">select</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="19">          <span class="hljs-attr">email</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="20">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        <span class="hljs-attr">where</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">          <span class="hljs-attr">isAdmin</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="23">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="24">      });</span>
+<span class="code-block-extension-codeLine" data-line-num="25"></span>
+<span class="code-block-extension-codeLine" data-line-num="26">      email = admin.<span class="hljs-property">email</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27"></span>
+<span class="code-block-extension-codeLine" data-line-num="28">      <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">set</span>(<span class="hljs-string">'admin_email'</span>, admin.<span class="hljs-property">email</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="30"></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">emailService</span>.<span class="hljs-title function_">sendMail</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="32">      <span class="hljs-attr">to</span>: email,</span>
+<span class="code-block-extension-codeLine" data-line-num="33">      <span class="hljs-attr">subject</span>: <span class="hljs-string">'预定申请催办提醒'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="34">      <span class="hljs-attr">html</span>: <span class="hljs-string">`id 为 <span class="hljs-subst">${id}</span> 的预定申请正在等待审批`</span></span>
+<span class="code-block-extension-codeLine" data-line-num="35">    });</span>
+<span class="code-block-extension-codeLine" data-line-num="36">    </span>
+<span class="code-block-extension-codeLine" data-line-num="37">    <span class="hljs-variable language_">this</span>.<span class="hljs-property">redisService</span>.<span class="hljs-title function_">set</span>(<span class="hljs-string">'urge_'</span> + id, <span class="hljs-number">1</span>, <span class="hljs-number">60</span> * <span class="hljs-number">30</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="38">}</span>
+</code></pre>
+<p>我们注入了 EmailService 和 RedisService。</p>
+<p>先用 redisService 查询 flag，查到的话就提醒半小时内只能催办一次。</p>
+<p>然后用 redisService 查询 admin 的邮箱，没查到的话到数据库查，然后存到 redis。</p>
+<p>之后发催办邮件，并且在 redis 里存一个 30 分钟的 flag。</p>
+<p>测试下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5b323c02e3dc43a486a9e8b4abca837b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=792&amp;h=598&amp;s=54092&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>第一次催办，管理员会收到邮件：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/595528fe560d4bda82b78af295a47e99~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=510&amp;h=270&amp;s=28591&amp;e=png&amp;b=f7f7f7" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>第二次催办，会提示半小时只能催办一次：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cb30b489a7bd4905afc02727c1de6738~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=846&amp;h=624&amp;s=65832&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 RedisInsight 里可以看到这两个 key：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/58d86bb56ea64ebc8836aaec345a4179~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1334&amp;h=542&amp;s=70661&amp;e=png&amp;b=141414" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样，催办接口就完成了。</p>
+<p>当然，这里最好是在邮件里带一个具体的链接，点击可以直接打开对应的页面来处理申请。</p>
+<p>等后面写完这个页面再改。</p>
+<p>案例代码上传了<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fmeeting_room_booking_system_backend" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/meeting_room_booking_system_backend" ref="nofollow noopener noreferrer">小册仓库</a></p>
+<h2 data-id="heading-0">总结</h2>
+<p>这节我们完成了预定管理模块的后端代码，包括列表、添加预定、审批、催办等。</p>
+<p>后端代码完成了，下节我们来写前端部分的代码。</p></div>

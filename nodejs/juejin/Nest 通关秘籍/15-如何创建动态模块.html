@@ -1,0 +1,220 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>前面讲过，Provider 是可以通过 useFactory 动态产生的，那 Module 可不可以呢？</p>
+<p>自然是可以的，这节我们就来学下动态模块 Dynamic Module。</p>
+<p>我们新建一个项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">new</span> <span class="hljs-keyword">dynamic</span><span class="hljs-operator">-</span><span class="hljs-keyword">module</span> <span class="hljs-operator">-</span>p npm</span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/46444cb09ad5475580b13f91ca1c1b45~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>执行</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang"></span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g resource bbb</span>
+</code></pre>
+<p>创建一个实现了 CRUD 的模块：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0deaf33ac2584601993f9efe543a7f20~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后执行：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">sql</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-sql code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest <span class="hljs-keyword">start</span> <span class="hljs-comment">--watch</span></span>
+</code></pre>
+<p>浏览器访问下，可以看到 bbb 模块生效了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/31c2e0f5e7124b58bcd45aef68e7c795~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个模块是静态的，也就是它的内容是固定不变的，每次 import 都是一样：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d9ddb1665fb84cd6b936afeaa8f66979~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cbbacaae49a24666867f801b5e05fb3d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>有的时候我们希望 import 的时候给这个模块传一些参数，动态生成模块的内容，怎么办呢？</p>
+<p>这时候就需要 Dynamic Module 了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">DynamicModule</span>, <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">BbbService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./bbb.service'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">BbbController</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./bbb.controller'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5">@<span class="hljs-title class_">Module</span>({})</span>
+<span class="code-block-extension-codeLine" data-line-num="6"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BbbModule</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  <span class="hljs-keyword">static</span> <span class="hljs-title function_">register</span>(<span class="hljs-attr">options</span>: <span class="hljs-title class_">Record</span>&lt;string, any&gt;): <span class="hljs-title class_">DynamicModule</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-attr">module</span>: <span class="hljs-title class_">BbbModule</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="11">      <span class="hljs-attr">controllers</span>: [<span class="hljs-title class_">BbbController</span>],</span>
+<span class="code-block-extension-codeLine" data-line-num="12">      <span class="hljs-attr">providers</span>: [</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">          <span class="hljs-attr">provide</span>: <span class="hljs-string">'CONFIG_OPTIONS'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="15">          <span class="hljs-attr">useValue</span>: options,</span>
+<span class="code-block-extension-codeLine" data-line-num="16">        },</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        <span class="hljs-title class_">BbbService</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      ],</span>
+<span class="code-block-extension-codeLine" data-line-num="19">      <span class="hljs-attr">exports</span>: []</span>
+<span class="code-block-extension-codeLine" data-line-num="20">    };</span>
+<span class="code-block-extension-codeLine" data-line-num="21">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="22">}</span>
+</code></pre>
+<p>我们给 BbbModule 加一个 register 的静态方法，返回模块定义的对象。</p>
+<p>和在装饰器里定义的时候的区别，只是多了一个 module 属性：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/45215ab2add145518da9a0d7a82b8dc5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8c3d1fa81d634f7ca8fd247debb5afd3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而且我们还可以把参数传入的 options 对象作为一个新的 provider。</p>
+<p>import 的时候就得这样用了，通过 register 方法传入参数，返回值就是模块定义：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/83f6b4e7df91480188fa7bf997bedae3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>改成这样之后，再跑一下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/871337c427cd472da6d0e5473dc830a2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>依然是正常的。</p>
+<p>而且这时候我们把传入的 options 通过 useValue 创建了个 provider，这样模块内部就可以注入它了。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/84605d8853614396983981028a3d88f5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我在 BbbController 里面通过 token 注入这个 provider，打印下它的值。</p>
+<p>改一下 register 的参数：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d86e20ae721a40e194e39625aae8db53~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器再访问下，可以看到控制台打印了 config 对象：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f7d70c1d877a47379c70628b3d44db81~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样我们就可以在 import 一个模块的时候，传入参数，然后动态生成模块的内容。</p>
+<p>这就是 Dynamic Module。</p>
+<p>这里的 register 方法其实叫啥都行，但 nest 约定了 3 种方法名：</p>
+<ul>
+<li>register</li>
+<li>forRoot</li>
+<li>forFeature</li>
+</ul>
+<p>我们约定它们分别用来做不同的事情：</p>
+<ul>
+<li>
+<p>register：用一次模块传一次配置，比如这次调用是 BbbModule.register({aaa:1})，下一次就是 BbbModule.register({aaa:2}) 了</p>
+</li>
+<li>
+<p>forRoot：配置一次模块用多次，比如 XxxModule.forRoot({}) 一次，之后就一直用这个 Module，一般在 AppModule 里 import</p>
+</li>
+<li>
+<p>forFeature：用了 forRoot 固定了整体模块，用于局部的时候，可能需要再传一些配置，比如用 forRoot 指定了数据库链接信息，再用 forFeature 指定某个模块访问哪个数据库和表。</p>
+</li>
+</ul>
+<p>光这么说可能不够直观，我们看一个真实的动态模块就懂了。</p>
+<p>比如 @nestjs/typeorm 的动态模块：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/96e4ef222a83420fb0311b590d98c424~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>forRoot 传入配置，动态产生 provider 和 exports，返回模块定义。</p>
+<p>而且还有 forRootAsync：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ae55b26456214f0598e466248d27962f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>区别就是可以用 async 的 useFactory 动态产生 provider，比如异步请求别的服务拿到配置返回，作为 options。</p>
+<p>forFeature 则是传入局部的一些配置，来动态产生局部用的模块：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e6341cb4c47145f9adb9eb3f18a6ab16~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>typeorm 的模块用起来是这样的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9cdb01de1a034e8fbd4721a9469c6d61~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5ee3de0dce054140a52a551c537da233~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>在 AppModule 里 import 通过 forRoot 动态产生的模块，在具体的业务 Module 里，通过 forFeature 传入具体实体类的配置。</p>
+<p>其实 forRoot、forFeature、register 有区别么？</p>
+<p>本质上没区别，只是我们约定了它们使用上的一些区别。</p>
+<p>此外，Nest 还提供了另一种方式来创建动态模块：</p>
+<p>我们再生成一个新模块：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g <span class="hljs-keyword">module</span> ccc</span>
+</code></pre>
+<p>然后生成个 controller：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">css</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-css code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">nest g controller ccc <span class="hljs-attr">--no-spec</span></span>
+</code></pre>
+<p>这次我们不手动写 register、registerAsync 等方法了，用 builder 来生成。</p>
+<p>新建一个 ccc.module-definition.ts 文件：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ConfigurableModuleBuilder</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"@nestjs/common"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> interface <span class="hljs-title class_">CccModuleOptions</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">aaa</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">bbb</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">}</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> { <span class="hljs-title class_">ConfigurableModuleClass</span>, <span class="hljs-variable constant_">MODULE_OPTIONS_TOKEN</span> } =</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConfigurableModuleBuilder</span>&lt;<span class="hljs-title class_">CccModuleOptions</span>&gt;().<span class="hljs-title function_">build</span>();</span>
+</code></pre>
+<p>用 ConfigurableModuleBuilder 生成一个 class，这个 class 里就带了 register、registerAsync 方法。</p>
+<p>返回的 ConfigurableModuleClass、MODULE_OPTIONS_TOKEN 分别是生成的 class 、options 对象的 token。</p>
+<p>然后 Module 继承它：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5b57382dcf0c4615803dba46ac4e4aaf~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样这个 CccModule 就已经有了 register 和 registerAsync 方法了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fe432d3624394d88bae76568627e9810~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>不用自己定义了，省事了不少。</p>
+<p>传入 options：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6fa22770c34b48e4ba24700436ce5514~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那现在如何在 Module 内注入这个 options 呢？</p>
+<p>记得 build class 的时候返回了一个 token 么？</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e591a30f6df541d4ae15b903fbb5b18f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>就用这个注入：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f6e02c15f2904ef3a63a4c3ddde1805c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Controller</span>, <span class="hljs-title class_">Get</span>, <span class="hljs-title class_">Inject</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/common'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">MODULE_OPTIONS_TOKEN</span>, <span class="hljs-title class_">CccModuleOptions</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./ccc.module-definition'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">@<span class="hljs-title class_">Controller</span>(<span class="hljs-string">'ccc'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CccController</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    @<span class="hljs-title class_">Inject</span>(<span class="hljs-variable constant_">MODULE_OPTIONS_TOKEN</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    private <span class="hljs-attr">options</span>: <span class="hljs-title class_">CccModuleOptions</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    @<span class="hljs-title class_">Get</span>(<span class="hljs-string">''</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-title function_">hello</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="12">        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">options</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="14">}</span>
+</code></pre>
+<p>浏览器访问下：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/66c068786e744a20aed3349bed11abb6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到拿到了 options 对象。</p>
+<p>当然，options 对象不是这么用的，一般是用来做配置，内部的 provider 基于它来做一些设置，这里只是演示。</p>
+<p>你还可以用 registerAsync 方法，用 useFactory 动态创建 options 对象：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/50a913efd7e8479fb54f47e517f78ad4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>前面我们不是说还可以用 forRoot、forFeature 这样的方法么？</p>
+<p>那用 builder 的方式如何生成这样的 class 呢？</p>
+<p>调用 setClassMethodName 设置下就好了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f63a5c0c2f2c40cb9a0719f8afe559dc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d9cad02e3bb84836adc5695ac32f0f06~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果我还想根据传入的参数决定是否设置为全局模块呢？</p>
+<p>那就要这样写了：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ConfigurableModuleBuilder</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"@nestjs/common"</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">export</span> interface <span class="hljs-title class_">CccModuleOptions</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-attr">aaa</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-attr">bbb</span>: string;</span>
+<span class="code-block-extension-codeLine" data-line-num="6">}</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> { <span class="hljs-title class_">ConfigurableModuleClass</span>, <span class="hljs-variable constant_">MODULE_OPTIONS_TOKEN</span> } =</span>
+<span class="code-block-extension-codeLine" data-line-num="9">  <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConfigurableModuleBuilder</span>&lt;<span class="hljs-title class_">CccModuleOptions</span>&gt;().<span class="hljs-title function_">setClassMethodName</span>(<span class="hljs-string">'register'</span>).<span class="hljs-title function_">setExtras</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-attr">isGlobal</span>: <span class="hljs-literal">true</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">  }, <span class="hljs-function">(<span class="hljs-params">definition, extras</span>) =&gt;</span> ({</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    ...definition,</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-attr">global</span>: extras.<span class="hljs-property">isGlobal</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="14">  })).<span class="hljs-title function_">build</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+</code></pre>
+<p>setExtras 第一个参数是给 options 扩展啥 extras 属性，第二个参数是收到 extras 属性之后如何修改模块定义。</p>
+<p>我们定义了 isGlobal 的 option，收到它之后给模块定义加上个 global。</p>
+<p>这时候你就会发现 register 的 options 多了 isGlobal：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4bf3b9deaeb54f93a188e3047a12af17~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样创建的就是全局的模块。</p>
+<p>不过这样还有个问题：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1b88e8a8367840b0b4961162a5b8b69b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>options 那里多了 isGlobal 属性，但是类型定义这里还没有呀。</p>
+<p>因为我们用的是这个类型：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b38c0025ad3d4b31be41167d177e595f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>最好是用 builder 返回的类型：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d7a20711a3e7449a9258864e4ec61d57~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这样就有了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/03dab57fce1c4c06b436b9ef41ce7a9d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而这个 ASYNC_OPTIONS_TYPE 是 async 方式创建模块的 otpion 类型：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/14e345b91cb2475fb605f5a658e297de~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>回过头来看一下这个 ConfigurableModuleBuilder，它只是对我们定义 register、registerAsync 的过程做了封装，传参数就可以生成对应的 class，简便了不少。</p>
+<p>如果你觉得这种 builder 的方式更麻烦，那直接用第一种方式也可以。</p>
+<p>案例代码在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fdynamic-module" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/dynamic-module" ref="nofollow noopener noreferrer">小册仓库</a>。</p>
+<h2 data-id="heading-0">总结</h2>
+<p>Module 可以传入 options 动态产生，这叫做动态 Module，你还可以把传入的 options 作为 provider 注入到别的对象里。</p>
+<p>建议的动态产生 Module 的方法名有 register、forRoot、forFeature 3种。</p>
+<ul>
+<li>
+<p>register：用一次注册一次</p>
+</li>
+<li>
+<p>forRoot：只注册一次，用多次，一般在 AppModule 引入</p>
+</li>
+<li>
+<p>forFeature：用了 forRoot 之后，用 forFeature 传入局部配置，一般在具体模块里 imports</p>
+</li>
+</ul>
+<p>并且这些方法都可以写 xxxAsync 版本，也就是传入 useFactory 等 option，内部注册异步 provider。</p>
+<p>这个过程也可以用 ConfigurableModuleBuilder 来生成。通过 setClassMethodName 设置方法名，通过 setExtras 设置额外的 options 处理逻辑。</p>
+<p>并且返回的 class 都有 xxxAsync 的版本。</p>
+<p>这就是动态模块的定义方式，后面用到 typeorm、mongoose 等模块会大量见到这种模块。</p></div>

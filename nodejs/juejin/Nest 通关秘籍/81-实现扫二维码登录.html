@@ -1,0 +1,688 @@
+<header>
+        <style>
+            .markdown-body{
+                width: 80%;
+                margin: auto;
+            }
+            .code-block-extension-header{
+                display: none;
+            }
+        </style>
+    </header><div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:16px;overflow-x:hidden;color:#252933}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:24px;line-height:38px;margin-bottom:5px}.markdown-body h2{font-size:22px;line-height:34px;padding-bottom:12px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:20px;line-height:28px}.markdown-body h4{font-size:18px;line-height:26px}.markdown-body h5{font-size:17px;line-height:24px}.markdown-body h6{font-size:16px;line-height:24px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><style data-highlight="" data-highlight-key="juejin">.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><p>扫码登录是常见的功能，基本各种网站都支持。</p>
+<p>比如掘金的登录就支持 APP 扫码的方式：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0fb47046ab8146eab82fb32fd9dc0fe4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1438&amp;h=898&amp;s=191078&amp;e=png&amp;b=f5f5f5" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果你 APP 没登录，扫码后会跳到登录页面：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e0182a6e1fb546d0bd1150c74eaf9050~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=476&amp;h=1002&amp;s=1435289&amp;e=gif&amp;f=29&amp;b=fcfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>登录之后，会进入确认界面，你可以选择授权登录或者取消：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b78b9d78cd9b4ec4b43365a7ce5f0a26~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=478&amp;h=976&amp;s=1081691&amp;e=gif&amp;f=45&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这边确认之后，pc 网站就登录了。</p>
+<p>知乎，b 站等也是这样的：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/383503009f304552b9d6fd592614e857~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1590&amp;h=850&amp;s=233151&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/28e706b5e1a44d21b73cf981cb44a414~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1554&amp;h=670&amp;s=130973&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>有没有感觉很神奇，为什么一扫二维码，然后确认下，那边就自动登录了呢？</p>
+<p>其实原理也很简单。</p>
+<p>我们先用解析工具解码下二维码的内容：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3d8894d940ad4bcc8be2770b3be5fd45~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=628&amp;h=948&amp;s=195555&amp;e=png&amp;b=fafafa" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dccfa3ca78964b58a8d95aae3c884dd7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=646&amp;h=886&amp;s=309358&amp;e=png&amp;b=f9f9f9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，二维码的内容是一个 url，如果在手机浏览器打开，是这样的：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0f07126cc2fd48428a8d23862fd92be7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=636&amp;h=1168&amp;s=192864&amp;e=png&amp;b=fefdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>会让你下载 APP。</p>
+<p>而在 APP 里打开，就是登录确认界面了：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/92145ba5fb4e4d6f8cb87ce21c796067~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1080&amp;h=1505&amp;s=111235&amp;e=jpg&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那确认的是哪个二维码呢？</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dccfa3ca78964b58a8d95aae3c884dd7~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=646&amp;h=886&amp;s=309358&amp;e=png&amp;b=f9f9f9" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>二维码这里是有个唯一 id 的，通过这个 id 就知道是哪个二维码。</p>
+<p>这个二维码有 5 个状态：</p>
+<ul>
+<li>未扫描</li>
+<li>已扫描，等待用户确认</li>
+<li>已扫描，用户同意授权</li>
+<li>已扫描，用户取消授权</li>
+<li>已过期</li>
+</ul>
+<p>最开始是未扫描状态：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/682727acbc2a45b785ae8e08f74794a8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=482&amp;h=534&amp;s=45446&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>扫码后会进入等待用户确认状态：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7b59ef0f07f542098b2141c857b0e073~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=418&amp;h=530&amp;s=49587&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>确认后会进入同意授权状态：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/45bfdfbcb0c6482680c08e0cfff18d00~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=482&amp;h=534&amp;s=46480&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>取消的话会进入取消授权状态：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/682727acbc2a45b785ae8e08f74794a8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=482&amp;h=534&amp;s=45446&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>长时间不操作会进入过期状态：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/74ccab5aa7a741c3b63c41a7eee00932~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=490&amp;h=514&amp;s=51254&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>也就是说，扫码后进行不同的操作就是修改这个 id 对应的二维码的状态。</p>
+<p>另一边修改了状态，这边是怎么知道二维码状态变了呢？</p>
+<p>websocket 么？</p>
+<p>不用，一般都是轮询来做。</p>
+<p>比如掘金：</p>
+<p>二维码出现后，会有一个每秒一次的轮询请求来查询二维码状态：</p>
+<p>最开始是 new：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/007fb6aebf714c8686f4a4e9ac1b75f0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1986&amp;h=1186&amp;s=309276&amp;e=png&amp;b=f4f4f4" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>扫码后会变成 scanned：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/652f04b6310f43fab83a71c23d999d1f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1880&amp;h=1134&amp;s=315938&amp;e=png&amp;b=f3f3f3" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>知乎也是一样：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8cbcb7dd403041438ae83ee779b90914~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1302&amp;h=896&amp;s=345535&amp;e=png&amp;b=fdf8f8" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/67444d7606f348619610d7dc217a2c8c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1324&amp;h=1184&amp;s=457052&amp;e=png&amp;b=fdf7f7" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候，手机会进入登录确认页面：</p>
+<p>bilibili 的登录确认页面：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6e24874e2e9e455db4b281e981b5b1cc~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=636&amp;h=822&amp;s=66456&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>知乎的登录确认页面：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bc1a92ffa5e44f50a5ad1a44c56848da~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=468&amp;h=1046&amp;s=48147&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这边点击确认登录或者取消之后，会发请求修改 id 对应的二维码的状态。</p>
+<p>那边一直在轮询，自然就知道了二维码状态的变更。</p>
+<p>也就是这样的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e253865ec4a24d868d21774cb41d709d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1620&amp;h=1110&amp;s=151466&amp;e=png&amp;b=fefcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>服务端有个 qrcode/generate 接口，会生成一个随机的二维码 id，存到 redis 里，并返回二维码。</p>
+<p>还有个 qrcode/check 接口，会返回 redis 里的二维码状态，浏览器里可以轮询这个接口拿到二维码状态。</p>
+<p>然后手机 APP 扫码之后，如果没登录，会先跳转到登录页面，登录之后会进入登录确认页面。</p>
+<p>这个时候就从二维码中拿到了 id，然后调用 qrcode/scan、qrcode/cancel、qrcode/confirm 就是修改二维码为不同的状态。</p>
+<p>这时候用户是登录了的，jwt 的登录认证方式会携带 token，服务端只要从 token 中取出用户信息，存入 redis 即可。</p>
+<p>然后另一边的轮询接口发现是确认状态，会根据用户信息生成 jwt 返回。</p>
+<p>这样，手机 APP 里确认之后，pc 的浏览器就自动登录了该用户账号。</p>
+<p>这里的 jwt 是保存登录状态的一种方案，会把用户信息放在 token 里返回，然后每次访问接口带上 authorization 的 header，携带 token。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8d8ba39866154acbbf3c3f8006d265ba~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1168&amp;h=472&amp;s=64050&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>思路理清了，我们来实现一下吧！</p>
+<p>创建个 nest 项目：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">java</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-java code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install -g <span class="hljs-meta">@nestjs</span>/cli</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">nest <span class="hljs-keyword">new</span> <span class="hljs-title class_">qrcode</span>-login</span>
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5b752fa1160d46caaa326978a74f705e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=934&amp;h=686&amp;s=267305&amp;e=png&amp;b=010101" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>把它跑起来：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">arduino</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-arduino code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm run start:dev</span>
+</code></pre>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fafac79754a649d5a5778c1f8a6a1f27~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1864&amp;h=506&amp;s=149211&amp;e=png&amp;b=181818" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>浏览器访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000" ref="nofollow noopener noreferrer">http://localhost:3000</a> 就可以可以看到 hello world，就代表服务跑起来了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6bd684dbb4f441c390b7f76268ee7cfb~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=552&amp;h=186&amp;s=16445&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们实现下生成二维码的接口：</p>
+<p>安装下用到的包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install qrcode @types/qrcode</span>
+</code></pre>
+<p>添加一个路由：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/68aab932c8504b2ca502e971483d598b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1190&amp;h=1124&amp;s=209155&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { randomUUID } <span class="hljs-keyword">from</span> <span class="hljs-string">'crypto'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> qrcode <span class="hljs-keyword">from</span> <span class="hljs-string">'qrcode'</span>;</span>
+</code></pre>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'qrcode/generate'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">generate</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">const</span> uuid = <span class="hljs-title function_">randomUUID</span>();</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">const</span> dataUrl = <span class="hljs-keyword">await</span> qrcode.<span class="hljs-title function_">toDataURL</span>(uuid);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-attr">qrcode_id</span>: uuid,</span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-attr">img</span>: dataUrl</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+</code></pre>
+<p>这里用 node 的 crypto 模块生成一个随机的 uuid。</p>
+<p>然后用 qrcode 生成二维码，只不过转成 base64 返回。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0eff253a775d4bf19c69dd98cc07062d~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1120&amp;h=432&amp;s=156529&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们在 html 里把它渲染出来看一下：</p>
+<p>新建 static/index.html</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>扫码登录<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"data:image/png;base64,这里填入你生成的 url"</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">""</span>/&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+</code></pre>
+<p>然后在 main.ts 里支持这个目录下静态资源的访问，用 pages 作为前缀：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0af7e7200cc741d4bf8ec8346fb3c3c8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1510&amp;h=586&amp;s=145389&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">NestFactory</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/core'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.module'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">NestExpressApplication</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@nestjs/platform-express'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="4"></span>
+<span class="code-block-extension-codeLine" data-line-num="5"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">bootstrap</span>(<span class="hljs-params"></span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">  <span class="hljs-keyword">const</span> app = <span class="hljs-keyword">await</span> <span class="hljs-title class_">NestFactory</span>.<span class="hljs-property">create</span>&lt;<span class="hljs-title class_">NestExpressApplication</span>&gt;(<span class="hljs-title class_">AppModule</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">  app.<span class="hljs-title function_">useStaticAssets</span>(<span class="hljs-string">'static'</span>, { <span class="hljs-attr">prefix</span>: <span class="hljs-string">'/pages'</span>});</span>
+<span class="code-block-extension-codeLine" data-line-num="9"></span>
+<span class="code-block-extension-codeLine" data-line-num="10">  <span class="hljs-keyword">await</span> app.<span class="hljs-title function_">listen</span>(<span class="hljs-number">3000</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">}</span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-title function_">bootstrap</span>();</span>
+</code></pre>
+<p>这样你访问 <a href="https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000%2Fpages%2Findex.html" target="_blank" rel="nofollow noopener noreferrer" title="http://localhost:3000/pages/index.html" ref="nofollow noopener noreferrer">http://localhost:3000/pages/index.html</a> 就可以看到二维码了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/19ffbb16fffb4999a43d6ad3a1a95159~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=810&amp;h=384&amp;s=35573&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>我们用在线解码工具解码下看看：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8157992f29e14a85a1ade9b273b01155~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=612&amp;h=668&amp;s=76718&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>确实，内容就是生成的 uuid。</p>
+<p>然后，其实这个二维码扫出的应该是个网址。</p>
+<p>比如掘金的二维码解析出的内容：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/15a7e655674e46a19ee70cabaaa37bd8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=696&amp;h=796&amp;s=159392&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果用手机浏览器扫这个码的话，打开的就是下载 APP 的页面：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b1ee0ad37594270931685e54cf80d4e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=500&amp;h=1018&amp;s=144169&amp;e=png&amp;b=fefdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>而如果用掘金 APP 扫码，扫出的就是登录确认页面了：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5cb5edeee7fb44d5a3f5ad6c4a0b6286~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=528&amp;h=1062&amp;s=68585&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这个很正常，因为如果随便一个浏览器都能扫码打开登录确认页面，那谁还下载掘金 APP 呢？</p>
+<p>所以掘金的二维码只能掘金 APP 扫，微信的二维码只能用微信 APP 扫。</p>
+<p>这个页面做了检查，判断是 APP 打开的还是其他方式打开的，分别会显示不同的内容。</p>
+<p>这里我们也改成一个 url：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2d3719fa4057487a894679444e9cd932~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1722&amp;h=424&amp;s=83805&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>扫码就会打开这个页面，而这个页面就是登录确认页面。</p>
+<p>我们写一下这个页面：</p>
+<p>新建 static/confirm.html</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>扫码登录确认<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span>&gt;</span>确认登录<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span>&gt;</span>取消<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>但这里有个问题，开发服务是在电脑上的，手机怎么访问呢？</p>
+<p>这里需要用 charles 来做代理：</p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.charlesproxy.com%2Fdownload%2F" target="_blank" rel="nofollow noopener noreferrer" title="https://www.charlesproxy.com/download/" ref="nofollow noopener noreferrer">下载 charles</a>，打开</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8ae04affd87e455fa823a51a122a42b2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=266&amp;h=280&amp;s=59590&amp;e=png&amp;b=9c5301" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>让电脑和手机连接同一个 wifi，然后在手机的 wifi 设置那里设置代理：</p>
+<p>代理的 ip 是电脑 ip，端口号就是 charles 代理服务的默认端口 8888</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c359f2d13a5a4732aba7d3cd97795ff3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=422&amp;h=836&amp;s=74404&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这时候电脑上会收到连接提醒，同意下就好了：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/de7ad193b9814f808951345886b1ca22~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1548&amp;h=374&amp;s=103014&amp;e=png&amp;b=edecec" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后手机就可以访问电脑上的 nest 服务：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/91613f501696463fbde4527b56043577~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=526&amp;h=254&amp;s=28438&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>看到这个 hello world 了没？</p>
+<p>这就是电脑上的这个 nest 服务返回的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b914063711e84a39b64d20295af04f30~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=556&amp;h=170&amp;s=17190&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>那个登录确认页面在电脑访问是这样的：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5355ebdbd8794068a8d5c11de7ffd4c8~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1000&amp;h=256&amp;s=31240&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我把二维码的内容改为这个：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d8f6199974948999d2f7fa38a17e538~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1778&amp;h=400&amp;s=84824&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>修改下展示二维码的页面：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>扫码登录<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/axios@1.5.0/dist/axios.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"img"</span> <span class="hljs-attr">src</span>=<span class="hljs-string">""</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">""</span>/&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'http://localhost:3000/qrcode/generate'</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">            <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">'img'</span>).<span class="hljs-property">src</span> = res.<span class="hljs-property">data</span>.<span class="hljs-property">img</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        })</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="17"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="18"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>用 axios 请求生成二维码的接口，然后修改图片 src。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/506a59ae214e4e30ac46f3a1d7433535~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=766&amp;h=426&amp;s=37165&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用手机扫码下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4cf518d1fc74407a893c4db5006d77a5~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=484&amp;h=858&amp;s=2198287&amp;e=gif&amp;f=40&amp;b=eeeded" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>用微信扫码，可以看到，打开了登录确认页面。</p>
+<p>按钮有点小，我们设置下样式。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>扫码登录确认<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">        <span class="hljs-selector-id">#info</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="9">            <span class="hljs-attribute">height</span>: <span class="hljs-number">400px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="10">            <span class="hljs-attribute">line-height</span>: <span class="hljs-number">400px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">            <span class="hljs-attribute">font-size</span>: <span class="hljs-number">20px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">            <span class="hljs-attribute">padding</span>: <span class="hljs-number">20px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        <span class="hljs-selector-id">#confirm</span>, <span class="hljs-selector-id">#cancel</span>{</span>
+<span class="code-block-extension-codeLine" data-line-num="15">            <span class="hljs-attribute">display</span>: block;</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-attribute">width</span>: <span class="hljs-number">80%</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">            <span class="hljs-attribute">line-height</span>: <span class="hljs-number">40px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="18">            <span class="hljs-attribute">font-size</span>: <span class="hljs-number">20px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">            <span class="hljs-attribute">margin-bottom</span>: <span class="hljs-number">20px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        <span class="hljs-selector-id">#confirm</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">            <span class="hljs-attribute">background</span>: skyblue;</span>
+<span class="code-block-extension-codeLine" data-line-num="23">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="25"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"info"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">        是否确认登录 xxx 网站？</span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"confirm"</span>&gt;</span>确认登录<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"cancel"</span>&gt;</span>取消<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="33"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e19a73abaa9b48e5af24369a1166cb53~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=454&amp;h=826&amp;s=2135402&amp;e=gif&amp;f=36&amp;b=edecec" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>好看多了。</p>
+<p>二维码的内容解码后是这样的：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/34dfd9cf20bc40309f15035451d36719~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=670&amp;h=656&amp;s=107357&amp;e=png&amp;b=fafafa" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后我们来实现剩下的接口：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/14b352ece74f47e48a1f4d366fd08b73~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1620&amp;h=1110&amp;s=138991&amp;e=png&amp;b=fefcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>生成二维码之后，要在 redis 里保存一份，这里我们简化一下，直接用个 map 保存吧。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a865258dd20c4e97b5adc47dfd3ec81a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1358&amp;h=1400&amp;s=288652&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-keyword">const</span> map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Map</span>&lt;string, <span class="hljs-title class_">QrCodeInfo</span>&gt;();</span>
+<span class="code-block-extension-codeLine" data-line-num="2"></span>
+<span class="code-block-extension-codeLine" data-line-num="3">interface <span class="hljs-title class_">QrCodeInfo</span>{</span>
+<span class="code-block-extension-codeLine" data-line-num="4">  <span class="hljs-attr">status</span>: <span class="hljs-string">'noscan'</span> | <span class="hljs-string">'scan-wait-confirm'</span> | <span class="hljs-string">'scan-confirm'</span> | <span class="hljs-string">'scan-cancel'</span> | <span class="hljs-string">'expired'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="5">  userInfo?: {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-attr">userId</span>: number;</span>
+<span class="code-block-extension-codeLine" data-line-num="7">  }</span>
+<span class="code-block-extension-codeLine" data-line-num="8">}</span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-comment">// noscan 未扫描</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-comment">// scan-wait-confirm -已扫描，等待用户确认</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11"><span class="hljs-comment">// scan-confirm 已扫描，用户同意授权</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-comment">// scan-cancel 已扫描，用户取消授权</span></span>
+<span class="code-block-extension-codeLine" data-line-num="13"><span class="hljs-comment">// expired 已过期</span></span>
+</code></pre>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">map.<span class="hljs-title function_">set</span>(<span class="hljs-string">`qrcode_<span class="hljs-subst">${uuid}</span>`</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="2">  <span class="hljs-attr">status</span>: <span class="hljs-string">'noscan'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3">});</span>
+</code></pre>
+<p>然后加一个 qrcode/check 接口，用来查询二维码状态：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'qrcode/check'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">check</span>(<span class="hljs-params">@Query(<span class="hljs-string">'id'</span>) id: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">return</span> map.<span class="hljs-title function_">get</span>(<span class="hljs-string">`qrcode_<span class="hljs-subst">${id}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">}</span>
+</code></pre>
+<p>测试下：</p>
+<p>访问 /qrcode/generate 生成二维码和 id</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/32a0669d416d45588dd18e90c9392a04~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1146&amp;h=506&amp;s=206489&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后访问 /qrcode/check 拿到这个 id 的状态：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c5c5997fff544697ada987914cb311b1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1140&amp;h=162&amp;s=29297&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后再实现 /qrcode/confirm、/qrcode/cancel、/qrcode/scan 这三个接口：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'qrcode/scan'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">scan</span>(<span class="hljs-params">@Query(<span class="hljs-string">'id'</span>) id: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">const</span> info = map.<span class="hljs-title function_">get</span>(<span class="hljs-string">`qrcode_<span class="hljs-subst">${id}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">if</span>(!info) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'二维码已过期'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="7">    info.<span class="hljs-property">status</span> = <span class="hljs-string">'scan-wait-confirm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">}</span>
+<span class="code-block-extension-codeLine" data-line-num="10"></span>
+<span class="code-block-extension-codeLine" data-line-num="11">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'qrcode/confirm'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="12"><span class="hljs-keyword">async</span> <span class="hljs-title function_">confirm</span>(<span class="hljs-params">@Query(<span class="hljs-string">'id'</span>) id: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">const</span> info = map.<span class="hljs-title function_">get</span>(<span class="hljs-string">`qrcode_<span class="hljs-subst">${id}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">if</span>(!info) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'二维码已过期'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    info.<span class="hljs-property">status</span> = <span class="hljs-string">'scan-confirm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">}</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'qrcode/cancel'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="22"><span class="hljs-keyword">async</span> <span class="hljs-title function_">cancel</span>(<span class="hljs-params">@Query(<span class="hljs-string">'id'</span>) id: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">    <span class="hljs-keyword">const</span> info = map.<span class="hljs-title function_">get</span>(<span class="hljs-string">`qrcode_<span class="hljs-subst">${id}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="24">    <span class="hljs-keyword">if</span>(!info) {</span>
+<span class="code-block-extension-codeLine" data-line-num="25">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'二维码已过期'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="26">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="27">    info.<span class="hljs-property">status</span> = <span class="hljs-string">'scan-cancel'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="29">}</span>
+</code></pre>
+<p>测试下：</p>
+<p>先 qrcode/generate 生成二维码，拿到 id：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3bde202b2c084200aa97f3cdccaa48ef~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1260&amp;h=560&amp;s=249395&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后调用 qrcode/scan 修改状态，之后调用 qrcode/check 查询下状态：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b8dd2fc138074fb585b663444ab44a9c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=962&amp;h=168&amp;s=25143&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b8d4ceb466724d64a9e949a7571f18f1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=890&amp;h=212&amp;s=26986&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>同样的方式测试 qrcode/cancel 和 qrcode/confirm 接口：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/65556923d4994c7cbeb65a89f75a0cc6~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=902&amp;h=212&amp;s=24523&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dd5ee75b095a4ef7858a6649f774fe79~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=892&amp;h=200&amp;s=26773&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/34d293f791ae4f57b87b213581be92f0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=854&amp;h=196&amp;s=23978&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/431da08bfbfa42b7b42113b434e6db9b~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=976&amp;h=178&amp;s=26816&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果 id 不存在，会返回 400 的状态码：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8673fb355f2e46d9a4d25747244b6717~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1152&amp;h=298&amp;s=61640&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/93911a7b52f342118a5859763578f210~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1474&amp;h=200&amp;s=36243&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后就可以在 static/index.html 里加上 qrcode/check 接口来轮询二维码状态了。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>扫码登录<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/axios@1.5.0/dist/axios.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="9"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="10">    <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"img"</span> <span class="hljs-attr">src</span>=<span class="hljs-string">""</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">""</span>/&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="11">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"info"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="13">        axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'http://localhost:3000/qrcode/generate'</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="14">            <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">'img'</span>).<span class="hljs-property">src</span> = res.<span class="hljs-property">data</span>.<span class="hljs-property">img</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="15"></span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-title function_">queryStatus</span>(res.<span class="hljs-property">data</span>.<span class="hljs-property">qrcode_id</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="17">        })</span>
+<span class="code-block-extension-codeLine" data-line-num="18"></span>
+<span class="code-block-extension-codeLine" data-line-num="19">        <span class="hljs-keyword">function</span> <span class="hljs-title function_">queryStatus</span>(<span class="hljs-params">id</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="20">            axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'http://localhost:3000/qrcode/check?id='</span> + id).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="21">                <span class="hljs-keyword">const</span> status = res.<span class="hljs-property">data</span>.<span class="hljs-property">status</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="22"></span>
+<span class="code-block-extension-codeLine" data-line-num="23">                <span class="hljs-keyword">let</span> content = <span class="hljs-string">''</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="24">                <span class="hljs-keyword">switch</span>(status) {</span>
+<span class="code-block-extension-codeLine" data-line-num="25">                    <span class="hljs-keyword">case</span> <span class="hljs-string">'noscan'</span>: content = <span class="hljs-string">'未扫码'</span>; <span class="hljs-keyword">break</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="26">                    <span class="hljs-keyword">case</span> <span class="hljs-string">'scan-wait-confirm'</span>: content = <span class="hljs-string">'已扫码，等待确认'</span>; <span class="hljs-keyword">break</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="27">                    <span class="hljs-keyword">case</span> <span class="hljs-string">'scan-confirm'</span>: content = <span class="hljs-string">'已确认'</span>; <span class="hljs-keyword">break</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="28">                    <span class="hljs-keyword">case</span> <span class="hljs-string">'scan-cancel'</span>: content = <span class="hljs-string">'已取消'</span>; <span class="hljs-keyword">break</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="29">                }</span>
+<span class="code-block-extension-codeLine" data-line-num="30">                <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">'info'</span>).<span class="hljs-property">textContent</span> = content;</span>
+<span class="code-block-extension-codeLine" data-line-num="31"></span>
+<span class="code-block-extension-codeLine" data-line-num="32">                <span class="hljs-keyword">if</span>(status === <span class="hljs-string">'noscan'</span> || status === <span class="hljs-string">'scan-wait-confirm'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="33">                    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">queryStatus</span>(id), <span class="hljs-number">1000</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="34">                }</span>
+<span class="code-block-extension-codeLine" data-line-num="35">            })</span>
+<span class="code-block-extension-codeLine" data-line-num="36">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="37">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="38"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="39"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>生成二维码之后，就开始轮询状态了。</p>
+<p>根据状态分别显示不同的文字，如果不是已确认或者已取消就在一秒后继续下次轮询。</p>
+<p>然后，在登录确认页面也加上接口调用：</p>
+<p>改下 static/confirm.html</p>
+<p>使用 URLSearchParams 的 api 拿到 url 中的 id：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/498039aceff849ed9a5fd3f1c09fbaef~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1144&amp;h=684&amp;s=83334&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后修改这个 id 对应的二维码的状态。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>扫码登录确认<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/axios@1.5.0/dist/axios.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-selector-id">#info</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">            <span class="hljs-attribute">height</span>: <span class="hljs-number">400px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">            <span class="hljs-attribute">line-height</span>: <span class="hljs-number">400px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">            <span class="hljs-attribute">font-size</span>: <span class="hljs-number">20px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">            <span class="hljs-attribute">padding</span>: <span class="hljs-number">20px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-selector-id">#confirm</span>, <span class="hljs-selector-id">#cancel</span>{</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-attribute">display</span>: block;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">            <span class="hljs-attribute">width</span>: <span class="hljs-number">80%</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="18">            <span class="hljs-attribute">line-height</span>: <span class="hljs-number">40px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">            <span class="hljs-attribute">font-size</span>: <span class="hljs-number">20px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">            <span class="hljs-attribute">margin-bottom</span>: <span class="hljs-number">20px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-selector-id">#confirm</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">            <span class="hljs-attribute">background</span>: skyblue;</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"info"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29">        是否确认登录 xxx 网站？</span>
+<span class="code-block-extension-codeLine" data-line-num="30">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"confirm"</span>&gt;</span>确认登录<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"cancel"</span>&gt;</span>取消<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="33"></span>
+<span class="code-block-extension-codeLine" data-line-num="34">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="35">        <span class="hljs-keyword">const</span> params = <span class="hljs-keyword">new</span> <span class="hljs-title class_">URLSearchParams</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">location</span>.<span class="hljs-property">search</span>.<span class="hljs-title function_">slice</span>(<span class="hljs-number">1</span>));</span>
+<span class="code-block-extension-codeLine" data-line-num="36"></span>
+<span class="code-block-extension-codeLine" data-line-num="37">        <span class="hljs-keyword">const</span> id = params.<span class="hljs-title function_">get</span>(<span class="hljs-string">'id'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="38"></span>
+<span class="code-block-extension-codeLine" data-line-num="39">        axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'http://192.168.31.56:3000/qrcode/scan?id='</span> + id).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="40">            <span class="hljs-title function_">alert</span>(<span class="hljs-string">'二维码已过期'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="41">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="42">        </span>
+<span class="code-block-extension-codeLine" data-line-num="43">        <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">'confirm'</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">'click'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="44">            axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'http://192.168.31.56:3000/qrcode/confirm?id='</span> + id).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="45">                <span class="hljs-title function_">alert</span>(<span class="hljs-string">'二维码已过期'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="46">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="47">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="48"></span>
+<span class="code-block-extension-codeLine" data-line-num="49">        <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">'cancel'</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">'click'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="50">            axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'http://192.168.31.56:3000/qrcode/cancel?id='</span> + id).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="51">                <span class="hljs-title function_">alert</span>(<span class="hljs-string">'二维码已过期'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="52">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="53">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="54">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="55"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="56"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>进入这个页面，就访问 qrcode/scan 接口，来把 id 对应的二维码改为已扫描状态。</p>
+<p>点击确认或者取消按钮也分别修改状态为确认和取消。</p>
+<p>注意，这个页面是在手机打开的，需要通过 ip 的方式访问接口。</p>
+<p>测试下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/df25ae7a819e44c89085f7423fdaea1a~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1294&amp;h=1128&amp;s=175212&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>打开页面后，生成二维码，这时候就开始轮询二维码状态。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba4aa28a974b424192a8f2187a91e561~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=564&amp;h=1080&amp;s=2449704&amp;e=gif&amp;f=31&amp;b=edecec" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>手机扫码，进入登录确认页面。</p>
+<p>这时候二维码页面的状态变为了等待确认：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a746d614b3f64efdb96abf782c279541~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1246&amp;h=1100&amp;s=167076&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后确认登录，这时候 pc 页面变为了已确认状态：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c2968738cbb14eeca61adf33079a027e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=506&amp;h=590&amp;s=33749&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0069dbfa26684ad78e3c67e5675472ee~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1172&amp;h=1054&amp;s=145738&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>如果点击取消，那就会变为已取消状态：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d41bb6e935a040ca82a2d58c14cd626c~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1178&amp;h=1066&amp;s=149096&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这就是扫码之后，pc 上的二维码同步改变状态的原理。</p>
+<p>当然，最终我们是要做登录的。</p>
+<p>确认之后，就要拿到这边的登录状态，从中取出用户信息。</p>
+<p>当然，现在我们还没做登录。</p>
+<p>我们通过 jwt 搞一下：</p>
+<p>引入 jwt 的 包：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">bash</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-bash code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">npm install @nestjs/jwt</span>
+</code></pre>
+<p>在 AppModule 里引入它：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d73cce32ac3c4310aadd059b5bfc57d4~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=808&amp;h=714&amp;s=125928&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>然后实现登录接口：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cd64743493af46568c9c6a6d367e2dc2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1692&amp;h=1256&amp;s=259718&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这里我们没有用数据库，只有 2 个用户，如果信息匹配，就返回 jwt 的 token：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Inject</span>(<span class="hljs-title class_">JwtService</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2">private <span class="hljs-attr">jwtService</span>: <span class="hljs-title class_">JwtService</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="3"></span>
+<span class="code-block-extension-codeLine" data-line-num="4">private users = [</span>
+<span class="code-block-extension-codeLine" data-line-num="5">    {<span class="hljs-attr">id</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">username</span>: <span class="hljs-string">'dong'</span>, <span class="hljs-attr">password</span>: <span class="hljs-string">'111'</span>},</span>
+<span class="code-block-extension-codeLine" data-line-num="6">    {<span class="hljs-attr">id</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">username</span>: <span class="hljs-string">'guang'</span>, <span class="hljs-attr">password</span>: <span class="hljs-string">'222'</span>},</span>
+<span class="code-block-extension-codeLine" data-line-num="7">];</span>
+<span class="code-block-extension-codeLine" data-line-num="8"></span>
+<span class="code-block-extension-codeLine" data-line-num="9">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'login'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="10"><span class="hljs-keyword">async</span> <span class="hljs-title function_">login</span>(<span class="hljs-params">@Query(<span class="hljs-string">'username'</span>) username: string, @Query(<span class="hljs-string">'password'</span>) password: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="11"></span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">const</span> user = <span class="hljs-variable language_">this</span>.<span class="hljs-property">users</span>.<span class="hljs-title function_">find</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">username</span> === username);</span>
+<span class="code-block-extension-codeLine" data-line-num="13"></span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">if</span>(!user) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnauthorizedException</span>(<span class="hljs-string">'用户不存在'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    <span class="hljs-keyword">if</span>(user.<span class="hljs-property">password</span> !== password) {</span>
+<span class="code-block-extension-codeLine" data-line-num="18">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnauthorizedException</span>(<span class="hljs-string">'密码错误'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="20"></span>
+<span class="code-block-extension-codeLine" data-line-num="21">    <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="22">      <span class="hljs-attr">token</span>: <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">jwtService</span>.<span class="hljs-title function_">sign</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="23">      <span class="hljs-attr">userId</span>: user.<span class="hljs-property">id</span></span>
+<span class="code-block-extension-codeLine" data-line-num="24">    })</span>
+<span class="code-block-extension-codeLine" data-line-num="25">}</span>
+</code></pre>
+<p>postman 里测试下：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c4f87496e12c47528e24322e1ef050aa~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1002&amp;h=706&amp;s=78880&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/98ddf9d9bba84df5b4834c925db67392~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1056&amp;h=776&amp;s=89706&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/781ec9ffe9b34d7888039312311605b3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1186&amp;h=708&amp;s=88776&amp;e=png&amp;b=fcfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>登录成功后，会返回 token。</p>
+<p>这个 token 一般都是在访问接口的时候放在 authorization 的 header 里，通过 Bearer xxx 的方式。</p>
+<p>我们添加一个 userInfo 的接口来拿到用户信息：</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'userInfo'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">userInfo</span>(<span class="hljs-params">@Headers(<span class="hljs-string">'Authorization'</span>) auth: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">try</span>{</span>
+<span class="code-block-extension-codeLine" data-line-num="4">      <span class="hljs-keyword">const</span> [, token] = auth.<span class="hljs-title function_">split</span>(<span class="hljs-string">' '</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-keyword">const</span> info = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">jwtService</span>.<span class="hljs-title function_">verify</span>(token);</span>
+<span class="code-block-extension-codeLine" data-line-num="6"></span>
+<span class="code-block-extension-codeLine" data-line-num="7">      <span class="hljs-keyword">const</span> user = <span class="hljs-variable language_">this</span>.<span class="hljs-property">users</span>.<span class="hljs-title function_">find</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">id</span> == info.<span class="hljs-property">userId</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="8">      <span class="hljs-keyword">return</span> user;</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    } <span class="hljs-keyword">catch</span>(e) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnauthorizedException</span>(<span class="hljs-string">'token 过期，请重新登录'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">}</span>
+</code></pre>
+<p>它会从 header 中取出 token，解析出其中的信息，从而拿到 userId，然后查询 id 对应的用户信息返回。</p>
+<p>我们加上 authorization 的 header，访问下 userInfo 接口：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ca79ec37b0e94bf79ab213afc12fa781~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1162&amp;h=710&amp;s=88816&amp;e=png&amp;b=fbfbfb" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>可以看到，拿到了用户的信息。</p>
+<p>然后我们在登录确认页面加上登录：</p>
+<p>添加两个按钮：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a17c0ea10dd145008880099dd68b066f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=866&amp;h=146&amp;s=35108&amp;e=png&amp;b=202020" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>这俩按钮分别是登录不同的账号，拿到 token：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a1902e94ca9d4b289a1bb8381834353e~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1258&amp;h=1052&amp;s=168297&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>访问 confirm 接口时带上这个 token：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3558d46dbe824dec90b4b6ae9789dacd~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1332&amp;h=826&amp;s=173309&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">html</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-html code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="3"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="5">    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="6">    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>扫码登录确认<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="7">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/axios@1.5.0/dist/axios.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">    <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="9">        <span class="hljs-selector-id">#info</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">            <span class="hljs-attribute">height</span>: <span class="hljs-number">400px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="11">            <span class="hljs-attribute">line-height</span>: <span class="hljs-number">400px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="12">            <span class="hljs-attribute">font-size</span>: <span class="hljs-number">20px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">            <span class="hljs-attribute">padding</span>: <span class="hljs-number">20px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="14">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="15">        <span class="hljs-selector-id">#confirm</span>, <span class="hljs-selector-id">#cancel</span>{</span>
+<span class="code-block-extension-codeLine" data-line-num="16">            <span class="hljs-attribute">display</span>: block;</span>
+<span class="code-block-extension-codeLine" data-line-num="17">            <span class="hljs-attribute">width</span>: <span class="hljs-number">80%</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="18">            <span class="hljs-attribute">line-height</span>: <span class="hljs-number">40px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">            <span class="hljs-attribute">font-size</span>: <span class="hljs-number">20px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">            <span class="hljs-attribute">margin-bottom</span>: <span class="hljs-number">20px</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="21">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="22">        <span class="hljs-selector-id">#confirm</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="23">            <span class="hljs-attribute">background</span>: skyblue;</span>
+<span class="code-block-extension-codeLine" data-line-num="24">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="25">    <span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="26"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="27"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="28">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"guang"</span>&gt;</span>登录光光账号<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="29">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"dong"</span>&gt;</span>登录东东账号<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="30"></span>
+<span class="code-block-extension-codeLine" data-line-num="31">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"info"</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="32">        是否确认登录 xxx 网站？</span>
+<span class="code-block-extension-codeLine" data-line-num="33">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="34">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"confirm"</span>&gt;</span>确认登录<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="35">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"cancel"</span>&gt;</span>取消<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="36"></span>
+<span class="code-block-extension-codeLine" data-line-num="37">    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span></span>
+<span class="code-block-extension-codeLine" data-line-num="38">        <span class="hljs-keyword">const</span> params = <span class="hljs-keyword">new</span> <span class="hljs-title class_">URLSearchParams</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">location</span>.<span class="hljs-property">search</span>.<span class="hljs-title function_">slice</span>(<span class="hljs-number">1</span>));</span>
+<span class="code-block-extension-codeLine" data-line-num="39"></span>
+<span class="code-block-extension-codeLine" data-line-num="40">        <span class="hljs-keyword">const</span> id = params.<span class="hljs-title function_">get</span>(<span class="hljs-string">'id'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="41"></span>
+<span class="code-block-extension-codeLine" data-line-num="42">        <span class="hljs-keyword">let</span> token = <span class="hljs-string">''</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="43">        <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">'dong'</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">'click'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="44">            axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'http://192.168.31.56:3000/login'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="45">                <span class="hljs-attr">params</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="46">                    <span class="hljs-attr">username</span>: <span class="hljs-string">'dong'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="47">                    <span class="hljs-attr">password</span>: <span class="hljs-string">'111'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="48">                }</span>
+<span class="code-block-extension-codeLine" data-line-num="49">            }).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="50">                token = res.<span class="hljs-property">data</span>.<span class="hljs-property">token</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="51">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="52">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="53"></span>
+<span class="code-block-extension-codeLine" data-line-num="54">        <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">'guang'</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">'click'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="55">            axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'http://192.168.31.56:3000/login'</span>, {</span>
+<span class="code-block-extension-codeLine" data-line-num="56">                <span class="hljs-attr">params</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="57">                    <span class="hljs-attr">username</span>: <span class="hljs-string">'guang'</span>,</span>
+<span class="code-block-extension-codeLine" data-line-num="58">                    <span class="hljs-attr">password</span>: <span class="hljs-string">'222'</span></span>
+<span class="code-block-extension-codeLine" data-line-num="59">                }</span>
+<span class="code-block-extension-codeLine" data-line-num="60">            }).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="61">                token = res.<span class="hljs-property">data</span>.<span class="hljs-property">token</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="62">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="63">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="64"></span>
+<span class="code-block-extension-codeLine" data-line-num="65">        axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'http://192.168.31.56:3000/qrcode/scan?id='</span> + id).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="66">            <span class="hljs-title function_">alert</span>(<span class="hljs-string">'二维码已过期'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="67">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="68">        </span>
+<span class="code-block-extension-codeLine" data-line-num="69">        <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">'confirm'</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">'click'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="70">            axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'http://192.168.31.56:3000/qrcode/confirm?id='</span> + id, {</span>
+<span class="code-block-extension-codeLine" data-line-num="71">                <span class="hljs-attr">headers</span>: {</span>
+<span class="code-block-extension-codeLine" data-line-num="72">                    <span class="hljs-attr">authorization</span>: <span class="hljs-string">'Bearer '</span> + token</span>
+<span class="code-block-extension-codeLine" data-line-num="73">                }</span>
+<span class="code-block-extension-codeLine" data-line-num="74">            }).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="75">                <span class="hljs-title function_">alert</span>(<span class="hljs-string">'二维码已过期'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="76">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="77">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="78"></span>
+<span class="code-block-extension-codeLine" data-line-num="79">        <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">'cancel'</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">'click'</span>, <span class="hljs-function">() =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="80">            axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">'http://192.168.31.56:3000/qrcode/cancel?id='</span> + id).<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="81">                <span class="hljs-title function_">alert</span>(<span class="hljs-string">'二维码已过期'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="82">            });</span>
+<span class="code-block-extension-codeLine" data-line-num="83">        });</span>
+<span class="code-block-extension-codeLine" data-line-num="84">    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="85"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+<span class="code-block-extension-codeLine" data-line-num="86"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</code></pre>
+<p>然后我们在 qrcode/confirm 接口里把 token 取出来，拿到其中的用户信息，保存到 map 里：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/39604c336b8547279f6e7dcaa05bba55~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1462&amp;h=888&amp;s=182870&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'qrcode/confirm'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">confirm</span>(<span class="hljs-params">@Query(<span class="hljs-string">'id'</span>) id: string, @Headers(<span class="hljs-string">'Authorization'</span>) auth: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">let</span> user;</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">try</span>{</span>
+<span class="code-block-extension-codeLine" data-line-num="5">      <span class="hljs-keyword">const</span> [, token] = auth.<span class="hljs-title function_">split</span>(<span class="hljs-string">' '</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="6">      <span class="hljs-keyword">const</span> info = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">jwtService</span>.<span class="hljs-title function_">verify</span>(token);</span>
+<span class="code-block-extension-codeLine" data-line-num="7"></span>
+<span class="code-block-extension-codeLine" data-line-num="8">      user = <span class="hljs-variable language_">this</span>.<span class="hljs-property">users</span>.<span class="hljs-title function_">find</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">id</span> == info.<span class="hljs-property">userId</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="9">    } <span class="hljs-keyword">catch</span>(e) {</span>
+<span class="code-block-extension-codeLine" data-line-num="10">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnauthorizedException</span>(<span class="hljs-string">'token 过期，请重新登录'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="12"></span>
+<span class="code-block-extension-codeLine" data-line-num="13">    <span class="hljs-keyword">const</span> info = map.<span class="hljs-title function_">get</span>(<span class="hljs-string">`qrcode_<span class="hljs-subst">${id}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="14">    <span class="hljs-keyword">if</span>(!info) {</span>
+<span class="code-block-extension-codeLine" data-line-num="15">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadRequestException</span>(<span class="hljs-string">'二维码已过期'</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="16">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="17">    info.<span class="hljs-property">status</span> = <span class="hljs-string">'scan-confirm'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="18">    info.<span class="hljs-property">userInfo</span> = user;</span>
+<span class="code-block-extension-codeLine" data-line-num="19">    <span class="hljs-keyword">return</span> <span class="hljs-string">'success'</span>;</span>
+<span class="code-block-extension-codeLine" data-line-num="20">}</span>
+</code></pre>
+<p>这样，当扫码确认后，那边就能拿到用户信息：</p>
+<p>我们改下 static/index.html</p>
+<p>确认的时候展示下登录用户的信息：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d80ee62f9e6e4526966e9b04cb9e7ba3~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1562&amp;h=716&amp;s=179685&amp;e=png&amp;b=1f1f1f" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>加上登录之后，我们再测试下：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e7fa9d20c9f04917bf6c8a631d2cb5a0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=840&amp;h=508&amp;s=42114&amp;e=png&amp;b=ffffff" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>手机扫码，点击登录光的账号，然后确认登录：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ef637d571a484fa79fb7445f5bf4e0c1~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=664&amp;h=1160&amp;s=2104022&amp;e=gif&amp;f=23&amp;b=8b8a8a" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a0fe0804c441487f92d1d5647ff35d74~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=762&amp;h=504&amp;s=45558&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>刷新页面，重新扫码，然后登录东东账号。</p>
+<p>这时候 pc 网站就显示了当前登录用户是 dong</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9505acdb3fb34872b69f605261ac5827~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=776&amp;h=518&amp;s=45876&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>当然，登录状态需要一个 jwt，我们返回下就好了。</p>
+<pre><div class="code-block-extension-header" style="background-color: rgb(248, 248, 248);"><div class="code-block-extension-headerLeft"><div class="code-block-extension-foldBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z" data-name="Down"></path></svg></div></div><div class="code-block-extension-headerRight"><span class="code-block-extension-lang">javascript</span><div class="code-block-extension-copyCodeBtn">复制代码</div></div></div><code class="hljs language-javascript code-block-extension-codeShowNum"><span class="code-block-extension-codeLine" data-line-num="1">@<span class="hljs-title class_">Get</span>(<span class="hljs-string">'qrcode/check'</span>)</span>
+<span class="code-block-extension-codeLine" data-line-num="2"><span class="hljs-keyword">async</span> <span class="hljs-title function_">check</span>(<span class="hljs-params">@Query(<span class="hljs-string">'id'</span>) id: string</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="3">    <span class="hljs-keyword">const</span> info = map.<span class="hljs-title function_">get</span>(<span class="hljs-string">`qrcode_<span class="hljs-subst">${id}</span>`</span>);</span>
+<span class="code-block-extension-codeLine" data-line-num="4">    <span class="hljs-keyword">if</span>(info.<span class="hljs-property">status</span> === <span class="hljs-string">'scan-confirm'</span>) {</span>
+<span class="code-block-extension-codeLine" data-line-num="5">        <span class="hljs-keyword">return</span> {</span>
+<span class="code-block-extension-codeLine" data-line-num="6">          <span class="hljs-attr">token</span>: <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">jwtService</span>.<span class="hljs-title function_">sign</span>({</span>
+<span class="code-block-extension-codeLine" data-line-num="7">            <span class="hljs-attr">userId</span>: info.<span class="hljs-property">userInfo</span>.<span class="hljs-property">userId</span></span>
+<span class="code-block-extension-codeLine" data-line-num="8">          }),</span>
+<span class="code-block-extension-codeLine" data-line-num="9">          ...info</span>
+<span class="code-block-extension-codeLine" data-line-num="10">        }</span>
+<span class="code-block-extension-codeLine" data-line-num="11">    }</span>
+<span class="code-block-extension-codeLine" data-line-num="12">    <span class="hljs-keyword">return</span> info;</span>
+<span class="code-block-extension-codeLine" data-line-num="13">}</span>
+</code></pre>
+<p>这样，当那边确认登录之后，这边就拿到了 jwt 的 token，也就是完成了登录了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/115f1d484a2d4faf86c64d12cb056f79~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1648&amp;h=1162&amp;s=229328&amp;e=png&amp;b=fefefe" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>对比下掘金的扫码登录流程：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5d4e3c15bb5547728d2fb5e846d67fa0~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1438&amp;h=898&amp;s=176458&amp;e=png&amp;b=f5f5f5" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bf5208c73d254b27ac5e223b5a61e45f~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=476&amp;h=1002&amp;s=169977&amp;e=png&amp;b=fdfcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ced7c4b4d7464a82b59497e259444b41~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=478&amp;h=976&amp;s=99098&amp;e=png&amp;b=fdfdfd" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>是不是一摸一样？</p>
+<p>扫码登录就是这样实现的。</p>
+<p>案例代码上传了<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FQuarkGluonPlasma%2Fnestjs-course-code%2Ftree%2Fmain%2Fqrcode-login" target="_blank" rel="nofollow noopener noreferrer" title="https://github.com/QuarkGluonPlasma/nestjs-course-code/tree/main/qrcode-login" ref="nofollow noopener noreferrer">小册仓库</a></p>
+<h2 data-id="heading-0">总结</h2>
+<p>扫码登录是常用的功能，掘金、知乎、b 站等各大网站都有。</p>
+<p>流程是在 pc 选择扫码登录的方式，用 APP 扫码，在 app 上登录之后进入登录确认页面。</p>
+<p>可以点击确认登录或者取消，如果确认登录，那 pc 网站就会自动登录该账号。</p>
+<p>它的实现原理是这样的：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8a7469b3869b47b386b9b894d5b947c2~tplv-k3u1fbpfcp-jj-mark:1663:0:0:0:q75.awebp#?w=1620&amp;h=1110&amp;s=139485&amp;e=png&amp;b=fefcfc" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p>pc 端生成二维码，然后不断轮询二维码状态。</p>
+<p>APP 里扫码拿到 qrcode_id，然后分别调用 scan、confirm、cancel 来修改二维码状态。</p>
+<p>并且登录之后会把 token 带过去。</p>
+<p>在 redis 里保存着二维码的状态和用户信息，然后这边确认之后，另一边就可以用 userInfo 生成 jwt 的 token，从而实现登录。</p>
+<p>这就是扫码登录的实现原理。</p></div>
