@@ -20,3 +20,24 @@ function lengthOfLIS(nums) {
 // 示例       1 1 1   2   2  3  4    4
 let nums = [10, 9, 2, 5, 3, 7, 101, 18];
 console.log(lengthOfLIS(nums)); // 输出: 4，最长递增子序列为 [2, 3, 7, 101]
+
+
+// function new1(fn){
+//     let obj = {}
+//     obj.__proto__ = fn.prototype
+
+//     fn.bind(obj)
+//     return obj;
+// // }
+// class Stu{
+//     name = 1
+//     say(){}
+// }
+// let stu = new Stu()
+// for(let k in stu){
+//     console.log(k);
+// }
+let fn = ()=>{
+    console.log(arguments);
+}
+fn(1,2,3)
