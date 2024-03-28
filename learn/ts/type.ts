@@ -79,4 +79,5 @@ let obj:Record<Key,Value> = {
 
 const fn = () => [1,2,3,'sad'];
  
+type rfn = typeof fn;
 type num = ReturnType<typeof fn>;

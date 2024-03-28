@@ -20,3 +20,20 @@ class D implements A,C{
 
   }
 }
+
+// js继承
+var calculatorMixin = (Base) =>
+  class extends Base {
+    calc() {}
+  };
+  class Foo{
+    foo(){}
+  }
+  class Foo1 extends Foo{
+    foo1(){}
+  }
+  class Foo2 extends Foo1{}
+
+// var ff = new Foo2()
+
+
