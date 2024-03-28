@@ -61,6 +61,22 @@ type ex = Exclude<'a' | 'b', 'a'>
 type omitu = Omit<User,'age'>
 
 
+type myOmit<T,K> = Pick<T,Exclude<keyof T,K>>
 
 
 
+//record 约束对象的key和value
+ 
+type Key = "c" | "x" | "k";
+ 
+type Value = '唱' | '跳'  | 'rap' | '篮球'
+ 
+let obj:Record<Key,Value> = {
+    'c':'唱',
+    "x":'跳',
+    "k":'rap'
+}
+
+const fn = () => [1,2,3,'sad'];
+ 
+type num = ReturnType<typeof fn>;
