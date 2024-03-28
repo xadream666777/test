@@ -81,3 +81,123 @@ const fn = () => [1,2,3,'sad'];
  
 type rfn = typeof fn;
 type num = ReturnType<typeof fn>;
+
+
+// 命名空间
+namespace spacea {
+  let fn = 1;
+  export const aa = 2 ;
+  export namespace spaceb{
+    export const bb = 3;
+  }
+
+  class A {
+    name:'A'
+    sayA(){}
+  }
+  class C {
+    name:'C'
+    sayC(){}
+  }
+  class B{}
+  [A,C].forEach(item=>{
+    let res= Object.getOwnPropertyNames(item.prototype)
+    console.log(res);
+  })
+
+  Mixins(B, [A, C])
+  function Mixins(curCls: any, itemCls: any[]) {
+      itemCls.forEach(item => {
+          Object.getOwnPropertyNames(item.prototype).forEach(name => {
+              curCls.prototype[name] = item.prototype[name]
+          })
+      })
+  }
+
+  interface Name {
+    name: string
+  }
+  interface Age {
+      age: number
+  }
+  interface Sex {
+      sex: number
+  }
+  
+  let people1: Name = { name: "小满" }
+  let people2: Age = { age: 20 }
+  let people3: Sex = { sex: 1 }
+  
+  const people = Object.assign(people1,people2,people3)
+  // people
+
+  // type aaA = void | number | never
+
+
+}
+
+namespace B{
+  interface Person {
+    name: string;
+    age: number;
+  }
+
+  interface Person {
+      gender: string;
+  }
+
+  const person: Person = {
+      name: "John",
+      age: 30,
+      gender: "male"
+  };
+
+  
+  // type User = {
+  //   name: string;
+  //   age: number;
+  // };
+
+  // type Admin = {
+  //     name: string;
+  //     role: string;
+  // };
+
+  // type UserAdmin = User & Admin;
+
+  // const userAdmin: UserAdmin = {
+  //     name: "John",
+  //     age: 30,
+  //     role: "admin"
+  // };
+
+  class a{
+    a1(){}
+  }
+  class b extends a{
+    b1(){}
+  }
+  class c extends b{
+    c1(){}
+  }
+  let ins = new c()
+
+  namespace x{
+    interface c extends a,b{}
+    
+    class d implements a,b{
+      a1
+      b1(){}
+      constructor(){
+        Object.assign(d.prototype,new a(),new b())
+        // this.a = new a()
+        // this.b = new b()
+      }
+    }
+    let dd = new d()
+    dd.a1()
+  }
+
+  
+
+}
